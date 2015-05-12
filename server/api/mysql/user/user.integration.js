@@ -1,7 +1,7 @@
 'use strict';
 
 var app = require('../../app');
-var User = require('../../sqldb').User;
+var User = require('./').User;
 var request = require('supertest');
 
 describe('User API:', function() {

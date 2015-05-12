@@ -6,8 +6,11 @@ angular.module('svampeatlasApp')
       'title': 'Home',
       'state': 'main'
     },{
-      'title': 'Taxonomy',
+      'title': 'Search Index Fungorum',
       'state': 'taxonomy'
+    },{
+      'title': 'View Taxon tree',
+      'state': 'taxonomy-tree'
     }];
 
     $scope.isCollapsed = true;

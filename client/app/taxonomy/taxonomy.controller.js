@@ -3,12 +3,15 @@
 angular.module('svampeatlasApp')
   .controller('TaxonomyCtrl',['$scope','IndexFungorum' ,function ($scope, IndexFungorum) {
    
-	  $scope.searchParams = { AnywhereInText: "false"};
+	  $scope.searchParams = { AnywhereInText: "false", MaxNumber: 100};
  
     $scope.getDataFromFUN = function(){
+		$scope.isLoading = true;
+		$scope.rowCollection = undefined;
 	    IndexFungorum.NameSearch($scope.searchParams).$promise.then(function(data){
 	  	  $scope.rowCollection = data.NameSearchResult.NewDataSet.IndexFungorum;
-	  	console.log(data)
+		  $scope.isLoading = false;
+	  //	console.log(data)
 	    })
     };
   }]);
