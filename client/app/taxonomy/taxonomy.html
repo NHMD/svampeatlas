@@ -1,35 +1,38 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div class="col-md-12">
 
-<form class="form-inline">
-  <div class="form-group">
+<form class="form">
+  <div class="form-group col-md-3">
     <label for="searchText">Search for taxon:</label>
     <input type="text" class="form-control" id="SearchText" placeholder="searchText" ng-model="searchParams.SearchText">
   </div>
-  <div class="form-group">
+  <div class="form-group col-md-3">
     <label for="MaxNumber">Max number of records:</label>
     <input type="number" class="form-control" id="MaxNumber" ng-value=100 ng-model="searchParams.MaxNumber">
   </div>
-  <div class="form-group">
-	  Anywhere in text: 
-  <div class="radio">
-    <label>
+  <div class="form-group col-md-2">
+	  <label class="col-md-12 inline-checkboxgroup-label">Anywhere in text:</label>
+  
+    <label class="radio-inline">
       <input type="radio" name="anywhereInText" id="anywhereInText1"  ng-model="searchParams.AnywhereInText" value="true">
       Yes
     </label>
-  </div>
+ 
   
-  <div class="radio">
-    <label>
+ 
+    <label class="radio-inline">
       <input type="radio" name="anywhereInText" id="anywhereInText2"  ng-model="searchParams.AnywhereInText" value="false">
       No
     </label>
+
   </div>
-  </div>
-  <button  class="btn btn-primary" ng-click="getDataFromFUN()">Search Index Fungorum</button>
+   <div class="form-group col-md-2">
+  <button  class="btn btn-primary" ng-click="getDataFromFUN()">GO!</button>
+</div>
 </form>
 </div>
 <div class="col-md-12" ng-show="isLoading">
+	<i class="fa fa-spinner fa-spin fa-2x"></i>
 </div>
 <div class="col-md-12" ng-show="rowCollection">
 <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
