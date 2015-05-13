@@ -119,70 +119,70 @@ exports.showTree = function(req, res) {
 	
 	var query = {
 		where: {RankID: 10},
-		attributes: ['_id', 'parent_id', 'TaxonName'],
+		attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 		include: [{
 			model: models.Taxon,
-			attributes: ['_id', 'parent_id', 'TaxonName'],
+			attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 			as: "children",
 			include: [{
 				model: models.Taxon,
-				attributes: ['_id', 'parent_id', 'TaxonName'],
+				attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 				as: "children",
 				include: [{
 					model: models.Taxon,
-					attributes: ['_id', 'parent_id', 'TaxonName'],
+					attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 					as: "children",
 					include: [{
 						model: models.Taxon,
-						attributes: ['_id', 'parent_id', 'TaxonName'],
+						attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 						as: "children",
 						include: [{
 							model: models.Taxon,
-							attributes: ['_id', 'parent_id', 'TaxonName'],
+							attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 							as: "children",
 							include: [{
 								model: models.Taxon,
-								attributes: ['_id', 'parent_id', 'TaxonName'],
+								attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 								as: "children",
 								include: [{
 									model: models.Taxon,
-									attributes: ['_id', 'parent_id', 'TaxonName'],
+									attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 									as: "children",
 									include: [{
 										model: models.Taxon,
-										attributes: ['_id', 'parent_id', 'TaxonName'],
+										attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 										as: "children",
 										include: [{
 											model: models.Taxon,
-											attributes: ['_id', 'parent_id', 'TaxonName'],
+											attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 											as: "children",
 											include: [{
 												model: models.Taxon,
-												attributes: ['_id', 'parent_id', 'TaxonName'],
+												attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 												as: "children",
 												include: [{
 													model: models.Taxon,
-													attributes: ['_id', 'parent_id', 'TaxonName'],
+													attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 													as: "children",
 													include: [{
 														model: models.Taxon,
-														attributes: ['_id', 'parent_id', 'TaxonName'],
+														attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 														as: "children",
 														include: [{
 															model: models.Taxon,
-															attributes: ['_id', 'parent_id', 'TaxonName'],
+															attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 															as: "children",
 															include: [{
 																model: models.Taxon,
-																attributes: ['_id', 'parent_id', 'TaxonName'],
+																attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 																as: "children",
 																include: [{
 																	model: models.Taxon,
-																	attributes: ['_id', 'parent_id', 'TaxonName'],
+																	attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 																	as: "children",
 																	include: [{
 																		model: models.Taxon,
-																		attributes: ['_id', 'parent_id', 'TaxonName'],
+																		attributes: ['_id', 'parent_id', 'TaxonName', 'taxonomic_rank'],
 																		as: "children"
 																	}]
 																}]

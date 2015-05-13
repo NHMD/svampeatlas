@@ -1,9 +1,26 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div class="container-fluid">
+<div class="col-md-12">
+<form class="form-inline">
+  <div class="form-group col-md-3">
+    <label for="searchText">Search for taxon:</label>
+    <input type="text" class="form-control" id="SearchText" placeholder="searchText" ng-model="taxonToSearchInTree">
+  </div>
+ <!-- <div class="form-group col-md-2">
+  <button type="button" class="btn btn-default" ng-model="selectedRank"  bs-options="rank for rank in ['genus', 'species']" placeholder="Choose rank" bs-select>
+  </div>
+	 -->
+  <div class="form-group col-md-2">
+  <button class="btn btn-primary" ng-model="taxonToSearchInTree" ng-click="findAndToggle(taxonToSearchInTree)">Find in tree</button>
+</div>
+</form>
 
+</div>
 <div class="col-md-2 col-md-offset-6">
 	<i ng-show="loading" class="fa fa-spinner fa-spin fa-5x"></i>
 </div>	
+</div>
+<div class="col-md-12">
 <div id="tree-container"> </div>
 </div>
 
@@ -11,3 +28,6 @@
 
 <div ng-include="'components/footer/footer.html'"></div>
 </div>
+
+
+
