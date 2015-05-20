@@ -123,12 +123,12 @@ angular.module('svampeatlasApp')
        */
       isLoggedIn: function(callback) {
         if (arguments.length === 0) {
-          return currentUser.hasOwnProperty('role');
+          return currentUser.hasOwnProperty('Roles');
         }
 
         return this.getCurrentUser(null)
           .then(function(user) {
-            var is = user.hasOwnProperty('role');
+            var is = user.hasOwnProperty('Roles');
             safeCb(callback)(is);
             return is;
           });
@@ -142,13 +142,32 @@ angular.module('svampeatlasApp')
         * @return {Bool|Promise}
         */
       isAdmin: function(callback) {
+		  
         if (arguments.length === 0) {
-          return currentUser.role === 'admin';
+          return currentUser.role === 'useradmin';
         }
 
         return this.getCurrentUser(null)
           .then(function(user) {
-            var is = user.role === 'admin';
+            var is = user.role === 'useradmin';
+            safeCb(callback)(is);
+            return is;
+          });
+      },
+	  
+	  hasRole: function(role, callback) {
+        if (arguments.length === 1) {
+          return _.find(currentUser.Roles, function(r) {
+			  return r.name === role;
+			}) !== undefined;
+        }
+
+        return this.getCurrentUser(null)
+          .then(function(user) {
+            var is = ( _.find(currentUser.Roles, function(r) {
+			  return r.name === role;
+			}) !== undefined);
+			
             safeCb(callback)(is);
             return is;
           });

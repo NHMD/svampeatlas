@@ -6,15 +6,18 @@ angular.module('svampeatlasApp')
       'title': 'Home',
       'state': 'main'
     },{
-      'title': 'Search Index Fungorum',
+      'title': 'Taxonomy',
       'state': 'taxonomy'
     },{
       'title': 'View Taxon tree',
       'state': 'taxonomy-tree'
+    },{
+      'title': 'Funindex',
+      'state': 'funindex'
     }];
 
     $scope.isCollapsed = true;
     $scope.isLoggedIn = Auth.isLoggedIn;
-    $scope.isAdmin = Auth.isAdmin;
+    $scope.hasRole = Auth.hasRole;
     $scope.getCurrentUser = Auth.getCurrentUser;
   });
