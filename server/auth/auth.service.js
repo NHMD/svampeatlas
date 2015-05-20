@@ -6,6 +6,8 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var User = require('../api/mysql').User;
+var Role = require('../api/mysql').Role;
+var _ = require('lodash');
 var validateJwt = expressJwt({
   secret: config.secrets.session
 });
@@ -29,7 +31,9 @@ function isAuthenticated() {
       User.find({
         where: {
           _id: req.user._id
-        }
+        },
+		include: [{
+			model: Role}]
       })
         .then(function(user) {
           if (!user) {
@@ -55,8 +59,11 @@ function hasRole(roleRequired) {
   return compose()
     .use(isAuthenticated())
     .use(function meetsRequirements(req, res, next) {
-      if (config.userRoles.indexOf(req.user.role) >=
-          config.userRoles.indexOf(roleRequired)) {
+		var hasRole = ( _.find(req.user.Roles, function(r) {
+			  return r.name === roleRequired;
+			}) !== undefined);
+      if (hasRole &&
+          config.userRoles.indexOf(roleRequired) > -1) {
         next();
       }
       else {

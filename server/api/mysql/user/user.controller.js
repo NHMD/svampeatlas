@@ -38,7 +38,6 @@ exports.index = function(req, res) {
       '_id',
       'name',
       'email',
-      'role',
       'provider'
     ]
   })
@@ -54,7 +53,7 @@ exports.index = function(req, res) {
 exports.create = function(req, res, next) {
   var newUser = User.build(req.body);
   newUser.setDataValue('provider', 'local');
-  newUser.setDataValue('role', 'user');
+ // newUser.setDataValue('role', 'user');
   newUser.save()
     .then(function(user) {
       var token = jwt.sign({ _id: user._id }, config.secrets.session, {
@@ -74,7 +73,10 @@ exports.show = function(req, res, next) {
   User.find({
     where: {
       _id: userId
-    }
+    },
+	include: [{
+		model: models.Role
+	}]
   })
     .then(function(user) {
       if (!user) {
@@ -136,9 +138,11 @@ exports.me = function(req, res, next) {
       '_id',
       'name',
       'email',
-      'role',
       'provider'
-    ]
+    ],
+	include: [{
+		model: models.Role
+	}]
   })
     .then(function(user) { // don't ever give out the password or salt
       if (!user) { return res.json(401); }

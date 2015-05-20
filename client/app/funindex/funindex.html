@@ -1,0 +1,85 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="col-md-12">
+
+<form class="form">
+  <div class="form-group col-md-3">
+    <label for="searchText">Search for taxon:</label>
+    <input type="text" class="form-control" id="SearchText" placeholder="searchText" ng-model="searchParams.SearchText">
+  </div>
+  <div class="form-group col-md-3">
+    <label for="MaxNumber">Max number of records:</label>
+    <input type="number" class="form-control" id="MaxNumber" ng-value=100 ng-model="searchParams.MaxNumber">
+  </div>
+  <div class="form-group col-md-2">
+	  <label class="col-md-12 inline-checkboxgroup-label">Anywhere in text:</label>
+  
+    <label class="radio-inline">
+      <input type="radio" name="anywhereInText" id="anywhereInText1"  ng-model="searchParams.AnywhereInText" value="true">
+      Yes
+    </label>
+ 
+  
+ 
+    <label class="radio-inline">
+      <input type="radio" name="anywhereInText" id="anywhereInText2"  ng-model="searchParams.AnywhereInText" value="false">
+      No
+    </label>
+
+  </div>
+   <div class="form-group col-md-2">
+  <button  class="btn btn-primary" ng-click="getDataFromFUN()">GO!</button>
+</div>
+</form>
+</div>
+<div class="col-md-12" ng-show="isLoading">
+	<i class="fa fa-spinner fa-spin fa-2x"></i>
+</div>
+<div class="col-md-12" ng-show="rowCollection">
+<table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
+	<thead>
+	<tr>
+		<th></th>
+		<th st-sort="NAME_x0020_OF_x0020_FUNGUS">Name</th>
+		<th st-sort="AUTHORS">Author</th>
+		<th st-sort="INFRASPECIFIC_x0020_RANK">Rank</th>
+		<th>Link</th>
+	</tr>
+	<tr>
+		<th></th>
+		<th>
+					<input st-search="NAME_x0020_OF_x0020_FUNGUS" placeholder="search for name" class="input-sm form-control" type="search"/>
+				</th>
+		<th>
+					<input st-search="AUTHORS" placeholder="search for author(s)" class="input-sm form-control" type="search"/>
+				</th>
+		<th>
+					<input st-search="INFRASPECIFIC_x0020_RANK" placeholder="search for rank" class="input-sm form-control" type="search"/>
+				</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr ng-repeat="row in displayedCollection">
+		<td><button class="btn btn-primary">Add/Sync to our Taxonomy </button></td>
+		<td>{{row.NAME_x0020_OF_x0020_FUNGUS}}</td>
+		<td>{{row.AUTHORS}}</td>
+		<td>{{row.INFRASPECIFIC_x0020_RANK}}</td>
+		<td><a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{row.RECORD_x0020_NUMBER}}" target="_BLANK">Index Fungorum</a></td>
+		
+	</tr>
+	</tbody>
+	<tfoot>
+				<tr>
+					<td colspan="5" class="text-center">
+						<div st-pagination="" st-items-by-page="50" st-displayed-pages="7"></div>
+					</td>
+				</tr>
+			</tfoot>
+</table>
+</div>
+<div class="col-md-12">
+
+<div ng-include="'components/footer/footer.html'"></div>
+</div>
+
+

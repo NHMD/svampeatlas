@@ -28,10 +28,12 @@ module.exports = function(sequelize, DataTypes) {
         isEmail: true
       }
     },
+	/*
     role: {
       type: DataTypes.STRING,
       defaultValue: 'user'
     },
+	*/
     password: {
       type: DataTypes.STRING,
       validate: {
@@ -61,7 +63,7 @@ module.exports = function(sequelize, DataTypes) {
       profile: function() {
         return {
           'name': this.name,
-          'role': this.role
+          'roles': this.Roles
         };
       },
 
@@ -69,7 +71,7 @@ module.exports = function(sequelize, DataTypes) {
       token: function() {
         return {
           '_id': this._id,
-          'role': this.role
+          'roles': this.Roles
         };
       }
     },

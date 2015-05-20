@@ -10,8 +10,10 @@
 'use strict';
 
 var _ = require('lodash');
+
 var models = require('../')
 var Taxon = models.Taxon;
+
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -61,8 +63,25 @@ function removeEntity(res) {
 
 // Get list of taxons
 exports.index = function(req, res) {
-  Taxon.findAll()
-    .then(responseWithResult(res))
+	
+	var query = {offset: req.query.offset, limit: req.query.limit, order: req.query.order};
+	if(req.query.where){
+		query['where'] = JSON.parse(req.query.where);
+	}
+	
+
+  Taxon.findAndCount(query)
+    .then(function(taxon) {
+		res.set('count', taxon.count );
+		if(req.query.offset){
+			res.set('offset', req.query.offset );
+		};
+		if(req.query.limit){
+			res.set('limit', req.query.limit );
+		};
+		
+		return res.json(200, taxon.rows);
+	})
     .catch(handleError(res));
 };
 
