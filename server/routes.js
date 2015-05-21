@@ -12,6 +12,7 @@ module.exports = function(app) {
   // Insert routes below
   app.use('/api/things', require('./api/mysql/thing'));
   app.use('/api/users', require('./api/mysql/user'));
+   app.use('/api/roles', require('./api/mysql/role'));
    app.use('/api/taxons', require('./api/mysql/taxon'));
   app.use('/api/indexfungorum', require('./api/soap/indexfungorum'));
 

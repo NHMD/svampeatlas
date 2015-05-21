@@ -38,8 +38,12 @@ exports.index = function(req, res) {
       '_id',
       'name',
       'email',
-      'provider'
-    ]
+      'provider',
+		
+    ],
+	include: [{
+		model: models.Role
+	}]
   })
     .then(function(users) {
 		res.status(200).json(users)
@@ -98,6 +102,22 @@ exports.destroy = function(req, res) {
     .then(respondWith(res, 204))
     .catch(handleError(res));
 };
+
+
+
+exports.removeRole = function(req, res) {
+  models.Userroles.destroy({where :{ user_id: req.params.id, role_id: req.params.roleid }})
+    .then(respondWith(res, 204))
+    .catch(handleError(res));
+};
+
+
+exports.addRole = function(req, res) {
+  models.Userroles.create({ user_id: req.params.id, role_id: req.params.roleid })
+    .then(respondWith(res, 201))
+    .catch(handleError(res));
+};
+
 
 /**
  * Change a users password
