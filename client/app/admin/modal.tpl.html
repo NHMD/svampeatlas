@@ -1,0 +1,39 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
+			<h4 class="modal-title">{{user_.name}}</h4></div>
+			
+			
+			
+				<div class="modal-body">
+					<label>Add role:
+					    <select class="form-control" ng-model="selectedRole" ng-options="role.name for role in roles | filter:filterAlreadyAddedRoles">
+					    </select>
+					  </label>
+					
+					<!--<button type="button" class="btn btn-default" ng-model="selectedRole" data-html="1" bs-options="role.name for role in roles | filter:filterAlreadyAddedRoles" placeholder="Choose role" bs-select>
+					  Action <span class="caret"></span>
+					</button>-->
+					
+					<button type="button" ng-show="selectedRole" class="btn btn-default" ng-click="addRole(selectedRole)">Add role</button>
+					
+					<table class="table table-striped roletable">
+
+					  <tr ng-repeat="role in user_.Roles">
+						  <td >{{role.name}}</td>
+						 <td> <a ng-click="removeRole(role)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a></td>
+					  </tr>
+					  
+				
+					</table>
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> 
+				</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>

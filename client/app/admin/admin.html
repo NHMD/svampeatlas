@@ -2,11 +2,53 @@
 
 <div class="container">
   <p>The delete user and user index api routes are restricted to users with the 'admin' role.</p>
-  <ul class="list-group">
+ <!-- <ul class="list-group">
     <li class="list-group-item" ng-repeat="user in users">
         <strong>{{user.name}}</strong><br>
         <span class="text-muted">{{user.email}}</span>
         <a ng-click="delete(user)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
     </li>
-  </ul>
+  </ul>-->
+  
+  <table class="table usertable" st-safe-src="users" st-table="safeUsers">
+  	<thead>
+  	<tr>
+  		
+  		<th st-sort="name">Name</th>
+  		<th st-sort="email">email</th>
+		<th>Roles</th>
+  	<th></th>
+  	</tr>
+  	<tr>
+  		
+  		<th><input st-search="name"></th>
+  		<th><input st-search="email"></th>
+  		<th></th>
+  		
+  	</tr>
+  	</thead>
+  	<tbody>
+  	<tr ng-repeat="row in safeUsers">
+  		
+  		<td>{{row.name}}</td>
+  		<td>{{row.email}}</td>
+  		<td><button type="button" class="btn btn-small btn-primary" ng-click="editUser(row)">Roles
+  
+</button></td>
+  		<td> <a ng-click="delete(row)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a></td>
+  	</tr>
+  	</tbody>
+  	<tbody ng-show="isLoading">
+  	<tr>
+  		<td colspan="4" class="text-center">Loading ... </td>
+  	</tr>
+  	</tbody>
+  	<tfoot>
+  	<tr>
+  		<td class="text-center" st-pagination="" st-items-by-page="50" colspan="4">
+  		</td>
+  	</tr>
+  	</tfoot>
+  </table>
+  
 </div>

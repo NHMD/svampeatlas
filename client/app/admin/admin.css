@@ -1,1 +1,66 @@
 .trash { color:rgb(209, 91, 71); }
+
+.modal-backdrop
+{
+    opacity:0.5 !important;
+}
+
+
+
+.usertable {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 800px; /* this can vary */
+}
+
+.usertable * {
+    box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+.usertable thead {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.usertable tbody {
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+.usertable thead > tr, tbody > tr, tfoot > tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.usertable thead, .usertable tfoot {
+    flex-shrink: 0;
+}
+
+.usertable th, .usertable tbody td {
+    width: 20%; /* this can vary */
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+.usertable tfoot {
+    display: inline-block;
+}
+
+.usertable tfoot td {
+    width: 100%;
+    display: inline-block;
+}
+
+.roletable th, .roletable tbody td {
+    width: 35%; /* this can vary */
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}

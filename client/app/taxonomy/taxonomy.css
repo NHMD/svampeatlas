@@ -1,5 +1,5 @@
 
-table {
+.taxontable {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     display: flex;
@@ -8,44 +8,44 @@ table {
     height: 800px; /* this can vary */
 }
 
-table * {
+.taxontable * {
     box-sizing: inherit;
     -moz-box-sizing: inherit;
 }
 
-thead {
+.taxontable thead {
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
 
-tbody {
+.taxontable tbody {
     overflow-y: scroll;
     display: inline-block;
 }
 
-thead > tr, tbody > tr, tfoot > tr {
+.taxontable thead > tr, tbody > tr, tfoot > tr {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
 }
 
-thead, tfoot {
+.taxontable thead, .taxontable tfoot {
     flex-shrink: 0;
 }
 
-th, tbody td {
+.taxontable th, .taxontable tbody td {
     width: 20%; /* this can vary */
     overflow-x: hidden;
     text-overflow: ellipsis;
     display: inline-block;
 }
 
-tfoot {
+.taxontable tfoot {
     display: inline-block;
 }
 
-tfoot td {
+.taxontable tfoot td {
     width: 100%;
     display: inline-block;
 }
