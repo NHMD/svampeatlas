@@ -62,8 +62,7 @@ function hasRole(roleRequired) {
 		var hasRole = ( _.find(req.user.Roles, function(r) {
 			  return r.name === roleRequired;
 			}) !== undefined);
-      if (hasRole &&
-          config.userRoles.indexOf(roleRequired) > -1) {
+      if (hasRole) {
         next();
       }
       else {

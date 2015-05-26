@@ -10,8 +10,14 @@
 'use strict';
 
 var _ = require('lodash');
-var soap = require('soap');
-var wsdl = "http://www.indexfungorum.org/ixfwebservice/fungus.asmx?WSDL";
+
+
+
+
+var request = require("request");
+
+
+
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -59,46 +65,13 @@ function removeEntity(res) {
   };
 }
 
-// Get list of things
-exports.NameSearch = function(req, res) {
-	soap.createClient(wsdl, function(err, client) {
-		if (err ) throw err;
-		
-		client.NameSearch(req.query, function(err, result) {
-			if (err) {
-				res.status(500).json(err.message)
-			};
-				res.status(200).json(result)
-		          console.log(result);
-		      });
-	});
-};
-
-exports.EpithetSearch = function(req, res) {
-	soap.createClient(wsdl, function(err, client) {
-		if (err ) throw err;
-		
-		client.EpithetSearch(req.query, function(err, result) {
-			if (err) {
-				res.status(500).json(err.message)
-			};
-				res.status(200).json(result)
-		          console.log(result);
-		      });
-	});
-};
-
 
 // Get list of things
-exports.NewNames = function(req, res) {
-	soap.createClient(wsdl, function(err, client) {
-		if (err ) throw err;
+exports.Mycobank = function(req, res) {
+	
+	req.pipe(request('http://www.mycobank.org//Services/Generic/SearchService.svc/rest/xml?layout=14682616000000161&filter=Name%20'+req.query.operator+'%20"'+req.query.name+'"&limit='+req.query.limit+'')).pipe(res)
 		
-		client.NewNames({rank: req.params.rank, startDate: req.params.startdate}, function(err, result) {
-			if (err) throw err;
-				res.status(200).json(result)
-		          console.log(result);
-		      });
-	});
 };
+
+
 

@@ -15,6 +15,7 @@ module.exports = function(app) {
    app.use('/api/roles', require('./api/mysql/role'));
    app.use('/api/taxons', require('./api/mysql/taxon'));
   app.use('/api/indexfungorum', require('./api/soap/indexfungorum'));
+  app.use('/api/mycobank', require('./api/soap/mycobank'));
 
   app.use('/auth', require('./auth'));
 
