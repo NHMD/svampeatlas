@@ -1,5 +1,15 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
 <div class="col-md-12">
+	
+	<div class="btn-group" ng-model="dataSource" bs-radio-group>
+	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="IndexFungorum"> Index Fungorum</label>
+	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="MycoBank"> Mycobank</label>
+
+	</div>
+	<hr>
+</div>	
+<div class="col-md-12" ng-show="dataSource">
 
 <form class="form">
   <div class="form-group col-md-3">
@@ -27,14 +37,16 @@
 
   </div>
    <div class="form-group col-md-2">
-  <button  class="btn btn-primary" ng-click="getDataFromFUN()">GO!</button>
+  <button  class="btn btn-primary" ng-click="getData()">GO!</button>
 </div>
 </form>
 </div>
-<div class="col-md-12" ng-show="isLoading">
-	<i class="fa fa-spinner fa-spin fa-2x"></i>
+<div ng-show="errorMsg" class="alert alert-danger col-md-12" role="alert"><strong>Error!</strong> The data could not be fetched. The error was: <br><strong> {{errorMsg}}</strong> </div>
+
+<div class="col-md-12" ng-show="isLoading && dataSource === 'IndexFungorum'">
+	<p>Fetching data from {{dataSource}} <i class="fa fa-spinner fa-spin fa-2x"></i></p>
 </div>
-<div class="col-md-12" ng-show="rowCollection">
+<div class="col-md-12" ng-show="rowCollection && dataSource === 'IndexFungorum'">
 <table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
 	<thead>
 	<tr>
@@ -76,6 +88,56 @@
 				</tr>
 			</tfoot>
 </table>
+</div>
+<!-- MycoBank     -->
+<div class="col-md-12" ng-show="isLoading && dataSource === 'MycoBank'">
+	<p>Fetching data from {{dataSource}} <i class="fa fa-spinner fa-spin fa-2x"></i></p>
+</div>
+<div class="col-md-12" ng-show="rowCollectionMycobank && dataSource === 'MycoBank'">
+<table st-table="displayedCollectionMycoBank" st-safe-src="rowCollectionMycobank" class="table table-striped">
+	<thead>
+	<tr>
+		<th></th>
+		<th st-sort="Name">Name</th>
+		<th st-sort="Authors_">Author</th>
+		<th st-sort="Rank_Pt_.TargetRecord.Name">Rank</th>
+		<th>Link</th>
+	</tr>
+	<tr>
+		<th></th>
+		<th>
+					<input st-search="Name" placeholder="search for name" class="input-sm form-control" type="search"/>
+				</th>
+		<th>
+					<input st-search="Authors_" placeholder="search for author(s)" class="input-sm form-control" type="search"/>
+				</th>
+		<th>
+					<input st-search="Rank_Pt_.TargetRecord.Name" placeholder="search for rank" class="input-sm form-control" type="search"/>
+				</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr ng-repeat="row in displayedCollectionMycoBank">
+		<td><button class="btn btn-primary">Add/Sync to our Taxonomy </button></td>
+		<td>{{row.Name}}</td>
+		<td>{{row.Authors_}}</td>
+		<td>{{row.Rank_Pt_.TargetRecord.Name}}</td>
+		<td><a href = "{{row.Classification_ | parseHref}}" target="_BLANK">Mycobank</a></td>
+		
+	</tr>
+	</tbody>
+	<tfoot>
+				<tr>
+					<td colspan="5" class="text-center">
+						<div st-pagination="" st-items-by-page="50" st-displayed-pages="7"></div>
+					</td>
+				</tr>
+			</tfoot>
+</table>
+</div>
+
+
 </div>
 <div class="col-md-12">
 

@@ -29,8 +29,7 @@ var all = {
     session: 'app-secret'
   },
 
-  // List of user roles
-  userRoles: ['taxonomyadmin', 'validator', 'useradmin'],
+ 
 
   // MongoDB connection options
   mongo: {

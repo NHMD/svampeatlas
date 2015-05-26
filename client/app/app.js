@@ -7,7 +7,8 @@ angular.module('svampeatlasApp', [
   'btford.socket-io',
   'ui.router',
 	'mgcrea.ngStrap', 
-	 'smart-table'
+	 'smart-table',
+	'xml'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -15,6 +16,7 @@ angular.module('svampeatlasApp', [
 
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
+	$httpProvider.interceptors.push('xmlHttpInterceptor');
   })
 
   .factory('authInterceptor', function($rootScope, $q, $cookieStore, $injector) {
