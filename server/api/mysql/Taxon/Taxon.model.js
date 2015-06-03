@@ -26,6 +26,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    SystematicPath: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     Version: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
@@ -41,23 +45,15 @@ module.exports = function(sequelize, DataTypes) {
     IsAccepted: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-    },
-    NcbiTaxonNumber: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    FunIndexBasNumber: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-    },
+    },    
     FunIndexCurrUseNumber: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-    },
-    FunIndexGlobal: {
+    }, 
+    FunIndexTypificationNumber: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
-    },
+    }, 
     FunIndexNumber: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -66,7 +62,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false,
     },
-    taxonomic_rank: {
+    RankName: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -86,27 +82,31 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    valArtsRapport: {
+    oekologi: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    spiselighedsrapport: {
+    bemaerkning: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    foersteFundIDK: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true,
+    },
+    foersteReferenceForDK: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true,
+    },
+    DK_reference: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    ern_ringsstrategirapport: {
+    MycoKeyIDDKWebLink: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    roedliste_2009: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    roedlisteBestandsudvikling: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    Udbredelse: {
+    internalNote: {
       type: DataTypes.STRING,
       allowNull: true,
     },
