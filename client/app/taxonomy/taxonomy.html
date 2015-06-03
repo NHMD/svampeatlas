@@ -11,14 +11,14 @@
 		<th st-sort="_id" st-ratio="20">DkIndexNumber</th>
 		<th st-sort="FullName">Full name</th>
 		<th st-sort="TaxonName">Taxon name</th>
-		<th st-sort="taxonomic_rank">Taxon rank</th>
+		<th st-sort="RankName">Taxon rank</th>
 		<th st-sort="DKnavn">Dansk navn</th>
 	</tr>
 	<tr>
 		<th><input st-search="_id" st-ratio="20"></th>
 		<th><input st-search="FullName"></th>
 		<th><input st-search="TaxonName"></th>
-		<th><input st-search="taxonomic_rank"></th>
+		<th><input st-search="RankName"></th>
 		<th><input st-search="DKnavn"></th>
 	</tr>
 	</thead>
@@ -27,7 +27,7 @@
 		<td st-ratio="20">{{row._id}}</td>
 		<td>{{row.FullName}}</td>
 		<td>{{row.TaxonName}}</td>
-		<td>{{row.taxonomic_rank}}</td>
+		<td>{{row.RankName}}</td>
 		<td>{{row.DKnavn}}</td>
 	</tr>
 	</tbody>

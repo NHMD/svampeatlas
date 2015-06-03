@@ -89,6 +89,22 @@ exports.EpithetSearch = function(req, res) {
 };
 
 
+exports.NameByKey = function(req, res) {
+	soap.createClient(wsdl, function(err, client) {
+		if (err ) throw err;
+		
+		client.NameByKey(req.query, function(err, result) {
+			if (err) {
+				res.status(500).json(err.message)
+			};
+				res.status(200).json(result)
+		          console.log(result);
+		      });
+	});
+};
+
+
+
 // Get list of things
 exports.NewNames = function(req, res) {
 	soap.createClient(wsdl, function(err, client) {
