@@ -1,0 +1,24 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+<div class="col-md-12" >
+<h2>{{taxon.FullName}}</h2>
+<h4><em>{{taxon.DKnavn}}</em></h4>
+</div>
+<div class="col-md-4" >
+<a href="#" editable-textarea="taxon.diagnose" e-rows="7" e-cols="40">
+    <pre>{{ taxon.diagnose || 'no description' }}</pre>
+  </a>
+</div>
+<div class="col-md-4" >
+
+</div>
+<div class="col-md-4" >
+
+</div>
+</div>
+<div class="col-md-12">
+
+<div ng-include="'components/footer/footer.html'"></div>
+</div>
+
+

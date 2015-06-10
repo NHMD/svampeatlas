@@ -98,6 +98,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(4),
       allowNull: true,
     },
+	PresentInDK: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
     DK_reference: {
       type: DataTypes.STRING,
       allowNull: true,
