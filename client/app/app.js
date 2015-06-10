@@ -8,6 +8,7 @@ angular.module('svampeatlasApp', [
   'ui.router',
 	'mgcrea.ngStrap', 
 	 'smart-table',
+	'xeditable',
 	'xml'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
@@ -46,7 +47,8 @@ angular.module('svampeatlasApp', [
     };
   })
 
-  .run(function($rootScope, $state, Auth) {
+  .run(function($rootScope, $state, Auth, editableOptions) {
+	   editableOptions.theme = 'bs3'; // bootstrap3 theme.
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function(event, next) {
       Auth.isLoggedIn(function(loggedIn) {

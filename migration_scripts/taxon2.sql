@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `Taxon` (
 `bemaerkning` text DEFAULT NULL COMMENT 'atlasBem_rkning in FileMaker',
 `foersteFundIDK` int(4) DEFAULT NULL,
 `foersteReferenceForDK` int(4) DEFAULT NULL,
+`PresentInDK` bit(1) NOT NULL DEFAULT 0,
  `DK_reference` text DEFAULT NULL,
  `MycoKeyIDDKWebLink` varchar(255) DEFAULT NULL,
  `internalNote` text DEFAULT NULL COMMENT 'note_internal in FileMaker',
@@ -288,17 +289,16 @@ http://localhost:9000/api/taxons/updateallidsbynameforunacceptedspecies
 			t.foersteFundIDK = t2.foersteFundIDK,
 			t.foersteReferenceForDK = t2.foersteReferenceForDK,
 			t.DK_reference = t2.DK_reference,
-			t.MycoKeyIDDKWebLink = t.MycoKeyIDDKWebLink,
+			t.MycoKeyIDDKWebLink = t2.MycoKeyIDDKWebLink,
 			t.internalNote = t2.internalNote,
 			 t.DKnavn = t2.DKnavn, 
 			 t.vernacular_name_DE =t2.vernacular_name_DE, 
 			 t.vernacular_name_Fi=t2.vernacular_name_Fi, 
 			 t.vernacular_name_FR=t2.vernacular_name_FR, 
-			 t.vernacular_name_GB=t2.vernacular_name_FR, 
+			 t.vernacular_name_GB=t2.vernacular_name_GB, 
 			 t.vernacular_name_NL=t2.vernacular_name_NL, 
 			 t.vernacular_name_NO=t2.vernacular_name_NO, 
-			 t.vernacular_name_SE = t2.vernacular_name_SE,
-			 t.isAccepted =1
+			 t.vernacular_name_SE = t2.vernacular_name_SE
 			where t.RankName in ("species", "sp.") AND t2.RankName in ("f.sp.", "f.", "var.","subsp." ) AND t._id=t2.parent_id AND t.TaxonName = t2.TaxonName;
 			-- Create a table for temporary super generic taxa
 			
@@ -441,7 +441,9 @@ select TaxonName, SystematicPath, SUBSTRING_INDEX(SUBSTRING_INDEX(t.SystematicPa
 -- update broken references, i.e. Incertae sedis, xxxxxxx, Incertae sedis,
 UPDATE Taxon t2, Taxon t SET t.parent_id = t2._id where SUBSTRING_INDEX(SUBSTRING_INDEX(t.SystematicPath, "Incertae sedis, ", -2),", Incertae sedis" ,1) = t2.TaxonName AND SUBSTRING_INDEX(SUBSTRING_INDEX(t.SystematicPath, "Incertae sedis, ", -2),", Incertae sedis" ,1) NOT REGEXP "," AND t.SystematicPath REGEXP "," AND t.SystematicPath LIKE CONCAT("%Incertae sedis, ", t.TaxonName);
 
-
+update TaxonBase set StatusTilstedeIDK= "0" where StatusTilstedeIDK="";
+	ALTER TABLE `TaxonBase` CHANGE `StatusTilstedeIDK` `StatusTilstedeIDK` BIT(1) NOT NULL;
+UPDATE Taxon t, TaxonBase t2 set t.PresentInDK=t2.StatusTilstedeIDK where t._id = t2.DkIndexNumber;
 -- This query gives Taxa wich occur more than once for the same FunIndexNumber
 -- select * from Taxon where FunIndexNumber IN (select FunIndexNumber from Taxon group by FunIndexNumber having count(*) > 1) AND FunIndexNumber IS NOT NULL ORDER BY `Taxon`.`FunIndexNumber` ASC;
 

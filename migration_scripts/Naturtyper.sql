@@ -30,3 +30,8 @@ CREATE TABLE NaturtypeTaxon (
 	FOREIGN KEY (naturtype_id) REFERENCES Naturtyper(_id),
 	FOREIGN KEY (taxon_id) REFERENCES Taxon(_id)
 ) ENGINE = InnoDB DEFAULT CHARSET UTF8;
+
+
+INSERT INTO NaturtypeTaxon (naturtype_id, taxon_id) SELECT n._id, t.DkIndexNumber
+FROM TaxonBase t
+JOIN Naturtyper n ON t.Naturtyper LIKE CONCAT('%', n.verbatimId, '%');
