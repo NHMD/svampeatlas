@@ -21,4 +21,14 @@ router.put('/:id', controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 
+
+
+router.get('/:id/images', controller.showImages);
+router.post('/:id/images', controller.addImage);
+router.put('/:id/images/:imgid', controller.updateImage);
+router.delete('/:id/images/:imgid', controller.deleteImage);
+
+
+
+
 module.exports = router;

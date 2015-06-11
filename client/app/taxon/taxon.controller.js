@@ -10,7 +10,22 @@ angular.module('svampeatlasApp')
 	  }
 
 	  
-
+	  $scope.updateTaxon = function(){
+		  console.log("Updating Taxon");
+		  console.log($scope.taxon)
+	  }
+	  
+	  
+	  
+	  
+	  
+	  $scope.isValidYear = function(year){
+	  	var yearPattern = /^(19|20)\d{2}$/
+		
+		  if (!yearPattern.test(year) || (parseInt(year) > new Date().getFullYear())) {
+		        return "You must enter a valid year";
+		      }
+	  }
 
 
   }])
