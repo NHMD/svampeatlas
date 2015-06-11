@@ -18,7 +18,8 @@ function onConnect(socket) {
   });
 
   // Insert sockets below
-  require('../api/mysql/thing/thing.socket').register(socket);
+  require('../api/mysql/TaxonImages/TaxonImages.socket').register(socket);
+  
   require('../api/mysql/Taxon/Taxon.socket').register(socket);
 }
 

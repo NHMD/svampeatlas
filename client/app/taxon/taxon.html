@@ -5,9 +5,37 @@
 <h4><em>{{taxon.DKnavn}}</em></h4>
 </div>
 <div class="col-md-4" >
-<a href="#" editable-textarea="taxon.diagnose" e-rows="7" e-cols="40">
+	
+	
+		<label class="control-label" for="diagnose">Diagnose</label>
+<a href="#" id="diagnose" editable-textarea="taxon.diagnose" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
     <pre>{{ taxon.diagnose || 'no description' }}</pre>
   </a>
+  <label class="control-label" for="forvekslingsmuligheder">Forvekslingsmuligheder</label>
+  <a href="#" id="forvekslingsmuligheder" editable-textarea="taxon.forvekslingsmuligheder" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
+      <pre>{{ taxon.forvekslingsmuligheder || 'no description' }}</pre>
+    </a>
+	 <label class="control-label" for="beskrivelse">Beskrivelse</label>
+    <a href="#" id="beskrivelse" editable-textarea="taxon.beskrivelse" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
+        <pre>{{ taxon.beskrivelse || 'no description' }}</pre>
+      </a>
+	   <label class="control-label" for="oekologi">Økologi</label>
+      <a href="#" id="oekologi" editable-textarea="taxon.oekologi" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
+          <pre>{{ taxon.oekologi || 'no description' }}</pre>
+        </a>
+		 <label class="control-label" for="bemaerkning">Bemærkning</label>
+        <a href="#" id="bemaerkning" editable-textarea="taxon.bemaerkning" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
+            <pre>{{ taxon.bemaerkning || 'no description' }}</pre>
+          </a>
+		  
+		  
+		<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="taxon.$update()">{{ taxon.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="taxon.$update()">{{ taxon.foersteReferenceForDK || 'n/a' }}</a></p>
+		
+		 <label class="control-label" for="DK_reference">DK referencer</label>
+        <a href="#" id="DK_reference" editable-textarea="taxon.DK_reference" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
+            <pre>{{ taxon.DK_reference || 'no description' }}</pre>
+          </a>
+		
 </div>
 <div class="col-md-4" >
 
@@ -20,5 +48,3 @@
 
 <div ng-include="'components/footer/footer.html'"></div>
 </div>
-
-
