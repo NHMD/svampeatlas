@@ -9,7 +9,8 @@ angular.module('svampeatlasApp', [
 	'mgcrea.ngStrap', 
 	 'smart-table',
 	'xeditable',
-	'xml'
+	'xml',
+	'ui.bootstrap'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
