@@ -15,7 +15,33 @@ angular.module('svampeatlasApp')
 		        },
 		        url: '/api/taxons/:id/parents',
 		        isArray: false
-		       }
+		       },
+	 		  'addImage': {
+	 		        method:'POST',
+	 		        params: {
+	 		         id: '@_id'
+	 		        },
+	 		        url: '/api/taxons/:id/images',
+	 		        isArray: false
+	 		       },
+	 	 		  'deleteImage': {
+	 	 		        method:'DELETE',
+	 	 		        params: {
+	 	 		         id: '@_id',
+							imgid:'imgid'	
+	 	 		        },
+	 	 		        url: '/api/taxons/:id/images/:imgid',
+	 	 		        isArray: false
+	 	 		       },
+	 	 	 		  'updateImage': {
+	 	 	 		        method:'PUT',
+	 	 	 		        params: {
+	 	 	 		         id: '@_id',
+	 							imgid:'imgid'	
+	 	 	 		        },
+	 	 	 		        url: '/api/taxons/:id/images/:imgid',
+	 	 	 		        isArray: false
+	 	 	 		       }
 	    });
    
   });

@@ -1,8 +1,9 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div class="container">
 <div class="col-md-12" >
-<h2>{{taxon.FullName}}</h2>
+<h2>{{taxon.FullName}}</h2><div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	)</div>
 <h4><em>{{taxon.DKnavn}}</em></h4>
+<p><small><em>{{taxon.SystematicPath}}</em></small></p>
 </div>
 <div class="col-md-4" >
 	
@@ -37,10 +38,110 @@
           </a>
 		
 </div>
-<div class="col-md-4" >
+<div class="col-md-3" >
 
 </div>
-<div class="col-md-4" >
+<div class="col-md-5" >
+	<div class="panel-group" role="tablist" aria-multiselectable="true" bs-collapse>
+  	  <!-- ########################################-->
+  	  <div class="panel panel-default" ng-if="taxon.synonyms.length && taxon.synonyms.length >1">
+  	    <div class="panel-heading" role="tab">
+  	      <h4 class="panel-title">
+  	        <a bs-collapse-toggle>
+  	          Synonyms ({{taxon.synonyms.length -1}})
+  	        </a>
+  	      </h4>
+  	    </div>
+  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+  	      <div class="panel-body">
+  	        <ul>
+				<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
+			</ul>
+  	      </div>
+  	    </div>
+  	  </div>
+  	  <!-- ########################################-->
+	  <!-- ########################################-->
+	  <div class="panel panel-default">
+	    <div class="panel-heading" role="tab">
+	      <h4 class="panel-title">
+	        <a bs-collapse-toggle>
+	          Images
+	        </a>
+	      </h4>
+	    </div>
+	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+	      <div class="panel-body">
+		    <div>
+		      <carousel interval="">
+		        <slide ng-repeat="slide in taxon.images" active="slide.active">
+		          <img ng-src="{{slide.uri}}" style="margin:auto;">
+		          <div class="carousel-caption">
+         
+		            &copy; {{slide.photographer}}, {{slide.collectionNumber}}
+		          </div>
+		
+		        </slide>
+				
+		      </carousel>
+	    </div>
+
+		 <!-- ########################################-->
+		
+		
+	    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onbeforesave="validateImage()" >
+		<div>	<button class="btn btn-success" ng-click="newPhoto();" ng-show="!imageForm.$visible">Add photo</button><button class="btn btn-primary" ng-click=" editImage()" ng-show="taxon.images.length > 0 && !imageForm.$visible">Update photo info</button><button class="btn btn-danger pull-right" ng-show="taxon.images.length > 0 && !imageForm.$visible" ng-click="deleteImage()">Delete photo</button></div>
+	      <div>
+	        <!-- editable username (text with validation) -->
+	        <span class="title">Thumbnail url: </span>
+	        <span editable-url="currentImage.thumburi" e-name="thumburi" e-required>{{ currentImage.thumburi || 'empty' }}</span>
+	      </div> 
+
+	      <div>
+	        <!-- editable username (text with validation) -->
+	        <span class="title">Url: </span>
+	        <span editable-url="currentImage.uri" e-name="uri" e-required>{{ currentImage.uri || 'empty' }}</span>
+	      </div> 
+		  
+	      <div>
+	        <!-- editable username (text with validation) -->
+	        <span class="title">Photographer: </span>
+	        <span editable-text="currentImage.photographer" e-name="photographer" e-required>{{ currentImage.photographer || 'empty' }}</span>
+	      </div>
+		  
+	      <div>
+	        <!-- editable username (text with validation) -->
+	        <span class="title">collectionNumber: </span>
+	        <span editable-text="currentImage.collectionNumber" e-name="collectionNumber" e-required>{{ currentImage.collectionNumber || 'empty' }}</span>
+	      </div>
+		  
+	      <div>
+	        <!-- editable username (text with validation) -->
+	        <span class="title">Country: </span>
+	        <span editable-text="currentImage.country" e-name="country" e-required>{{ currentImage.country || 'empty' }}</span>
+	      </div>
+	
+
+	      <div class="buttons">
+	      
+	        <!-- buttons to submit / cancel form -->
+	        <span ng-show="imageForm.$visible">
+	          <button type="submit" class="btn btn-primary" ng-disabled="imageForm.$waiting">
+	            Save
+	          </button>
+	          <button type="button" class="btn btn-default" ng-disabled="imageForm.$waiting" ng-click="imageForm.$cancel()">
+	            Cancel
+	          </button>
+	        </span>
+	      </div>
+	    </form>
+	  </div>
+	  <!-- ########################################-->
+	</div>
+	</div>
+
+	
+	<!-- ########################################-->
 
 </div>
 </div>

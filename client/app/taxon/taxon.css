@@ -49,3 +49,24 @@ tfoot td {
     width: 100%;
     display: inline-block;
 }
+
+.carousel-caption {
+  padding-bottom: 0px !important;
+}
+
+.carousel-indicators {
+  bottom: 0px !important;
+}
+
+form[name="imageForm"] .title {
+  display: inline-block;
+  font-weight: bold;
+  padding-top: 5px;
+  vertical-align: top;
+  min-width: 150px;
+}
+
+form[name="imageForm"] > div {
+  height: auto;
+  padding: 5px 0;
+}

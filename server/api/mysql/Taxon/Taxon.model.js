@@ -174,8 +174,31 @@ module.exports = function(sequelize, DataTypes) {
     					foreignKey: "parent_id",
     					as: "children"
     				});
-    			
-		
+			
+    		models.TaxonImages
+    				.belongsTo(models.Taxon, {
+    					foreignKey: "taxon_id",
+    					as: "taxon"
+    				});
+					
+    		models.Taxon
+    				.hasMany(models.TaxonImages, {
+    					foreignKey: "taxon_id",
+    					as: "images"
+    				});
+			
+    		models.Taxon
+    				.hasMany(models.Taxon, {
+    					foreignKey: "accepted_id",
+    					as: "synonyms"
+    				});
+					
+    		models.Taxon
+    				.belongsTo(models.Taxon, {
+    					foreignKey: "accepted_id",
+    					as: "acceptedTaxon"
+    				});
+			
     		}
 		
   		},
