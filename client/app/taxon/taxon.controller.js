@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$scope', 'Taxon', '$stateParams', '$timeout',
-		function($scope, Taxon, $stateParams,$timeout) {
+	.controller('TaxonCtrl', ['$scope', 'Taxon', '$stateParams', '$timeout','$modal',
+		function($scope, Taxon, $stateParams,$timeout, $modal) {
 			
 			$scope.$timeout = $timeout;
  
@@ -12,7 +12,36 @@ angular.module('svampeatlasApp')
 				$scope.taxon = Taxon.get({
 					id: $stateParams.id
 				});
-				console.log($scope.taxon)
+				console.log($scope.taxon);
+				
+				$scope.getTaxon = function(viewValue) {
+					
+					if(viewValue === ""){
+						return [];
+					} 
+					var value = (viewValue.constructor.name === 'Resource') ? viewValue.FullName : viewValue;
+
+					var params = {
+						where: {
+							TaxonName: {
+								like: value + "%"
+							},
+							RankID: {
+								$lt: $scope.taxon.RankID
+							}
+						},
+						limit: 30
+					};
+					
+					return Taxon.query(params).$promise;
+
+				};
+				
+				$scope.$watch('selectedParentTaxon', function(newval, oldval){
+					if(typeof newval === "object" && newval.constructor.name === "Resource"){
+						console.log(JSON.stringify(newval))
+					}
+				});
 				
 				$scope.taxon.$promise.then(function(){
 					$scope.$watch('taxon.images', function(newVal, oldVal) {
@@ -24,9 +53,8 @@ angular.module('svampeatlasApp')
 					 
 	
 				})
-				
-				
-			}
+		
+			};
 
 			$scope.getCurrentImage = function(){
 				return _.find($scope.taxon.images, function(img) {
@@ -91,7 +119,25 @@ angular.module('svampeatlasApp')
 			
 			$scope.isValidImage = function(img){
 				return img.uri !== undefined && img.thumburi !== undefined
+			};
+			
+			$scope.changeParent = function(){
+				
+				Taxon.setParent({
+					id: $scope.taxon._id
+				}, $scope.selectedParentTaxon ).$promise.then(function(tx){
+					
+					$scope.taxon.Parent = Taxon.get({
+					id: tx.parent_id
+				});
+					$scope.taxon.parent_id = tx.parent_id;
+				})
 			}
+			$scope.parentModal = $modal({
+				scope: $scope,
+				template: '/app/taxon/parent.modal.tpl.html',
+				show: false
+			});	
 		}
 	])
 	.filter('synonymsWithoutSelf', function() {

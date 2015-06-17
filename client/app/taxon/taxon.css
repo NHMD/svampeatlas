@@ -1,11 +1,12 @@
 
-table {
+table.parent-taxon-table {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    height: 800px; /* this can vary */
+    height: auto; /* this can vary */
+	margin-top: 10px;
 }
 
 table * {
@@ -55,7 +56,7 @@ tfoot td {
 }
 
 .carousel-indicators {
-  bottom: 0px !important;
+  bottom: -6px !important;
 }
 
 form[name="imageForm"] .title {
@@ -69,4 +70,8 @@ form[name="imageForm"] .title {
 form[name="imageForm"] > div {
   height: auto;
   padding: 5px 0;
+}
+
+.possible-funindex-syn-alert {
+	margin-top: 10px;
 }

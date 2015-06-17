@@ -559,6 +559,36 @@ exports.destroy = function(req, res) {
 	catch (handleError(res));
 };
 
+exports.setParent = function(req, res) {
+	
+	var parentTaxon = req.body;
+	
+	Taxon.find({
+		where: {
+			_id: req.params.id
+		}
+	})
+		.then(function(taxon){
+			
+			return taxon.setParent(parentTaxon._id);
+		})
+		.then(function(taxon){
+			
+			taxon.SystematicPath = parentTaxon.SystematicPath +", "+ taxon.TaxonName;
+			taxon.Path = parentTaxon.Path +", "+ taxon._id;
+			return taxon.save();
+		})
+		.then(function(taxon){
+			
+			return res.status(201).json(taxon);
+		})
+		.
+	catch (function(err){
+		
+		return res.status(500).send(err);
+	});
+};
+
 
 exports.showImages = function(req, res){
 	models.TaxonImages.findAll({

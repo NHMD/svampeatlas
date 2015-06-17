@@ -14,7 +14,7 @@
     "angular-socket-io": "~0.6.0",
     "angular-ui-router": "~0.2.10",
     "angular-translate": "2.7.0",
-    "angular-strap": "2.2.1",
+    "angular-strap": "2.2.4",
     "angular-smart-table": "",
     "angular-xeditable": "",
     "d3": "3.5.5",

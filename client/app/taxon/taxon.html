@@ -1,10 +1,22 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div class="container">
-<div class="col-md-12" >
-<h2>{{taxon.FullName}}</h2><div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	)</div>
+<div class="row">
+<div class="col-md-8" >
+<h2>{{taxon.FullName}}</h2>
+
+<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	)</div>
+<div class="alert alert-danger col-md-12" role="alert" ng-show="taxon.parent_id === null"><strong>Orphant taxon! </strong> Please add parent Taxon in the actions menu on the right. 
+
+</div>
 <h4><em>{{taxon.DKnavn}}</em></h4>
 <p><small><em>{{taxon.SystematicPath}}</em></small></p>
+<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small></p>
 </div>
+<div class="col-md-4" >
+	
+</div>
+</div>
+
 <div class="col-md-4" >
 	
 	
@@ -43,6 +55,30 @@
 </div>
 <div class="col-md-5" >
 	<div class="panel-group" role="tablist" aria-multiselectable="true" bs-collapse>
+    	  <!-- ########################################-->
+    	  <div class="panel panel-default">
+    	    <div class="panel-heading" role="tab">
+    	      <h4 class="panel-title">
+    	        <a bs-collapse-toggle>
+    	       <i class="fa fa-exclamation-triangle text-danger" ng-show=" taxon.Parent === null "></i>   Parent taxon 
+    	        </a>
+    	      </h4>
+    	    </div>
+    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+    	      <div class="panel-body">
+				  <button class="btn btn-danger" ng-show=" taxon.Parent === null " ng-click="parentModal.show()">Set parent taxon</button>
+					<table ng-show=" taxon.Parent !== null " class="table parent-taxon-table">
+
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30"><a href="/taxon/{{taxon.Parent._id}}">{{ taxon.Parent.FullName}}</a></td><td st-ratio="50"><button class="btn btn-danger" ng-click="parentModal.show()">Change parent taxon</button></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Epithet :</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.TaxonName}}</td><td st-ratio="50"></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{ taxon.Parent.Author}}</i></td><td st-ratio="50"></td></tr>
+					  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.RankName}}</td><td st-ratio="50"></td></tr>
+				
+					</table>
+    	      </div>
+    	    </div>
+    	  </div>
+    	  <!-- ########################################-->
   	  <!-- ########################################-->
   	  <div class="panel panel-default" ng-if="taxon.synonyms.length && taxon.synonyms.length >1">
   	    <div class="panel-heading" role="tab">
@@ -66,7 +102,7 @@
 	    <div class="panel-heading" role="tab">
 	      <h4 class="panel-title">
 	        <a bs-collapse-toggle>
-	          Images
+	          Images ( {{taxon.images.length}} )
 	        </a>
 	      </h4>
 	    </div>
