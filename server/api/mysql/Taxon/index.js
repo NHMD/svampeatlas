@@ -21,7 +21,7 @@ router.put('/:id', controller.update);
 router.patch('/:id', controller.update);
 router.delete('/:id', controller.destroy);
 
-
+router.post('/:id/parent', controller.setParent);
 
 router.get('/:id/images', controller.showImages);
 router.post('/:id/images', controller.addImage);

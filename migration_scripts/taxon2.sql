@@ -180,9 +180,52 @@ INSERT INTO Taxon (
 	DK_reference,
 	MycoKeyIDDKWebLink,
 	note_internal, DKnavn, vernacular_name_DE, vernacular_name_Fi, vernacular_name_FR, vernacular_name_GB, vernacular_name_NL, vernacular_name_NO, vernacular_name_SE, (select _id from Taxon t2 where t2.TaxonName = TaxonBase.FunGenus AND t2.RankName = "genus") FROM TaxonBase where taxonomic_rank = "species";
+	
+	-- create 93 species which has no taxonomic rank in Taxon Base
+	INSERT INTO Taxon (
+		RankID,
+		_id,
+		createdAt, 
+		updatedAt,
+		IsAccepted, 
+		FullName, 
+		RankName, 
+		TaxonName, 
+		Author, 
+		FunIndexCurrUseNumber, 
+		FunIndexNumber, 
+		diagnose, 
+		forvekslingsmuligheder, 
+		beskrivelse,
+		oekologi,
+		bemaerkning,
+		foersteFundIDK,
+		foersteReferenceForDK,
+		DK_reference,
+		MycoKeyIDDKWebLink,
+		internalNote,
+		 DKnavn, 
+		 vernacular_name_DE, 
+		 vernacular_name_Fi, 
+		 vernacular_name_FR, 
+		 vernacular_name_GB, 
+		 vernacular_name_NL, 
+		 vernacular_name_NO, 
+		 vernacular_name_SE,
+	 		parent_id) SELECT 0, DkIndexNumber, NOW(), NOW(), 1, FuldeNavnFraFUN, "sp.XXX", FUNSpeciesEpithet, FUNAuthor, FunIndexCurrUseNumber, FunIndexNumber, diagnose, forvekslingsmuligheder, beskrivelse,
+		AtlasOekologi,
+		atlasBem_rkning,
+		foersteFundIDK,
+		foersteReferenceForDK,
+		DK_reference,
+		MycoKeyIDDKWebLink,
+		note_internal, DKnavn, vernacular_name_DE, vernacular_name_Fi, vernacular_name_FR, vernacular_name_GB, vernacular_name_NL, vernacular_name_NO, vernacular_name_SE, (select _id from Taxon t2 where t2.TaxonName = tb.FunGenus AND t2.RankName = "genus") FROM (select t3.* from Fungi f, TaxonBase t3 where f.DkIndexNumber= t3.DkIndexNumber AND t3.taxonomic_rank = "" AND f.DkIndexNumber not in (select _id from Taxon tax) GROUP BY f.DkIndexNumber) tb;
 
 
 	UPDATE Taxon t, TaxonBase t2 SET t.accepted_id = t2.DKIndexANDSynNumber where t._id = t2.DkIndexNumber AND t2.DKIndexANDSynNumber != "";
+	
+	UPDATE Taxon set RankName = "sp." where RankName in ("species", "sp.XXX");
+	UPDATE Taxon set RankName = "gen." where RankName = "genus";
 		
 		
 		
@@ -447,3 +490,43 @@ UPDATE Taxon t, TaxonBase t2 set t.PresentInDK=t2.StatusTilstedeIDK where t._id 
 -- This query gives Taxa wich occur more than once for the same FunIndexNumber
 -- select * from Taxon where FunIndexNumber IN (select FunIndexNumber from Taxon group by FunIndexNumber having count(*) > 1) AND FunIndexNumber IS NOT NULL ORDER BY `Taxon`.`FunIndexNumber` ASC;
 
+
+-- Create Paths
+UPDATE Taxon t SET t.Path = t._id where t.RankName = "life";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "regn.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "phyl.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "subphyl.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "class.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "subclass.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "ord.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "fam.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "gen.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "sp.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "subsp.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "var.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "f.";
+UPDATE Taxon t, Taxon t2 SET t.Path = CONCAT(t2.Path, ", ", t._id) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "f.sp.";
+
+-- Create SystematicPaths for species and subspecific taxa:
+UPDATE Taxon t, Taxon t2 SET t.SystematicPath = CONCAT(t2.SystematicPath, ", ", t.TaxonName) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "sp.";
+UPDATE Taxon t, Taxon t2 SET t.SystematicPath = CONCAT(t2.SystematicPath, ", ", t.TaxonName) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "subsp.";
+UPDATE Taxon t, Taxon t2 SET t.SystematicPath = CONCAT(t2.SystematicPath, ", ", t.TaxonName) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "var.";
+UPDATE Taxon t, Taxon t2 SET t.SystematicPath = CONCAT(t2.SystematicPath, ", ", t.TaxonName) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "f.";
+UPDATE Taxon t, Taxon t2 SET t.SystematicPath = CONCAT(t2.SystematicPath, ", ", t.TaxonName) WHERE t.parent_id= t2._id AND t.parent_id IS NOT NULL AND t.RankName = "f.sp.";
+
+--RankIds
+
+UPDATE Taxon t SET RankID =0 where t.RankName = "life";
+UPDATE Taxon t SET RankID =100 where t.RankName = "regn.";
+UPDATE Taxon t SET RankID =500 where t.RankName = "phyl.";
+UPDATE Taxon t SET RankID =1000 where t.RankName = "subphyl.";
+UPDATE Taxon t SET RankID =1500 where t.RankName = "class.";
+UPDATE Taxon t SET RankID =2000 where t.RankName = "subclass.";
+UPDATE Taxon t SET RankID =3000 where t.RankName = "ord.";
+UPDATE Taxon t SET RankID =4000 where t.RankName = "fam.";
+UPDATE Taxon t SET RankID =5000 where t.RankName = "gen.";
+UPDATE Taxon t SET RankID =10000 where t.RankName = "sp.";
+UPDATE Taxon t SET RankID =11000 where t.RankName = "subsp.";
+UPDATE Taxon t SET RankID =12000 where t.RankName = "var.";
+UPDATE Taxon t SET RankID =13000 where t.RankName = "f.";
+UPDATE Taxon t SET RankID =14000 where t.RankName = "f.sp.";
