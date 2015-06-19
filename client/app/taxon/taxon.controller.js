@@ -125,12 +125,9 @@ angular.module('svampeatlasApp')
 				
 				Taxon.setParent({
 					id: $scope.taxon._id
-				}, $scope.selectedParentTaxon ).$promise.then(function(tx){
+				}, $scope.selectedParentTaxon ).$promise.then(function(taxon){
 					
-					$scope.taxon.Parent = Taxon.get({
-					id: tx.parent_id
-				});
-					$scope.taxon.parent_id = tx.parent_id;
+					$scope.taxon = taxon;
 				})
 			}
 			$scope.parentModal = $modal({

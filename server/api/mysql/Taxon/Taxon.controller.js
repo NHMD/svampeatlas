@@ -560,34 +560,66 @@ exports.destroy = function(req, res) {
 };
 
 exports.setParent = function(req, res) {
-	
+
 	var parentTaxon = req.body;
-	
+
 	Taxon.find({
 		where: {
 			_id: req.params.id
-		}
-	})
-		.then(function(taxon){
+		},
+		include: [{
+			model: models.Taxon,
+			as: "Parent"
+		}]
+	}).then(function(taxon) {
+		
+		if (taxon.Parent === null) {
 			
-			return taxon.setParent(parentTaxon._id);
-		})
-		.then(function(taxon){
-			
-			taxon.SystematicPath = parentTaxon.SystematicPath +", "+ taxon.TaxonName;
-			taxon.Path = parentTaxon.Path +", "+ taxon._id;
+			taxon.SystematicPath = parentTaxon.SystematicPath + ", " + taxon.TaxonName;
+			taxon.Path = parentTaxon.Path + ", " + taxon._id;
 			return taxon.save();
-		})
-		.then(function(taxon){
+		} else {
 			
+			return taxon
+		}
+
+	})
+		.then(function(taxon) {
+
+			var c_id = taxon._id; // Child ID
+			var np_id = parentTaxon._id; // New parent ID
+			var op_id = taxon.Parent._id; // Old parent ID
+
+			
+			var set_new_parent_sql = "CALL SET_NEW_PARENT( " + c_id + " , " + op_id + " , " + np_id + " )";
+
+			
+			return models.sequelize.query(set_new_parent_sql);
+
+		})
+		.then(function() {
+			
+			return Taxon.find({
+				where: {
+					_id: req.params.id
+				},
+				include: [{
+					model: models.Taxon,
+					as: "Parent"
+				}]
+			})
+		})
+		.then(function(taxon) {
+
 			return res.status(201).json(taxon);
 		})
 		.
-	catch (function(err){
-		
+	catch (function(err) {
+		console.log(JSON.stringify(err))
 		return res.status(500).send(err);
 	});
 };
+
 
 
 exports.showImages = function(req, res){
