@@ -193,7 +193,9 @@ function getSystematicPath(r, rankName){
 	};
 	
 	return systematicPath;
-}
+};
+
+exports.getSystematicPath = getSystematicPath;
 // Updates all genera with correct systematic path and currentuse idx
 exports.updateAllSystematicsById = function(req, res) {
 	Taxon.findAll({

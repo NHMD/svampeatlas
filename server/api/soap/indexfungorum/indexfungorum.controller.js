@@ -12,6 +12,7 @@
 var _ = require('lodash');
 var soap = require('soap');
 var wsdl = "http://www.indexfungorum.org/ixfwebservice/fungus.asmx?WSDL";
+var Taxon = require("../../mysql/Taxon/Taxon.controller");
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -97,6 +98,12 @@ exports.NameByKey = function(req, res) {
 			if (err) {
 				res.status(500).json(err.message)
 			};
+			var r = result.NameByKeyResult.NewDataSet.IndexFungorum;
+			
+			if(r !== undefined){
+			var systematicPath = Taxon.getSystematicPath(r, r.INFRASPECIFIC_x0020_RANK);
+			result.NameByKeyResult.NewDataSet.IndexFungorum.SystematicPath= systematicPath;
+		};
 				res.status(200).json(result)
 		          console.log(result);
 		      });

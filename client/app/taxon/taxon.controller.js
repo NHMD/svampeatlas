@@ -1,16 +1,22 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$scope', 'Taxon', '$stateParams', '$timeout','$modal',
-		function($scope, Taxon, $stateParams,$timeout, $modal) {
+	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', '$stateParams', '$timeout','$modal',
+		function($scope, Taxon, TaxonIntegrationService, $stateParams,$timeout, $modal) {
 			
 	
 			
 			
 			$scope.$timeout = $timeout;
  
-			
-			if ($stateParams.id) {
+			if($stateParams.id && $stateParams.id === 'new'){
+				$scope.taxon = {};
+				if(TaxonIntegrationService.taxon){
+					$scope.taxon = TaxonIntegrationService.taxon;
+					console.log(TaxonIntegrationService.taxon)
+				}
+			}
+			else if ($stateParams.id && $stateParams.id !== 'new') {
 				console.log("Found id " + $stateParams.id)
 				$scope.taxon = Taxon.get({
 					id: $stateParams.id
