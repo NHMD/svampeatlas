@@ -9,7 +9,7 @@ angular.module('svampeatlasApp')
 		return href;
     };
 })
-  .controller('FunindexCtrl',['$scope','IndexFungorum', 'MycoBank','x2js' ,function ($scope, IndexFungorum, MycoBank, x2js) {
+  .controller('FunindexCtrl',['$scope', '$state', 'IndexFungorum', 'MycoBank','x2js', 'Taxon', 'TaxonIntegrationService' ,function ($scope, $state, IndexFungorum, MycoBank, x2js, Taxon, TaxonIntegrationService) {
    
 	  $scope.handleError = function(err){
 		  $scope.errorMsg= err.status +" "+ err.statusText+" "+err.data;
@@ -17,7 +17,7 @@ angular.module('svampeatlasApp')
 	  }
 	  
 	  $scope.searchParams = { AnywhereInText: "false", MaxNumber: 100};
- 
+	 
     $scope.getDataFromFUN = function(){
 
 		$scope.rowCollection = undefined;
@@ -79,5 +79,32 @@ angular.module('svampeatlasApp')
 		
 	}
 	
+	$scope.addToTaxonBase = function(taxon){
+		
+		 Taxon.query({
+			 where : { FunIndexNumber: taxon.RECORD_x0020_NUMBER }
+		}).$promise.then(function(taxa){
+			
+			
+			
+			if(taxa.length === 1){
+				$state.go('taxon', {id: taxa[0]._id})
+				console.log("found")
+			} else if(taxa.length === 0){
+				
+			    IndexFungorum.NameByKey({NameKey: taxon.RECORD_x0020_NUMBER}).$promise.then(function(NameByKeyData){
+				
+				TaxonIntegrationService.setTaxon(NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum, $scope.dataSource);
+				$state.go('taxon', {id: 'new'})
+				console.log("its a new one...")
+					
+			    })
+				.catch($scope.handleError)
+				
+			}
+			
+		})
+		
+	};
 	
   }]);

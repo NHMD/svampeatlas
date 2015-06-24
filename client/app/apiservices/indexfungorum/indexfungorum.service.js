@@ -11,16 +11,21 @@ angular.module('svampeatlasApp')
         params: {
           controller:'namesearch'
         }
-      }
-	  },
-      {
-        EpithetSearch: {
-          method: 'GET',
-          params: {
-            controller:'epithetsearch'
-          }
+      },
+      EpithetSearch: {
+        method: 'GET',
+        params: {
+          controller:'epithetsearch'
         }
-  	  });
+      },
+      NameByKey: {
+        method: 'GET',
+        params: {
+          controller:'namebykey'
+        }
+      }
+	  
+	  });
   });
   
   

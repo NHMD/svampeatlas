@@ -75,7 +75,7 @@
 	</thead>
 	<tbody>
 	<tr ng-repeat="row in displayedCollection">
-		<td><button class="btn btn-primary">Add/Sync to our Taxonomy </button></td>
+		<td><button class="btn btn-primary" ng-click="addToTaxonBase(row)">Add/Sync to our Taxonomy </button></td>
 		<td>{{row.NAME_x0020_OF_x0020_FUNGUS}}</td>
 		<td>{{row.AUTHORS}}</td>
 		<td>{{row.INFRASPECIFIC_x0020_RANK}}</td>
@@ -122,7 +122,7 @@
 	</thead>
 	<tbody>
 	<tr ng-repeat="row in displayedCollectionMycoBank">
-		<td><button class="btn btn-primary">Add/Sync to our Taxonomy </button></td>
+		<td><button class="btn btn-primary" ng-click="addToTaxonBase(row)">Add/Sync to our Taxonomy </button></td>
 		<td>{{row.Name}}</td>
 		<td>{{row.Authors_}}</td>
 		<td>{{row.Rank_Pt_.TargetRecord.Name}}</td>
