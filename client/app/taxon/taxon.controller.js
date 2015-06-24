@@ -4,6 +4,9 @@ angular.module('svampeatlasApp')
 	.controller('TaxonCtrl', ['$scope', 'Taxon', '$stateParams', '$timeout','$modal',
 		function($scope, Taxon, $stateParams,$timeout, $modal) {
 			
+	
+			
+			
 			$scope.$timeout = $timeout;
  
 			

@@ -1,21 +1,23 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('NavbarCtrl', function ($scope, Auth) {
+  .controller('NavbarCtrl', function ($scope, Auth, $state) {
     $scope.menu = [{
       'title': 'Home',
       'state': 'main'
     },{
-      'title': 'Taxonomy',
-      'state': 'taxonomy'
-    },{
       'title': 'View Taxon tree',
       'state': 'taxonomy-tree'
-    },{
-      'title': 'Funindex',
-      'state': 'funindex'
     }];
-
+	
+	$scope.isTaxonBase = function(){
+		var TaxonBaseStates = ['taxonomy','funindex', 'taxon' ];
+		
+		return (_.find(TaxonBaseStates, function(s){
+			return s === $state.current.name;
+		})) ? "active" : "";
+		
+	}
     $scope.isCollapsed = true;
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.hasRole = Auth.hasRole;
