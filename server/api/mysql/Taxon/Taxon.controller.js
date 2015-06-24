@@ -368,6 +368,7 @@ exports.updateAllFUNIdsByNameMatch = function(req, res) {
 					
 							taxon.RankName = r.INFRASPECIFIC_x0020_RANK;
 							taxon.FunIndexNumber = r.RECORD_x0020_NUMBER;
+							taxon.GUID = r.UUID;
 							return taxon.save();
 						} else {
 							return 1;
@@ -432,7 +433,7 @@ exports.syncAllFUNIdsByNameMatch = function(req, res) {
 								taxon.FunIndexTypificationNumber = 0;
 							}
 							
-							
+							taxon.GUID = r.UUID;
 							taxon.FunIndexNumber = r.RECORD_x0020_NUMBER;
 							taxon.Author = r.AUTHORS;
 							return taxon.save();
@@ -501,7 +502,7 @@ exports.syncAllFUNIdsByNameMatchForNewParentSpecies = function(req, res) {
 							taxon.FullName = r.NAME_x0020_OF_x0020_FUNGUS +" "+r.AUTHORS;
 							taxon.FunIndexNumber = r.RECORD_x0020_NUMBER;
 							taxon.Author = r.AUTHORS;
-							
+							taxon.GUID = r.UUID;
 							return taxon.save();
 						} else {
 							return 1;

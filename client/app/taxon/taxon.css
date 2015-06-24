@@ -75,3 +75,21 @@ form[name="imageForm"] > div {
 .possible-funindex-syn-alert {
 	margin-top: 10px;
 }
+
+ .panel-heading[role=tab] .panel-title a, a[ng-click], input[type=checkbox] {
+  cursor: pointer;
+}
+
+div.x-editable-texarea {
+
+	  display: block;
+	  padding: 9.5px;
+	  margin: 0 0 10px;
+	  font-size: 13px;
+	  line-height: 1.42857143;
+	  color: #333;
+	  background-color: #f5f5f5;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	
+}
