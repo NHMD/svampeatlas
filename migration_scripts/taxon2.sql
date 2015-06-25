@@ -530,3 +530,5 @@ UPDATE Taxon t SET RankID =11000 where t.RankName = "subsp.";
 UPDATE Taxon t SET RankID =12000 where t.RankName = "var.";
 UPDATE Taxon t SET RankID =13000 where t.RankName = "f.";
 UPDATE Taxon t SET RankID =14000 where t.RankName = "f.sp.";
+
+CREATE TABLE TaxonRanks SELECT DISTINCT RankName, RankID FROM Taxon;

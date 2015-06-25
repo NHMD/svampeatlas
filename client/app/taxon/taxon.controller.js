@@ -1,74 +1,77 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', '$stateParams', '$timeout','$modal',
-		function($scope, Taxon, TaxonIntegrationService, $stateParams,$timeout, $modal) {
-			
-	
-			
-			
+	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', '$state' ,'$stateParams', '$timeout', '$modal',
+		function($scope, Taxon, TaxonIntegrationService, $state, $stateParams, $timeout, $modal) {
+
+
+
+
 			$scope.$timeout = $timeout;
- 
-			if($stateParams.id && $stateParams.id === 'new'){
+
+			if ($stateParams.id && $stateParams.id === 'new') {
 				$scope.taxon = {};
-				if(TaxonIntegrationService.taxon){
-					$scope.taxon = TaxonIntegrationService.taxon;
-					console.log(TaxonIntegrationService.taxon)
+				if (TaxonIntegrationService.taxon) {
+					TaxonIntegrationService.taxon.then(function(taxon) {
+						$scope.taxon = new Taxon(taxon);
+						$scope.taxon.PresentInDK = false;
+						console.log($scope.taxon)
+					})
+
 				}
-			}
-			else if ($stateParams.id && $stateParams.id !== 'new') {
+			} else if ($stateParams.id && $stateParams.id !== 'new') {
 				console.log("Found id " + $stateParams.id)
 				$scope.taxon = Taxon.get({
 					id: $stateParams.id
 				});
 				console.log($scope.taxon);
-				
-				$scope.getTaxon = function(viewValue) {
-					
-					if(viewValue === ""){
-						return [];
-					} 
-					var value = (viewValue.constructor.name === 'Resource') ? viewValue.FullName : viewValue;
 
-					var params = {
-						where: {
-							TaxonName: {
-								like: value + "%"
-							},
-							RankID: {
-								$lt: $scope.taxon.RankID
-							}
-						},
-						limit: 30
-					};
-					
-					return Taxon.query(params).$promise;
 
-				};
-				
-				$scope.$watch('selectedParentTaxon', function(newval, oldval){
-					if(typeof newval === "object" && newval.constructor.name === "Resource"){
-						console.log(JSON.stringify(newval))
-					}
-				});
-				
-				$scope.taxon.$promise.then(function(){
+
+				$scope.taxon.$promise.then(function() {
 					$scope.$watch('taxon.images', function(newVal, oldVal) {
-					    if(newVal !== undefined && newVal !== oldVal) {
+						if (newVal !== undefined && newVal !== oldVal) {
 							$scope.currentImage = $scope.getCurrentImage();
-					    }
-					  }, true);
-					  
-					 
-	
+						}
+					}, true);
+
 				})
-		
+
 			};
 
-			$scope.getCurrentImage = function(){
+			$scope.getTaxon = function(viewValue) {
+
+				if (viewValue === "") {
+					return [];
+				}
+				var value = (viewValue.constructor.name === 'Resource') ? viewValue.FullName : viewValue;
+
+				var params = {
+					where: {
+						TaxonName: {
+							like: value + "%"
+						},
+						RankID: {
+							$lt: $scope.taxon.RankID
+						}
+					},
+					limit: 30
+				};
+
+				return Taxon.query(params).$promise;
+
+			};
+
+			$scope.$watch('selectedParentTaxon', function(newval, oldval) {
+				if (typeof newval === "object" && newval.constructor.name === "Resource") {
+					console.log(JSON.stringify(newval))
+				}
+			});
+
+			$scope.getCurrentImage = function() {
 				return _.find($scope.taxon.images, function(img) {
-														return img.active === true;
-															});
+					return img.active === true;
+				});
 			}
 
 			$scope.isValidYear = function(year) {
@@ -78,72 +81,87 @@ angular.module('svampeatlasApp')
 					return "You must enter a valid year";
 				}
 			}
-			
-			$scope.deleteImage = function(){
-				
-			return	Taxon.deleteImage({
-									id: $scope.taxon._id,
-									imgid: $scope.currentImage._id
-								}).$promise.then(function(){
-									_.remove($scope.taxon.images, function(img) {
-									  return img._id = $scope.currentImage._id;
-									});
-									
-								});
+
+			$scope.deleteImage = function() {
+
+				return Taxon.deleteImage({
+					id: $scope.taxon._id,
+					imgid: $scope.currentImage._id
+				}).$promise.then(function() {
+					_.remove($scope.taxon.images, function(img) {
+						return img._id = $scope.currentImage._id;
+					});
+
+				});
 			};
-			
-			$scope.newPhoto = function(){
+
+			$scope.newPhoto = function() {
 				$scope.currentImage = {}
 				$scope.imageForm.$show();
 			}
-			
-			$scope.editImage = function(){		
+
+			$scope.editImage = function() {
 				$scope.currentImage = $scope.getCurrentImage();
-				$timeout(function(){
+				$timeout(function() {
 					$scope.imageForm.$show();
-				}, 0)	
-				
+				}, 0)
+
 			}
-			
-			$scope.saveOrUpdateImage = function(){	
-				if(!$scope.imageForm.$dirty)	{
+
+			$scope.saveOrUpdateImage = function() {
+				if (!$scope.imageForm.$dirty) {
 					return;
-				}
-				else if($scope.currentImage._id !== undefined && $scope.isValidImage($scope.currentImage)){
-							   
+				} else if ($scope.currentImage._id !== undefined && $scope.isValidImage($scope.currentImage)) {
+
 					Taxon.updateImage({
-										id: $scope.taxon._id,
-										imgid: $scope.currentImage._id
-									}, $scope.currentImage);
-				} else if($scope.isValidImage($scope.currentImage)) {
+						id: $scope.taxon._id,
+						imgid: $scope.currentImage._id
+					}, $scope.currentImage);
+				} else if ($scope.isValidImage($scope.currentImage)) {
 					Taxon.addImage({
 						id: $scope.taxon._id
-					}, _.merge($scope.currentImage, {taxon_id: $scope.taxon._id}) ).$promise.then(function(image){
-						
+					}, _.merge($scope.currentImage, {
+						taxon_id: $scope.taxon._id
+					})).$promise.then(function(image) {
+
 						$scope.taxon.images.push(image);
 					})
-				} 	
-				
+				}
+
 			}
-			
-			$scope.isValidImage = function(img){
+
+			$scope.isValidImage = function(img) {
 				return img.uri !== undefined && img.thumburi !== undefined
 			};
 			
-			$scope.changeParent = function(){
+			$scope.saveNewTaxon = function(taxon){
 				
-				Taxon.setParent({
-					id: $scope.taxon._id
-				}, $scope.selectedParentTaxon ).$promise.then(function(taxon){
-					
-					$scope.taxon = taxon;
+				taxon.$save().then(function(t){
+					$scope.taxon = t;
+					$state.go('taxon', {id: taxon._id}, {inherit: false, notify: false});
 				})
 			}
+			
+			$scope.changeParent = function() {
+				if ($scope.taxon._id === undefined) {
+					$scope.taxon.Parent = $scope.selectedParentTaxon;
+				} else {
+
+					Taxon.setParent({
+						id: $scope.taxon._id
+					}, $scope.selectedParentTaxon).$promise.then(function(taxon) {
+
+						$scope.taxon = taxon;
+						
+					})
+				};
+			}
+
 			$scope.parentModal = $modal({
 				scope: $scope,
 				template: '/app/taxon/parent.modal.tpl.html',
 				show: false
-			});	
+			});
 		}
 	])
 	.filter('synonymsWithoutSelf', function() {
