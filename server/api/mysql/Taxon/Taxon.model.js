@@ -46,6 +46,7 @@ module.exports = function(sequelize, DataTypes) {
     IsAccepted: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+		defaultValue: true
     },    
     FunIndexCurrUseNumber: {
       type: DataTypes.INTEGER(11),

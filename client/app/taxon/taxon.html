@@ -6,22 +6,28 @@
 </div>	
 	    	<div class="row">
 			<div class="col-md-8" >
-			<h2>{{taxon.FullName}}</h2>
+			<h2>{{taxon.FullName}} <button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon</button></h2>
 
 			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	)</div>
 			<div class="alert alert-danger col-md-12" role="alert" ng-show="taxon.parent_id === null"><strong>Orphant taxon! </strong> Please add parent Taxon in the actions menu on the right. 
 
 			</div>
-			<h4><em>{{taxon.DKnavn}}</em></h4>
+			
+			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.DKnavn"  onaftersave="taxon.$update()"><em>{{ taxon.DKnavn || 'n/a' }}</em></a> </h4> <div class="checkbox"><label>Present in DK
+    <input type="checkbox" ng-model="taxon.PresentInDK">
+  </label></div>
+			
+			
 			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
 			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small></p>
 			</div>
 			<div class="col-md-4" >
-	
+				
 			</div>
 			</div>
 
-			<div class="col-md-4" >
+<div class="row">
+			<div class="col-md-5" ng-show="taxon._id !== undefined">
 	
 	
 					<label class="control-label" for="diagnose">Diagnose</label>
@@ -54,10 +60,10 @@
 			          </a>
 		
 			</div>
-			<div class="col-md-3" >
+			<div class="col-md-1" ng-show="taxon._id !== undefined">
 
 			</div>
-			<div class="col-md-5" >
+			<div class="col-md-6" >
 				<div class="panel-group" role="tablist" aria-multiselectable="true" bs-collapse>
 			    	  <!-- ########################################-->
 			    	  <div class="panel panel-default">
@@ -70,6 +76,9 @@
 			    	    </div>
 			    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			    	      <div class="panel-body">
+							  <div class="alert alert-warning" role="alert" ng-show="taxon._id === undefined && taxon.Parent !== null && selectedParentTaxon === undefined"><strong>Suggested parent taxon.</strong> Please review this and change it if neccesary.</div>
+							  <div class="alert alert-danger" role="alert" ng-show="taxon._id === undefined && taxon.Parent === null"><strong>No parent taxon selected.</strong> Please select a parent taxon before saving.</div>
+							  
 							  <button class="btn btn-danger" ng-show=" taxon.Parent === null " ng-click="parentModal.show()">Set parent taxon</button>
 								<table ng-show=" taxon.Parent !== null " class="table parent-taxon-table">
 
@@ -84,7 +93,7 @@
 			    	  </div>
 			    	  <!-- ########################################-->
 			  	  <!-- ########################################-->
-			  	  <div class="panel panel-default" ng-if="taxon.synonyms.length && taxon.synonyms.length >1">
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined && taxon.synonyms.length && taxon.synonyms.length >1">
 			  	    <div class="panel-heading" role="tab">
 			  	      <h4 class="panel-title">
 			  	        <a bs-collapse-toggle>
@@ -102,7 +111,7 @@
 			  	  </div>
 			  	  <!-- ########################################-->
 				  <!-- ########################################-->
-				  <div class="panel panel-default">
+				  <div class="panel panel-default" ng-if="taxon._id !== undefined">
 				    <div class="panel-heading" role="tab">
 				      <h4 class="panel-title">
 				        <a bs-collapse-toggle>
@@ -180,7 +189,7 @@
 				</div>
 				</div>
 			
-			
+	</div>		
 	   
 	
 <div class="row">

@@ -527,10 +527,62 @@ exports.syncAllFUNIdsByNameMatchForNewParentSpecies = function(req, res) {
 
 // Creates a new taxon in the DB.
 exports.create = function(req, res) {
-	Taxon.create(req.body)
-		.then(responseWithResult(res, 201))
-	.catch (handleError(res));
+	var parent_id = req.body.Parent._id;
+	var newTaxon = req.body;
+	newTaxon.parent_id = parent_id;
+	newTaxon.Path = "XXXXX"; // a dummy path which will be changed once we have the ID - everything is wrapped in a transaction.
+	models.sequelize.transaction(function(t) {
+
+		return Taxon.find({
+			where: {
+				_id: parent_id
+			}
+		}, {
+			transaction: t
+		})
+			.then(function(parent) {
+
+				return [Taxon.create(newTaxon, {
+					transaction: t
+				}), parent];
+			})
+			.spread(function(taxon, parent) {
+				taxon.SystematicPath = parent.SystematicPath + ", " + taxon.TaxonName;
+				taxon.Path = parent.Path + ", " + taxon._id;
+				taxon.accepted_id = taxon._id;
+				return taxon.save({
+					transaction: t
+				});
+			})
+
+
+	})
+		.then(function(taxon) {
+			return Taxon.find({
+				where: {
+					_id: taxon._id
+				},
+				include: [{
+						model: models.Taxon,
+						as: "Parent"
+					}, {
+						model: models.Taxon,
+						as: "acceptedTaxon"
+					}
+
+				]
+			})
+		})
+
+	.then(function(taxon) {
+
+		return res.status(201).json(taxon);
+	})
+		.
+	catch (handleError(res));
 };
+
+
 
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
