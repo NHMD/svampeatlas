@@ -1,5 +1,5 @@
 'use strict';
-
+var _ = require('lodash');
 var validatePresenceOf = function(value) {
   return value && value.length;
 };
@@ -159,7 +159,7 @@ module.exports = function(sequelize, DataTypes) {
 
   }, {
     	tableName: 'Taxon',
-    //	timestamps: false,
+    	timestamps: true,
     	freezeTableName: true,
     	classMethods: {
 		
@@ -208,31 +208,9 @@ module.exports = function(sequelize, DataTypes) {
        * Pre-save hooks
        */
       hooks: {
-  		/*
-        beforeBulkCreate: function(Taxons, fields, fn) {
-          var totalUpdated = 0;
-          Taxons.forEach(function(Taxon) {
-            Taxon.updatePassword(function(err) {
-              if (err) {
-                return fn(err);
-              }
-              totalUpdated += 1;
-              if (totalUpdated === Taxons.length) {
-                return fn();
-              }
-            });
-          });
-        },
-        beforeCreate: function(Taxon, fields, fn) {
-          Taxon.updatePassword(fn);
-        },
-        beforeUpdate: function(Taxon, fields, fn) {
-          if (Taxon.changed('password')) {
-            Taxon.updatePassword(fn);
-          }
-        }
+
 	  
-  	  */
+  	  
       },
 
       /**

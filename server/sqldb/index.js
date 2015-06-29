@@ -31,6 +31,13 @@ db.User = db.sequelize.import(path.join(
 ));
 
 // Insert models below
+db.TaxonLog = db.sequelize.import(path.join(
+  config.root,
+  'server',
+  'api',
+  'TaxonLog',
+  'TaxonLog.model'
+));
 db.TaxonImages = db.sequelize.import(path.join(
   config.root,
   'server',

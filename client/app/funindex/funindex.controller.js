@@ -103,11 +103,12 @@ angular.module('svampeatlasApp')
 						})
 						
 					} else if (taxa.length === 0) {
-
+						TaxonIntegrationService.dataSource = $scope.dataSource;
+						
 						IndexFungorum.NameByKey({
 							NameKey: taxon.RECORD_x0020_NUMBER
 						}).$promise.then(function(NameByKeyData) {
-
+							
 							TaxonIntegrationService.setTaxon(NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum, $scope.dataSource);
 							$state.go('taxon', {
 								id: 'new'
@@ -143,14 +144,14 @@ angular.module('svampeatlasApp')
 						
 							var match = regex.exec(taxon.CurrentName_Pt_);
 							
-							taxon.FunIndexCurrUseNumber = (match !== "") ? match[1] : taxon.MycoBankNr_;
+							taxon.FunIndexCurrUseNumber = (match) ? match[1] : taxon.MycoBankNr_;
 							
 							regex = /<Name>(.*?)<\/Name>/ig;
 						
 							match = regex.exec(taxon.Rank_Pt_);
 							
 							
-							taxon.RankName = (match !== "") ? match[1] : undefined;
+							taxon.RankName = (match) ? match[1] : undefined;
 							
 							TaxonIntegrationService.setTaxon(taxon, $scope.dataSource);
 							
