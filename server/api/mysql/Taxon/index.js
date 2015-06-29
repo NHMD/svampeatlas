@@ -16,17 +16,17 @@ router.get('/tree', controller.showTree);
 router.get('/:id', controller.show);
 router.get('/:id/updatesystematics', controller.updateSystematics);
 
-router.post('/', controller.create);
-router.put('/:id', controller.update);
-router.patch('/:id', controller.update);
-router.delete('/:id', controller.destroy);
+router.post('/', auth.hasRole('taxonomyadmin'), controller.create);
+router.put('/:id',auth.hasRole('taxonomyadmin'),  controller.update);
+router.patch('/:id',auth.hasRole('taxonomyadmin'),  controller.update);
+router.delete('/:id',auth.hasRole('taxonomyadmin'),  controller.destroy);
 
-router.post('/:id/parent', controller.setParent);
+router.post('/:id/parent', auth.hasRole('taxonomyadmin'), controller.setParent);
 
 router.get('/:id/images', controller.showImages);
-router.post('/:id/images', controller.addImage);
-router.put('/:id/images/:imgid', controller.updateImage);
-router.delete('/:id/images/:imgid', controller.deleteImage);
+router.post('/:id/images',auth.hasRole('taxonomyadmin'),  controller.addImage);
+router.put('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  controller.updateImage);
+router.delete('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  controller.deleteImage);
 
 
 

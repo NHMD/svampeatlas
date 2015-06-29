@@ -554,10 +554,21 @@ exports.create = function(req, res) {
 					transaction: t
 				});
 			})
+			.then(function(taxon) {
+		
+				return [taxon, models.TaxonLog.create({
+					eventname: "New taxon",
+					description: taxon.FullName + " (id: "+taxon._id+") was added to our database. Datasource: "+newTaxon.dataSource,
+					user_id: req.user._id,
+					taxon_id: taxon._id
+			
+				})]
+			})
 
 
 	})
-		.then(function(taxon) {
+	
+		.spread(function(taxon) {
 			return Taxon.find({
 				where: {
 					_id: taxon._id
@@ -586,17 +597,41 @@ exports.create = function(req, res) {
 
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
-	if (req.body._id) {
-		delete req.body._id;
-	}
+	
 	Taxon.find({
 		where: {
 			_id: req.params.id
 		}
 	})
-		.then(handleEntityNotFound(res))
-		.then(saveUpdates(req.body))
-		.then(responseWithResult(res))
+	.then(function(taxon){
+		if(!taxon){
+			res.send(404);
+		};
+		for(var i=0; i< taxon.attributes.length; i++){
+			taxon.set(taxon.attributes[i] , req.body[taxon.attributes[i]])
+		}
+		var changed = taxon.changed().toString();
+		
+		return [taxon.save(), changed];
+		
+	})
+	.spread(function(taxon, changed){
+	
+		return [taxon, models.TaxonLog.create({
+			eventname: "Updated taxon",
+			description: "Field(s): "+changed,
+			user_id: req.user._id,
+			taxon_id: taxon._id
+			
+		})]
+		
+	})
+	.spread(function(taxon){
+	
+		return res.status(204).json(taxon);
+		
+	})
+		
 		.
 	catch (handleError(res));
 };
@@ -649,8 +684,18 @@ exports.setParent = function(req, res) {
 			var set_new_parent_sql = "CALL SET_NEW_PARENT( " + c_id + " , " + op_id + " , " + np_id + " )";
 
 			
-			return models.sequelize.query(set_new_parent_sql);
+			return [taxon, parentTaxon, taxon.Parent, models.sequelize.query(set_new_parent_sql)];
 
+		})
+		.spread(function(taxon, newParent, oldParent) {
+			
+			return models.TaxonLog.create({
+				eventname: "Changed parent taxon",
+				description: taxon.FullName + " (id: "+taxon._id+") changed parent from "+oldParent.FullName+ " (id: "+oldParent._id+") to "+newParent.FullName+ " (id: "+newParent._id+")",
+				user_id: req.user._id,
+				taxon_id: taxon._id
+				
+			})
 		})
 		.then(function() {
 			

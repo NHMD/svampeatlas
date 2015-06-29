@@ -15,6 +15,7 @@ angular.module('svampeatlasApp')
 						}
 					}).$promise.then(function(parents) {
 						var thisTaxon = {};
+						thisTaxon.dataSource = source;
 						thisTaxon.SystematicPath = taxon.SystematicPath + ", " + that.getTaxonName(taxon);
 						thisTaxon.FullName = taxon.NAME_x0020_OF_x0020_FUNGUS + " " + taxon.AUTHORS;
 						thisTaxon.Author = taxon.AUTHORS;
@@ -58,6 +59,7 @@ angular.module('svampeatlasApp')
 					
 					this.taxon = Taxon.query(query).$promise.then(function(parents) {
 						var thisTaxon = {};
+						thisTaxon.dataSource = source;
 						thisTaxon.SystematicPath = taxon.SystematicPath + ", " + taxon.Epithet_;
 						thisTaxon.FullName = taxon.Name + " " + taxon.Authors_;
 						thisTaxon.Author = taxon.Authors_;
