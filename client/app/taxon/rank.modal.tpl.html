@@ -1,0 +1,64 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title">Change taxon rank</h4></div>
+				<div class="modal-body">
+					<tabset  type="wizard">
+					    <tab heading="Change parent">
+							<form>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in getTaxon($viewValue)" data-placement="auto" placeholder="Enter taxon name" bs-typeahead>
+					</form>	
+					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
+
+					</div>
+					<table ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" class="table parent-taxon-table">
+
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.FullName}}</td><td st-ratio="50"><a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexNumber}}" target="_BLANK" class="btn btn-primary" > <i class="fa fa-link"></i> View on Index Fungorum</a></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Epithet :</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.TaxonName}}</td><td st-ratio="50"></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{$parent.selectedParentTaxon.Author}}</i></td><td st-ratio="50"></td></tr>
+					  <tr ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.RankName}}</td><td st-ratio="50"></td></tr>
+				
+					</table>	
+				
+				<div class="modal-footer">
+					<div class="col-md-12">
+					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> <button type="button" class="btn btn-success pull-right" ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" ng-click="changeParent(); $hide()"> <i class="fa fa-check"></i> Change parent taxon!</button> 
+					</div>
+				</div>
+			</tab>
+					    <tab heading="Choose rank">
+						<div class="btn-group" ng-model="selectedRank.newRank" bs-radio-group>
+							<label  class="btn btn-default" ng-repeat="rank in RankService.getLowerRanks(taxon.Parent.RankID)"><input type="radio" class="btn btn-default" name="selectedRank"  ng-value="rank"> {{rank.RankName}}</label>
+						
+						</div>
+					</tab>
+						<tab heading="Choose super taxon level" ng-show="selectedRank.newRank.flexible === true">Short </tab>
+					    <tab heading="Long Justified">Long Labeled Justified content</tab>
+					  </tabset>
+			<!--		<form>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in getTaxon($viewValue)" data-placement="auto" placeholder="Enter taxon name" bs-typeahead>
+					</form>	
+					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
+
+					</div>
+					<table ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" class="table parent-taxon-table">
+
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.FullName}}</td><td st-ratio="50"><a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexNumber}}" target="_BLANK" class="btn btn-primary" > <i class="fa fa-link"></i> View on Index Fungorum</a></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Epithet :</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.TaxonName}}</td><td st-ratio="50"></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{$parent.selectedParentTaxon.Author}}</i></td><td st-ratio="50"></td></tr>
+					  <tr ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.RankName}}</td><td st-ratio="50"></td></tr>
+				
+					</table>
+			
+			
+				
+				<div class="modal-footer">
+					<div class="col-md-12">
+					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> <button type="button" class="btn btn-success pull-right" ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" ng-click="changeParent(); $hide()"> <i class="fa fa-check"></i> Change parent taxon!</button> 
+					</div>
+				</div> -->
+			
+		</div>
+	</div>
