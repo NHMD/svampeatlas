@@ -1,11 +1,16 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', '$state' ,'$stateParams', '$timeout', '$modal',
-		function($scope, Taxon, TaxonIntegrationService, $state, $stateParams, $timeout, $modal) {
-
-
-
+	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', 'RankService', '$state' ,'$stateParams', '$timeout', '$modal',
+		function($scope, Taxon, TaxonIntegrationService, RankService, $state, $stateParams, $timeout, $modal) {
+			
+			
+			$scope.$watch('selectedRank.newRank', function(o,n){
+				
+				console.log(o);
+			})
+			
+			$scope.RankService = RankService;
 
 			$scope.$timeout = $timeout;
 
@@ -25,8 +30,12 @@ angular.module('svampeatlasApp')
 					id: $stateParams.id
 				});
 				console.log($scope.taxon);
-
-
+				
+				$scope.taxon.$promise.then(function() {
+					$scope.selectedRank = {
+						newRank : RankService.getRank($scope.taxon.RankID)
+					}
+				});
 
 				$scope.taxon.$promise.then(function() {
 					$scope.$watch('taxon.images', function(newVal, oldVal) {
@@ -55,6 +64,7 @@ angular.module('svampeatlasApp')
 							$lt: $scope.taxon.RankID
 						}
 					},
+					order: "RankID DESC", 
 					limit: 30
 				};
 
@@ -162,6 +172,26 @@ angular.module('svampeatlasApp')
 				template: '/app/taxon/parent.modal.tpl.html',
 				show: false
 			});
+			$scope.rankModal = $modal({
+				scope: $scope,
+				template: '/app/taxon/rank.modal.tpl.html',
+				show: false
+			});
+		/*	$scope.ranktabs = [
+			    { title:'Change parent',  active: true},
+			    { title:'Choose new rank'   },
+				{ title:'Taxon'  },
+				{ title:'Log'}
+			  ];
+			
+			  
+			
+			$scope.selectRankTab = function(tab){
+				
+				
+				
+			}
+			*/
 		}
 	])
 	.filter('synonymsWithoutSelf', function() {
