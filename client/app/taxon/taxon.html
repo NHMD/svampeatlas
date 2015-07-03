@@ -19,7 +19,7 @@
 			
 			
 			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
-			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Change rank</button></p>
+			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon.RankName === 'sp.' || taxon.RankName === 'gen.'" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button></p>
 			</div>
 			<div class="col-md-4" >
 				
@@ -122,8 +122,8 @@
 				    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 				      <div class="panel-body">
 					    <div>
-					      <carousel interval="">
-					        <slide ng-repeat="slide in taxon.images" active="slide.active">
+					      <carousel disable-ng-animate interval="">
+					        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
 					          <img ng-src="{{slide.uri}}" style="margin:auto;">
 					          <div class="carousel-caption">
          

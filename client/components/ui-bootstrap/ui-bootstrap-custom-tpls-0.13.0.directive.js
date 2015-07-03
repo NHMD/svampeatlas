@@ -310,7 +310,7 @@ angular.module('ui.bootstrap.tabs', [])
 *
 */
 angular.module('ui.bootstrap.carousel', [])
-.controller('CarouselController', ['$scope', '$interval', '$animate', function ($scope, $interval, $animate) {
+.controller('CarouselController', ['$scope', '$interval', '$animate', '$timeout' , function ($scope, $interval, $animate, $timeout) {
   var self = this,
     slides = self.slides = $scope.slides = [],
     currentIndex = -1,
@@ -379,18 +379,23 @@ angular.module('ui.bootstrap.carousel', [])
     var newIndex = (self.getCurrentIndex() + 1) % slides.length;
 
     //Prevent this user-triggered transition from occurring if there is already one in progress
-    if (!$scope.$currentTransition) {
-      return self.select(getSlideByIndex(newIndex), 'next');
-    }
+  	  $timeout(function(){
+		  if (!$scope.$currentTransition) {
+		  return self.select(getSlideByIndex(newIndex), 'next');
+	  }
+  
+    });
   };
 
   $scope.prev = function() {
     var newIndex = self.getCurrentIndex() - 1 < 0 ? slides.length - 1 : self.getCurrentIndex() - 1;
 
     //Prevent this user-triggered transition from occurring if there is already one in progress
+    $timeout(function(){
     if (!$scope.$currentTransition) {
       return self.select(getSlideByIndex(newIndex), 'prev');
     }
+	 });
   };
 
   $scope.isActive = function(slide) {

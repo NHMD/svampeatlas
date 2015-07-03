@@ -1,17 +1,35 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', 'RankService', '$state' ,'$stateParams', '$timeout', '$modal',
-		function($scope, Taxon, TaxonIntegrationService, RankService, $state, $stateParams, $timeout, $modal) {
+	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', '$state' ,'$stateParams', '$timeout', '$modal',
+		function($scope, Taxon, TaxonIntegrationService, $state, $stateParams, $timeout, $modal) {
 			
-			
-			$scope.$watch('selectedRank.newRank', function(o,n){
+			$scope.changeRankAndSave = function(taxon){
 				
-				console.log(o);
-			})
+				taxon.RankName = $scope.superrank;
+				taxon.RankID = $scope.selectedSuperRankID.superrankId;
+				taxon.FunIndexNumber = 0;
+				taxon.FunIndexCurrUseNumber =0;
+				taxon.FunIndexTypificationNumber = 0;
+				taxon.GUID = "";
+				if($scope.superrank === "superspecies"){
+					taxon.FullName = taxon.Parent.TaxonName + " "+ taxon.TaxonName ;
+				};
+				if($scope.superrank === "supergenus"){
+					taxon.FullName = taxon.TaxonName ;
+				};
+				
+				//$scope.selectedSuperRankID = undefined;
+				
+				taxon.$update().then(function(t){
+					$scope.taxon = t;
+					$state.go('taxon', {id: taxon._id}, {inherit: false, notify: false});
+				})
+				
+			};
 			
-			$scope.RankService = RankService;
-
+			
+			
 			$scope.$timeout = $timeout;
 
 			if ($stateParams.id && $stateParams.id === 'new') {
@@ -32,9 +50,43 @@ angular.module('svampeatlasApp')
 				console.log($scope.taxon);
 				
 				$scope.taxon.$promise.then(function() {
-					$scope.selectedRank = {
-						newRank : RankService.getRank($scope.taxon.RankID)
-					}
+					
+					if($scope.taxon.RankName === "sp."){
+						$scope.superrank = "superspecies";
+					} else if($scope.taxon.RankName ==="gen."){
+						$scope.superrank = "supergenus";
+					};
+					
+					
+					
+				$scope.taxon.Children = Taxon.query(
+					{where : {parent_id: $scope.taxon._id},
+					 order: "RankID ASC", 
+					 limit: 10
+				}).$promise.then(function(children){
+					if(children.length >= 1){
+						$scope.childRank = children[0].RankID;
+						if($scope.taxon.RankID === 5000 && $scope.childRank >= 10000){
+							$scope.childName = "Genus"
+							$scope.childRank = 5000;
+						} else if($scope.taxon.RankID === 10000 && $scope.childRank >= 10000){
+							$scope.childName = "Species"
+							$scope.childRank = 10000;
+						} else {
+							$scope.childName = children[0].TaxonName;
+						}
+						
+					} else {
+						if($scope.superrank === "superspecies"){
+							$scope.childRank = 10000;
+							$scope.childName = "Species";
+						} else if($scope.superrank === "supergenus"){
+							$scope.childRank = 5000;
+							$scope.childName = "Genus";
+						} ;
+					};
+					$scope.selectedSuperRankID = { superrankId:   ( $scope.taxon.Parent.RankID + $scope.childRank) /2 };
+				})
 				});
 
 				$scope.taxon.$promise.then(function() {
@@ -71,6 +123,8 @@ angular.module('svampeatlasApp')
 				return Taxon.query(params).$promise;
 
 			};
+			
+		
 
 			$scope.$watch('selectedParentTaxon', function(newval, oldval) {
 				if (typeof newval === "object" && newval.constructor.name === "Resource") {
