@@ -616,14 +616,22 @@ exports.update = function(req, res) {
 		
 	})
 	.spread(function(taxon, changed){
-	
-		return [taxon, models.TaxonLog.create({
+		if(changed.indexOf("RankID") > -1){
+			return [taxon, models.TaxonLog.create({
+				eventname: "Changed taxonomic rank",
+				description: "New rank: "+taxon.RankName+", rank level: "+taxon.RankID,
+				user_id: req.user._id,
+				taxon_id: taxon._id
+			
+			})]
+		} else {
+			return [taxon, models.TaxonLog.create({
 			eventname: "Updated taxon",
 			description: "Field(s): "+changed,
 			user_id: req.user._id,
 			taxon_id: taxon._id
 			
-		})]
+		})]}
 		
 	})
 	.spread(function(taxon){
