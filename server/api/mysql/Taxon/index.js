@@ -23,6 +23,8 @@ router.delete('/:id',auth.hasRole('taxonomyadmin'),  controller.destroy);
 
 router.post('/:id/parent', auth.hasRole('taxonomyadmin'), controller.setParent);
 
+
+
 router.get('/:id/images', controller.showImages);
 router.post('/:id/images',auth.hasRole('taxonomyadmin'),  controller.addImage);
 router.put('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  controller.updateImage);

@@ -10,7 +10,8 @@ angular.module('svampeatlasApp', [
 	 'smart-table',
 	'xeditable',
 	'xml',
-	'ui.bootstrap'
+	'ui.bootstrap',
+	'ngMaterial'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
@@ -19,6 +20,7 @@ angular.module('svampeatlasApp', [
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
 	$httpProvider.interceptors.push('xmlHttpInterceptor');
+	
   })
 
   .factory('authInterceptor', function($rootScope, $q, $cookieStore, $injector) {
