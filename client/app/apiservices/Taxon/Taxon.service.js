@@ -51,6 +51,14 @@ angular.module('svampeatlasApp')
 				},
 				url: '/api/taxons/:id/parent',
 				isArray: false
+			},
+			'addSynonym': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/synonyms',
+				isArray: false
 			}
 		});
 

@@ -20,6 +20,7 @@ Promise.promisifyAll(soap);
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
 	return function(err) {
+		console.log(err);
 		res.status(statusCode).send(err);
 	};
 }
@@ -574,6 +575,12 @@ exports.create = function(req, res) {
 					_id: taxon._id
 				},
 				include: [{
+						model: models.TaxonImages,
+						as: "images"
+					}, {
+						model: models.Taxon,
+						as: "synonyms"
+					}, {
 						model: models.Taxon,
 						as: "Parent"
 					}, {
@@ -624,6 +631,14 @@ exports.update = function(req, res) {
 				taxon_id: taxon._id
 			
 			})]
+		} else if(changed.indexOf("accepted_id") > -1){
+			return [taxon, models.TaxonLog.create({
+				eventname: "Detached synonym",
+				description: taxon.FullName+" is no longer a synonym ",
+				user_id: req.user._id,
+				taxon_id: taxon._id
+			
+			})]
 		} else {
 			return [taxon, models.TaxonLog.create({
 			eventname: "Updated taxon",
@@ -634,9 +649,31 @@ exports.update = function(req, res) {
 		})]}
 		
 	})
-	.spread(function(taxon){
+	.spread(function(taxon) {
+		return Taxon.find({
+			where: {
+				_id: taxon._id
+			},
+			include: [{
+					model: models.TaxonImages,
+					as: "images"
+				}, {
+					model: models.Taxon,
+					as: "synonyms"
+				}, {
+					model: models.Taxon,
+					as: "Parent"
+				}, {
+					model: models.Taxon,
+					as: "acceptedTaxon"
+				}
+
+			]
+		})
+	})
+	.then(function(taxon){
 	
-		return res.status(204).json(taxon);
+		return res.status(200).json(taxon);
 		
 	})
 		
@@ -654,6 +691,55 @@ exports.destroy = function(req, res) {
 		.then(handleEntityNotFound(res))
 		.then(removeEntity(res))
 		.
+	catch (handleError(res));
+};
+
+exports.addSynonym = function(req, res) {
+	var synonymTaxon = req.body;
+	
+	Taxon.update(
+	    { accepted_id: req.params.id } /* set attributes' value */,
+	    { where: { accepted_id: synonymTaxon._id }} /* where criteria */
+	  ).then(function(affectedRows) {
+	  
+		  			return [synonymTaxon, models.TaxonLog.create({
+		  				eventname: "Synonymised taxon",
+		  				description: "New accepted taxon id: "+req.params.id + ", affected "+affectedRows+" taxa (including existing synonyms of "+synonymTaxon.FullName+")",
+		  				user_id: req.user._id,
+		  				taxon_id: synonymTaxon._id
+			
+		  			})]
+		  		
+		
+	  })
+	.spread(function(taxon) {
+		return Taxon.find({
+			where: {
+				_id: taxon._id
+			},
+			include: [{
+					model: models.TaxonImages,
+					as: "images"
+				}, {
+					model: models.Taxon,
+					as: "synonyms"
+				}, {
+					model: models.Taxon,
+					as: "Parent"
+				}, {
+					model: models.Taxon,
+					as: "acceptedTaxon"
+				}
+
+			]
+
+		})
+	})
+	  .then(function(taxon){
+	
+		return res.status(201).json(taxon);
+		
+	}).
 	catch (handleError(res));
 };
 
@@ -712,9 +798,20 @@ exports.setParent = function(req, res) {
 					_id: req.params.id
 				},
 				include: [{
-					model: models.Taxon,
-					as: "Parent"
-				}]
+						model: models.TaxonImages,
+						as: "images"
+					}, {
+						model: models.Taxon,
+						as: "synonyms"
+					}, {
+						model: models.Taxon,
+						as: "Parent"
+					}, {
+						model: models.Taxon,
+						as: "acceptedTaxon"
+					}
+
+				]
 			})
 		})
 		.then(function(taxon) {

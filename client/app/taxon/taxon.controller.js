@@ -23,7 +23,8 @@ angular.module('svampeatlasApp')
 				
 				taxon.$update().then(function(t){
 					$scope.taxon = t;
-					$state.go('taxon', {id: taxon._id}, {inherit: false, notify: false});
+					//$state.go('taxon', {id: taxon._id}, {inherit: false, notify: false});
+					$scope.rankModal.hide();
 				})
 				
 			};
@@ -85,7 +86,7 @@ angular.module('svampeatlasApp')
 							$scope.childName = "Genus";
 						} ;
 					};
-					$scope.selectedSuperRankID = { superrankId:   ( $scope.taxon.Parent.RankID + $scope.childRank) /2 };
+					$scope.selectedSuperRankID = ($scope.taxon.RankName === "superspecies" || $scope.taxon.RankName === "supergenus") ? { superrankId :   $scope.taxon.RankID  } : { superrankId:   ( $scope.taxon.Parent.RankID + $scope.childRank) /2 };
 				})
 				});
 
@@ -100,14 +101,16 @@ angular.module('svampeatlasApp')
 
 			};
 
-			$scope.getTaxon = function(viewValue) {
-
+			$scope.getTaxon = function(viewValue, type) {
+				
 				if (viewValue === "") {
 					return [];
 				}
 				var value = (viewValue.constructor.name === 'Resource') ? viewValue.FullName : viewValue;
-
-				var params = {
+				
+				var params;
+				if(type === "parent"){
+					params = {
 					where: {
 						TaxonName: {
 							like: value + "%"
@@ -119,6 +122,35 @@ angular.module('svampeatlasApp')
 					order: "RankID DESC", 
 					limit: 30
 				};
+			} else if(type === "synonym") {
+				
+				var RankID = {};
+				
+				if($scope.taxon.RankName === "var."){
+					RankID['$between'] = [10000, 15000];
+				} else if ($scope.taxon.RankName === "sp."){
+					RankID['$between'] = [5001, 15000];
+				} else if ($scope.taxon.RankName === "superspecies"){
+					RankID['$between'] = [5000, 10000];
+				} else if ($scope.taxon.RankName === "gen."){
+					RankID['$between'] = [4000, 10000];
+				} else if ($scope.taxon.RankName === "supergenus"){
+					RankID['$between'] = [4000, 10000];
+				} else {
+					RankID['$between'] = [100, $scope.taxon.RankID +1000];
+				};
+				
+				params = {
+				where: {
+					TaxonName: {
+						like: value + "%"
+					},
+					RankID: RankID
+				},
+				limit: 30
+			};
+				
+			}
 
 				return Taxon.query(params).$promise;
 
@@ -220,7 +252,27 @@ angular.module('svampeatlasApp')
 					})
 				};
 			}
+			$scope.makeIntoSynonym = function(){
+				
+				$scope.taxon.accepted_id = $scope.selectedValidTaxon._id;
+				
+				Taxon.addSynonym({
+					id: $scope.selectedValidTaxon._id
+				}, $scope.taxon).$promise.then(function(taxon) {
 
+					$scope.taxon = taxon;
+					$state.go('taxon', {id: taxon._id}, {inherit: false, notify: false});
+				})
+			};
+			
+			$scope.unlinkSynonym = function(){
+				$scope.taxon.accepted_id = $scope.taxon._id;
+				$scope.taxon.$update().then(function(t){
+					$scope.taxon = t;
+					$state.go('taxon', {id: $scope.taxon._id}, {inherit: false, notify: false});
+				})
+			}
+			
 			$scope.parentModal = $modal({
 				scope: $scope,
 				template: '/app/taxon/parent.modal.tpl.html',
@@ -229,6 +281,12 @@ angular.module('svampeatlasApp')
 			$scope.rankModal = $modal({
 				scope: $scope,
 				template: '/app/taxon/rank.modal.tpl.html',
+				show: false
+			});
+			
+			$scope.synonymModal = $modal({
+				scope: $scope,
+				template: '/app/taxon/synonym.modal.tpl.html',
 				show: false
 			});
 		/*	$scope.ranktabs = [

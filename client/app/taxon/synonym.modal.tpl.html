@@ -1,0 +1,32 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title">Synonymize taxon</h4></div>
+				<div class="modal-body">
+					<form>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedValidTaxon" bs-options="taxon as taxon.FullName for taxon in getTaxon($viewValue, 'synonym')" data-placement="auto" placeholder="Enter taxon name" bs-typeahead>
+					</form>	
+					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedValidTaxon.FunIndexNumber !== $parent.selectedValidTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedValidTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
+
+					</div>
+					<table ng-show="$parent.selectedValidTaxon !== undefined && $parent.selectedValidTaxon.constructor.name === 'Resource'" class="table parent-taxon-table">
+
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedValidTaxon.FullName}}</td><td st-ratio="50"><a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedValidTaxon.FunIndexNumber}}" target="_BLANK" class="btn btn-primary" > <i class="fa fa-link"></i> View on Index Fungorum</a></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Epithet :</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedValidTaxon.TaxonName}}</td><td st-ratio="50"></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{$parent.selectedValidTaxon.Author}}</i></td><td st-ratio="50"></td></tr>
+					  <tr ng-show="$parent.selectedValidTaxon !== undefined && $parent.selectedValidTaxon.constructor.name === 'Resource'" class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedValidTaxon.RankName}}</td><td st-ratio="50"></td></tr>
+				
+					</table>
+			
+			
+				
+				<div class="modal-footer">
+					<div class="col-md-12">
+					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> <button type="button" class="btn btn-success pull-right" ng-show="$parent.selectedValidTaxon !== undefined && $parent.selectedValidTaxon.constructor.name === 'Resource'" ng-click="makeIntoSynonym(); $hide()"> <i class="fa fa-check"></i> Make into synonym!</button> 
+					</div>
+				</div>
+			
+		</div>
+	</div>

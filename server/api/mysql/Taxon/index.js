@@ -22,7 +22,7 @@ router.patch('/:id',auth.hasRole('taxonomyadmin'),  controller.update);
 router.delete('/:id',auth.hasRole('taxonomyadmin'),  controller.destroy);
 
 router.post('/:id/parent', auth.hasRole('taxonomyadmin'), controller.setParent);
-
+router.post('/:id/synonyms',auth.hasRole('taxonomyadmin'),  controller.addSynonym);
 
 
 router.get('/:id/images', controller.showImages);
