@@ -6,9 +6,9 @@
 </div>	
 	    	<div class="row">
 			<div class="col-md-8" >
-			<h2>{{taxon.FullName}} <button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon</button></h2>
+			<h2>{{taxon.FullName}} <button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon</button> <button class="btn btn-danger" ng-show="taxon._id === taxon.accepted_id" ng-click="synonymModal.show()" tabindex="0">Make into synonym</button></h2>
 
-			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	)</div>
+			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) <button class="btn btn-xs btn-danger pull-right"  ng-click="unlinkSynonym()" tabindex="0">Unlink synonym</button></div>
 			<div class="alert alert-danger col-md-12" role="alert" ng-show="taxon.parent_id === null"><strong>Orphant taxon! </strong> Please add parent Taxon in the actions menu on the right. 
 
 			</div>
@@ -19,7 +19,9 @@
 			
 			
 			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
-			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon.RankName === 'sp.' || taxon.RankName === 'gen.'" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button></p>
+			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon.RankName === 'sp.' || taxon.RankName === 'gen.'" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button>
+			<button ng-show="taxon.RankName === 'superspecies' || taxon.RankName === 'supergenus'" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Change rank level</button>
+			</p>
 			</div>
 			<div class="col-md-4" >
 				
