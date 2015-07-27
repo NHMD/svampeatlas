@@ -11,7 +11,7 @@
     </div>
     <div collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav">
-          <li ng-class='isTaxonBase()'>
+          <li  ng-show="hasRole('taxonomyadmin')" ng-class='isTaxonBase()'>
               <a ui-sref="taxonomy">TaxonBase</a>
           </li>
         <li ng-repeat="item in menu" ui-sref-active="active">

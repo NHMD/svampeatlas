@@ -761,6 +761,7 @@ exports.setParent = function(req, res) {
 			
 			taxon.SystematicPath = parentTaxon.SystematicPath + ", " + taxon.TaxonName;
 			taxon.Path = parentTaxon.Path + ", " + taxon._id;
+		//	taxon.parent_id = parentTaxon._id; // setting the parent_id to avoid null pointer
 			return taxon.save();
 		} else {
 			
@@ -772,7 +773,7 @@ exports.setParent = function(req, res) {
 
 			var c_id = taxon._id; // Child ID
 			var np_id = parentTaxon._id; // New parent ID
-			var op_id = taxon.Parent._id; // Old parent ID
+			var op_id = (taxon.Parent !== null ) ? taxon.Parent._id : null; // Old parent ID
 
 			
 			var set_new_parent_sql = "CALL SET_NEW_PARENT( " + c_id + " , " + op_id + " , " + np_id + " )";
@@ -782,10 +783,16 @@ exports.setParent = function(req, res) {
 
 		})
 		.spread(function(taxon, newParent, oldParent) {
+			var description;
+			if(oldParent === null){
+				description = taxon.FullName + " (id: "+taxon._id+") was orphant but has now got parent : "+newParent.FullName+ " (id: "+newParent._id+")"
+			} else {
+				description = taxon.FullName + " (id: "+taxon._id+") changed parent from "+oldParent.FullName+ " (id: "+oldParent._id+") to "+newParent.FullName+ " (id: "+newParent._id+")";
+			};
 			
 			return models.TaxonLog.create({
 				eventname: "Changed parent taxon",
-				description: taxon.FullName + " (id: "+taxon._id+") changed parent from "+oldParent.FullName+ " (id: "+oldParent._id+") to "+newParent.FullName+ " (id: "+newParent._id+")",
+				description: description,
 				user_id: req.user._id,
 				taxon_id: taxon._id
 				
