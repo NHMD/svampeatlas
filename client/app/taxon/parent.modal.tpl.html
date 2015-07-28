@@ -6,7 +6,7 @@
 				<h4 class="modal-title">Change parent taxon</h4></div>
 				<div class="modal-body">
 					<form>
-						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in getTaxon($viewValue, 'parent')" data-placement="auto" placeholder="Enter taxon name" bs-typeahead>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getPossibleParentTaxa($viewValue, $parent.taxon)" data-placement="auto" placeholder="Enter taxon name" bs-typeahead>
 					</form>	
 					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
 
@@ -19,9 +19,7 @@
 					  <tr ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.RankName}}</td><td st-ratio="50"></td></tr>
 				
 					</table>
-			
-			
-				
+		
 				<div class="modal-footer">
 					<div class="col-md-12">
 					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> <button type="button" class="btn btn-success pull-right" ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" ng-click="changeParent(); $hide()"> <i class="fa fa-check"></i> Change parent taxon!</button> 
