@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', '$state' ,'$stateParams', '$timeout', '$modal',
-		function($scope, Taxon, TaxonIntegrationService, $state, $stateParams, $timeout, $modal) {
+	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', '$state' ,'$stateParams', '$timeout', '$modal',
+		function($scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, $state, $stateParams, $timeout, $modal) {
 			
 			$scope.changeRankAndSave = function(taxon){
 				
@@ -101,60 +101,7 @@ angular.module('svampeatlasApp')
 
 			};
 
-			$scope.getTaxon = function(viewValue, type) {
-				
-				if (viewValue === "") {
-					return [];
-				}
-				var value = (viewValue.constructor.name === 'Resource') ? viewValue.FullName : viewValue;
-				
-				var params;
-				if(type === "parent"){
-					params = {
-					where: {
-						TaxonName: {
-							like: value + "%"
-						},
-						RankID: {
-							$lt: $scope.taxon.RankID
-						}
-					},
-					order: "RankID DESC", 
-					limit: 30
-				};
-			} else if(type === "synonym") {
-				
-				var RankID = {};
-				
-				if($scope.taxon.RankName === "var."){
-					RankID['$between'] = [10000, 15000];
-				} else if ($scope.taxon.RankName === "sp."){
-					RankID['$between'] = [5001, 15000];
-				} else if ($scope.taxon.RankName === "superspecies"){
-					RankID['$between'] = [5000, 10000];
-				} else if ($scope.taxon.RankName === "gen."){
-					RankID['$between'] = [4000, 10000];
-				} else if ($scope.taxon.RankName === "supergenus"){
-					RankID['$between'] = [4000, 10000];
-				} else {
-					RankID['$between'] = [100, $scope.taxon.RankID +1000];
-				};
-				
-				params = {
-				where: {
-					TaxonName: {
-						like: value + "%"
-					},
-					RankID: RankID
-				},
-				limit: 30
-			};
-				
-			}
-
-				return Taxon.query(params).$promise;
-
-			};
+			$scope.TaxonTypeaheadService = TaxonTypeaheadService;
 			
 		
 

@@ -9,9 +9,19 @@ angular.module('svampeatlasApp')
 			return href;
 		};
 	})
-	.controller('FunindexCtrl', ['$scope', '$state', 'IndexFungorum', 'MycoBank', 'x2js', 'Taxon', 'TaxonIntegrationService',
-		function($scope, $state, IndexFungorum, MycoBank, x2js, Taxon, TaxonIntegrationService) {
+	.filter('higherRanksThanParent', function() {
+		return function(ranks, parent) {
+			return (parent !== undefined) ? _.filter(ranks, function(s) {
+				return s.RankID > parent.RankID;
+			}) : ranks;
 
+		};
+	})
+	.controller('FunindexCtrl', ['$scope', '$state', 'IndexFungorum', 'MycoBank', 'x2js', 'Taxon', 'TaxonIntegrationService','TaxonTypeaheadService', 'TaxonRank',
+		function($scope, $state, IndexFungorum, MycoBank, x2js, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonRank) {
+			$scope.TaxonTypeaheadService = TaxonTypeaheadService;
+			$scope.TaxonRanks = TaxonRank.query();
+			
 			$scope.handleError = function(err) {
 				$scope.errorMsg = err.status + " " + err.statusText + " " + err.data;
 				$scope.isLoading = false;

@@ -8,11 +8,46 @@
 	<div class="btn-group" ng-model="dataSource" bs-radio-group>
 	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="IndexFungorum"> Index Fungorum</label>
 	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="MycoBank"> Mycobank</label>
+	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="Manual"> Manual</label>
 
 	</div>
 	<hr>
+</div>
+<div class="col-md-12" ng-show="dataSource && dataSource === 'Manual'">
+<div class="col-md-5"> 
+	<h4>Choose parent taxon:</h4>
+					<form>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getTaxon($viewValue)" data-placement="auto" placeholder="Enter taxon name" bs-typeahead>
+					</form>	
+					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
+
+					</div>
+					<table ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" class="table parent-taxon-table">
+
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.FullName}}</td><td st-ratio="50"><a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexNumber}}" target="_BLANK" class="btn btn-primary" > <i class="fa fa-link"></i> View on Index Fungorum</a></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Epithet :</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.TaxonName}}</td><td st-ratio="50"></td></tr>
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{$parent.selectedParentTaxon.Author}}</i></td><td st-ratio="50"></td></tr>
+					  <tr ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.RankName}}</td><td st-ratio="50"></td></tr>
+				
+					</table>
+					</div>	
+<div class="col-md-5" ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'">
+<h4>Enter the new taxon attributes:</h4>	
+<div class="form-group">
+  <label for="rank-selector">Select taxon rank:</label>
+  <select id="rank-selector" class="form-control" ng-options="rank as rank.RankName for rank in TaxonRanks | higherRanksThanParent:$parent.selectedParentTaxon" ng-model="selectedTaxonRank"></select>
+</div>
+	<div class="form-group">
+	  <label for="taxonName">Taxon name / epithet:</label>
+	  <input type="text" class="form-control" id="taxonName">
+	</div>
+	<div class="form-group">
+	  <label for="taxonAuthor">Author:</label>
+	  <input type="text" class="form-control" id="taxonAuthor">
+	</div>
+</div>
 </div>	
-<div class="col-md-12" ng-show="dataSource">
+<div class="col-md-12" ng-show="dataSource && dataSource !== 'Manual'">
 
 <form class="form">
   <div class="form-group col-md-3">
