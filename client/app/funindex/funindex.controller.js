@@ -21,6 +21,44 @@ angular.module('svampeatlasApp')
 		function($scope, $state, IndexFungorum, MycoBank, x2js, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonRank) {
 			$scope.TaxonTypeaheadService = TaxonTypeaheadService;
 			$scope.TaxonRanks = TaxonRank.query();
+			$scope.selectedTaxonAuthor = "";
+			$scope.newTaxonIsValid = function(){
+				
+				var auhtorIsValid = ($scope.selectedTaxonAuthor) ? true: false;
+				if($scope.selectedTaxonRank && ($scope.selectedTaxonRank.RankName === 'superspecies' || $scope.selectedTaxonRank.RankName === 'supergenus')){
+					auhtorIsValid = true;
+				}
+				return ($scope.selectedParentTaxon !== undefined && $scope.selectedParentTaxon.constructor.name === 'Resource') 
+				&& $scope.selectedTaxonRank && $scope.selectedTaxonName && auhtorIsValid;
+				
+			}
+			$scope.saveNewTaxon = function(){
+				var FullName;
+				if($scope.selectedTaxonRank.RankID < 10000){
+					FullName = $scope.selectedTaxonName +" "+ $scope.selectedTaxonAuthor;
+				} else if($scope.selectedTaxonRank.RankID === 10000){
+					FullName = $scope.selectedParentTaxon.TaxonName +" "+$scope.selectedTaxonName +" "+ $scope.selectedTaxonAuthor;
+				} else {
+					FullName = $scope.selectedParentTaxon.FullName +" "+$scope.selectedTaxonRank.RankName+" "+$scope.selectedTaxonName +" "+ $scope.selectedTaxonAuthor;
+				}
+				var taxon = new Taxon({
+					parent_id: $scope.selectedParentTaxon._id,
+					TaxonName : $scope.selectedTaxonName,
+					RankName: $scope.selectedTaxonRank.RankName,
+					RankID: $scope.selectedTaxonRank.RankID,
+					Author: $scope.selectedTaxonAuthor,
+					FullName: FullName,
+					FunIndexNumber: 0,
+					FunIndexCurrUseNumber: 0,
+					FunIndexTypificationNumber: 0,
+					PresentInDK: 0,
+					Parent: $scope.selectedParentTaxon
+				}).$save().then(function(taxon){
+					$state.go('taxon', {
+						id: taxon._id
+					})
+				})
+			}
 			
 			$scope.handleError = function(err) {
 				$scope.errorMsg = err.status + " " + err.statusText + " " + err.data;
@@ -169,9 +207,6 @@ angular.module('svampeatlasApp')
 								id: 'new'
 							})
 							
-
-						
-
 					}
 
 				})
