@@ -39,11 +39,14 @@
 </div>
 	<div class="form-group">
 	  <label for="taxonName">Taxon name / epithet:</label>
-	  <input type="text" class="form-control" id="taxonName">
+	  <input type="text" class="form-control" id="taxonName" ng-model="selectedTaxonName">
+	</div>
+	<div class="form-group" ng-show="selectedTaxonRank && selectedTaxonRank.RankName !== 'supergenus' && selectedTaxonRank.RankName !== 'superspecies'">
+	  <label for="taxonAuthor">Author:</label>
+	  <input type="text" class="form-control" id="taxonAuthor" ng-model="selectedTaxonAuthor">
 	</div>
 	<div class="form-group">
-	  <label for="taxonAuthor">Author:</label>
-	  <input type="text" class="form-control" id="taxonAuthor">
+	  <button class="btn btn-primary" ng-show="newTaxonIsValid()" ng-click="saveNewTaxon()"> <i class="fa fa-save"></i> Save taxon</button>
 	</div>
 </div>
 </div>	
