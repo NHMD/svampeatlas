@@ -1,0 +1,32 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title">Change taxon rank to {{superrank}}</h4></div>
+				<div class="modal-body">
+					
+					
+					<div ng-show="superrank === 'superspecies'" class="alert alert-warning" role="alert">You are changing the rank to {{superrank}}. Please select an appropriate Rank level. If the taxon represent a group of species (s.lato) you should pick a rank level fairly close to <strong>{{childName}}</strong>. If it is a subgenus or a high level clade you should choose a rank closer to <strong>{{taxon.Parent.FullName}} </strong></br>Note that raising a taxon rank will unlink the taxon to <strong>index fungorum</strong> and you may want to create a new taxon for {{taxon.FullName}} s. stricto.</div>
+					<div ng-show="superrank === 'supergenus'" class="alert alert-warning" role="alert">You are changing the rank to {{superrank}}. Please select an appropriate Rank level. If the taxon represent a group of genera (e.g. Boletus s.lato) you should pick a rank level fairly close to <strong>{{childName}}</strong>. If it is a higher level clade you should choose a rank closer to <strong>{{taxon.Parent.FullName}} </strong></br>Note that raising a taxon rank will unlink the taxon to <strong>index fungorum</strong> and you may want to create a new taxon for {{taxon.FullName}} s. stricto.</div>
+					<div layout>
+					      <div flex="10" layout layout-align="center center">
+					        <span class="md-body-1">{{taxon.Parent.FullName}} ({{taxon.Parent.RankName}})</span>
+					      </div>
+					      <md-slider flex class="md-primary" md-discrete ng-model="selectedSuperRankID.superrankId" step="1" min="{{taxon.Parent.RankID +1}}" max="{{childRank -1}}" aria-label="Rank level">
+					      </md-slider>
+					      <div flex="10" layout layout-align="center center">
+					        <span class="md-body-1">{{childName}}</span>
+					      </div>
+					    </div>
+						
+						
+						<div class="modal-footer">
+							<div class="col-md-12">
+							<button  class="btn btn-lg btn-danger"   ng-click="$hide()">Discard changes</button> <button  class="btn btn-lg btn-success"   ng-click="changeRankAndSave(taxon)">Save changes</button> 
+							</div>
+						</div>
+
+			
+		</div>
+	</div>
