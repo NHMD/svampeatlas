@@ -10,6 +10,7 @@ angular.module('svampeatlasApp')
 			    { title:'Search taxa', state: 'taxonomy', active: 'taxonomy' === $state.current.name},
 			    { title:'Add new taxon',  state: 'funindex' , active: 'funindex' === $state.current.name},
 				{ title:'Taxon', state: 'taxon' , active: 'taxon' === $state.current.name, disabled: true},
+				{ title:'Red List',  state: 'taxaredlisdata' , active: 'taxaredlisdata' === $state.current.name},
 				{ title:'Log', state: 'taxonlog' , active: 'taxonlog' === $state.current.name}
 			  ];
 			
