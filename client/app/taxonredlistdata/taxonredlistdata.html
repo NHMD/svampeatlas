@@ -10,7 +10,7 @@
 
 			
 			
-			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <em>{{ taxon.DKnavn || 'n/a' }}</em> </h4> <div class="checkbox"><label>Present in DK
+			<h4 ><strong>DK name: </strong> <em>{{ taxon.DKnavn || 'n/a' }}</em> </h4> <div class="checkbox"><label>Present in DK
     <input type="checkbox" ng-model="taxon.PresentInDK" ng-change="taxon.$update()">
   </label></div>
 			
@@ -19,59 +19,218 @@
 			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small>
 			</p>
 			</div>
-			<div class="col-md-4" >
-				
 			</div>
-			</div>
-
-<div class="row">
-			<div class="col-md-5" ng-show="taxon._id !== undefined">
+			<h3 class="text-danger">Rødliste: </h3>
+			<tabset >
+			  	<tab ng-repeat="redlistdata in allyearsredlistdata" heading="{{redlistdata.year +' ('+redlistdata.VerbatimStatus+')'}}"  >
+  	    
+			  	   
+	   		   <div class="row" >
+	   			   <div class="col-md-6" >
+	       					<label class="control-label" for="VerbatimStatus">Status (oprindelig) </label>
+	       			<a href="#" id="VerbatimStatus" editable-text="redlistdata.VerbatimStatus" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+	       			   {{ redlistdata.VerbatimStatus || 'no description' }}
+	       			  </a>
+	   				  </div>
+ 				  
+	   	   </div>
+ 		   <div class="row" >
+ 			   <div class="col-md-6" >
+     					<label class="control-label" for="Roedlisteansvarlig">Rødlisteansvarlig </label>
+     			<a href="#" id="Roedlisteansvarlig" editable-text="redlistdata.Roedlisteansvarlig" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+     			   {{ redlistdata.Roedlisteansvarlig || 'no description' }}
+     			  </a>
+ 				  </div>
+ 				  
+ 	   </div>
+<div class="row" >
+			<div class="col-md-5" >
 	
 	
 					<label class="control-label" for="roedlisteNationalStatus">National status</label>
 			<a href="#" id="roedlisteNationalStatus" editable-textarea="redlistdata.roedlisteNationalStatus" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
 			    <div class="x-editable-texarea">{{ redlistdata.roedlisteNationalStatus || 'no description' }}</div>
 			  </a>
+		  </div>
+		  <div class="col-md-5" >
   					<label class="control-label" for="roedlisteNationalStatusClean">National status clean</label>
   			<a href="#" id="roedlisteNationalStatusClean" editable-textarea="redlistdata.roedlisteNationalStatusClean" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
   			    <div class="x-editable-texarea">{{ redlistdata.roedlisteNationalStatusClean || 'no description' }}</div>
   			  </a>
-			  
+			   </div>
+		   </div>
+		   <div class="row" >
+			   <div class="col-md-5" >
     					<label class="control-label" for="roedlisteBestandsudvikling">Bestandsudvikling</label>
     			<a href="#" id="roedlisteBestandsudvikling" editable-textarea="redlistdata.roedlisteBestandsudvikling" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
     			    <div class="x-editable-texarea">{{ redlistdata.roedlisteBestandsudvikling || 'no description' }}</div>
     			  </a>
+				  </div>
+				  <div class="col-md-5" >
   					<label class="control-label" for="roedlisteBestandsstoerrelseBem">Bestandsstørrelsesbemærkning</label>
   			<a href="#" id="roedlisteBestandsstoerrelseBem" editable-textarea="redlistdata.roedlisteBestandsstoerrelseBem" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
   			    <div class="x-editable-texarea">{{ redlistdata.roedlisteBestandsstoerrelseBem || 'no description' }}</div>
   			  </a>
 		
-		  
-		  
-					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="taxon.$update()">{{ taxon.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="taxon.$update()">{{ taxon.foersteReferenceForDK || 'n/a' }}</a></p>
-		
-					 <label class="control-label" for="DK_reference">DK referencer</label>
-			        <a href="#" id="DK_reference" editable-textarea="taxon.DK_reference" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
-			            <div class="x-editable-texarea">{{ taxon.DK_reference || 'no description' }}</div>
-			          </a>
-		
-			</div>
-			<div class="col-md-1" ng-show="taxon._id !== undefined">
-
-			</div>
-			<div class="col-md-6" >
-				
-				</div>
-			
-	</div>		
+		  </div>
+	   </div>
+		   <div class="row" >
+			   <div class="col-md-10" >
+    					<label class="control-label" for="Udbredelse">Udbredelse</label>
+    			<a href="#" id="Udbredelse" editable-textarea="redlistdata.Udbredelse" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+    			    <div class="x-editable-texarea">{{ redlistdata.Udbredelse || 'no description' }}</div>
+    			  </a>
+				  </div>
+				  
+	   </div>
 	   
-	
-<div class="row">
-
-	
-	<!-- ########################################-->
-
-</div>
+		   <div class="row" >
+			   <div class="col-md-10" >
+    					<label class="control-label" for="Roedlistevurdering">Rødlistevurdering</label>
+    			<a href="#" id="Roedlistevurdering" editable-textarea="redlistdata.Roedlistevurdering" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+    			    <div class="x-editable-texarea">{{ redlistdata.Roedlistevurdering || 'no description' }}</div>
+    			  </a>
+				  </div>
+				  
+	   </div>
+	   
+		   <div class="row" >
+			   <div class="col-md-5" >
+    					<label class="control-label" for="Litteratur_DMU">Litteratur DMU</label>
+    			<a href="#" id="Litteratur_DMU" editable-textarea="redlistdata.Litteratur_DMU" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+    			    <div class="x-editable-texarea">{{ redlistdata.Litteratur_DMU || 'no description' }}</div>
+    			  </a>
+				  </div>
+				  <div class="col-md-5" >
+  					<label class="control-label" for="Litteratur">Andre referencer</label>
+  			<a href="#" id="Litteratur" editable-textarea="redlistdata.Litteratur" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+  			    <div class="x-editable-texarea">{{ redlistdata.Litteratur || 'no description' }}</div>
+  			  </a>
+		
+		  </div>
+	   </div>
+	   
+		   <div class="row" >
+			   <div class="col-md-10" >
+    					<label class="control-label" for="Kriterier">Kriterier</label>
+    			<a href="#" id="Kriterier" editable-text="redlistdata.Kriterier" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+    			    {{ redlistdata.Kriterier || 'no description' }}
+    			  </a>
+				  </div>
+				  
+	   </div>
+		   <div class="row" >
+			   <div class="col-md-10" >
+    					<label class="control-label" for="roedlisteLevesteder">Levesteder</label>
+    			<a href="#" id="roedlisteLevesteder" editable-text="redlistdata.roedlisteLevesteder" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+    			    {{ redlistdata.roedlisteLevesteder || 'no description' }}
+    			  </a>
+				  </div>
+				  
+	   </div>
+		   <div class="row" >
+			   <div class="col-md-10" >
+    					<label class="control-label" for="roedlisteNegativePaavirknBem">Negative Påvirkninger Bemærkning</label>
+    			<a href="#" id="roedlisteNegativePaavirknBem" editable-textarea="redlistdata.roedlisteNegativePaavirknBem" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+    			    <div class="x-editable-texarea">{{ redlistdata.roedlisteNegativePaavirknBem || 'no description' }}</div>
+    			  </a>
+				  </div>
+				  
+	   </div>
+		   <div class="row" >
+			   <div class="col-md-10" >
+    					<label class="control-label" for="roedlisteNegativePaavirkninger">Negative Påvirkninger</label>
+    			<a href="#" id="roedlisteNegativePaavirkninger" editable-text="redlistdata.roedlisteNegativePaavirkninger" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+    			    {{ redlistdata.roedlisteNegativePaavirkninger || 'no description' }}
+    			  </a>
+				  </div>
+				  
+	   </div>
+ 		   <div class="row" >
+ 			   <div class="col-md-3" >
+     					<label class="control-label" for="roedlisteBestandsstoerrelse">Rødliste bestandsstørrelse </label>
+     			<a href="#" id="roedlisteBestandsstoerrelse" editable-text="redlistdata.roedlisteBestandsstoerrelse" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+     			   {{ redlistdata.roedlisteBestandsstoerrelse || 'no description' }}
+     			  </a>
+ 				  </div>
+ 				  <div class="col-md-5" >
+   					<label class="control-label" for="roedlisteBestandsstoerrelseAar">Bestandsstørrelse (år)</label>
+   			<a href="#" id="roedlisteBestandsstoerrelseAar" editable-text="redlistdata.roedlisteBestandsstoerrelseAar" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+   			    {{ redlistdata.roedlisteBestandsstoerrelseAar || 'no description' }}
+   			  </a>
+		
+ 		  </div>
+ 	   </div>
+ 		   <div class="row" >
+ 			   <div class="col-md-3" >
+     					<label class="control-label" for="NationalRoedlistekatogeri">National kategori </label>
+     			<a href="#" id="NationalRoedlistekatogeri" editable-text="redlistdata.NationalRoedlistekatogeri" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+     			   {{ redlistdata.NationalRoedlistekatogeri || 'no description' }}
+     			  </a>
+ 				  </div>
+ 				  <div class="col-md-2" >
+   					<label class="control-label" for="Artstilbagegang">Artstilbagegang</label>
+   			<a href="#" id="Artstilbagegang" editable-text="redlistdata.Artstilbagegang" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+   			    {{ redlistdata.Artstilbagegang || 'no description' }}
+   			  </a>
+		
+ 		  </div>
+ 				  <div class="col-md-5" >
+   					<label class="control-label" for="roedlisteUdbredelsesareal">Udbredelsesareal</label>
+   			<a href="#" id="roedlisteUdbredelsesareal" editable-text="redlistdata.roedlisteUdbredelsesareal" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+   			   {{ redlistdata.roedlisteUdbredelsesareal || 'no description' }}
+   			  </a>
+		
+ 		  </div>
+ 	   </div>
+ 		   <div class="row" >
+ 			   <div class="col-md-3" >
+     					<label class="control-label" for="roedlisteID">Rødliste ID </label>
+     			<a href="#" id="roedlisteID" editable-text="redlistdata.roedlisteID" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+     			   {{ redlistdata.roedlisteID || 'no description' }}
+     			  </a>
+ 				  </div>
+ 				  <div class="col-md-5" >
+   					<label class="control-label" for="roedlisteGruppe">Rødlistegruppe</label>
+   			<a href="#" id="roedlisteGruppe" editable-text="redlistdata.roedlisteGruppe" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+   			    {{ redlistdata.roedlisteGruppe || 'no description' }}
+   			  </a>
+		
+ 		  </div>
+ 	   </div>
+ 		   <div class="row" >
+ 			   <div class="col-md-3" >
+     					<label class="control-label" for="roedlisteIndivider">Rødlisteindivider </label>
+     			<a href="#" id="roedlisteIndivider" editable-text="redlistdata.roedlisteIndivider" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+     			   {{ redlistdata.roedlisteIndivider || 'no description' }}
+     			  </a>
+ 				  </div>
+ 				  <div class="col-md-2" >
+   					<label class="control-label" for="roedlisteGenerationstid">Generationstid</label>
+   			<a href="#" id="roedlisteGenerationstid" editable-text="redlistdata.roedlisteGenerationstid" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+   			    {{ redlistdata.roedlisteGenerationstid || 'no description' }}
+   			  </a>
+		
+ 		  </div>
+ 				  <div class="col-md-5" >
+   					<label class="control-label" for="roedlisteGenerationsinterval">Generationstidsinterval</label>
+   			<a href="#" id="roedlisteGenerationsinterval" editable-text="redlistdata.roedlisteGenerationsinterval" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+   			   {{ redlistdata.roedlisteGenerationsinterval || 'no description' }}
+   			  </a>
+		
+ 		  </div>
+ 	   </div>
+ 		   <div class="row" >
+ 			   <div class="col-md-6" >
+     					<label class="control-label" for="roedlisteNomenkaltur">Rødliste nomenklatur </label>
+     			<a href="#" id="roedlisteNomenkaltur" editable-text="redlistdata.roedlisteNomenkaltur" e-rows="7" e-cols="40" onaftersave="redlistdata.$update()">
+     			   {{ redlistdata.roedlisteNomenkaltur || 'no description' }}
+     			  </a>
+ 				  </div>
+ 				  
+ 	   </div>
+	  	    </tab>
+	 </tabset>
 </div>
 <div class="col-md-12">
 
