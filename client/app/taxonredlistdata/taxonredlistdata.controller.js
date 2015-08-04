@@ -13,7 +13,8 @@ angular.module('svampeatlasApp')
 							console.log($scope.taxon);
 				
 							$scope.allyearsredlistdata = TaxonRedListData.query({where: { taxon_id: $stateParams.id}, order: "year DESC"}).$promise.then(function(res){
-								$scope.redlistdata = res[0];
+							//	$scope.redlistdata = res[0];
+								$scope.allyearsredlistdata = res;
 							})
 
 						
