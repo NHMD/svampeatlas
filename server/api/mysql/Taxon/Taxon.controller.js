@@ -100,18 +100,22 @@ exports.show = function(req, res) {
 			_id: req.params.id
 		},
 		include: [{
-			model: models.TaxonImages,
-			as: "images"},
-			{
-						model: models.Taxon,
-						as: "synonyms"},
-				{
-							model: models.Taxon,
-							as: "Parent"},
-					{
-								model: models.Taxon,
-								as: "acceptedTaxon"}
-							
+				model: models.TaxonImages,
+				as: "images"
+			}, {
+				model: models.Taxon,
+				as: "synonyms"
+			}, {
+				model: models.Taxon,
+				as: "Parent"
+			}, {
+				model: models.Taxon,
+				as: "acceptedTaxon"
+			}, {
+				model: models.TaxonAttributes,
+				as: "attributes"
+			}
+
 		]
 	})
 		.then(handleEntityNotFound(res))
@@ -119,6 +123,7 @@ exports.show = function(req, res) {
 		.
 	catch (handleError(res));
 };
+
 
 exports.updateSystematics = function(req, res) {
 	Taxon.find({
@@ -696,26 +701,80 @@ exports.destroy = function(req, res) {
 
 exports.addSynonym = function(req, res) {
 	var synonymTaxon = req.body;
-	
-	Taxon.update(
-	    { accepted_id: req.params.id } /* set attributes' value */,
-	    { where: { accepted_id: synonymTaxon._id }} /* where criteria */
-	  ).then(function(affectedRows) {
-	  
-		  			return [synonymTaxon, models.TaxonLog.create({
-		  				eventname: "Synonymised taxon",
-		  				description: "New accepted taxon id: "+req.params.id + ", affected "+affectedRows+" taxa (including existing synonyms of "+synonymTaxon.FullName+")",
-		  				user_id: req.user._id,
-		  				taxon_id: synonymTaxon._id
-			
-		  			})]
-		  		
-		
-	  })
-	.spread(function(taxon) {
+
+	models.sequelize.transaction(function(t) {
+		return Taxon.update({
+			accepted_id: req.params.id
+		} /* set attributes' value */ , {
+			where: {
+				accepted_id: synonymTaxon._id
+			}
+		} /* where criteria */ , {
+			transaction: t
+		})
+
+		.then(function(affectedRows) {
+
+			return models.TaxonLog.create({
+				eventname: "Synonymised taxon",
+				description: "New accepted taxon id: " + req.params.id + ", affected " + affectedRows + " taxa (including existing synonyms of " + synonymTaxon.FullName + ")",
+				user_id: req.user._id,
+				taxon_id: synonymTaxon._id
+
+			}, {
+				transaction: t
+			});
+
+
+		})
+			.then(function() {
+
+				return models.TaxonRedListData.count({
+						where: {
+							taxon_id: req.params.id
+						}
+
+					},
+
+					{
+						transaction: t
+					}
+				);
+
+			})
+			.then(function(count) {
+
+				if (count === 0){
+					return models.TaxonRedListData.update({
+						taxon_id: req.params.id
+					}, {
+						where: {
+							taxon_id: synonymTaxon._id
+						}
+					}, {
+						transaction: t
+					})}
+					else return true;
+			})
+			.then(function() {
+
+					return models.TaxonImages.update({
+						taxon_id: req.params.id
+					}, {
+						where: {
+							taxon_id: synonymTaxon._id
+						}
+					}, {
+						transaction: t
+					})
+			})
+
+	})
+
+	.then(function() {
 		return Taxon.find({
 			where: {
-				_id: taxon._id
+				_id: synonymTaxon._id
 			},
 			include: [{
 					model: models.TaxonImages,
@@ -735,13 +794,14 @@ exports.addSynonym = function(req, res) {
 
 		})
 	})
-	  .then(function(taxon){
-	
-		return res.status(201).json(taxon);
-		
-	}).
+		.then(function(taxon) {
+
+			return res.status(201).json(taxon);
+
+		}).
 	catch (handleError(res));
 };
+
 
 exports.setParent = function(req, res) {
 
