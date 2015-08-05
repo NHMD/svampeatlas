@@ -76,6 +76,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
     },
+	/*
     diagnose: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -152,6 +153,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
     },
+	*/
     parent_id: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
@@ -203,6 +205,17 @@ module.exports = function(sequelize, DataTypes) {
     				.belongsTo(models.Taxon, {
     					foreignKey: "accepted_id",
     					as: "acceptedTaxon"
+    				});
+    		models.TaxonAttributes
+    				.belongsTo(models.Taxon, {
+    					foreignKey: "taxon_id",
+    					as: "taxon"
+    				});
+					
+    		models.Taxon
+    				.hasOne(models.TaxonAttributes, {
+    					foreignKey: "taxon_id",
+    					as: "attributes"
     				});
 			
     		}
