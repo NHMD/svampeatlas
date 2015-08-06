@@ -10,8 +10,8 @@
 
 			
 			
-			<h4 ><strong>DK name: </strong> <em>{{ taxon.DKnavn || 'n/a' }}</em> </h4> <div class="checkbox"><label>Present in DK
-    <input type="checkbox" ng-model="taxon.PresentInDK" ng-change="taxon.$update()">
+			<h4 ><strong>DK name: </strong> <em>{{ taxon.attributes.DKnavn || 'n/a' }}</em> </h4> <div class="checkbox"><label>Present in DK
+    <input type="checkbox" ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
   </label></div>
 			
 			

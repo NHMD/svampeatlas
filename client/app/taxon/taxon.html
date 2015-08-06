@@ -140,7 +140,7 @@
 					 <!-- ########################################-->
 		
 		
-				    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onbeforesave="validateImage()" >
+				    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onbeforesave="validateImage()" ng-controller="TaxonCtrl">
 					<div>	<button class="btn btn-success" ng-click="newPhoto();" ng-show="!imageForm.$visible">Add photo</button><button class="btn btn-primary" ng-click=" editImage()" ng-show="taxon.images.length > 0 && !imageForm.$visible">Update photo info</button><button class="btn btn-danger pull-right" ng-show="taxon.images.length > 0 && !imageForm.$visible" ng-click="deleteImage()">Delete photo</button></div>
 				      <div>
 				        <!-- editable username (text with validation) -->
@@ -190,6 +190,8 @@
 				  <!-- ########################################-->
 				</div>
 				</div>
+				
+				
 			
 	</div>		
 	   
