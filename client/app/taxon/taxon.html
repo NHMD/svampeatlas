@@ -34,23 +34,23 @@
 	
 					<label class="control-label" for="diagnose">Diagnose</label>
 			<a href="#" id="diagnose" editable-textarea="taxon.attributes.diagnose" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-			    <div class="x-editable-texarea">{{ taxon.attributes.diagnose || 'no description' }}</div>
+			    <div class="x-editable-texarea">{{ taxon.attributes.diagnose || 'n/a' }}</div>
 			  </a>
 			  <label class="control-label" for="forvekslingsmuligheder">Forvekslingsmuligheder</label>
 			  <a href="#" id="forvekslingsmuligheder" editable-textarea="taxon.attributes.forvekslingsmuligheder" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-			      <div class="x-editable-texarea">{{ taxon.attributes.forvekslingsmuligheder || 'no description' }}</div>
+			      <div class="x-editable-texarea">{{ taxon.attributes.forvekslingsmuligheder || 'n/a' }}</div>
 			    </a>
 				 <label class="control-label" for="beskrivelse">Beskrivelse</label>
 			    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.beskrivelse" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-			        <div class="x-editable-texarea">{{ taxon.attributes.beskrivelse || 'no description' }}</div>
+			        <div class="x-editable-texarea">{{ taxon.attributes.beskrivelse || 'n/a' }}</div>
 			      </a>
 				   <label class="control-label" for="oekologi">Økologi</label>
 			      <a href="#" id="oekologi" editable-textarea="taxon.attributes.oekologi" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-			          <div class="x-editable-texarea">{{ taxon.attributes.oekologi || 'no description' }}</div>
+			          <div class="x-editable-texarea">{{ taxon.attributes.oekologi || 'n/a' }}</div>
 			        </a>
 					 <label class="control-label" for="bemaerkning">Bemærkning</label>
 			        <a href="#" id="bemaerkning" editable-textarea="taxon.attributes.bemaerkning" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-			            <div class="x-editable-texarea">{{ taxon.attributes.bemaerkning || 'no description' }}</div>
+			            <div class="x-editable-texarea">{{ taxon.attributes.bemaerkning || 'n/a' }}</div>
 			          </a>
 		  
 		  
@@ -58,7 +58,7 @@
 		
 					 <label class="control-label" for="DK_reference">DK referencer</label>
 			        <a href="#" id="DK_reference" editable-textarea="taxon.attributes.DK_reference" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-			            <div class="x-editable-texarea">{{ taxon.attributes.DK_reference || 'no description' }}</div>
+			            <div class="x-editable-texarea">{{ taxon.attributes.DK_reference || 'n/a' }}</div>
 			          </a>
 		
 			</div>
@@ -108,6 +108,65 @@
 			  	        <ul>
 							<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
 						</ul>
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
+			  	          Vernacular names
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+						  <table class="table parent-taxon-table">
+							   <tr ><td st-ratio="100">
+						 <label class="control-label" for="vernacular_name_DE">DE: </label>
+				        <a href="#" id="vernacular_name_DE" editable-text="taxon.attributes.vernacular_name_DE" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+				            {{ taxon.attributes.vernacular_name_DE || 'n/a' }}
+				          </a>
+						  </td></tr>
+						  <tr><td  st-ratio="100">
+  						 <label class="control-label" for="vernacular_name_Fi">Fi: </label>
+  				        <a href="#" id="vernacular_name_Fi" editable-text="taxon.attributes.vernacular_name_Fi" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+  				            {{ taxon.attributes.vernacular_name_Fi || 'n/a' }}
+  				          </a>
+						   </td></tr>
+   						  <tr><td  st-ratio="100">
+     						 <label class="control-label" for="vernacular_name_FR">FR: </label>
+     				        <a href="#" id="vernacular_name_FR" editable-text="taxon.attributes.vernacular_name_FR" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+     				            {{ taxon.attributes.vernacular_name_FR || 'n/a' }}
+     				          </a>
+   						   </td></tr>
+    						  <tr><td  st-ratio="100">
+      						 <label class="control-label" for="vernacular_name_GB">GB: </label>
+      				        <a href="#" id="vernacular_name_GB" editable-text="taxon.attributes.vernacular_name_GB" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+      				            {{ taxon.attributes.vernacular_name_GB || 'n/a' }}
+      				          </a>
+    						   </td></tr>
+       						  <tr><td  st-ratio="100">
+         						 <label class="control-label" for="vernacular_name_NL">NL: </label>
+         				        <a href="#" id="vernacular_name_NL" editable-text="taxon.attributes.vernacular_name_NL" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+         				            {{ taxon.attributes.vernacular_name_NL || 'n/a' }}
+         				          </a>
+       						   </td></tr>
+        						  <tr><td  st-ratio="100">
+          						 <label class="control-label" for="vernacular_name_NO">NO: </label>
+          				        <a href="#" id="vernacular_name_NO" editable-text="taxon.attributes.vernacular_name_NO" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+          				            {{ taxon.attributes.vernacular_name_NO || 'n/a' }}
+          				          </a>
+        						   </td></tr>
+           						  <tr><td  st-ratio="100">
+             						 <label class="control-label" for="vernacular_name_SE">SE: </label>
+             				        <a href="#" id="vernacular_name_SE" editable-text="taxon.attributes.vernacular_name_SE" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+             				            {{ taxon.attributes.vernacular_name_SE || 'n/a' }}
+             				          </a>
+           						   </td></tr>
+						  </table>
 			  	      </div>
 			  	    </div>
 			  	  </div>
