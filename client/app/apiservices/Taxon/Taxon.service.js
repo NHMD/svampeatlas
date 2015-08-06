@@ -59,7 +59,31 @@ angular.module('svampeatlasApp')
 				},
 				url: '/api/taxons/:id/synonyms',
 				isArray: false
-			}
+			},
+			'addAttributes': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/attributes',
+				isArray: false
+			},
+			'deleteAttributes': {
+				method: 'DELETE',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/attributes',
+				isArray: false
+			},
+			'updateAttributes': {
+				method: 'PUT',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/attributes',
+				isArray: false
+			},
 		});
 
 	});

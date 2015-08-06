@@ -2,6 +2,8 @@
 
 var express = require('express');
 var controller = require('./Taxon.controller');
+var attributesController = require('../TaxonAttributes/TaxonAttributes.controller');
+var imagesController = require('../TaxonImages/TaxonImages.controller');
 var auth = require('../../../auth/auth.service');
 
 var router = express.Router();
@@ -25,10 +27,14 @@ router.post('/:id/parent', auth.hasRole('taxonomyadmin'), controller.setParent);
 router.post('/:id/synonyms',auth.hasRole('taxonomyadmin'),  controller.addSynonym);
 
 
-router.get('/:id/images', controller.showImages);
-router.post('/:id/images',auth.hasRole('taxonomyadmin'),  controller.addImage);
-router.put('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  controller.updateImage);
-router.delete('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  controller.deleteImage);
+router.get('/:id/images', imagesController.showImages);
+router.post('/:id/images',auth.hasRole('taxonomyadmin'),  imagesController.addImage);
+router.put('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  imagesController.updateImage);
+router.delete('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  imagesController.deleteImage);
+
+router.post('/:id/attributes',auth.hasRole('taxonomyadmin'),   attributesController.create);
+router.put('/:id/attributes',auth.hasRole('taxonomyadmin'),   attributesController.update);
+router.delete('/:id/attributes',auth.hasRole('taxonomyadmin'),   attributesController.destroy);
 
 
 

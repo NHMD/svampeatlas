@@ -13,8 +13,8 @@
 
 			</div>
 			
-			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.DKnavn"  onaftersave="taxon.$update()"><em>{{ taxon.DKnavn || 'n/a' }}</em></a> </h4> <div class="checkbox"><label>Present in DK
-    <input type="checkbox" ng-model="taxon.PresentInDK" ng-change="taxon.$update()">
+			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div class="checkbox"><label>Present in DK
+    <input type="checkbox" ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
   </label></div>
 			
 			
@@ -33,32 +33,32 @@
 	
 	
 					<label class="control-label" for="diagnose">Diagnose</label>
-			<a href="#" id="diagnose" editable-textarea="taxon.diagnose" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
-			    <div class="x-editable-texarea">{{ taxon.diagnose || 'no description' }}</div>
+			<a href="#" id="diagnose" editable-textarea="taxon.attributes.diagnose" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			    <div class="x-editable-texarea">{{ taxon.attributes.diagnose || 'no description' }}</div>
 			  </a>
 			  <label class="control-label" for="forvekslingsmuligheder">Forvekslingsmuligheder</label>
-			  <a href="#" id="forvekslingsmuligheder" editable-textarea="taxon.forvekslingsmuligheder" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
-			      <div class="x-editable-texarea">{{ taxon.forvekslingsmuligheder || 'no description' }}</div>
+			  <a href="#" id="forvekslingsmuligheder" editable-textarea="taxon.attributes.forvekslingsmuligheder" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			      <div class="x-editable-texarea">{{ taxon.attributes.forvekslingsmuligheder || 'no description' }}</div>
 			    </a>
 				 <label class="control-label" for="beskrivelse">Beskrivelse</label>
-			    <a href="#" id="beskrivelse" editable-textarea="taxon.beskrivelse" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
-			        <div class="x-editable-texarea">{{ taxon.beskrivelse || 'no description' }}</div>
+			    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.beskrivelse" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			        <div class="x-editable-texarea">{{ taxon.attributes.beskrivelse || 'no description' }}</div>
 			      </a>
 				   <label class="control-label" for="oekologi">Økologi</label>
-			      <a href="#" id="oekologi" editable-textarea="taxon.oekologi" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
-			          <div class="x-editable-texarea">{{ taxon.oekologi || 'no description' }}</div>
+			      <a href="#" id="oekologi" editable-textarea="taxon.attributes.oekologi" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			          <div class="x-editable-texarea">{{ taxon.attributes.oekologi || 'no description' }}</div>
 			        </a>
 					 <label class="control-label" for="bemaerkning">Bemærkning</label>
-			        <a href="#" id="bemaerkning" editable-textarea="taxon.bemaerkning" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
-			            <div class="x-editable-texarea">{{ taxon.bemaerkning || 'no description' }}</div>
+			        <a href="#" id="bemaerkning" editable-textarea="taxon.attributes.bemaerkning" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			            <div class="x-editable-texarea">{{ taxon.attributes.bemaerkning || 'no description' }}</div>
 			          </a>
 		  
 		  
-					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="taxon.$update()">{{ taxon.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="taxon.$update()">{{ taxon.foersteReferenceForDK || 'n/a' }}</a></p>
+					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
 		
 					 <label class="control-label" for="DK_reference">DK referencer</label>
-			        <a href="#" id="DK_reference" editable-textarea="taxon.DK_reference" e-rows="7" e-cols="40" onaftersave="taxon.$update()">
-			            <div class="x-editable-texarea">{{ taxon.DK_reference || 'no description' }}</div>
+			        <a href="#" id="DK_reference" editable-textarea="taxon.attributes.DK_reference" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			            <div class="x-editable-texarea">{{ taxon.attributes.DK_reference || 'no description' }}</div>
 			          </a>
 		
 			</div>

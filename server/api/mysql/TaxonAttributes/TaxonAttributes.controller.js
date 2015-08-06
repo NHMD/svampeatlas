@@ -69,8 +69,9 @@ function removeEntity(res) {
 exports.show = function(req, res) {
 	TaxonAttributes.find({
 		where: {
-			_id: req.params.id
-		})
+			taxon_id: req.params.id
+		}
+	})
 		.then(handleEntityNotFound(res))
 		.then(responseWithResult(res))
 		.
@@ -92,7 +93,7 @@ exports.update = function(req, res) {
 	
 	TaxonAttributes.find({
 		where: {
-			_id: req.params.id
+			taxon_id: req.params.id
 		}
 	})
 	.then(function(taxonAttr){
@@ -100,7 +101,7 @@ exports.update = function(req, res) {
 			res.send(404);
 		};
 		for(var i=0; i< taxonAttr.attributes.length; i++){
-			taxon.set(taxonAttr.attributes[i] , req.body[taxonAttr.attributes[i]])
+			taxonAttr.set(taxonAttr.attributes[i] , req.body[taxonAttr.attributes[i]])
 		}
 		var changed = taxonAttr.changed().toString();
 		
@@ -139,7 +140,7 @@ exports.update = function(req, res) {
 exports.destroy = function(req, res) {
 	TaxonAttributes.find({
 		where: {
-			_id: req.params.id
+			taxon_id: req.params.id
 		}
 	})
 		.then(handleEntityNotFound(res))

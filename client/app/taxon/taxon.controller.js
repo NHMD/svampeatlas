@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', '$state' ,'$stateParams', '$timeout', '$modal',
-		function($scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, $state, $stateParams, $timeout, $modal) {
+	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes','$state' ,'$stateParams', '$timeout', '$modal',
+		function($scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService,TaxonAttributes, $state, $stateParams, $timeout, $modal) {
 			
+			$scope.Taxon = Taxon;
 			$scope.changeRankAndSave = function(taxon){
 				
 				taxon.RankName = $scope.superrank;
@@ -48,6 +49,9 @@ angular.module('svampeatlasApp')
 				$scope.taxon = Taxon.get({
 					id: $stateParams.id
 				});
+				$scope.taxonAttributes	= TaxonAttributes.get({
+					id: $stateParams.id
+				});
 				console.log($scope.taxon);
 				
 				$scope.taxon.$promise.then(function() {
@@ -58,7 +62,7 @@ angular.module('svampeatlasApp')
 						$scope.superrank = "supergenus";
 					};
 					
-					
+				
 					
 				$scope.taxon.Children = Taxon.query(
 					{where : {parent_id: $scope.taxon._id},

@@ -894,59 +894,6 @@ exports.setParent = function(req, res) {
 
 
 
-exports.showImages = function(req, res){
-	models.TaxonImages.findAll({
-		where: {
-			taxon_id: req.params.id
-		}
-	})
-		.then(handleEntityNotFound(res))
-		.then(responseWithResult(res, 200))
-		.
-	catch (handleError(res));
-	
-}
-
-// Creates a new taxon in the DB.
-exports.addImage = function(req, res) {
-	models.TaxonImages.create(req.body)
-		.then(responseWithResult(res, 201))
-	.catch (handleError(res));
-};
-
-// Deletes a taxon image from the DB.
-exports.deleteImage = function(req, res) {
-	models.TaxonImages.find({
-		where: {
-			_id: req.params.imgid,
-			taxon_id: req.params.id
-			
-		}
-	})
-		.then(handleEntityNotFound(res))
-		.then(removeEntity(res))
-		.
-	catch (handleError(res));
-};
-
-// Updates an existing taxon in the DB.
-exports.updateImage = function(req, res) {
-	if (req.body._id) {
-		delete req.body._id;
-	}
-	console.log(JSON.stringify(req.params))
-	models.TaxonImages.find({
-		where: {
-			_id: req.params.imgid,
-			taxon_id: req.params.id
-		}
-	})
-		.then(handleEntityNotFound(res))
-		.then(saveUpdates(req.body))
-		.then(responseWithResult(res))
-		.
-	catch (handleError(res));
-};
 
 exports.showTree = function(req, res) {
 
