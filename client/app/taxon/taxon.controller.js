@@ -298,12 +298,4 @@ angular.module('svampeatlasApp')
 			}
 			*/
 		}
-	])
-	.filter('synonymsWithoutSelf', function() {
-		return function(synonyms) {
-			return _.filter(synonyms, function(s) {
-				return s.accepted_id !== s._id;;
-			});
-
-		};
-	});
+	]);

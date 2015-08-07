@@ -11,7 +11,7 @@ angular.module('svampeatlasApp')
     }];
 	
 	$scope.isTaxonBase = function(){
-		var TaxonBaseStates = ['taxonomy','funindex', 'taxon' ];
+		var TaxonBaseStates = ['taxonomy','funindex', 'taxon', 'taxonredlistdata' ];
 		
 		return (_.find(TaxonBaseStates, function(s){
 			return s === $state.current.name;
