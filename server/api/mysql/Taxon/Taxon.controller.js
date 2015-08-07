@@ -562,6 +562,14 @@ exports.create = function(req, res) {
 			})
 			.then(function(taxon) {
 		
+				return [taxon, models.TaxonAttributes.create({
+	
+					taxon_id: taxon._id
+			
+				})]
+			})
+			.spread(function(taxon) {
+		
 				return [taxon, models.TaxonLog.create({
 					eventname: "New taxon",
 					description: taxon.FullName + " (id: "+taxon._id+") was added to our database. Datasource: "+newTaxon.dataSource,
@@ -591,6 +599,9 @@ exports.create = function(req, res) {
 					}, {
 						model: models.Taxon,
 						as: "acceptedTaxon"
+					}, {
+						model: models.TaxonAttributes,
+						as: "attributes"
 					}
 
 				]

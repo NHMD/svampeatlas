@@ -6,7 +6,9 @@
 </div>	
 	    	<div class="row">
 			<div class="col-md-8" >
-			<h2>{{taxon.FullName}} <button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon</button> <button class="btn btn-danger" ng-show="taxon._id === taxon.accepted_id" ng-click="synonymModal.show()" tabindex="0">Make into synonym</button></h2>
+			<h2>{{taxon.FullName}} <button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon</button> <button class="btn btn-danger" ng-show="taxon._id === taxon.accepted_id" ng-click="synonymModal.show()" tabindex="0">Make into synonym</button>
+<button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			
+			</h2>
 
 			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) <button class="btn btn-xs btn-danger pull-right"  ng-click="unlinkSynonym()" tabindex="0">Unlink synonym</button></div>
 			<div class="alert alert-danger col-md-12" role="alert" ng-show="taxon.parent_id === null"><strong>Orphant taxon! </strong> Please add parent Taxon in the actions menu on the right. 
@@ -105,9 +107,22 @@
 			  	    </div>
 			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			  	      <div class="panel-body">
-			  	        <ul>
+  						  <table class="table parent-taxon-table">
+  							   <tr ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><td st-ratio="70">
+  						 <a href="/taxon/{{syn._id}}">{{syn.FullName}}</a>
+  						  </td>
+					  <td st-ratio="13">
+					    						<button class="btn btn-sm btn-danger" ng-click="mergeWithSynTaxon(syn)" data-html=true data-title="{{mergetooltip.title}}" bs-tooltip>Merge</button>
+					    						  </td>
+												  <td st-ratio="17">
+												    						<button class="btn btn-sm btn-danger" ng-click="overWriteFromSynTaxon(syn)" data-html=true data-title="{{overwritetooltip.title}}" bs-tooltip>Overwrite</button>
+												    						  </td>
+					  </tr>
+					  </table>
+			  	        
+						<!--<ul>
 							<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
-						</ul>
+						</ul> -->
 			  	      </div>
 			  	    </div>
 			  	  </div>
@@ -200,7 +215,7 @@
 		
 		
 				    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onbeforesave="validateImage()" ng-controller="TaxonCtrl">
-					<div>	<button class="btn btn-success" ng-click="newPhoto();" ng-show="!imageForm.$visible">Add photo</button><button class="btn btn-primary" ng-click=" editImage()" ng-show="taxon.images.length > 0 && !imageForm.$visible">Update photo info</button><button class="btn btn-danger pull-right" ng-show="taxon.images.length > 0 && !imageForm.$visible" ng-click="deleteImage()">Delete photo</button></div>
+					<div>	<button class="btn btn-success" ng-click="newPhoto();" ng-show="!imageForm.$visible">Add photo</button> <button class="btn btn-primary" ng-click=" editImage()" ng-show="taxon.images.length > 0 && !imageForm.$visible">Update photo info</button> <button class="btn btn-danger pull-right" ng-show="taxon.images.length > 0 && !imageForm.$visible" ng-click="deleteImage()">Delete photo</button></div>
 				      <div>
 				        <!-- editable username (text with validation) -->
 				        <span class="title">Thumbnail url: </span>

@@ -10,8 +10,7 @@ module.exports = function(sequelize, DataTypes) {
     taxon_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -53,6 +52,7 @@ module.exports = function(sequelize, DataTypes) {
 	PresentInDK: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+		defaultValue: false
     },
     DK_reference: {
       type: DataTypes.STRING,
