@@ -7,7 +7,7 @@
 	    	<div class="row">
 			<div class="col-md-8" >
 			<h2>{{taxon.FullName}} <button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon</button> <button class="btn btn-danger" ng-show="taxon._id === taxon.accepted_id" ng-click="synonymModal.show()" tabindex="0">Make into synonym</button>
-<button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			
+<button class="btn btn-lg btn-primary" ng-show="redListDataIsDirty === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="redListDataIsDirty === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			
 			</h2>
 
 			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) <button class="btn btn-xs btn-danger pull-right"  ng-click="unlinkSynonym()" tabindex="0">Unlink synonym</button></div>

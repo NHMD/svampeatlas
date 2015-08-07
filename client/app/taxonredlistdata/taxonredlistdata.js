@@ -3,8 +3,8 @@
 angular.module('svampeatlasApp')
   .config(function ($stateProvider) {
     $stateProvider
-      .state('taxaredlisdata', {
-        url: '/taxaredlisdata/:id?',
+      .state('taxonredlistdata', {
+        url: '/taxonredlistdata/:id?',
         templateUrl: 'app/taxonredlistdata/taxonredlistdata.html',
         controller: 'TaxonRedListDataCtrl'
       });

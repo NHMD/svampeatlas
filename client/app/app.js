@@ -22,7 +22,14 @@ angular.module('svampeatlasApp', [
 	$httpProvider.interceptors.push('xmlHttpInterceptor');
 	
   })
+.filter('synonymsWithoutSelf', function() {
+	return function(synonyms) {
+		return _.filter(synonyms, function(s) {
+			return s.accepted_id !== s._id;;
+		});
 
+	};
+})
   .factory('authInterceptor', function($rootScope, $q, $cookieStore, $injector) {
     var state;
     return {
