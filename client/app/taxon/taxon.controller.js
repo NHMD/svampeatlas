@@ -56,6 +56,16 @@ angular.module('svampeatlasApp')
 				
 				$scope.taxon.$promise.then(function() {
 					
+					$scope.mergetooltip = {
+					  "title": "Merge all unset attributes from this taxon.<br />All attributes currently present on "+$scope.taxon.FullName+ " will be preserved.",
+					  "checked": false
+					};
+			
+					$scope.overwritetooltip = {
+					  "title": "Overwrite all attributes of "+$scope.taxon.FullName+ "<br />with those of this taxon.",
+					  "checked": false
+					};
+					
 					if($scope.taxon.RankName === "sp."){
 						$scope.superrank = "superspecies";
 					} else if($scope.taxon.RankName ==="gen."){
@@ -224,6 +234,36 @@ angular.module('svampeatlasApp')
 				})
 			}
 			
+			$scope.mergeWithSynTaxon = function(syn){
+				
+				TaxonAttributes.get({id: syn._id}).$promise.then(function(synAttributes){
+				//	alert(syn_id)
+					angular.forEach($scope.taxon.attributes, function(value, key) {
+						
+						if(key !== 'taxon_id' && !value && synAttributes[key]){
+							$scope.taxon.attributes[key] = synAttributes[key];
+							$scope.taxonAttributesUnsaved = true;
+						}
+					});
+				})
+				
+			};
+			
+			$scope.overWriteFromSynTaxon = function(syn){
+				if (confirm("Overwrite all attributes of "+$scope.taxon.FullName+" with those of "+syn.FullName+" ?")){
+				TaxonAttributes.get({id: syn._id}).$promise.then(function(synAttributes){
+				//	alert(syn_id)
+					angular.forEach(synAttributes, function(value, key) {
+						
+						if(key !== 'taxon_id' && value){
+							$scope.taxon.attributes[key] = value;
+							$scope.taxonAttributesUnsaved = true;
+						}
+					});
+				})
+			};
+			};
+			
 			$scope.parentModal = $modal({
 				scope: $scope,
 				template: '/app/taxon/parent.modal.tpl.html',
@@ -240,6 +280,8 @@ angular.module('svampeatlasApp')
 				template: '/app/taxon/synonym.modal.tpl.html',
 				show: false
 			});
+			
+			
 		/*	$scope.ranktabs = [
 			    { title:'Change parent',  active: true},
 			    { title:'Choose new rank'   },
