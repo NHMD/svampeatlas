@@ -782,6 +782,35 @@ exports.addSynonym = function(req, res) {
 						transaction: t
 					})
 			})
+			.then(function() {
+		
+					return [models.TaxonAttributes.find({
+						where : {taxon_id: req.params.id}
+					}, {
+						transaction: t
+					}),
+					models.TaxonAttributes.find({
+											where: {taxon_id: synonymTaxon._id}
+										}, {
+											transaction: t
+										})
+				]
+			})
+			.spread(function(taxonAttrs, synonymTaxonAttrs){
+				
+				_.each(synonymTaxonAttrs.dataValues, function(value, key) {
+					
+					if(key !== 'taxon_id' && value && !taxonAttrs.get(key)){
+						taxonAttrs.set(key, value);
+						
+						
+					}
+				});
+				
+				return taxonAttrs.save({
+											transaction: t
+										})
+			})
 
 	})
 
