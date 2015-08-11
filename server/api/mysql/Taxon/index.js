@@ -4,6 +4,7 @@ var express = require('express');
 var controller = require('./Taxon.controller');
 var attributesController = require('../TaxonAttributes/TaxonAttributes.controller');
 var imagesController = require('../TaxonImages/TaxonImages.controller');
+var naturtypeController = require('../Naturtype/Naturtype.controller');
 var auth = require('../../../auth/auth.service');
 
 var router = express.Router();
@@ -36,7 +37,9 @@ router.post('/:id/attributes',auth.hasRole('taxonomyadmin'),   attributesControl
 router.put('/:id/attributes',auth.hasRole('taxonomyadmin'),   attributesController.update);
 router.delete('/:id/attributes',auth.hasRole('taxonomyadmin'),   attributesController.destroy);
 
-
+router.get('/:id/naturetypes', naturtypeController.showTaxonNatureTypes);
+router.post('/:id/naturetypes',auth.hasRole('taxonomyadmin'),  naturtypeController.addTaxonNatureType);
+router.delete('/:id/naturetypes/:naturtypeid',auth.hasRole('taxonomyadmin'),  naturtypeController.deleteTaxonNatureType);
 
 
 module.exports = router;

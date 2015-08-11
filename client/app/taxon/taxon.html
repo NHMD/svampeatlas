@@ -132,6 +132,29 @@
 			  	    <div class="panel-heading" role="tab">
 			  	      <h4 class="panel-title">
 			  	        <a bs-collapse-toggle>
+			  	          Nature types ( {{taxon.naturtyper.length}} )
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+						  
+						 <div class="checkbox" ng-repeat="natureType in natureTypes">
+							 
+						      <label  for="{{natureType._id}}">
+						        <input type="checkbox"  ng-model="natureType.isChecked"  id="{{natureType._id}}" ng-change="addOrRemoveNatureType(natureType)"/>
+						        {{natureType.name}}
+						      </label>
+						    </div>
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
 			  	          Vernacular names
 			  	        </a>
 			  	      </h4>

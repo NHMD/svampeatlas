@@ -14,7 +14,9 @@ module.exports = function(app) {
   app.use('/api/taxonimages', require('./api/mysql/TaxonImages'));
   app.use('/api/taxonranks', require('./api/mysql/TaxonRanks'));
   app.use('/api/taxonredlistdata', require('./api/mysql/TaxonRedListData'));
+//  app.use('/api/redlisteditions', require('./api/mysql/RedListEditions'));
    app.use('/api/taxonattributes', require('./api/mysql/TaxonAttributes'));
+   app.use('/api/naturetypes', require('./api/mysql/Naturtype'));
   app.use('/api/things', require('./api/mysql/thing'));
   app.use('/api/users', require('./api/mysql/user'));
    app.use('/api/roles', require('./api/mysql/role'));

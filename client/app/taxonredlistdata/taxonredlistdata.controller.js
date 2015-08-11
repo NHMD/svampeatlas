@@ -5,7 +5,7 @@ angular.module('svampeatlasApp')
 		function($scope, Taxon, $state, $stateParams, $timeout, TaxonRedListData) {
 		
 			$scope.Taxon = Taxon;
-
+		
 			if ($stateParams.id && $stateParams.id !== 'new') {
 						
 							$scope.taxon = Taxon.get({
