@@ -33,7 +33,7 @@ angular.module('svampeatlasApp')
 		  };
 	      TaxonLog.query(query, function (result, headers) {
 	        $scope.displayed = result;
-	      	 tableState.pagination.numberOfPages = parseInt(headers('count') / limit);//set the number of pages so the pagination can update
+	      	 tableState.pagination.numberOfPages = Math.ceil(headers('count') / limit);//set the number of pages so the pagination can update
 	        $scope.isLoading = false;
 	      } );
 	    };

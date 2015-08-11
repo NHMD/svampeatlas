@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes','$state' ,'$stateParams', '$timeout', '$modal',
-		function($scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService,TaxonAttributes, $state, $stateParams, $timeout, $modal) {
+	.controller('TaxonCtrl', ['$q','$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes','NatureTypes', '$state' ,'$stateParams', '$timeout', '$modal',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService,TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal) {
 			
 			$scope.Taxon = Taxon;
+			$scope.natureTypes = NatureTypes.query();
+			
 			$scope.changeRankAndSave = function(taxon){
 				
 				taxon.RankName = $scope.superrank;
@@ -112,7 +114,19 @@ angular.module('svampeatlasApp')
 					}, true);
 
 				})
+				
+				$q.all([$scope.taxon.$promise, $scope.natureTypes.$promise]).then(function(){
+					
+					for(var i=0; i< $scope.taxon.naturtyper.length; i++ ) {
+				
+					    _.find($scope.natureTypes, function(nt) {
+					    				   return nt._id === $scope.taxon.naturtyper[i]._id;
+					   			   }).isChecked = true;
+					}
 
+				})
+
+				
 			};
 
 			$scope.TaxonTypeaheadService = TaxonTypeaheadService;
@@ -281,7 +295,41 @@ angular.module('svampeatlasApp')
 				show: false
 			});
 			
+			$scope.taxonHasNatureType = function(natureTypeId){
+				
+				return _.find($scope.taxon.naturtyper, function(nt) {
+ 				   return nt._id === natureTypeId;
+			   }) ;
+			};
 			
+			$scope.addOrRemoveNatureType = function(type){
+				
+				if(type.isChecked && !$scope.taxonHasNatureType(type._id)){
+					// create the type
+					Taxon.addNatureType({
+					id: $scope.taxon._id
+				}, type).$promise.then(function(){
+					$scope.taxon.naturtyper.push(type)
+				}).catch(function(err){
+					type.isChecked = !type.isChecked
+				})
+				}
+				else if(!type.isChecked && $scope.taxonHasNatureType(type._id)){
+					// delete the type
+					Taxon.deleteNatureType({
+					id: $scope.taxon._id,
+						naturetypeid: 	type._id
+				}).$promise.then(function(){
+					_.remove($scope.taxon.naturtyper, function(t) {
+					  return t._id == type._id;
+					});
+				}).catch(function(err){
+					type.isChecked = !type.isChecked
+				})
+					
+				}
+				
+			}
 		/*	$scope.ranktabs = [
 			    { title:'Change parent',  active: true},
 			    { title:'Choose new rank'   },

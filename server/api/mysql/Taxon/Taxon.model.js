@@ -218,6 +218,16 @@ module.exports = function(sequelize, DataTypes) {
     					as: "attributes"
     				});
 			
+					models.Taxon.belongsToMany(models.Naturtype, {
+					  through: models.TaxonNaturtype,
+					  foreignKey: 'taxon_id',
+					as: 'naturtyper'
+					});
+					models.Naturtype.belongsToMany(models.Taxon, {
+					  through: models.TaxonNaturtype,
+					  foreignKey: 'naturtype_id'
+					});
+			
     		}
 		
   		},

@@ -84,6 +84,31 @@ angular.module('svampeatlasApp')
 				url: '/api/taxons/:id/attributes',
 				isArray: false
 			},
+			'addNatureType': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/naturetypes',
+				isArray: false
+			},
+			'deleteNatureType': {
+				method: 'DELETE',
+				params: {
+					id: '@_id',
+					naturetypeid: 'naturetypeid'
+				},
+				url: '/api/taxons/:id/naturetypes/:naturetypeid',
+				isArray: false
+			},
+			'getNatureTypes': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/naturetypes',
+				isArray: true
+			},
 		});
 
 	});

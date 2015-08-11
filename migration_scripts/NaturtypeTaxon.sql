@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Struktur-dump for tabellen `NaturtypeTaxon`
 --
 
-CREATE TABLE IF NOT EXISTS `NaturtypeTaxon` (
+CREATE TABLE IF NOT EXISTS `TaxonNaturtype` (
   `naturtype_id` int(11) NOT NULL,
   `taxon_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `NaturtypeTaxon` (
 --
 -- Indeks for tabel `NaturtypeTaxon`
 --
-ALTER TABLE `NaturtypeTaxon`
+ALTER TABLE `TaxonNaturtype`
  ADD PRIMARY KEY (`naturtype_id`,`taxon_id`), ADD KEY `taxon_id` (`taxon_id`);
 
 --
@@ -48,10 +48,18 @@ ALTER TABLE `NaturtypeTaxon`
 --
 -- Begrænsninger for tabel `NaturtypeTaxon`
 --
-ALTER TABLE `NaturtypeTaxon`
+
+select t.taxon_id from TaxonNaturtype t where t.taxon_id not in (select distinct _id from Taxon);
+
+ALTER TABLE `TaxonNaturtype`
 ADD CONSTRAINT `naturtypetaxon_ibfk_1` FOREIGN KEY (`naturtype_id`) REFERENCES `Naturtyper` (`_id`),
 ADD CONSTRAINT `naturtypetaxon_ibfk_2` FOREIGN KEY (`taxon_id`) REFERENCES `Taxon` (`_id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+INSERT INTO TaxonNaturtype SELECT n._id, t.DkIndexNumber FROM Naturtyper n JOIN TaxonBase t ON t.Naturtyper LIKE CONCAT("%",n.verbatimId,"%");
+
+INSERT INTO TaxonNaturtype SELECT n._id, t.DkIndexNumber FROM Naturtyper n JOIN TaxonBase_missing_taxa t ON t.Naturtyper LIKE CONCAT("%",n.verbatimId,"%");
+

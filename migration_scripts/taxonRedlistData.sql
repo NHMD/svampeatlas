@@ -240,3 +240,37 @@ UPDATE TaxonRedListData SET Status = "NA" WHERE VerbatimStatus LIKE "%NA%";
 UPDATE TaxonRedListData SET Status = "NE" WHERE VerbatimStatus LIKE "%NE%";
 
 Flere ? hvad med f.eks."DK:  R", "DK (E)", "DK (Ex)", "(V)" ??
+
+
+INSERT INTO TaxonRedListData (
+	`taxon_id`,
+	`VerbatimStatus`,
+	`year` 
+) SELECT `DkIndexNumber`,
+	`StatusNy`,
+	2005 FROM TaxonBase_missing_taxa WHERE StatusNy IS NOT NULL AND StatusNy <> "" AND roedlisteGruppe <> "" AND StatusDK <> "";
+
+
+	-- 1997
+
+	INSERT INTO TaxonRedListData (
+		`taxon_id`,
+		`VerbatimStatus`,
+		`year` 
+	) SELECT `DkIndexNumber`,
+	 
+		`Status`,
+		1997 FROM TaxonBase_missing_taxa WHERE Status IS NOT NULL AND Status <> "" AND roedlisteGruppe <> "" AND StatusDK <> "";
+
+
+
+-- 1990
+
+		INSERT INTO TaxonRedListData (
+			`taxon_id`,
+			`VerbatimStatus`,
+			`year` 
+		) SELECT `DkIndexNumber`,
+	 
+			`Gl_status`,
+			1990 FROM TaxonBase_missing_taxa WHERE Gl_status IS NOT NULL AND Gl_status <> "" AND roedlisteGruppe <> "" AND StatusDK <> "";

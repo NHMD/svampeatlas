@@ -114,6 +114,9 @@ exports.show = function(req, res) {
 			}, {
 				model: models.TaxonAttributes,
 				as: "attributes"
+			}, {
+				model: models.Naturtype,
+				as: 'naturtyper'
 			}
 
 		]
