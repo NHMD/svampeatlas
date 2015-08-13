@@ -17,6 +17,8 @@ module.exports = function(app) {
 //  app.use('/api/redlisteditions', require('./api/mysql/RedListEditions'));
    app.use('/api/taxonattributes', require('./api/mysql/TaxonAttributes'));
    app.use('/api/naturetypes', require('./api/mysql/Naturtype'));
+   app.use('/api/nutritionstrategies', require('./api/mysql/ErnaeringsStrategi'));
+   
   app.use('/api/things', require('./api/mysql/thing'));
   app.use('/api/users', require('./api/mysql/user'));
    app.use('/api/roles', require('./api/mysql/role'));

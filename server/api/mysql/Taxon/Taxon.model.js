@@ -228,6 +228,18 @@ module.exports = function(sequelize, DataTypes) {
 					  foreignKey: 'naturtype_id'
 					});
 			
+			
+					models.Taxon.belongsToMany(models.ErnaeringsStrategi, {
+					  through: models.TaxonErnaeringsStrategi,
+					  foreignKey: 'taxon_id',
+					as: 'nutritionstrategies'
+					});
+					models.ErnaeringsStrategi.belongsToMany(models.Taxon, {
+					  through: models.TaxonErnaeringsStrategi,
+					  foreignKey: 'ernaeringsstrategi_id'
+					});
+			
+				
     		}
 		
   		},
