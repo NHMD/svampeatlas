@@ -109,6 +109,31 @@ angular.module('svampeatlasApp')
 				url: '/api/taxons/:id/naturetypes',
 				isArray: true
 			},
+			'addNutritionStrategy': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/nutritionstrategies',
+				isArray: false
+			},
+			'deleteNutritionStrategy': {
+				method: 'DELETE',
+				params: {
+					id: '@_id',
+					nutritionstrategyid: 'nutritionstrategyid'
+				},
+				url: '/api/taxons/:id/nutritionstrategies/:nutritionstrategyid',
+				isArray: false
+			},
+			'getNutritionStrategies': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/nutritionstrategies',
+				isArray: true
+			},
 		});
 
 	});

@@ -1,0 +1,99 @@
+
+table.parent-taxon-table {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: auto; /* this can vary */
+	margin-top: 10px;
+}
+
+table * {
+    box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+thead {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+tbody {
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+thead > tr, tbody > tr, tfoot > tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+thead, tfoot {
+    flex-shrink: 0;
+}
+
+th, tbody td {
+    width: 20%; /* this can vary */
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+tfoot {
+    display: inline-block;
+}
+
+tfoot td {
+    width: 100%;
+    display: inline-block;
+}
+
+.carousel-caption {
+  padding-bottom: 0px !important;
+}
+
+.carousel-indicators {
+  bottom: -6px !important;
+}
+
+form[name="imageForm"] .title {
+  display: inline-block;
+  font-weight: bold;
+  padding-top: 5px;
+  vertical-align: top;
+  min-width: 150px;
+}
+
+form[name="imageForm"] > div {
+  height: auto;
+  padding: 5px 0;
+}
+
+.possible-funindex-syn-alert {
+	margin-top: 10px;
+}
+
+ .panel-heading[role=tab] .panel-title a, a[ng-click], input[type=checkbox] {
+  cursor: pointer;
+}
+
+div.x-editable-texarea {
+
+	  display: block;
+	  padding: 9.5px;
+	  margin: 0 0 10px;
+	  font-size: 13px;
+	  line-height: 1.42857143;
+	  color: #333;
+	  background-color: #f5f5f5;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	
+}
+
+.tab-pane {
+	margin-top: 10px;	
+}

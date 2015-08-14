@@ -153,6 +153,11 @@ models.TaxonNaturtype.find({
     }
   })
   .then(handleEntityNotFound(res))
-  .then(removeEntity(res))
+  .then(function(taxonNaturtype){
+	  return models.TaxonNaturtype.destroy({where: taxonNaturtype.dataValues});
+  })
+  .then(function(){
+	  return res.status(204).send()
+  })
   .catch(handleError(res));
 };

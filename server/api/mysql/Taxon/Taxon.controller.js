@@ -117,6 +117,9 @@ exports.show = function(req, res) {
 			}, {
 				model: models.Naturtype,
 				as: 'naturtyper'
+			}, {
+				model: models.ErnaeringsStrategi,
+				as: 'nutritionstrategies'
 			}
 
 		]

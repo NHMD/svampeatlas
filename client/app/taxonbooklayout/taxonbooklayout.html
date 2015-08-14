@@ -1,0 +1,329 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+
+<div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
+	
+</div>	
+	    	<div class="row">
+			<div class="col-md-8" >
+			<h2>{{taxon.FullName}} 		
+			</h2>
+
+			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbooklayout/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) <button class="btn btn-xs btn-danger pull-right"  ng-click="unlinkSynonym()" tabindex="0">Unlink synonym</button></div>
+			<div class="alert alert-danger col-md-12" role="alert" ng-show="taxon.parent_id === null"><strong>Orphant taxon! </strong> Please add parent Taxon in the actions menu on the right. 
+
+			</div>
+			
+			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div class="checkbox"><label>Present in DK
+    <input type="checkbox" ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+  </label></div>
+			
+			
+			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
+			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> 
+			</p>
+			</div>
+			<div class="col-md-4" >
+				
+			</div>
+			</div>
+
+<div class="row">
+			<div class="col-md-5" ng-show="taxon._id !== undefined">
+	
+	
+					<label class="control-label" for="diagnose">Diagnose</label>
+			<a href="#" id="diagnose" editable-textarea="taxon.attributes.diagnose" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			    <div class="x-editable-texarea">{{ taxon.attributes.diagnose || 'n/a' }}</div>
+			  </a>
+			  <label class="control-label" for="forvekslingsmuligheder">Forvekslingsmuligheder</label>
+			  <a href="#" id="forvekslingsmuligheder" editable-textarea="taxon.attributes.forvekslingsmuligheder" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			      <div class="x-editable-texarea">{{ taxon.attributes.forvekslingsmuligheder || 'n/a' }}</div>
+			    </a>
+				 <div class="row">
+				 <div class="col-md-6">
+			 <div  ng-repeat="nutritionStrategy in nutritionStrategies | limitTo: basicNutritionLimit" >
+				 
+			      <label  >
+			        <input type="checkbox"  ng-model="nutritionStrategy.isChecked"   ng-change="addOrRemoveNutritionStrategy(nutritionStrategy)"/>
+			        {{nutritionStrategy.name}}
+			      </label>
+			    </div>
+				 </div>
+				 
+				 <div class="col-md-6" ng-show="taxon.isBiotroph">
+ <div  ng-repeat="nutritionStrategy in nutritionStrategies | limitTo: biotrofNutrionLimit : basicNutritionLimit" >
+	 
+      <label  >
+        <input type="checkbox"  ng-model="nutritionStrategy.isChecked"   ng-change="addOrRemoveNutritionStrategy(nutritionStrategy)"/>
+        {{nutritionStrategy.name}}
+      </label>
+    </div>
+	</div>
+	</div>
+   <label class="control-label" for="oekologi">Økologi</label>
+    <a href="#" id="oekologi" editable-textarea="taxon.attributes.oekologi" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+        <div class="x-editable-texarea">{{ taxon.attributes.oekologi || 'n/a' }}</div>
+      </a>
+				 <label class="control-label" for="spiselighedsrapport">Spiselighedsrapport</label>
+			    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.spiselighedsrapport" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			        <div class="x-editable-texarea">{{ taxon.attributes.spiselighedsrapport || 'n/a' }}</div>
+			      </a>
+				 <label class="control-label" for="beskrivelse">Beskrivelse</label>
+			    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.beskrivelse" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			        <div class="x-editable-texarea">{{ taxon.attributes.beskrivelse || 'n/a' }}</div>
+			      </a>
+  				 <label class="control-label" for="BeskrivelseUK">Beskrivelse UK</label>
+  			    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.BeskrivelseUK" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+  			        <div class="x-editable-texarea">{{ taxon.attributes.BeskrivelseUK || 'n/a' }}</div>
+  			      </a>
+				  
+					 <label class="control-label" for="bemaerkning">Bemærkning</label>
+			        <a href="#" id="bemaerkning" editable-textarea="taxon.attributes.bemaerkning" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			            <div class="x-editable-texarea">{{ taxon.attributes.bemaerkning || 'n/a' }}</div>
+			          </a>
+		  
+		  
+					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
+		
+					 <label class="control-label" for="DK_reference">DK referencer</label>
+			        <a href="#" id="DK_reference" editable-textarea="taxon.attributes.DK_reference" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+			            <div class="x-editable-texarea">{{ taxon.attributes.DK_reference || 'n/a' }}</div>
+			          </a>
+		
+			</div>
+			<div class="col-md-1" ng-show="taxon._id !== undefined">
+
+			</div>
+			<div class="col-md-6" >
+				<div class="panel-group" role="tablist" aria-multiselectable="true" bs-collapse>
+			    	  <!-- ########################################-->
+			    	  <div class="panel panel-default">
+			    	    <div class="panel-heading" role="tab">
+			    	      <h4 class="panel-title">
+			    	        <a bs-collapse-toggle>
+			    	       <i class="fa fa-exclamation-triangle text-danger" ng-show=" taxon.Parent === null "></i>   Parent taxon 
+			    	        </a>
+			    	      </h4>
+			    	    </div>
+			    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			    	      <div class="panel-body">
+							  <div class="alert alert-warning" role="alert" ng-show="taxon._id === undefined && taxon.Parent !== null && selectedParentTaxon === undefined"><strong>Suggested parent taxon.</strong> Please review this and change it if neccesary.</div>
+							  <div class="alert alert-danger" role="alert" ng-show="taxon._id === undefined && taxon.Parent === null"><strong>No parent taxon selected.</strong> Please select a parent taxon before saving.</div>
+							  
+							  
+								<table ng-show=" taxon.Parent !== null " class="table parent-taxon-table">
+
+								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30"><a href="/taxonbooklayout/{{taxon.Parent._id}}">{{ taxon.Parent.FullName}}</a></td><td st-ratio="50"></td></tr>
+								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Epithet :</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.TaxonName}}</td><td st-ratio="50"></td></tr>
+								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{ taxon.Parent.Author}}</i></td><td st-ratio="50"></td></tr>
+								  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.RankName}}</td><td st-ratio="50"></td></tr>
+				
+								</table>
+			    	      </div>
+			    	    </div>
+			    	  </div>
+			    	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined && taxon.synonyms.length && taxon.synonyms.length >1">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
+			  	          Synonyms ({{taxon.synonyms.length -1}})
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+  						  <table class="table parent-taxon-table">
+  							   <tr ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><td st-ratio="70">
+  						 <a href="/taxonbooklayout/{{syn._id}}">{{syn.FullName}}</a>
+  						  </td>
+					  
+					  </tr>
+					  </table>
+			  	        
+						<!--<ul>
+							<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxonbooklayout/{{syn._id}}">{{syn.FullName}}</a></li>
+						</ul> -->
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
+			  	          Nature types ( {{taxon.naturtyper.length}} )
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+						  
+						 <div class="checkbox" ng-repeat="natureType in natureTypes">
+							 
+						      <label  for="{{natureType._id}}">
+						        <input type="checkbox"  ng-model="natureType.isChecked"  id="{{natureType._id}}" ng-change="addOrRemoveNatureType(natureType)"/>
+						        {{natureType.name}}
+						      </label>
+						    </div>
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
+			  	          Vernacular names
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+						  <table class="table parent-taxon-table">
+							   <tr ><td st-ratio="100">
+						 <label class="control-label" for="vernacular_name_DE">DE: </label>
+				        <a href="#" id="vernacular_name_DE" editable-text="taxon.attributes.vernacular_name_DE" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+				            {{ taxon.attributes.vernacular_name_DE || 'n/a' }}
+				          </a>
+						  </td></tr>
+						  <tr><td  st-ratio="100">
+  						 <label class="control-label" for="vernacular_name_Fi">Fi: </label>
+  				        <a href="#" id="vernacular_name_Fi" editable-text="taxon.attributes.vernacular_name_Fi" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+  				            {{ taxon.attributes.vernacular_name_Fi || 'n/a' }}
+  				          </a>
+						   </td></tr>
+   						  <tr><td  st-ratio="100">
+     						 <label class="control-label" for="vernacular_name_FR">FR: </label>
+     				        <a href="#" id="vernacular_name_FR" editable-text="taxon.attributes.vernacular_name_FR" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+     				            {{ taxon.attributes.vernacular_name_FR || 'n/a' }}
+     				          </a>
+   						   </td></tr>
+    						  <tr><td  st-ratio="100">
+      						 <label class="control-label" for="vernacular_name_GB">GB: </label>
+      				        <a href="#" id="vernacular_name_GB" editable-text="taxon.attributes.vernacular_name_GB" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+      				            {{ taxon.attributes.vernacular_name_GB || 'n/a' }}
+      				          </a>
+    						   </td></tr>
+       						  <tr><td  st-ratio="100">
+         						 <label class="control-label" for="vernacular_name_NL">NL: </label>
+         				        <a href="#" id="vernacular_name_NL" editable-text="taxon.attributes.vernacular_name_NL" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+         				            {{ taxon.attributes.vernacular_name_NL || 'n/a' }}
+         				          </a>
+       						   </td></tr>
+        						  <tr><td  st-ratio="100">
+          						 <label class="control-label" for="vernacular_name_NO">NO: </label>
+          				        <a href="#" id="vernacular_name_NO" editable-text="taxon.attributes.vernacular_name_NO" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+          				            {{ taxon.attributes.vernacular_name_NO || 'n/a' }}
+          				          </a>
+        						   </td></tr>
+           						  <tr><td  st-ratio="100">
+             						 <label class="control-label" for="vernacular_name_SE">SE: </label>
+             				        <a href="#" id="vernacular_name_SE" editable-text="taxon.attributes.vernacular_name_SE" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+             				            {{ taxon.attributes.vernacular_name_SE || 'n/a' }}
+             				          </a>
+           						   </td></tr>
+						  </table>
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+				  <!-- ########################################-->
+				  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+				    <div class="panel-heading" role="tab">
+				      <h4 class="panel-title">
+				        <a bs-collapse-toggle>
+				          Images ( {{taxon.images.length}} )
+				        </a>
+				      </h4>
+				    </div>
+				    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+				      <div class="panel-body">
+					    <div>
+					      <carousel disable-ng-animate interval="">
+					        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
+					          <img ng-src="{{slide.uri}}" style="margin:auto;">
+					          <div class="carousel-caption">
+         
+					            &copy; {{slide.photographer}}, {{slide.collectionNumber}}
+					          </div>
+		
+					        </slide>
+				
+					      </carousel>
+				    </div>
+
+					 <!-- ########################################-->
+		
+		
+				    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onbeforesave="validateImage()" ng-controller="TaxonCtrl">
+					<div>	<button class="btn btn-success" ng-click="newPhoto();" ng-show="!imageForm.$visible">Add photo</button> <button class="btn btn-primary" ng-click=" editImage()" ng-show="taxon.images.length > 0 && !imageForm.$visible">Update photo info</button> <button class="btn btn-danger pull-right" ng-show="taxon.images.length > 0 && !imageForm.$visible" ng-click="deleteImage()">Delete photo</button></div>
+				      <div>
+				        <!-- editable username (text with validation) -->
+				        <span class="title">Thumbnail url: </span>
+				        <span editable-url="currentImage.thumburi" e-name="thumburi" e-required>{{ currentImage.thumburi || 'empty' }}</span>
+				      </div> 
+
+				      <div>
+				        <!-- editable username (text with validation) -->
+				        <span class="title">Url: </span>
+				        <span editable-url="currentImage.uri" e-name="uri" e-required>{{ currentImage.uri || 'empty' }}</span>
+				      </div> 
+		  
+				      <div>
+				        <!-- editable username (text with validation) -->
+				        <span class="title">Photographer: </span>
+				        <span editable-text="currentImage.photographer" e-name="photographer" e-required>{{ currentImage.photographer || 'empty' }}</span>
+				      </div>
+		  
+				      <div>
+				        <!-- editable username (text with validation) -->
+				        <span class="title">collectionNumber: </span>
+				        <span editable-text="currentImage.collectionNumber" e-name="collectionNumber" e-required>{{ currentImage.collectionNumber || 'empty' }}</span>
+				      </div>
+		  
+				      <div>
+				        <!-- editable username (text with validation) -->
+				        <span class="title">Country: </span>
+				        <span editable-text="currentImage.country" e-name="country" e-required>{{ currentImage.country || 'empty' }}</span>
+				      </div>
+	
+
+				      <div class="buttons">
+	      
+				        <!-- buttons to submit / cancel form -->
+				        <span ng-show="imageForm.$visible">
+				          <button type="submit" class="btn btn-primary" ng-disabled="imageForm.$waiting">
+				            Save
+				          </button>
+				          <button type="button" class="btn btn-default" ng-disabled="imageForm.$waiting" ng-click="imageForm.$cancel()">
+				            Cancel
+				          </button>
+				        </span>
+				      </div>
+				    </form>
+				  </div>
+				  <!-- ########################################-->
+				</div>
+				</div>
+				
+				
+			
+	</div>		
+	   
+	
+<div class="row">
+
+	
+	<!-- ########################################-->
+
+</div>
+</div>
+<div class="col-md-12">
+
+<div ng-include="'components/footer/footer.html'"></div>
+</div>
