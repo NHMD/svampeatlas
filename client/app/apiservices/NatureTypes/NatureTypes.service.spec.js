@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: RedListEditions', function () {
+describe('Service: NatureTypes', function () {
 
   // load the service's module
   beforeEach(module('svampeatlasApp'));

@@ -66,6 +66,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
     },
+    spiselighedsrapport: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    BeskrivelseUK: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     DKnavn: {
       type: DataTypes.STRING,
       allowNull: true,

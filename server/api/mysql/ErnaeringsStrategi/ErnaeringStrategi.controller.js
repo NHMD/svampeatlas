@@ -140,20 +140,28 @@ exports.showTaxonNutritionStrategies = function(req, res) {
 
 exports.addTaxonNutritionStrategy= function(req, res) {
 
-models.TaxonErnaeringsStrategi.create({naturtype_id: req.body._id, taxon_id: req.params.id})
+models.TaxonErnaeringsStrategi.create({ernaeringsstrategi_id: req.body._id, taxon_id: req.params.id})
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
+
+
 
 exports.deleteTaxonNutritionStrategy = function(req, res) {
 
 models.TaxonErnaeringsStrategi.find({
     where: {
      taxon_id: req.params.id,
-		ernaeringstrategi_id: 	req.params.nutritionstrategyid
+	ernaeringsstrategi_id: 	req.params.nutritionstrategyid
     }
   })
   .then(handleEntityNotFound(res))
-  .then(removeEntity(res))
+  .then(function(taxonErnaeringsStrategi){
+	  return models.TaxonErnaeringsStrategi.destroy({where: taxonErnaeringsStrategi.dataValues});
+  })
+  .then(function(){
+	 
+	  return res.status(204).send()
+  })
   .catch(handleError(res));
 };
