@@ -130,6 +130,44 @@ exports.show = function(req, res) {
 	catch (handleError(res));
 };
 
+exports.showSiblings = function(req, res) {
+	Taxon.find({
+		where: {
+			_id: req.params.id
+		}
+	})
+		.then(handleEntityNotFound(res))
+		.then(function(taxon) {
+			return Taxon.findAll({
+				where: models.Sequelize.and({
+						_id: {
+							ne: taxon._id
+						}
+					}, {
+						parent_id: taxon.parent_id
+					}
+
+				),
+				include: [{
+					model: models.TaxonAttributes,
+					as: "attributes",
+					where: models.Sequelize.and({
+						diagnose: {
+							ne: null
+						}
+					}, {
+						diagnose: {
+							ne: ""
+						}
+					})
+				}]
+			})
+		})
+		.then(responseWithResult(res))
+		.
+	catch (handleError(res));
+};
+
 
 exports.updateSystematics = function(req, res) {
 	Taxon.find({

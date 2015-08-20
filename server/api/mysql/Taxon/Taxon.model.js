@@ -205,18 +205,22 @@ module.exports = function(sequelize, DataTypes) {
     				.belongsTo(models.Taxon, {
     					foreignKey: "accepted_id",
     					as: "acceptedTaxon"
-    				});
+    		
+					});
+					/*
     		models.TaxonAttributes
     				.belongsTo(models.Taxon, {
-    					foreignKey: "taxon_id",
-    					as: "taxon"
+    					foreignKey: "taxon_id" //,
+    					//as: "taxon"
     				});
 					
+					*/
     		models.Taxon
     				.hasOne(models.TaxonAttributes, {
-    					foreignKey: "taxon_id",
+    					foreignKey: "taxon_id" ,
     					as: "attributes"
     				});
+					
 			
 					models.Taxon.belongsToMany(models.Naturtype, {
 					  through: models.TaxonNaturtype,
