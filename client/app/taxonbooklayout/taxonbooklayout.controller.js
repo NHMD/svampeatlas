@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonBookLayoutCtrl', ['$q','$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes','NatureTypes', 'NutritionStrategies','$state' ,'$stateParams', '$timeout', '$modal',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService,TaxonAttributes, NatureTypes,NutritionStrategies, $state, $stateParams, $timeout, $modal) {
+	.controller('TaxonBookLayoutCtrl', ['$q','$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonRedListData','TaxonTypeaheadService', 'TaxonAttributes','NatureTypes', 'NutritionStrategies','$state' ,'$stateParams', '$timeout', '$modal', '$mdSidenav', '$mdUtil', '$log',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonRedListData, TaxonTypeaheadService,TaxonAttributes, NatureTypes,NutritionStrategies, $state, $stateParams, $timeout, $modal, $mdSidenav, $mdUtil, $log) {
 			
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
@@ -21,10 +21,22 @@ angular.module('svampeatlasApp')
 				});
 				console.log($scope.taxon);
 				
-				
+				Taxon.get({
+									id: $stateParams.id
+								});
+								
+				$scope.taxon.$promise.then(function() {
+					$scope.taxon.siblings = Taxon.getSiblings({
+									id: $scope.taxon._id
+								});
+				});
+
+				$scope.redlistdata = TaxonRedListData.query({where: { taxon_id: $stateParams.id}, year: 2009}).$promise.then(function(res){
+				//	$scope.redlistdata = res[0];
+					$scope.redlistdata = res;
 					
-
-
+				})
+				
 				$scope.taxon.$promise.then(function() {
 					$scope.$watch('taxon.images', function(newVal, oldVal) {
 						if (newVal !== undefined && newVal !== oldVal) {
@@ -71,65 +83,9 @@ angular.module('svampeatlasApp')
 				});
 			}
 
-			$scope.isValidYear = function(year) {
-				var yearPattern = /^(19|20)\d{2}$/
 
-				if (!yearPattern.test(year) || (parseInt(year) > new Date().getFullYear())) {
-					return "You must enter a valid year";
-				}
-			}
 
-			$scope.deleteImage = function() {
 
-				return Taxon.deleteImage({
-					id: $scope.taxon._id,
-					imgid: $scope.currentImage._id
-				}).$promise.then(function() {
-					_.remove($scope.taxon.images, function(img) {
-						return img._id = $scope.currentImage._id;
-					});
-
-				});
-			};
-
-			$scope.newPhoto = function() {
-				$scope.currentImage = {}
-				$scope.imageForm.$show();
-			}
-
-			$scope.editImage = function() {
-				$scope.currentImage = $scope.getCurrentImage();
-				$timeout(function() {
-					$scope.imageForm.$show();
-				}, 0)
-
-			}
-
-			$scope.saveOrUpdateImage = function() {
-				if (!$scope.imageForm.$dirty) {
-					return;
-				} else if ($scope.currentImage._id !== undefined && $scope.isValidImage($scope.currentImage)) {
-
-					Taxon.updateImage({
-						id: $scope.taxon._id,
-						imgid: $scope.currentImage._id
-					}, $scope.currentImage);
-				} else if ($scope.isValidImage($scope.currentImage)) {
-					Taxon.addImage({
-						id: $scope.taxon._id
-					}, _.merge($scope.currentImage, {
-						taxon_id: $scope.taxon._id
-					})).$promise.then(function(image) {
-
-						$scope.taxon.images.push(image);
-					})
-				}
-
-			}
-
-			$scope.isValidImage = function(img) {
-				return img.uri !== undefined && img.thumburi !== undefined
-			};
 			
 
 /*
@@ -234,13 +190,66 @@ angular.module('svampeatlasApp')
 					
 				})
 					
-				}
-				
-				
-				
+				}		
 				
 			};
+			
+			
+			
+			$scope.taxon.$promise.then(function(){
+			$scope.getNameWithoutAuthor = function(){
+				
+				 
+					var parts = $scope.taxon.SystematicPath.split(", ");
+				
+					if($scope.taxon.RankID > 10000)
+					{return parts[parts.length-3]+" "+parts[parts.length-2]+" "+$scope.taxon.RankName+" "+parts[parts.length-1]}
+					else if($scope.taxon.RankID === 10000){
+						return parts[parts.length-2]+" "+parts[parts.length-1]
+					} else {
+						return $scope.taxon.TaxonName;
+					}	
+				
+			}
+		});
 
+		$scope.aside = {
+		  "title": "Title",
+		  "content": "Hello Aside<br />This is a multiline message!"
+		};
+		
+		$scope.toggleLeft = buildToggler('left');
+		    $scope.toggleRight = buildToggler('right');
+		    /**
+		     * Build handler to open/close a SideNav; when animation finishes
+		     * report completion in console
+		     */
+		    function buildToggler(navID) {
+		      var debounceFn =  $mdUtil.debounce(function(){
+		            $mdSidenav(navID)
+		              .toggle()
+		              .then(function () {
+		                $log.debug("toggle " + navID + " is done");
+		              });
+		          },200);
+		      return debounceFn;
+		    }
+		
+		    $scope.closeSideNav = function () {
+		         $mdSidenav('right').close()
+		           .then(function () {
+		             $log.debug("close RIGHT is done");
+		           });
+		       };
+			   $scope.getIframeSrc = function(){
+			   	
+				return "http://svampe.dk/soeg/filemaker.php?DKIndex=" +$scope.taxon._id ;
+			   }
+			   
+			   $scope.getBogtekstLength = function(){
+				   return $("#bogtekst").text().length;
+				
+			   }
 		/*	$scope.ranktabs = [
 			    { title:'Change parent',  active: true},
 			    { title:'Choose new rank'   },

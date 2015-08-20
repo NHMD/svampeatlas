@@ -20,6 +20,7 @@ router.get('/tree', controller.showTree);
 router.get('/:id', controller.show);
 router.get('/:id/updatesystematics', controller.updateSystematics);
 
+
 router.post('/', auth.hasRole('taxonomyadmin'), controller.create);
 router.put('/:id',auth.hasRole('taxonomyadmin'),  controller.update);
 router.patch('/:id',auth.hasRole('taxonomyadmin'),  controller.update);
@@ -27,7 +28,7 @@ router.delete('/:id',auth.hasRole('taxonomyadmin'),  controller.destroy);
 
 router.post('/:id/parent', auth.hasRole('taxonomyadmin'), controller.setParent);
 router.post('/:id/synonyms',auth.hasRole('taxonomyadmin'),  controller.addSynonym);
-
+router.get('/:id/siblings', controller.showSiblings);
 
 router.get('/:id/images', imagesController.showImages);
 router.post('/:id/images',auth.hasRole('taxonomyadmin'),  imagesController.addImage);

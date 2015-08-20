@@ -134,6 +134,14 @@ angular.module('svampeatlasApp')
 				url: '/api/taxons/:id/nutritionstrategies',
 				isArray: true
 			},
+			getSiblings: {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/siblings',
+				isArray: true
+			}
 		});
 
 	});
