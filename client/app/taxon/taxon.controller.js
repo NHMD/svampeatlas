@@ -26,7 +26,7 @@ angular.module('svampeatlasApp')
 				
 				taxon.$update().then(function(t){
 					$scope.taxon = t;
-					//$state.go('taxon', {id: taxon._id}, {inherit: false, notify: false});
+					//$state.go('taxonlayout-taxon', {id: taxon._id}, {inherit: false, notify: false});
 					$scope.rankModal.hide();
 				})
 				
@@ -209,7 +209,7 @@ angular.module('svampeatlasApp')
 				
 				taxon.$save().then(function(t){
 					$scope.taxon = t;
-					$state.go('taxon', {id: taxon._id}, {inherit: false, notify: false});
+					$state.go('taxonlayout-taxon', {id: taxon._id}, {inherit: false, notify: false});
 				})
 			}
 			
@@ -236,7 +236,7 @@ angular.module('svampeatlasApp')
 				}, $scope.taxon).$promise.then(function(taxon) {
 
 					$scope.taxon = taxon;
-					$state.go('taxon', {id: taxon._id}, {inherit: false, notify: false});
+					$state.go('taxonlayout-taxon', {id: taxon._id}, {inherit: false, notify: false});
 				})
 			};
 			
@@ -244,7 +244,7 @@ angular.module('svampeatlasApp')
 				$scope.taxon.accepted_id = $scope.taxon._id;
 				$scope.taxon.$update().then(function(t){
 					$scope.taxon = t;
-					$state.go('taxon', {id: $scope.taxon._id}, {inherit: false, notify: false});
+					$state.go('taxonlayout-taxon', {id: $scope.taxon._id}, {inherit: false, notify: false});
 				})
 			}
 			

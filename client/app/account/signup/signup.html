@@ -18,6 +18,27 @@
             A name is required
           </p>
         </div>
+		
+        <div class="form-group" ng-class="{ 'has-success': form.name.$valid && submitted && !form.Initialer.$error.mongoose,
+                                            'has-error': (form.name.$invalid && submitted) || form.Initialer.$error.mongoose }">
+          <label>Initials</label>
+
+          <input type="text" ng-minlength="2" ng-maxlength="6" name="Initialer" class="form-control" ng-model="user.Initialer"
+                 required
+				 mongoose-error/>
+        <p class="help-block" ng-show="form.Initialer.$error.maxlength">
+          Too long
+        </p>
+        <p class="help-block" ng-show="form.Initialer.$error.minlength">
+          Too short
+        </p>
+          <p class="help-block" ng-show="form.Initialer.$error.required">
+            Initials are required
+          </p>
+          <p class="help-block" ng-show="form.Initialer.$error.mongoose">
+            {{ errors.Initialer }}
+          </p>
+        </div>
 
         <div class="form-group" ng-class="{ 'has-success': form.email.$valid && submitted,
                                             'has-error': form.email.$invalid && submitted }">

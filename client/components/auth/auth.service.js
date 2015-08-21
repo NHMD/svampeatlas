@@ -29,7 +29,7 @@ angular.module('svampeatlasApp')
        */
       login: function(user, callback) {
         return $http.post('/auth/local', {
-          email: user.email,
+          Initialer: user.Initialer,
           password: user.password
         })
         .then(function(res) {

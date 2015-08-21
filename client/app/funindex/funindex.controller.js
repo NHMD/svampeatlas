@@ -54,7 +54,7 @@ angular.module('svampeatlasApp')
 					PresentInDK: 0,
 					Parent: $scope.selectedParentTaxon
 				}).$save().then(function(taxon){
-					$state.go('taxon', {
+					$state.go('taxonlayout-taxon', {
 						id: taxon._id
 					})
 				})
@@ -146,7 +146,7 @@ angular.module('svampeatlasApp')
 				}).$promise.then(function(taxa) {
 
 					if (taxa.length === 1) {
-						$state.go('taxon', {
+						$state.go('taxonlayout-taxon', {
 							id: taxa[0]._id
 						})
 						
@@ -158,7 +158,7 @@ angular.module('svampeatlasApp')
 						}).$promise.then(function(NameByKeyData) {
 							
 							TaxonIntegrationService.setTaxon(NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum, $scope.dataSource);
-							$state.go('taxon', {
+							$state.go('taxonlayout-taxon', {
 								id: 'new'
 							})
 							
@@ -180,7 +180,7 @@ angular.module('svampeatlasApp')
 				}).$promise.then(function(taxa) {
 
 					if (taxa.length === 1) {
-						$state.go('taxon', {
+						$state.go('taxonlayout-taxon', {
 							id: taxa[0]._id
 						})
 						
@@ -203,7 +203,7 @@ angular.module('svampeatlasApp')
 							
 							TaxonIntegrationService.setTaxon(taxon, $scope.dataSource);
 							
-							$state.go('taxon', {
+							$state.go('taxonlayout-taxon', {
 								id: 'new'
 							})
 							

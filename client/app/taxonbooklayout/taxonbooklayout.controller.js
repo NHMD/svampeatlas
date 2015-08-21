@@ -86,28 +86,6 @@ angular.module('svampeatlasApp')
 
 
 
-			
-
-/*
-			
-			$scope.parentModal = $modal({
-				scope: $scope,
-				template: '/app/taxon/parent.modal.tpl.html',
-				show: false
-			});
-			$scope.rankModal = $modal({
-				scope: $scope,
-				template: '/app/taxon/rank.modal.tpl.html',
-				show: false
-			});
-			
-			$scope.synonymModal = $modal({
-				scope: $scope,
-				template: '/app/taxon/synonym.modal.tpl.html',
-				show: false
-			});
-			
-			*/
 			$scope.taxonHasNatureType = function(natureTypeId){
 				
 				return _.find($scope.taxon.naturtyper, function(nt) {

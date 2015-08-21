@@ -1,9 +1,13 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('SettingsCtrl', function($scope, User, Auth) {
+  .controller('SettingsCtrl', function($scope, User, Auth, $window) {
     $scope.errors = {};
-
+	
+    $scope.loginOauth = function(provider) {
+      $window.location.href = '/auth/' + provider +'/authorize?access_token='+Auth.getToken();
+    };
+	
     $scope.changePassword = function(form) {
       $scope.submitted = true;
       if (form.$valid) {

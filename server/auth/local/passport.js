@@ -1,16 +1,16 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-function localAuthenticate(User, email, password, done) {
+function localAuthenticate(User, Initialer, password, done) {
   User.find({
     where: {
-      email: email.toLowerCase()
+      Initialer: Initialer.toLowerCase()
     }
   })
     .then(function(user) {
       if (!user) {
         return done(null, false, {
-          message: 'This email is not registered.'
+          message: 'This Initialer is not registered.'
         });
       }
       user.authenticate(password, function(authError, authenticated) {
@@ -33,9 +33,9 @@ function localAuthenticate(User, email, password, done) {
 
 exports.setup = function(User, config) {
   passport.use(new LocalStrategy({
-    usernameField: 'email',
+    usernameField: 'Initialer',
     passwordField: 'password' // this is the virtual field on the model
-  }, function(email, password, done) {
-    return localAuthenticate(User, email, password, done);
+  }, function(Initialer, password, done) {
+    return localAuthenticate(User, Initialer, password, done);
   }));
 };

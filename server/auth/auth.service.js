@@ -23,6 +23,7 @@ function isAuthenticated() {
       // allow access_token to be passed through query parameter as well
       if (req.query && req.query.hasOwnProperty('access_token')) {
         req.headers.authorization = 'Bearer ' + req.query.access_token;
+		console.log("XXXXXXXXX TOKEN FOUND")
       }
       validateJwt(req, res, next);
     })
@@ -48,6 +49,60 @@ function isAuthenticated() {
     });
 }
 
+
+/**
+ * If there is a user, appends it to the req
+ * else req.user would be undefined
+ */
+ function appendUser() {
+    return compose()
+        // Attach user to request
+        .use(function(req, res, next) {
+            validateJwt(req, res, function(val) {
+                if(_.isUndefined(val)) {
+					
+			        User.find({
+			          where: {
+			            _id: req.user._id
+			          },
+			  		include: [{
+			  			model: Role}]
+			        })
+			        .then(function(user) {
+			          if (!user) {
+                          req.user = undefined;
+                          return next();
+			          } else {
+			          req.user = user;
+			          next();
+				  }
+			        })
+			        .catch(function(err) {
+			          return next(err);
+			        });
+					
+			
+                } else {
+                    req.user = undefined;
+                    next();
+                }
+            });
+        });
+}
+
+/**
+ * Takes the token cookie and adds the header
+ * for it on the request
+ */
+ function addAuthHeaderFromCookie() {
+    return compose()
+        .use(function(req, res, next) {
+            if(req.cookies.token) {
+                req.headers.authorization = 'Bearer ' + _.trim(req.cookies.token, '\"');
+            }
+            return next();
+        });
+}
 /**
  * Checks if the user role meets the minimum requirements of the route
  */
@@ -94,6 +149,27 @@ function setTokenCookie(req, res) {
   res.redirect('/');
 }
 
+function generateInitials(name){
+	
+	var parts = name.split(" ");
+	if(parts.length ===1){
+		return parts[0].substring(0,4);
+	} else if(parts.length ===2){
+		return parts[0].substring(0,2)+parts[1].substring(0,2);
+	} else {
+		return parts[0].substring(0,1)+parts[1].substring(0,1)+parts[2].substring(0,2);
+	}
+	
+};
+
+function getRandomTwoDigit(){
+	return Math.round(Math.random()*100);
+}
+
+exports.generateInitials = generateInitials;
+exports.getRandomTwoDigit = getRandomTwoDigit;
+exports.appendUser = appendUser;
+exports.addAuthHeaderFromCookie = addAuthHeaderFromCookie;
 exports.isAuthenticated = isAuthenticated;
 exports.hasRole = hasRole;
 exports.signToken = signToken;

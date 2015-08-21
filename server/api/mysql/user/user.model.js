@@ -19,11 +19,11 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING,
     email: {
       type: DataTypes.STRING,
-    /*
+    
 	  unique: {
         msg: 'The specified email address is already in use.'
       },
-		*/
+		
       validate: {
         isEmail: true
       }
@@ -51,7 +51,10 @@ module.exports = function(sequelize, DataTypes) {
         }
 		
 	},
-	Validation: DataTypes.BOOLEAN
+	Validation: {
+		type: DataTypes.INTEGER,
+		defaultValue: 0	
+	}
 
   }, {
 
