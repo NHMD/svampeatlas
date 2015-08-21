@@ -3,8 +3,8 @@
 angular.module('svampeatlasApp')
   .config(function ($stateProvider) {
     $stateProvider
-      .state('taxonbooklayout', {
-        url: '/taxonbooklayout/:id?',
+      .state('taxonlayout-taxonbooklayout', {
+        url: '/taxonbase/taxonbooklayout/:id?',
         templateUrl: 'app/taxonbooklayout/taxonbooklayout.html',
         controller: 'TaxonBookLayoutCtrl'
       });

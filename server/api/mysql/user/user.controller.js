@@ -39,7 +39,7 @@ exports.index = function(req, res) {
       'name',
       'email',
       'provider',
-		
+	'Initialer'
     ],
 	include: [{
 		model: models.Role
@@ -157,6 +157,7 @@ exports.me = function(req, res, next) {
     attributes: [
       '_id',
       'name',
+	'Initialer',
       'email',
       'provider'
     ],

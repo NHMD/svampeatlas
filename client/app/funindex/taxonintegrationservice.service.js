@@ -87,8 +87,9 @@ angular.module('svampeatlasApp')
 
 			getTypificationNumber: function(taxon) {
 				if (!taxon.TYPIFICATION_x0020_DETAILS) return 0;
-
-				return taxon.TYPIFICATION_x0020_DETAILS.split("$")[0];
+				var typNr = taxon.TYPIFICATION_x0020_DETAILS.split("$")[0];
+				return (typNr.length > 1 && parseInt(typNr[0] !== NaN)) ? parseInt(typNr[0]) : 0;
+				
 			},
 			getTaxonName: function(taxon) {
 				if (taxon.INFRASPECIFIC_x0020_EPITHET) {

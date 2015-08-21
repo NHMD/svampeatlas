@@ -9,9 +9,9 @@ angular.module('svampeatlasApp')
 			$scope.tabs = [
 			    { title:'Search taxa', state: 'taxonomy', active: 'taxonomy' === $state.current.name},
 			    { title:'Add new taxon',  state: 'funindex' , active: 'funindex' === $state.current.name},
-				{ title:'Taxon', state: 'taxon' , active: 'taxon' === $state.current.name, disabled: !($state.current.name === 'taxonredlistdata' || $state.current.name === 'taxon' || $state.current.name === 'taxonbooklayout')},
-				{ title:'Red List',  state: 'taxonredlistdata' , active: 'taxonredlistdata' === $state.current.name, disabled: !($state.current.name === 'taxonredlistdata' || $state.current.name === 'taxon' || $state.current.name === 'taxonbooklayout')},
-				{ title:'Book layout',  state: 'taxonbooklayout' , active: 'taxonbooklayout' === $state.current.name, disabled: !($state.current.name === 'taxonredlistdata' || $state.current.name === 'taxon' || $state.current.name === 'taxonbooklayout')},
+				{ title:'Taxon', state: 'taxonlayout-taxon' , active: 'taxonlayout-taxon' === $state.current.name, disabled: $state.current.name.split('-')[0] !== 'taxonlayout'},
+				{ title:'Red List',  state: 'taxonlayout-taxonredlistdata' , active: 'taxonlayout-taxonredlistdata' === $state.current.name, disabled: $state.current.name.split('-')[0] !== 'taxonlayout'},
+				{ title:'Book layout',  state: 'taxonlayout-taxonbooklayout' , active: 'taxonlayout-taxonbooklayout' === $state.current.name, disabled: $state.current.name.split('-')[0] !== 'taxonlayout'},
 				{ title:'Log', state: 'taxonlog' , active: 'taxonlog' === $state.current.name}
 			  ];
 			
@@ -21,7 +21,7 @@ angular.module('svampeatlasApp')
 				
 				console.log($state.current)
 				
-				if($state.current.name === 'taxonredlistdata' || $state.current.name === 'taxon' || $state.current.name === 'taxonbooklayout'){
+				if($state.current.name.split('-')[0] === 'taxonlayout'){
 					$state.go(tab.state, $stateParams);
 					
 				} else {

@@ -12,6 +12,7 @@ angular.module('svampeatlasApp')
         Auth.createUser({
           name: $scope.user.name,
           email: $scope.user.email,
+		  Initialer:  $scope.user.Initialer,
           password: $scope.user.password
         })
         .then(function() {
@@ -24,9 +25,13 @@ angular.module('svampeatlasApp')
 
           // Update validity of form fields that match the sequelize errors
           if (err.name) {
-            angular.forEach(err.fields, function(field) {
+            angular.forEach(err.fields, function(value, field) {
               form[field].$setValidity('mongoose', false);
-              $scope.errors[field] = err.message;
+			  if(err.name === "SequelizeUniqueConstraintError"){
+			  	$scope.errors[field] = field+" er optaget";
+			  } else {
+				  $scope.errors[field] = err.message;
+			  }
             });
           }
         });

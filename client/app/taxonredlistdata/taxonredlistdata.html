@@ -8,7 +8,7 @@
 			<div class="col-md-6" >
 			<h2>{{taxon.FullName}}</h2>
 			
-<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonredlistdata/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) </div>
+<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbase/taxonredlistdata/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) </div>
 			
 			
 			<h4 ><strong>DK name: </strong> <em>{{ taxon.attributes.DKnavn || 'n/a' }}</em> </h4> <div class="checkbox"><label>Present in DK
@@ -35,7 +35,7 @@
 		  	      <div class="panel-body">
 						  <table class="table parent-taxon-table">
 							   <tr ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><td st-ratio="70">
-						 <a href="/taxonredlistdata/{{syn._id}}">{{syn.FullName}}</a>
+						 <a href="/taxonbase/taxonredlistdata/{{syn._id}}">{{syn.FullName}}</a>
 						  </td>
 				  <td st-ratio="30">
 				    						<button class="btn btn-sm btn-danger" ng-click="importRedlistDataFromSynonym(syn)" ng-show="allyearsredlistdata.length === 0" data-html=true data-title="{{mergetooltip.title}}" bs-tooltip>Importér rødlistedata</button>
@@ -45,7 +45,7 @@
 				  </table>
 		  	        
 					<!--<ul>
-						<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
+						<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxonbase/taxonredlistdata/{{syn._id}}">{{syn.FullName}}</a></li>
 					</ul> -->
 		  	      </div>
 		  	    </div>

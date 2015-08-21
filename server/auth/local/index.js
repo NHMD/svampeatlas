@@ -8,6 +8,7 @@ var router = express.Router();
 
 router.post('/', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
+	 
     var error = err || info;
     if (error) {
       return res.json(401, error);

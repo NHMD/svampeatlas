@@ -13,14 +13,14 @@
   <table class="table usertable" st-safe-src="users" st-table="safeUsers">
   	<thead>
   	<tr>
-  		
+  		<th st-sort="Initialer">Initials</th>
   		<th st-sort="name">Name</th>
   		<th st-sort="email">email</th>
 		<th>Roles</th>
   	<th></th>
   	</tr>
   	<tr>
-  		
+  		<th><input st-search="Initialer"></th>
   		<th><input st-search="name"></th>
   		<th><input st-search="email"></th>
   		<th></th>
@@ -29,7 +29,7 @@
   	</thead>
   	<tbody>
   	<tr ng-repeat="row in safeUsers">
-  		
+  		<td>{{row.Initialer}}</td>
   		<td>{{row.name}}</td>
   		<td>{{row.email}}</td>
   		<td><button type="button" class="btn btn-small btn-primary" ng-click="editUser(row)">Roles

@@ -10,7 +10,7 @@ angular.module('svampeatlasApp')
 
       if (form.$valid) {
         Auth.login({
-          email: $scope.user.email,
+          Initialer: $scope.user.Initialer,
           password: $scope.user.password
         })
         .then(function() {

@@ -30,7 +30,7 @@
 	<tbody ng-show="!isLoading">
 	<tr ng-repeat="row in displayed">
 		<td st-ratio="20">{{row._id}}</td>
-		<td><a href="/taxon/{{row._id}}">{{row.FullName}}</a></td>
+		<td><a href="/taxonbase/taxon/{{row._id}}">{{row.FullName}}</a></td>
 		<td>{{row.TaxonName}}</td>
 		<td>{{row.RankName}}</td>
 		<td>{{row.DKnavn}}</td>
