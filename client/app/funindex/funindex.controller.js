@@ -138,6 +138,7 @@ angular.module('svampeatlasApp')
 			}
 
 			$scope.addToTaxonBase = function(taxon) {
+				console.log(taxon)
 				if ($scope.dataSource === "IndexFungorum") {
 				Taxon.query({
 					where: {
@@ -175,7 +176,7 @@ angular.module('svampeatlasApp')
 				
 				Taxon.query({
 					where: {
-						FunIndexNumber: taxon.MycoBankNr_
+						FunIndexNumber: taxon.mycobanknr_
 					}
 				}).$promise.then(function(taxa) {
 
@@ -187,19 +188,23 @@ angular.module('svampeatlasApp')
 					} else if (taxa.length === 0) {
 							
 							
-							taxon.SystematicPath = String(taxon.Classification_).replace(/<[^>]+>/gm, '');
+							taxon.SystematicPath = String(taxon.classification_).replace(/<[^>]+>/gm, '');
+						
+						/*
 							var regex = /<Id>(.*?)<\/Id>/ig;
 						
-							var match = regex.exec(taxon.CurrentName_Pt_);
+							var match = regex.exec(taxon.currentname_pt_.TargetRecord.Id);
+							*/
 							
-							taxon.FunIndexCurrUseNumber = (match) ? match[1] : taxon.MycoBankNr_;
+							taxon.FunIndexCurrUseNumber = (taxon.currentname_pt_ && taxon.currentname_pt_.TargetRecord.Id) ? taxon.currentname_pt_.TargetRecord.Id : taxon.mycobanknr_;
 							
+						/*
 							regex = /<Name>(.*?)<\/Name>/ig;
 						
-							match = regex.exec(taxon.Rank_Pt_);
+							match = regex.exec(taxon.rank_pt_.TargetRecord.Name);
+							*/
 							
-							
-							taxon.RankName = (match) ? match[1] : undefined;
+							taxon.RankName = (taxon.rank_pt_.TargetRecord.Name) ? taxon.rank_pt_.TargetRecord.Name: undefined;
 							
 							TaxonIntegrationService.setTaxon(taxon, $scope.dataSource);
 							

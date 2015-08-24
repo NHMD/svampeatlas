@@ -51,7 +51,15 @@ angular.module('svampeatlasApp')
 									$like: splittedSysPath[0]+'%'
 								}}]
 						};
-					} else {
+					}else if(that.getRankID(taxon.RankName) > 9999) {
+						query.where = {
+							TaxonName: taxon.name.split(" ")[0],
+							RankID: {
+								$lt: that.getRankID(taxon.RankName)
+							}
+						}; 
+					}
+					else {
 						query.where = {
 							SystematicPath: taxon.SystematicPath
 						};
@@ -60,16 +68,16 @@ angular.module('svampeatlasApp')
 					this.taxon = Taxon.query(query).$promise.then(function(parents) {
 						var thisTaxon = {};
 						thisTaxon.dataSource = source;
-						thisTaxon.SystematicPath = taxon.SystematicPath + ", " + taxon.Epithet_;
-						thisTaxon.FullName = taxon.Name + " " + taxon.Authors_;
-						thisTaxon.Author = taxon.Authors_;
+						thisTaxon.SystematicPath =  (parents.length >0) ? parents[0].SystematicPath + ", " + taxon.epithet_  : taxon.SystematicPath + ", " + taxon.epithet_;
+						thisTaxon.FullName = taxon.name + " " + taxon.authorsabbrev_;
+						thisTaxon.Author = taxon.authorsabbrev_;
 						thisTaxon.FunIndexCurrUseNumber = taxon.FunIndexCurrUseNumber;
 						thisTaxon.FunIndexTypificationNumber = 0;
-						thisTaxon.FunIndexNumber = taxon.MycoBankNr_;
+						thisTaxon.FunIndexNumber = taxon.mycobanknr_;
 
 						thisTaxon.RankName = taxon.RankName;
 						thisTaxon.RankID = that.getRankID(taxon.RankName);
-						thisTaxon.TaxonName = taxon.Epithet_;
+						thisTaxon.TaxonName = taxon.epithet_;
 						if (parents.length > 0) {
 							thisTaxon.Parent = parents[0];
 						} else {
