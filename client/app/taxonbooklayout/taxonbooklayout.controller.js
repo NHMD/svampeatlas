@@ -196,8 +196,8 @@ angular.module('svampeatlasApp')
 		  "content": "Hello Aside<br />This is a multiline message!"
 		};
 		
-		$scope.toggleLeft = buildToggler('left');
-		    $scope.toggleRight = buildToggler('right');
+		$scope.toggleSimilarSpecies = buildToggler('similarAside');
+		    $scope.toggleIframe = buildToggler('iframeAside');
 		    /**
 		     * Build handler to open/close a SideNav; when animation finishes
 		     * report completion in console
@@ -213,8 +213,8 @@ angular.module('svampeatlasApp')
 		      return debounceFn;
 		    }
 		
-		    $scope.closeSideNav = function () {
-		         $mdSidenav('right').close()
+		    $scope.closeSideNav = function (nav) {
+		         $mdSidenav(nav).close()
 		           .then(function () {
 		             $log.debug("close RIGHT is done");
 		           });

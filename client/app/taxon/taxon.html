@@ -21,7 +21,7 @@
 			
 			
 			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
-			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon._id !== undefined && (taxon.RankName === 'sp.' || taxon.RankName === 'gen.')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button>
+			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon._id !== undefined && taxon._id === taxon.accepted_id && (taxon.RankName === 'sp.' || taxon.RankName === 'gen.')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button>
 			<button ng-show="taxon._id !== undefined && (taxon.RankName === 'superspecies' || taxon.RankName === 'supergenus')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Change rank level</button>
 			</p>
 			</div>

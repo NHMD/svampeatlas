@@ -5,17 +5,20 @@
 	
 </div>	
 	    	<div class="row">
-				<md-button ng-click="toggleRight()"
+				<md-button ng-click="toggleIframe()"
 				            class="md-primary">
 				            Maps, graphs from atlas
+				          </md-button> <md-button ng-click="toggleSimilarSpecies()"
+				            class="md-primary">
+				            Similar species
 				          </md-button> 
-				<md-sidenav class="md-sidenav-right md-whiteframe-z2 iframe-sidenav" md-component-id="right">
+				<md-sidenav class="md-sidenav-right md-whiteframe-z2 iframe-sidenav" md-component-id="iframeAside">
 				      <md-toolbar class="md-theme-light">
 				        <h1 class="md-toolbar-tools">Sidenav Right</h1>
 				      </md-toolbar>
 				      <md-content  layout-padding>
 				       
-				        <md-button ng-click="closeSideNav()" class="md-primary">
+				        <md-button ng-click="closeSideNav('iframeAside')" class="md-primary">
 				          Close
 				        </md-button>
 				        <md-button  class="md-primary" href="{{getIframeSrc()}}" target="_BLANK">
@@ -25,6 +28,31 @@
 						
 				      </md-content>
 				    </md-sidenav>
+					<md-sidenav class="md-sidenav-right md-whiteframe-z2 iframe-sidenav" md-component-id="similarAside">
+					      <md-toolbar class="md-theme-light">
+					        <h1 class="md-toolbar-tools">Sidenav Right</h1>
+					      </md-toolbar>
+					      <md-content  layout-padding>
+				       
+					        <md-button ng-click="closeSideNav('similarAside')" class="md-primary">
+					          Close
+					        </md-button>
+					        <md-button  class="md-primary" href="{{getIframeSrc()}}" target="_BLANK">
+					         <i class="fa fa-external-link"></i> open in new tab
+					        </md-button>
+							<table id="sibling-table">
+
+							  <tr class="parent-taxon-table" ng-repeat="sibling in taxon.siblings"><td class="parent-taxon-table" st-ratio="100"><strong><a href="/taxonbase/taxonbooklayout/{{sibling._id}}">{{sibling.FullName}}</a> <span ng-show="sibling.attributes.DKnavn">- {{sibling.attributes.DKnavn}}</span></strong><br>
+								  {{sibling.attributes.diagnose}}<br>
+								  {{sibling.attributes.forvekslingsmuligheder}}<br><br>
+								  {{sibling.attributes.oekologi}}
+								  <hr></td></tr>
+				 
+
+							</table>
+						
+					      </md-content>
+					    </md-sidenav>
 			<div class="col-md-8" >
 			<h2>{{taxon.FullName}} 		
 			</h2>
@@ -48,7 +76,7 @@
 			</div>
 
 <div class="row">
-			<div class="col-md-4" ng-show="taxon._id !== undefined">
+			<div class="col-md-6" ng-show="taxon._id !== undefined">
 	
 	
 					<label class="control-label" for="diagnose">Diagnose</label>
@@ -111,23 +139,10 @@
 			          </a>
 		
 			</div>
-			<div class="col-md-4" ng-show="taxon._id !== undefined">
+			
+			<div class="col-md-6" >
 				
-				<table >
-
-				  <tr class="parent-taxon-table" ng-repeat="sibling in taxon.siblings"><td class="parent-taxon-table" st-ratio="100"><strong><a href="/taxonbase/taxonbooklayout/{{sibling._id}}">{{sibling.FullName}}</a> <span ng-show="sibling.attributes.DKnavn">- {{sibling.attributes.DKnavn}}</span></strong><br>
-					  {{sibling.attributes.diagnose}}<br>
-					  {{sibling.attributes.forvekslingsmuligheder}}<br><br>
-					  {{sibling.attributes.oekologi}}
-					  <hr></td></tr>
-				 
-
-				</table>
-				
-			</div>
-			<div class="col-md-4" >
-				
-				<strong><em>{{getNameWithoutAuthor()}}</em> <span ng-show="taxon.attributes.DKnavn">- {{taxon.attributes.DKnavn}}</span></strong>
+				<h3><em>{{getNameWithoutAuthor()}}</em> <span ng-show="taxon.attributes.DKnavn">- {{taxon.attributes.DKnavn}}</span></h3>
 		      <carousel disable-ng-animate interval="">
 		        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
 		          <img ng-src="{{slide.uri}}" style="margin:auto;">
