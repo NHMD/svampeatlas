@@ -120,7 +120,7 @@
 		
 	<tr ng-repeat="row in displayedCollection">
 		<td><button class="btn btn-primary" ng-click="addToTaxonBase(row)">Add/Sync to our Taxonomy </button></td>
-		<td>{{row.NAME_x0020_OF_x0020_FUNGUS}} <i class="fa fa-warning text-warning" ng-if="row.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== row.RECORD_x0020_NUMBER"></i></td>
+		<td>{{row.NAME_x0020_OF_x0020_FUNGUS}} <i class="fa fa-warning text-warning" ng-if="row.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== row.RECORD_x0020_NUMBER" data-title="Possibly invalid or synonym. Please review carefully." bs-tooltip></i></td>
 		<td>{{row.AUTHORS}}</td>
 		<td>{{row.INFRASPECIFIC_x0020_RANK}}</td>
 		<td><a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{row.RECORD_x0020_NUMBER}}" target="_BLANK">Index Fungorum</a></td>
@@ -167,7 +167,7 @@
 	<tbody>
 	<tr ng-repeat="row in displayedCollectionMycoBank">
 		<td><button class="btn btn-primary" ng-click="addToTaxonBase(row)">Add/Sync to our Taxonomy </button></td>
-		<td>{{row.name}} <i class="fa fa-warning text-warning" ng-if="row.currentname_pt_ && row.currentname_pt_.TargetRecord.Id !== row.mycobanknr_"></i></td>
+		<td>{{row.name}} <i class="fa fa-warning text-warning" ng-if="row.currentname_pt_ && row.currentname_pt_.TargetRecord.Id !== row.mycobanknr_" data-title="Possibly invalid or synonym. Please review carefully." bs-tooltip></i></td>
 		<td>{{row.authorsabbrev_}}</td>
 		<td>{{row.rank_pt_.TargetRecord.Name}} </td>
 		<td><a href = "{{row.Classification_ | parseHref}}" target="_BLANK">Mycobank</a></td>

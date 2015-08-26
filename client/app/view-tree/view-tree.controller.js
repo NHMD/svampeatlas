@@ -1,22 +1,19 @@
 
 
 angular.module('svampeatlasApp')
-	.controller('ViewTreeCtrl', ['Auth', 'User', '$scope', '$filter', 
-		function(Auth, User, $scope, $filter) {
+	.controller('ViewTreeCtrl', ['Auth', 'User', '$scope', '$filter', '$timeout', '$document','$mdToast',
+		function(Auth, User, $scope, $filter, $timeout, $document,  $mdToast) {
 
-
-
-			$scope.loading = false;
+			$scope.selectedTaxon = {};
+			$scope.loading = true;
 			
-			//	$rootScope.fields.selectedCollection.discipline.disciplineId;
-
-			//	var taxonUrl = "/api/disciplines/3/trees/Taxon";
+	
 
 			$scope.showTree = function(url) {
-
-
+			
 				treeJSON = d3.json(url, function(error, treeData) {
-
+					//$timeout(function(){$scope.loading = false}, 0);
+					
 				    // Calculate total nodes, max label length
 				    var totalNodes = 0;
 				    var maxLabelLength = 0;
@@ -549,29 +546,98 @@ angular.module('svampeatlasApp')
 				         toggle(d);
 				       }
 				     }
-					 $scope.findAndToggle = function (taxonName){
-						 visit(root, function(n){
-							 if(n.TaxonName === taxonName){
-								 if($scope.selectedTaxonNode){
-								 	toggle($scope.selectedTaxonNode);
+					 
+					 $scope.expandPath = function(path){
+						 angular.forEach(path, function(p){
+							 if(!p.children)
+								 {
+									 toggle(p);
 								 }
-								 centerNode(n);
-								 toggle(n);
-								 update(n);
-								 $scope.selectedTaxonNode = n;
+							 
+							
+								 centerNode(p);
+								 update(p); 
+							
+						 })
+						
+					 }
+					 
+					 $scope.$watch('selectedTaxon.taxon', function(newval, oldval){
+						 if(newval && newval !== oldval)	{
+							 console.log("selected tax id "+newval[newval.length-1]._id)
+							
+							  $scope.expandPath(newval)
+						 };
+					 })
+					 
+					 $scope.findAndToggle = function (taxonName){
+						 $scope.selectedTaxon.taxon
+						 $scope.foundTaxa = [];
+						 var map = [];
+						 visit(root, function(n){
+							 map[n._id] = n;
+							 
+							 var splittedName = taxonName.split(" ");
+							 if(n.RankName === "sp." && splittedName.length === 2 && n.TaxonName.slice(0, splittedName[1].length) === splittedName[1] && map[n.parent_id].TaxonName.slice(0, splittedName[0].length) === splittedName[0]){
+								 var path = [n];
+								 var target = n;
+								 while(map[target.parent_id] !== undefined){
+									 path.push(map[target.parent_id]);
+									 target = map[target.parent_id];
+								 }
+								 path.reverse();
+								 
+								 $scope.selectedTaxon.taxon = path;
+								 $scope.foundTaxa.push({path: path});
+							 }
+							 else if(n.TaxonName === taxonName){
+								
+								 var path = [n];
+								 var target = n;
+								 while(map[target.parent_id] !== undefined){
+									 path.push(map[target.parent_id]);
+									 target = map[target.parent_id];
+								 }
+								 path.reverse();
+								 
+								 $scope.selectedTaxon.taxon = path;
+								 $scope.foundTaxa.push({path: path});
+							
 							 }
 						 }, function(parent){
-							 if(parent.TaxonName !== taxonName){
-								 return parent.children;
-							 }
-							 else {
-								 return false;
-							 }
-						 })
+							 return (parent.children) ? parent.children: parent._children;
+							 
+						 });
+						 
+						 if($scope.foundTaxa.length > 0){
+						 	$scope.expandPath($scope.selectedTaxon.taxon)
+						 } else {
+						 	
+							$scope.showNotFoundToast()
+						 }
+						 
 					 	
 					 };
 				     // Initialize the display to show a few nodes.
 				     root.children.forEach(toggleAll);
+					 update(root);
+					 centerNode(root);
+					 
+					 $timeout(function(){$scope.loading = false}, 0);
+					 
+					 $scope.collapseTree = function(){
+						 visit(root, function(n){
+							 if(n.children){
+							 	toggle(n)
+							 }
+						 }, function(parent){
+							 return (parent.children) ? parent.children: parent._children;
+							 
+						 });
+						 
+						 update(root);
+						 centerNode(root);
+					 }
 					 /*
 				     toggle(root.children[1]);
 				     toggle(root.children[1].children[2]);
@@ -583,14 +649,27 @@ angular.module('svampeatlasApp')
 				    centerNode(root.children[1].children[2]);
 		
 					*/
-					 update(root);
-					 centerNode(root);
+					 
 					 
 				});
 			};
 			// End $scope.showTree
-
-			$scope.showTree("/api/taxons/tree");
+			$document.ready(function(){
+				$scope.showTree("/api/taxons/tree");
+			})
+			
+			
+		    $scope.showNotFoundToast = function() {
+				
+		       $mdToast.show(
+		         $mdToast.simple()
+		           .content('No matches found')
+		           .position("fit")
+				   .parent(document.getElementById('tree-container'))
+		           .hideDelay(3000)
+		       );
+		     };
+			
 
 		}
 	]);

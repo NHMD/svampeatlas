@@ -12,4 +12,7 @@
     -ms-flex-direction: column;
     flex-direction: column;
 }
+
+#sibling-table {
+	height:100%;
 }

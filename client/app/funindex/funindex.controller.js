@@ -219,6 +219,8 @@ angular.module('svampeatlasApp')
 			}
 
 			};
+			
+		
 
 		}
 	]);
