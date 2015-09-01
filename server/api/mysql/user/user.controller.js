@@ -159,7 +159,8 @@ exports.me = function(req, res, next) {
       'name',
 	'Initialer',
       'email',
-      'provider'
+      'provider',
+		'facebook'
     ],
 	include: [{
 		model: models.Role
@@ -167,7 +168,7 @@ exports.me = function(req, res, next) {
   })
     .then(function(user) { // don't ever give out the password or salt
       if (!user) { return res.json(401); }
-      res.json(user);
+      res.json(user.profile);
     })
     .catch(function(err) {
       return next(err);

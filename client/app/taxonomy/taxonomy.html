@@ -24,7 +24,7 @@
 		<th><input st-search="FullName"></th>
 		<th><input st-search="TaxonName"></th>
 		<th><input st-search="RankName"></th>
-		<th><input st-search="DKnavn"></th>
+		<th><input st-search="attributes.DKnavn"></th>
 	</tr>
 	</thead>
 	<tbody ng-show="!isLoading">
@@ -33,7 +33,7 @@
 		<td><a href="/taxonbase/taxon/{{row._id}}">{{row.FullName}}</a></td>
 		<td>{{row.TaxonName}}</td>
 		<td>{{row.RankName}}</td>
-		<td>{{row.DKnavn}}</td>
+		<td>{{row.attributes.DKnavn}}</td>
 	</tr>
 	</tbody>
 	<tbody ng-show="isLoading">

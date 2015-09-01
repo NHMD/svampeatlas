@@ -8,6 +8,7 @@ angular.module('svampeatlasApp')
 			
 			$scope.tabs = [
 			    { title:'Search taxa', state: 'taxonomy', active: 'taxonomy' === $state.current.name},
+				{ title:'Taxon tree', state: 'taxonomy-tree', active: 'taxonomy-tree' === $state.current.name},
 			    { title:'Add new taxon',  state: 'funindex' , active: 'funindex' === $state.current.name},
 				{ title:'Taxon', state: 'taxonlayout-taxon' , active: 'taxonlayout-taxon' === $state.current.name, disabled: $state.current.name.split('-')[0] !== 'taxonlayout'},
 				{ title:'Red List',  state: 'taxonlayout-taxonredlistdata' , active: 'taxonlayout-taxonredlistdata' === $state.current.name, disabled: $state.current.name.split('-')[0] !== 'taxonlayout'},

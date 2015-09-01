@@ -5,9 +5,6 @@ angular.module('svampeatlasApp')
     $scope.menu = [{
       'title': 'Home',
       'state': 'main'
-    },{
-      'title': 'View Taxon tree',
-      'state': 'taxonomy-tree'
     }];
 	
 	$scope.isTaxonBase = function(){

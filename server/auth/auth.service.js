@@ -78,6 +78,7 @@ function isAuthenticated() {
 				  }
 			        })
 			        .catch(function(err) {
+						console.log("ERROR "+err)
 			          return next(err);
 			        });
 					

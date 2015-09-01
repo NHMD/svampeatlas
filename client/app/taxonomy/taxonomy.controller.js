@@ -15,7 +15,7 @@ angular.module('svampeatlasApp')
 
 	      var offset = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
 	      var limit = pagination.number || 50;  // Number of entries showed per page.
-		  var where = (tableState.search.predicateObject) ? _.mapValues(tableState.search.predicateObject, function(value, key){
+		  var where = (tableState.search.predicateObject) ? _.mapValues(_.omit(tableState.search.predicateObject, 'attributes'), function(value, key){
 			  
 			  return {like : value += "%"};
 		  }) : undefined;
@@ -31,6 +31,18 @@ angular.module('svampeatlasApp')
 		  if(where) {
 			  query['where']= JSON.stringify(where)
 		  };
+		  
+		  var attributesWhere = (tableState.search.predicateObject && tableState.search.predicateObject.attributes) ? _.mapValues(tableState.search.predicateObject.attributes, function(value, key){
+			  
+			  return {like : value += "%"};
+		  }) : undefined;
+		   
+  		query.include = JSON.stringify([{
+				model: "TaxonAttributes",
+				as: "attributes",
+			where: JSON.stringify(attributesWhere)
+			}]);
+		  
 	      Taxon.query(query, function (result, headers) {
 	        $scope.displayed = result;
 	      	 tableState.pagination.numberOfPages = Math.ceil(headers('count') / limit);//set the number of pages so the pagination can update

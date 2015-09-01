@@ -2,10 +2,14 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-12">
-      <h1>Change Password</h1>
-    </div>
-    <div class="col-sm-12">
+    
+    <div class="col-sm-5">
+		<h1>User profile</h1>
+		<p>Name: {{getCurrentUser().name}}</p> 
+		<p>Initials: {{getCurrentUser().Initialer}}</p> 
+		<p>Email: {{getCurrentUser().email}}</p> 
+		 <h1>Change Password</h1>
+		
       <form class="form" name="form" ng-submit="changePassword(form)" novalidate>
 
         <div class="form-group">
@@ -28,15 +32,24 @@
              ng-show="(form.newPassword.$error.minlength || form.newPassword.$error.required) && (form.newPassword.$dirty || submitted)">
             Password must be at least 3 characters.
           </p>
-        </div>
+        
 
         <p class="help-block"> {{ message }} </p>
 
         <button class="btn btn-lg btn-primary" type="submit">Save changes</button>
-        <a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">
-          <i class="fa fa-facebook"></i> Connect with Facebook
-        </a>
+        
       </form>
+	  </div>
+	   </div>
+	  <div class="col-sm-6">
+		  
+          <a class="btn btn-facebook" href="" ng-show="!getCurrentUser().fb" ng-click="loginOauth('facebook')">
+            <i class="fa fa-facebook"></i> Connect with Facebook
+          </a>
+          <a class="btn btn-facebook" href="" ng-show="getCurrentUser().fb" ng-click="disconnectOauth('facebook')">
+            <i class="fa fa-facebook"></i> Disconnect Facebook account
+          </a>
+		  </div>
     </div>
   </div>
 </div>

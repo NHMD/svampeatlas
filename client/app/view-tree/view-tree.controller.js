@@ -407,7 +407,9 @@ angular.module('svampeatlasApp')
 				                return d.children || d._children ? -10 : 10;
 				            })
 				            .attr("dy", ".35em")
-				            .attr('class', 'nodeText')
+				            .attr('class', function(d){ 
+								return (d._id === d.accepted_id ||  _.isNull(d.accepted_id)) ? 'node-text':'node-text-syn'
+							})
 				            .attr("text-anchor", function(d) {
 				                return d.children || d._children ? "end" : "start";
 				            })
@@ -590,7 +592,7 @@ angular.module('svampeatlasApp')
 								 $scope.selectedTaxon.taxon = path;
 								 $scope.foundTaxa.push({path: path});
 							 }
-							 else if(n.TaxonName === taxonName){
+							 else if(n.TaxonName === taxonName || n.TaxonName.slice(0, splittedName[0].length) === splittedName[0]){
 								
 								 var path = [n];
 								 var target = n;
