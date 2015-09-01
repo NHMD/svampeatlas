@@ -1,10 +1,13 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('LoginCtrl', function($scope, Auth, $state, $window) {
+  .controller('LoginCtrl', function($scope, Auth, $state, $window, $location) {
     $scope.user = {};
     $scope.errors = {};
-
+	
+	
+	$scope.fberror = $location.search().fberror;
+	
     $scope.login = function(form) {
       $scope.submitted = true;
 

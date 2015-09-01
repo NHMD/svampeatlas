@@ -15,6 +15,15 @@
 .node text {
   font-size:10px; 
   font-family:sans-serif;
+  
+}
+ 
+.node-text-syn {
+  font-size:10px; 
+  stroke: #FF6699;
+  fill: #FF6699;
+  stroke-width: 0.25px;
+  font-family:sans-serif;
 }
  
 .link {

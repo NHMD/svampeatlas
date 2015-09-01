@@ -62,13 +62,20 @@ module.exports = function(sequelize, DataTypes) {
      * Virtual Getters
      */
     getterMethods: {
-      // Public profile information
-      profile: function() {
-        return {
-          'name': this.name,
-          'roles': this.Roles
-        };
-      },
+	// Public profile information
+	profile: function() {
+		console.log("FFFBBB " + this.facebook)
+		return {
+			'_id': this._id,
+			'Initialer': this.Initialer,
+			'email': this.email,
+			'provider': this.provider,
+			'name': this.name,
+			'Roles': this.Roles,
+			'fb': this.facebook !== null
+		};
+	},
+
 
       // Non-sensitive info we'll be putting in the token
       token: function() {

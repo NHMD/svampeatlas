@@ -4,8 +4,10 @@
     .config(function ($stateProvider) {
       $stateProvider
         .state('taxonomy-tree', {
-          url: '/taxonomy-tree',
+          url: '/taxonbase/taxonomy-tree',
            templateUrl: 'app/view-tree/view-tree.html',
           controller: 'ViewTreeCtrl'
         });
     });
+	
+	

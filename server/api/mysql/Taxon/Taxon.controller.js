@@ -75,7 +75,17 @@ exports.index = function(req, res) {
 	if (req.query.where) {
 		query['where'] = JSON.parse(req.query.where);
 	}
-
+	if (req.query.include) {
+		var include = JSON.parse(req.query.include)
+		
+	query['include'] =	_.map(include, function(n){
+		n.model = models[n.model];
+		if(n.where) {
+			n.where = JSON.parse(n.where)
+		}
+		return n;
+		})	
+	}
 
 	Taxon.findAndCount(query)
 		.then(function(taxon) {
@@ -986,70 +996,70 @@ exports.showTree = function(req, res) {
 		where: {
 			TaxonName: "Life"
 		},
-		attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+		attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 		include: [{
 			model: models.Taxon,
-			attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+			attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 			as: "children",
 			include: [{
 				model: models.Taxon,
-				attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+				attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 				as: "children",
 				include: [{
 					model: models.Taxon,
-					attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+					attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 					as: "children",
 					include: [{
 						model: models.Taxon,
-						attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+						attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 						as: "children",
 						include: [{
 							model: models.Taxon,
-							attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+							attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 							as: "children",
 							include: [{
 								model: models.Taxon,
-								attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+								attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 								as: "children",
 								include: [{
 									model: models.Taxon,
-									attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+									attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 									as: "children",
 									include: [{
 										model: models.Taxon,
-										attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+										attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 										as: "children",
 										include: [{
 											model: models.Taxon,
-											attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+											attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 											as: "children",
 											include: [{
 												model: models.Taxon,
-												attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+												attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 												as: "children",
 												include: [{
 													model: models.Taxon,
-													attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+													attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 													as: "children",
 													include: [{
 														model: models.Taxon,
-														attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+														attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 														as: "children",
 														include: [{
 															model: models.Taxon,
-															attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+															attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 															as: "children",
 															include: [{
 																model: models.Taxon,
-																attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+																attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 																as: "children",
 																include: [{
 																	model: models.Taxon,
-																	attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+																	attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 																	as: "children",
 																	include: [{
 																		model: models.Taxon,
-																		attributes: ['_id', 'parent_id', 'TaxonName', 'RankName'],
+																		attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 																		as: "children"
 																	}]
 																}]

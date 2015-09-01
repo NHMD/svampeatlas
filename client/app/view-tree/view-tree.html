@@ -1,60 +1,66 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-<div class="container-fluid" id="main-tree-view">
-<div class="row">
+<div class="container" id="main-tree-view">
+	<div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
+	
+	</div>
+	<div class="row">
 
-<!--
-  <div class="form-group col-md-3">
-    <label for="searchText">Search for taxon:</label>
-    <input type="text" class="form-control" id="SearchText" placeholder="searchText" ng-model="taxonToSearchInTree">
-  </div>
-  -->
+	<!--
+	  <div class="form-group col-md-3">
+	    <label for="searchText">Search for taxon:</label>
+	    <input type="text" class="form-control" id="SearchText" placeholder="searchText" ng-model="taxonToSearchInTree">
+	  </div>
+	  -->
   
 	  
-	  <md-content layout-padding layout="row" layout-sm="column">
-	<section style="width:30%" >
-	     <md-input-container >
-          <label>Search for taxon:</label>
-          <input ng-model="taxonToSearchInTree" ng-focus="taxonToSearchInTree = ''; foundTaxa = []">
-	     </md-input-container>
-		<!-- 
-		 <md-input-container  ng-show="foundTaxa.length > 1">
-		         <label> matches found:</label>
-		         <md-select ng-model="selectedTaxon.taxon">
-		           <md-option ng-value="taxon.path" ng-repeat="taxon in foundTaxa">{{taxon.path[taxon.path.length-2].TaxonName}} -> {{taxon.path[taxon.path.length-1].TaxonName}}</md-option>
-		         </md-select>
-		       </md-input-container> 
-	-->
-		 </section>
-		 <section>
-		 <md-radio-group ng-model="selectedTaxon.taxon" ng-if="foundTaxa.length > 1">
-		  <p class="md-body-2">{{foundTaxa.length}} matches found: </p>
-		       <md-radio-button ng-value="taxon.path" ng-repeat="taxon in foundTaxa">{{taxon.path[taxon.path.length-2].TaxonName}} -> {{taxon.path[taxon.path.length-1].TaxonName}}</md-radio-button>
+		  <md-content layout-padding layout="row" layout-sm="column">
+		<section style="width:30%" >
+		     <md-input-container >
+	          <label>Search for taxon:</label>
+	          <input ng-model="taxonToSearchInTree" ng-focus="taxonToSearchInTree = ''; foundTaxa = []">
+		     </md-input-container>
+			<!-- 
+			 <md-input-container  ng-show="foundTaxa.length > 1">
+			         <label> matches found:</label>
+			         <md-select ng-model="selectedTaxon.taxon">
+			           <md-option ng-value="taxon.path" ng-repeat="taxon in foundTaxa">{{taxon.path[taxon.path.length-2].TaxonName}} -> {{taxon.path[taxon.path.length-1].TaxonName}}</md-option>
+			         </md-select>
+			       </md-input-container> 
+		-->
+			 </section>
+			 <section>
+			 <md-radio-group ng-model="selectedTaxon.taxon" ng-if="foundTaxa.length > 1">
+			  <p class="md-body-2">{{foundTaxa.length}} matches found: </p>
+			       <md-radio-button ng-value="taxon.path" ng-repeat="taxon in foundTaxa"><span ng-show="taxon.path[taxon.path.length-1].RankID > 10000" >{{taxon.path[taxon.path.length-3].TaxonName}}</span> <span ng-show="taxon.path[taxon.path.length-1].RankID > 9999" >{{taxon.path[taxon.path.length-2].TaxonName}}</span> <span ng-show="taxon.path[taxon.path.length-1].RankID > 10000" >{{taxon.path[taxon.path.length-1].RankName}}</span> {{taxon.path[taxon.path.length-1].TaxonName}}</md-radio-button>
       
-		     </md-radio-group>
-	 </section> 
-		<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-        <md-button md-no-ink class="md-primary"  ng-click="findAndToggle(taxonToSearchInTree)">Find in tree</md-button>
-   	  <md-button md-no-ink class="md-primary"  ng-click="collapseTree()">Collapse tree</md-button>
-  </section> 
-	   </md-content>
+			     </md-radio-group>
+		 </section> 
+			<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+	        <md-button md-no-ink class="md-primary"  ng-click="findAndToggle(taxonToSearchInTree)">Find in tree</md-button>
+	   	  <md-button md-no-ink class="md-primary"  ng-click="collapseTree()">Collapse tree</md-button>
+	  </section> 
+		   </md-content>
     
- <!-- <div class="form-group col-md-2">
-  <button type="button" class="btn btn-default" ng-model="selectedRank"  bs-options="rank for r3nk in ['genus', 'species']" placeholder="Choose rank" bs-select>
-  </div>
+	 <!-- <div class="form-group col-md-2">
+	  <button type="button" class="btn btn-default" ng-model="selectedRank"  bs-options="rank for r3nk in ['genus', 'species']" placeholder="Choose rank" bs-select>
+	  </div>
 	
-  <div class="form-group col-md-2">
-  <button class="btn btn-primary"  ng-click="findAndToggle(taxonToSearchInTree)">Find in tree</button>
+	  <div class="form-group col-md-2">
+	  <button class="btn btn-primary"  ng-click="findAndToggle(taxonToSearchInTree)">Find in tree</button>
   
-   <button class="btn btn-primary"  ng-click="collapseTree()">Collapse tree</button>
-</div>
- -->
+	   <button class="btn btn-primary"  ng-click="collapseTree()">Collapse tree</button>
+	</div>
+	 -->
 
-</div>
+	</div>
 
 
-<md-progress-linear md-mode="indeterminate" ng-show="loading"></md-progress-linear>
+	<md-progress-linear md-mode="indeterminate" ng-show="loading"></md-progress-linear>
 
-</div>
+	</div>
+	</div>
+<div class="container-fluid" id="main-tree-view">
+
 <div class="row">
 <div id="tree-container"> </div>
 </div>
