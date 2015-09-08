@@ -140,9 +140,13 @@ angular.module('svampeatlasApp')
 			});
 
 			$scope.getCurrentImage = function() {
+				
+				return $scope.currentImage;
+				/*
 				return _.find($scope.taxon.images, function(img) {
 					return img.active === true;
 				});
+				*/
 			}
 
 			$scope.isValidYear = function(year) {
@@ -153,26 +157,34 @@ angular.module('svampeatlasApp')
 				}
 			}
 
+
 			$scope.deleteImage = function() {
 
 				return Taxon.deleteImage({
 					id: $scope.taxon._id,
 					imgid: $scope.currentImage._id
 				}).$promise.then(function() {
+					
+				
 					_.remove($scope.taxon.images, function(img) {
-						return img._id = $scope.currentImage._id;
+						
+						return img._id === $scope.currentImage._id;
 					});
-
+					
+					$state.go($state.$current, null, { reload: true });
+					
+					
 				});
 			};
-
+			
+		
 			$scope.newPhoto = function() {
 				$scope.currentImage = {}
 				$scope.imageForm.$show();
 			}
 
 			$scope.editImage = function() {
-				$scope.currentImage = $scope.getCurrentImage();
+				
 				$timeout(function() {
 					$scope.imageForm.$show();
 				}, 0)
@@ -194,13 +206,21 @@ angular.module('svampeatlasApp')
 					}, _.merge($scope.currentImage, {
 						taxon_id: $scope.taxon._id
 					})).$promise.then(function(image) {
-
-						$scope.taxon.images.push(image);
+						
+							//$scope.taxon.images.push(image);
+							$state.go($state.$current, null, { reload: true });
+							
+						
 					})
 				}
 
 			}
-
+			$scope.onSlideChanged = function (nextSlide, direction, nextIndex) {
+				
+				$scope.currentImage = $scope.taxon.images[nextIndex];
+			    console.log(nextIndex);
+			}
+			
 			$scope.isValidImage = function(img) {
 				return img.uri !== undefined && img.thumburi !== undefined
 			};

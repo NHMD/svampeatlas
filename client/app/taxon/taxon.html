@@ -220,15 +220,16 @@
 				    </div>
 				    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 				      <div class="panel-body">
-					    <div>
-					      <carousel disable-ng-animate interval="">
-					        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
+					    <div>				
+							
+					     <carousel  interval="" on-carousel-change="onSlideChanged(nextSlide, direction, nextIndex)">
+					        <slide  ng-repeat="slide in taxon.images" active="slide.active">
 					          <img ng-src="{{slide.uri}}" style="margin:auto;">
 					          <div class="carousel-caption">
          
 					            &copy; {{slide.photographer}}, {{slide.collectionNumber}}
 					          </div>
-		
+							  
 					        </slide>
 				
 					      </carousel>
@@ -282,7 +283,7 @@
 				          </button>
 				        </span>
 				      </div>
-				    </form>
+				    </form> 
 				  </div>
 				  <!-- ########################################-->
 				</div>

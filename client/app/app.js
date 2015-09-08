@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp', [
+	'ngAnimate',
   'ngCookies',
   'ngResource',
   'ngSanitize',
