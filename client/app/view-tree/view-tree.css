@@ -45,3 +45,13 @@
 .ghostCircle, .activeDrag .ghostCircle{
      display: none;
 }
+
+.show-context {
+    z-index:1000;
+    position: absolute;
+   
+}
+
+.hide-context {
+    display: none;
+}

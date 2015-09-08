@@ -13,7 +13,7 @@
 	  -->
   
 	  
-		  <md-content layout-padding layout="row" layout-sm="column">
+		  <md-content layout-padding layout="row" layout-sm="column" ng-show="!loading">
 		<section style="width:30%" >
 		     <md-input-container >
 	          <label>Search for taxon:</label>
@@ -38,9 +38,53 @@
 			<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
 	        <md-button md-no-ink class="md-primary"  ng-click="findAndToggle(taxonToSearchInTree)">Find in tree</md-button>
 	   	  <md-button md-no-ink class="md-primary"  ng-click="collapseTree()">Collapse tree</md-button>
+		   <md-button md-no-ink class="md-primary"  ng-click="refreshTree()">Refresh tree from server</md-button>
 	  </section> 
 		   </md-content>
-    
+		  <!-- initially hidden right-click menu -->
+		        <!-- <div class="hide-context" id="context-menu">
+		             <ul>
+		                 <li>
+		                     <a ng-href="/taxonbase/taxon/{{contextNodeId}}">Taxon layout</a>
+		                 </li>
+
+		                 <li>
+		                     <a ng-href="/taxonbase/taxonredlistdata/{{contextNodeId}}">Red list</a>
+		                 </li>
+
+		                 <li>
+		                     <a ng-href="/taxonbase/taxonbooklayout/{{contextNodeId}}">Book layout</a>
+		                 </li>
+		             </ul>
+		         </div> -->
+				 
+				 
+				 
+				 
+			    
+				 
+			        <md-menu-content width="4" class="hide-context" id="context-menu">
+			          <md-menu-item>
+			            <md-button ng-click="gotoLayout('taxonlayout-taxon')">
+			             Taxon layout
+			             
+			            </md-button>
+			          </md-menu-item>
+			          <md-menu-item>
+			            <md-button  ng-click="gotoLayout('taxonlayout-taxonredlistdata')">
+			              
+			             Red list
+			            </md-button>
+			          </md-menu-item>
+			         
+			          <md-menu-item>
+			            <md-button ng-click="gotoLayout('taxonlayout-taxonbooklayout')">
+			            
+			              Book layout
+			            </md-button>
+			          </md-menu-item>
+			        </md-menu-content>
+			      
 	 <!-- <div class="form-group col-md-2">
 	  <button type="button" class="btn btn-default" ng-model="selectedRank"  bs-options="rank for r3nk in ['genus', 'species']" placeholder="Choose rank" bs-select>
 	  </div>

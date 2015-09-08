@@ -1,19 +1,69 @@
 
 
 angular.module('svampeatlasApp')
-	.controller('ViewTreeCtrl', ['Auth', 'User', '$scope', '$filter', '$timeout', '$document','$mdToast',
-		function(Auth, User, $scope, $filter, $timeout, $document,  $mdToast) {
-
+	.controller('ViewTreeCtrl', ['Auth', 'User','$http','$stateParams', '$state', '$cacheFactory', '$scope', '$filter', '$timeout', '$document','$mdToast',
+		function(Auth, User, $http, $stateParams, $state, $cacheFactory, $scope, $filter, $timeout, $document,  $mdToast) {
+			
+			
+			
+			$scope.cache = $cacheFactory.get('treeCache');
+			
+			if($scope.cache === undefined){
+				$scope.cache =  $cacheFactory('treeCache');
+			}
+			
+			$scope.$on(
+			                        "$destroy",
+			                        function handleDestroyEvent() {
+										document.getElementById('tree-container').empty();
+										
+			                            console.log( "emptied container" );
+			                        }
+			                    );
+			
 			$scope.selectedTaxon = {};
 			$scope.loading = true;
 			
-	
-
-			$scope.showTree = function(url) {
+		    $document.bind("click", function(event) {
+		           document.getElementById("context-menu").className = "hide-context";
+		       });
+				
+		//	$http.get(url).then(function(result) {
 			
-				treeJSON = d3.json(url, function(error, treeData) {
-					//$timeout(function(){$scope.loading = false}, 0);
-					
+			$scope.treeData = $scope.cache.get("tree");
+			
+			if($scope.treeData !== undefined){
+				$timeout(function(){showTree(JSON.parse($scope.treeData))}, 0);
+			} else {
+				
+				$http.get("/api/taxons/tree").then(function(result) {
+					$scope.cache.put("tree", JSON.stringify(result.data));
+					$scope.treeData = result.data;
+					showTree($scope.treeData);
+				})
+			}
+			
+			$scope.refreshTree = function(){
+				
+				$scope.cache.remove("tree");
+				angular.element(document.getElementById('tree-container')).empty();
+				$scope.loading = true;
+				$http.get("/api/taxons/tree").then(function(result) {
+					$scope.cache.put("tree", result.data);
+					$scope.treeData = result.data;
+					showTree($scope.treeData);
+				})
+			}
+			
+			$scope.gotoLayout = function(layout){
+				
+				
+				$state.go(layout, {id: $scope.contextNodeId});
+			}
+
+			function showTree (treeData) {
+			
+				
 				    // Calculate total nodes, max label length
 				    var totalNodes = 0;
 				    var maxLabelLength = 0;
@@ -34,7 +84,7 @@ angular.module('svampeatlasApp')
 
 				    var tree = d3.layout.tree()
 				        .size([viewerHeight, viewerWidth]);
-
+						$scope.d3tree =  tree;
 				    // define a d3 diagonal projection for use by the node paths later on.
 				    var diagonal = d3.svg.diagonal()
 				        .projection(function(d) {
@@ -113,7 +163,8 @@ angular.module('svampeatlasApp')
 
 				    // define the zoomListener which calls the zoom function on the "zoom" event constrained within the scaleExtents
 				    var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
-
+					
+					/*
 				    function initiateDrag(d, domNode) {
 				        draggingNode = d;
 				        d3.select(domNode).select('.ghostCircle').attr('pointer-events', 'none');
@@ -155,7 +206,7 @@ angular.module('svampeatlasApp')
 
 				        dragStarted = null;
 				    }
-
+					*/
 				    // define the baseSvg, attaching a class for styling and the zoomListener
 				    var baseSvg = d3.select("#tree-container").append("svg")
 				        .attr("width", viewerWidth)
@@ -166,6 +217,7 @@ angular.module('svampeatlasApp')
 
 				    // Define the drag listeners for drag/drop behaviour of nodes.
 				    dragListener = d3.behavior.drag()
+						/*
 				        .on("dragstart", function(d) {
 				            if (d == root) {
 				                return;
@@ -181,7 +233,8 @@ angular.module('svampeatlasApp')
 				            }
 				            if (dragStarted) {
 				                domNode = this;
-				                initiateDrag(d, domNode);
+				               // initiateDrag(d, domNode);
+							   dragStarted = null;
 				            }
 
 				            // get coords of mouseEvent relative to svg container to allow for panning
@@ -255,7 +308,7 @@ angular.module('svampeatlasApp')
 				            draggingNode = null;
 				        }
 				    }
-
+					*/
 				    // Helper functions for collapsing and expanding nodes.
 
 				    function collapse(d) {
@@ -273,7 +326,7 @@ angular.module('svampeatlasApp')
 				            d._children = null;
 				        }
 				    }
-
+					/*
 				    var overCircle = function(d) {
 				        selectedNode = d;
 				        updateTempConnector();
@@ -284,6 +337,7 @@ angular.module('svampeatlasApp')
 				    };
 
 				    // Function to update the temporary connector indicating dragging affiliation
+					/*
 				    var updateTempConnector = function() {
 				        var data = [];
 				        if (draggingNode !== null && selectedNode !== null) {
@@ -310,6 +364,7 @@ angular.module('svampeatlasApp')
 
 				        link.exit().remove();
 				    };
+					*/
 
 				    // Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
 
@@ -346,6 +401,7 @@ angular.module('svampeatlasApp')
 				        d = toggleChildren(d);
 				        update(d);
 				        centerNode(d);
+						// $state.transitionTo('taxonomy-tree', {id: d._id}, { notify: false });
 				    }
 
 				    function update(source) {
@@ -381,7 +437,7 @@ angular.module('svampeatlasApp')
 				        });
 
 				        // Update the nodes…
-				        node = svgGroup.selectAll("g.node")
+				      var  node = svgGroup.selectAll("g.node")
 				            .data(nodes, function(d) {
 				                return d.id || (d.id = ++i);
 				            });
@@ -393,7 +449,23 @@ angular.module('svampeatlasApp')
 				            .attr("transform", function(d) {
 				                return "translate(" + source.y0 + "," + source.x0 + ")";
 				            })
-				            .on('click', click);
+							
+				            .on('click', click)
+							.on('contextmenu', function(n){
+							  	$scope.contextNodeId = n._id;
+								
+								var evt = d3.event;
+								evt.preventDefault();
+								$timeout(function(){
+									
+					               document.getElementById("context-menu").style.top =  evt.pageY + 'px';
+					               document.getElementById("context-menu").style.left = evt.pageX  + 'px';
+								   document.getElementById("context-menu").className = "show-context";  
+					               evt.returnValue = false;
+									
+								}, 10);
+							              
+							})
 
 				        nodeEnter.append("circle")
 				            .attr('class', 'nodeCircle')
@@ -568,7 +640,8 @@ angular.module('svampeatlasApp')
 						 if(newval && newval !== oldval)	{
 							 console.log("selected tax id "+newval[newval.length-1]._id)
 							
-							  $scope.expandPath(newval)
+							 $scope.expandPath(newval);
+							 var id = newval[newval.length-1]._id;
 						 };
 					 })
 					 
@@ -580,7 +653,7 @@ angular.module('svampeatlasApp')
 							 map[n._id] = n;
 							 
 							 var splittedName = taxonName.split(" ");
-							 if(n.RankName === "sp." && splittedName.length === 2 && n.TaxonName.slice(0, splittedName[1].length) === splittedName[1] && map[n.parent_id].TaxonName.slice(0, splittedName[0].length) === splittedName[0]){
+							 if(splittedName.length === 2 && n.TaxonName.slice(0, splittedName[1].length) === splittedName[1] && map[n.parent_id].TaxonName.slice(0, splittedName[0].length) === splittedName[0]){
 								 var path = [n];
 								 var target = n;
 								 while(map[target.parent_id] !== undefined){
@@ -592,7 +665,7 @@ angular.module('svampeatlasApp')
 								 $scope.selectedTaxon.taxon = path;
 								 $scope.foundTaxa.push({path: path});
 							 }
-							 else if(n.TaxonName === taxonName || n.TaxonName.slice(0, splittedName[0].length) === splittedName[0]){
+							 else if(n.TaxonName === taxonName || (splittedName.length === 1 && n.TaxonName.slice(0, splittedName[0].length) === splittedName[0])){
 								
 								 var path = [n];
 								 var target = n;
@@ -620,6 +693,43 @@ angular.module('svampeatlasApp')
 						 
 					 	
 					 };
+					 
+					 
+					 $scope.findAndToggleById = function (id){
+						 $scope.selectedTaxon.taxon
+						 $scope.foundTaxa = [];
+						 var map = [];
+						 visit(root, function(n){
+							 map[n._id] = n;
+	
+							 if(n._id === parseInt(id)){
+								 var path = [n];
+								 var target = n;
+								 while(map[target.parent_id] !== undefined){
+									 path.push(map[target.parent_id]);
+									 target = map[target.parent_id];
+								 }
+								 path.reverse();
+								 
+								 $scope.selectedTaxon.taxon = path;
+								 $scope.foundTaxa.push({path: path});
+							 }
+						 }, function(parent){
+							 return (parent.children) ? parent.children: parent._children;
+							 
+						 });
+						 
+						 if($scope.foundTaxa.length > 0){
+						 	$scope.expandPath($scope.selectedTaxon.taxon)
+						 } else {
+						 	
+							$scope.showNotFoundToast()
+						 }
+						 
+					 	
+					 };
+					 
+					 
 				     // Initialize the display to show a few nodes.
 				     root.children.forEach(toggleAll);
 					 update(root);
@@ -653,12 +763,9 @@ angular.module('svampeatlasApp')
 					*/
 					 
 					 
-				});
 			};
 			// End $scope.showTree
-			$document.ready(function(){
-				$scope.showTree("/api/taxons/tree");
-			})
+			
 			
 			
 		    $scope.showNotFoundToast = function() {
