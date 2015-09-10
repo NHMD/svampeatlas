@@ -369,7 +369,7 @@ angular.module('svampeatlasApp')
 				    // Function to center node when clicked/dropped so node doesn't get lost when collapsing/moving with large amount of children.
 
 				    function centerNode(source) {
-				        scale = zoomListener.scale();
+				      var  scale = zoomListener.scale();
 				        x = -source.y0;
 				        y = -source.x0;
 				        x = x * scale + viewerWidth / 2;
