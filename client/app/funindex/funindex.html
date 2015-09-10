@@ -170,7 +170,7 @@
 		<td>{{row.name}} <i class="fa fa-warning text-warning" ng-if="row.currentname_pt_ && row.currentname_pt_.TargetRecord.Id !== row.mycobanknr_" data-title="Possibly invalid or synonym. Please review carefully." bs-tooltip></i></td>
 		<td>{{row.authorsabbrev_}}</td>
 		<td>{{row.rank_pt_.TargetRecord.Name}} </td>
-		<td><a href = "{{row.Classification_ | parseHref}}" target="_BLANK">Mycobank</a></td>
+		<td><a href = "http://www.mycobank.org/BioloMICS.aspx?Table=Mycobank&mycobank_={{row.mycobanknr_}}&Fields=All" target="_BLANK">Mycobank</a></td>
 		
 	</tr>
 	</tbody>

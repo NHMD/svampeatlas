@@ -216,7 +216,7 @@ angular.module('svampeatlasApp')
 
 
 				    // Define the drag listeners for drag/drop behaviour of nodes.
-				    dragListener = d3.behavior.drag()
+				    var dragListener = d3.behavior.drag()
 						/*
 				        .on("dragstart", function(d) {
 				            if (d == root) {
