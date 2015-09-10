@@ -21,12 +21,11 @@ module.exports = {
             process.env.OPENSHIFT_APP_NAME ||
             'mongodb://localhost/app'
   },
-,
   sequelize: {
 	  uri: 'mysql://',
 	  username: process.env.OPENSHIFT_MYSQL_DB_USERNAME,
 	  password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
-	database: "taxonbase",
+	database: "taxon",
     options: {
       logging: console.log,
 		
