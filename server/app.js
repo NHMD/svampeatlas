@@ -8,12 +8,12 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var express = require('express');
-var mongoose = require('mongoose-bird')();
+//var mongoose = require('mongoose-bird')();
 var db = require('./api/mysql');
 var config = require('./config/environment');
 
 // Connect to MongoDB
-mongoose.connect(config.mongo.uri, config.mongo.options);
+//mongoose.connect(config.mongo.uri, config.mongo.options);
 
 // Populate databases with sample data
 if (config.seedDB) { require('./config/seed'); }
