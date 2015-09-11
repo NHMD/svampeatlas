@@ -274,6 +274,14 @@ module.exports = function (grunt) {
         }
       }
     },
+	
+	uglify: {
+	    options: {
+	      mangle: {
+	        except: ['parent-modal.tpl.html', 'rank-modal.tpl.html', 'synonym-modal.tpl.html']
+	      }
+	    }
+	},
 
     // The following *-min tasks produce minified files in the dist folder
     imagemin: {
