@@ -15,7 +15,7 @@
 
 			</div>
 			
-			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div class="checkbox"><label>Present in DK
+			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div class="checkbox"><label ng-show="taxon._id">Present in DK
     <input type="checkbox" ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
   </label></div>
 			
