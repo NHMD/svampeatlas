@@ -300,18 +300,18 @@ angular.module('svampeatlasApp')
 			
 			$scope.parentModal = $modal({
 				scope: $scope,
-				templateUrl: '/app/taxon/parent-modal.tpl.html',
+				templateUrl: 'app/taxon/parent-modal.tpl.html',
 				show: false
 			});
 			$scope.rankModal = $modal({
 				scope: $scope,
-				templateUrl: '/app/taxon/rank-modal.tpl.html',
+				templateUrl: 'app/taxon/rank-modal.tpl.html',
 				show: false
 			});
 			
 			$scope.synonymModal = $modal({
 				scope: $scope,
-				templateUrl: '/app/taxon/synonym-modal.tpl.html',
+				templateUrl: 'app/taxon/synonym-modal.tpl.html',
 				show: false
 			});
 			
