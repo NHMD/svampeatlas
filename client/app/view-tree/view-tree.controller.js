@@ -15,7 +15,7 @@ angular.module('svampeatlasApp')
 			$scope.$on(
 			                        "$destroy",
 			                        function handleDestroyEvent() {
-										document.getElementById('tree-container').empty();
+										 angular.element("#tree-container").empty();
 										
 			                            console.log( "emptied container" );
 			                        }
@@ -25,7 +25,7 @@ angular.module('svampeatlasApp')
 			$scope.loading = true;
 			
 		    $document.bind("click", function(event) {
-		           document.getElementById("context-menu").className = "hide-context";
+		           angular.element("#context-menu").addClass("hide-context");
 		       });
 				
 		//	$http.get(url).then(function(result) {
@@ -46,7 +46,7 @@ angular.module('svampeatlasApp')
 			$scope.refreshTree = function(){
 				
 				$scope.cache.remove("tree");
-				angular.element(document.getElementById('tree-container')).empty();
+				 angular.element("#tree-container").empty();
 				$scope.loading = true;
 				$http.get("/api/taxons/tree").then(function(result) {
 					$scope.cache.put("tree", result.data);

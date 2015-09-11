@@ -1,7 +1,9 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, socket) {
+  .controller('MainCtrl', function($scope, $http ) {
+   
+   /*
     $scope.awesomeThings = [];
 
     $http.get('/api/things').success(function(awesomeThings) {
@@ -24,4 +26,5 @@ angular.module('svampeatlasApp')
     $scope.$on('$destroy', function() {
       socket.unsyncUpdates('thing');
     });
+	*/
   });
