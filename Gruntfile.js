@@ -318,7 +318,7 @@ module.exports = function (grunt) {
         module: 'svampeatlasApp',
         htmlmin: {
           collapseBooleanAttributes: true,
-          collapseWhitespace: true,
+          collapseWhitespace: false,
           removeAttributeQuotes: true,
           removeEmptyAttributes: true,
           removeRedundantAttributes: true,
