@@ -92,6 +92,10 @@ angular.module('svampeatlasApp')
 						var result = data.Results.Taxon;
 
 						if (result) {
+							//If we get inly one match, put in an array
+							if(!result.length){
+								result = [result];
+							}
 							var x2js = new X2JS();
 							for (var i = 0; i < result.length; i++) {
 
