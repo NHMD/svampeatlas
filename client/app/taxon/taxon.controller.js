@@ -132,13 +132,19 @@ angular.module('svampeatlasApp')
 			$scope.TaxonTypeaheadService = TaxonTypeaheadService;
 			
 		
-
+/*
 			$scope.$watch('selectedParentTaxon', function(newval, oldval) {
 				if (typeof newval === "object" && newval.constructor.name === "Resource") {
 					console.log(JSON.stringify(newval))
 				}
 			});
-
+			
+			$scope.$watch('selectedValidTaxon', function(newval, oldval) {
+				if (typeof newval === "object" && newval.constructor.name === "Resource") {
+					console.log(JSON.stringify(newval))
+				}
+			});
+			*/
 			$scope.getCurrentImage = function() {
 				
 				return $scope.currentImage;
