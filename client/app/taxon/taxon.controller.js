@@ -49,6 +49,7 @@ angular.module('svampeatlasApp')
 
 				}
 			} else if ($stateParams.id && $stateParams.id !== 'new') {
+				
 				console.log("Found id " + $stateParams.id)
 				$scope.taxon = Taxon.get({
 					id: $stateParams.id
@@ -59,6 +60,8 @@ angular.module('svampeatlasApp')
 				console.log($scope.taxon);
 				
 				$scope.taxon.$promise.then(function() {
+					
+					$scope.saveIsClicked = false;
 					
 					$scope.mergetooltip = {
 					  "title": "Merge all unset attributes from this taxon.<br />All attributes currently present on "+$scope.taxon.FullName+ " will be preserved.",
@@ -234,7 +237,7 @@ angular.module('svampeatlasApp')
 			};
 			
 			$scope.saveNewTaxon = function(taxon){
-				
+				$scope.saveIsClicked = true;
 				taxon.$save().then(function(t){
 					$scope.taxon = t;
 					$state.go('taxonlayout-taxon', {id: taxon._id}, {inherit: false, notify: false});
