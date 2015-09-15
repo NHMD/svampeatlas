@@ -16,7 +16,7 @@ router.get('/updateallsystematicsbytypificationid', controller.updateAllSystemat
 router.get('/syncallfunidsbynamematch', controller.syncAllFUNIdsByNameMatch);
 router.get('/updateallidsbyname/:taxonrank', controller.updateAllFUNIdsByNameMatch);
 router.get('/updateallidsbynameforunacceptedspecies', controller.syncAllFUNIdsByNameMatchForNewParentSpecies);
-router.get('/tree', controller.showTree);
+router.get('/tree', auth.hasRole('taxonomyadmin'), controller.showTree);
 router.get('/:id', controller.show);
 router.get('/:id/updatesystematics', controller.updateSystematics);
 
