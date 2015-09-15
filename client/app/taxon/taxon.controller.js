@@ -11,15 +11,17 @@ angular.module('svampeatlasApp')
 				
 				taxon.RankName = $scope.superrank;
 				taxon.RankID = $scope.selectedSuperRankID.superrankId;
-				taxon.FunIndexNumber = 0;
-				taxon.FunIndexCurrUseNumber =0;
+				taxon.FunIndexNumber = null;
+				taxon.FunIndexCurrUseNumber =null;
 				taxon.FunIndexTypificationNumber = 0;
 				taxon.GUID = "";
 				if($scope.superrank === "superspecies"){
-					taxon.FullName = taxon.Parent.TaxonName + " "+ taxon.TaxonName ;
+					taxon.FullName = taxon.Parent.TaxonName + " "+ taxon.TaxonName + " s. lato";
+					taxon.Author = "";
 				};
 				if($scope.superrank === "supergenus"){
-					taxon.FullName = taxon.TaxonName ;
+					taxon.FullName = taxon.TaxonName+ " s. lato";
+					taxon.Author = "";
 				};
 				
 				//$scope.selectedSuperRankID = undefined;

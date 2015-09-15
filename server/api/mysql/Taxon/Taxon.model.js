@@ -50,7 +50,8 @@ module.exports = function(sequelize, DataTypes) {
     },    
     FunIndexCurrUseNumber: {
       type: DataTypes.INTEGER(11),
-      allowNull: false,
+ allowNull: true,
+    defaultValue: null,
     }, 
     FunIndexTypificationNumber: {
       type: DataTypes.INTEGER(11),
@@ -58,7 +59,8 @@ module.exports = function(sequelize, DataTypes) {
     }, 
     FunIndexNumber: {
       type: DataTypes.INTEGER(11),
-      allowNull: false,
+ allowNull: true,
+    defaultValue: null,
     },
     RankID: {
       type: DataTypes.INTEGER(11),
