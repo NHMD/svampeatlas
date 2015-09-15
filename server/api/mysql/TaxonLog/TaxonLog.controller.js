@@ -1,5 +1,5 @@
 'use strict';
-
+var _ = require('lodash');
 var models = require('../')
 var TaxonLog = models.TaxonLog;
 
@@ -61,6 +61,18 @@ exports.index = function(req, res) {
 		query['where'] = JSON.parse(req.query.where);
 	}
 
+	if (req.query.include) {
+		var include = JSON.parse(req.query.include)
+		
+	query['include'] =	_.map(include, function(n){
+		n.model = models[n.model];
+		if(n.where) {
+			n.where = JSON.parse(n.where)
+		}
+		return n;
+		})	
+	}
+/*
 	query.include = [{
 			model: models.User,
 			attributes: ['_id', 'name', 'email'],
@@ -70,7 +82,7 @@ exports.index = function(req, res) {
 					attributes: ['_id', 'FullName'],
 					as: "Taxon"}
 	];
-		
+	*/	
 	TaxonLog.findAndCount(query)
 		.then(function(TaxonLog) {
 			res.set('count', TaxonLog.count);
