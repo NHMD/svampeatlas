@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
   .controller('TaxonomyCtrl',['$scope','Taxon',  function ($scope, Taxon) {
    
-
+console.log("taxonomy")
 
 	    $scope.displayed = [];
 

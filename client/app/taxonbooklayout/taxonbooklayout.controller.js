@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
 	.controller('TaxonBookLayoutCtrl', ['$q','$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonRedListData','TaxonTypeaheadService', 'TaxonAttributes','NatureTypes', 'NutritionStrategies','$state' ,'$stateParams', '$timeout', '$modal', '$mdSidenav', '$mdUtil', '$log',
 		function($q, $scope, Taxon, TaxonIntegrationService, TaxonRedListData, TaxonTypeaheadService,TaxonAttributes, NatureTypes,NutritionStrategies, $state, $stateParams, $timeout, $modal, $mdSidenav, $mdUtil, $log) {
-			
+			console.log("book")
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
 			$scope.nutritionStrategies = NutritionStrategies.query();
@@ -19,11 +19,7 @@ angular.module('svampeatlasApp')
 				$scope.taxonAttributes	= TaxonAttributes.get({
 					id: $stateParams.id
 				});
-				console.log($scope.taxon);
-				
-				Taxon.get({
-									id: $stateParams.id
-								});
+			
 								
 				$scope.taxon.$promise.then(function() {
 					$scope.taxon.siblings = Taxon.getSiblings({

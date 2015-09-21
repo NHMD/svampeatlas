@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams',
+	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams', 
 		function($scope,  $state, $stateParams) {
 			
 			$scope.state = $state;
@@ -15,23 +15,19 @@ angular.module('svampeatlasApp')
 				{ title:'Book layout',  state: 'taxonlayout-taxonbooklayout' , active: 'taxonlayout-taxonbooklayout' === $state.current.name, disabled: $state.current.name.split('-')[0] !== 'taxonlayout'},
 				{ title:'Log', state: 'taxonlog' , active: 'taxonlog' === $state.current.name}
 			  ];
+			  $scope.tabs.activeTab = $state.current.name;
 			
-			  
-			  
-			$scope.selectTab = function(tab){
-				
-				console.log($state.current)
-				
-				if($state.current.name.split('-')[0] === 'taxonlayout'){
-					$state.go(tab.state, $stateParams);
+			  $scope.$watch('tabs.activeTab', function(newState, oldState){
+				  if(newState !== oldState){
+  					if($state.current.name.split('-')[0] === 'taxonlayout'){
+  						$state.go(newState, {id : $stateParams.id});
 					
-				} else {
-					$state.go(tab.state);
-				}
-				
-				
-				
-			}
+  					} else {
+  						$state.go(newState);
+  					}
+				  }
+			  })
+
 			
 		
 		}

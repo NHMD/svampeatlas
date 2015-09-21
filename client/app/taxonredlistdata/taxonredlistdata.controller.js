@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
 	.controller('TaxonRedListDataCtrl', ['$scope', 'Taxon',  '$state' ,'$stateParams', '$timeout', 'TaxonRedListData',
 		function($scope, Taxon, $state, $stateParams, $timeout, TaxonRedListData) {
-		
+		console.log("redlist")
 			$scope.Taxon = Taxon;
 		
 			if ($stateParams.id && $stateParams.id !== 'new') {
