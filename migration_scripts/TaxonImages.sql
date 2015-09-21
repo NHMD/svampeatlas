@@ -11,7 +11,7 @@ collectionNumber varchar(255)
 ) ENGINE = InnoDB DEFAULT CHARSET= UTF8;
 
 
-INSERT INTO TaxonImages (taxon_id, thumburi, uri, photographer, country, collectionNumber) select p._id, concat("http://www.mycokey.com/MycoKeySolidState/", REPLACE(p.path, ":", "/"), "S.jpg"), concat("http://www.mycokey.com/MycoKeySolidState/", REPLACE(p.path, ":", "/"), "L.jpg"), a.illustrator, a.Country, a.Number  from MycoKeyPictures p LEFT JOIN MycoKeyAttributes a ON a.MycoKeyHtmlReference=p.path where p._id IS NOT NULL;
+INSERT INTO TaxonImages (updatedAt, taxon_id, thumburi, uri, photographer, country, collectionNumber) select NOW(), p._id, concat("http://www.mycokey.com/MycoKeySolidState/", REPLACE(p.path, ":", "/"), "S.jpg"), concat("http://www.mycokey.com/MycoKeySolidState/", REPLACE(p.path, ":", "/"), "L.jpg"), a.illustrator, a.Country, a.Number  from MycoKeyPictures p LEFT JOIN MycoKeyAttributes a ON a.MycoKeyHtmlReference=p.path where p._id IS NOT NULL;
 
 
 INSERT INTO TaxonImages (_id, uri, size, photographer, country, collectionNumber) select p._id, concat("http://www.mycokey.com/MycoKeySolidState/", REPLACE(p.path, ":", "/"), "L.jpg"), "l", a.illustrator, a.Country, a.Number  from MycoKeyPictures p LEFT JOIN MycoKeyAttributes a ON a.MycoKeyHtmlReference=p.path where p._id IS NOT NULL;

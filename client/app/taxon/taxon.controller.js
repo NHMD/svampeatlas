@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
 	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal',
 		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal) {
-			console.log("taxon")
+			$scope._ = _;
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
 
@@ -80,14 +80,27 @@ angular.module('svampeatlasApp')
 					};
 
 
-
-					$scope.taxon.Children = Taxon.query({
+					 Taxon.query({
 						where: {
 							parent_id: $scope.taxon._id
 						},
 						order: "RankID ASC",
-						limit: 10
+						include: JSON.stringify([{
+							model: "TaxonAttributes",
+							as: "attributes",
+							fields: JSON.stringify(["PresentInDK"])}])
 					}).$promise.then(function(children) {
+						$scope.taxon.Children = children;
+						
+						var acceptedAndSyns = _.partition($scope.taxon.Children, function(n) {
+						  return n._id === n.accepted_id;
+						});
+						$scope.numAcceptedChildren  = acceptedAndSyns[0].length;
+						$scope.numPresentInDK = _.filter(acceptedAndSyns[0],function(n){ return n.attributes && n.attributes.PresentInDK;}).length -1;
+						$scope.numSynChildren  = acceptedAndSyns[1].length;
+						
+						console.log(_.filter($scope.taxon.Children, function(n) { return n._id === n.accepted_id;}).length -1);
+						
 						if (children.length >= 1) {
 							$scope.childRank = children[0].RankID;
 							if ($scope.taxon.RankID === 5000 && $scope.childRank >= 10000) {
