@@ -14,12 +14,12 @@ CREATE TABLE IF NOT EXISTS `Taxon` (
   `RankID` int(11) NOT NULL,
   `RankName` varchar(128) DEFAULT NULL COMMENT 'taxonomic_rank in FileMaker',
   `TaxonName` varchar(128) NOT NULL,
-  `Author` varchar(128) DEFAULT NULL,
+  `Author` varchar(1024) DEFAULT NULL,
   `diagnose` text DEFAULT NULL COMMENT 'diagnose in FileMaker',
   `forvekslingsmuligheder` text DEFAULT NULL,
   `beskrivelse` text DEFAULT NULL,
  `oekologi` text DEFAULT NULL COMMENT 'AtlasOekologi in FileMaker',
-`bemaerkning` text DEFAULT NULL COMMENT 'atlasBem_rkning in FileMaker',
+`bemaerkning` text DEFAULT NULL COMMENT 'atlasBemaerkning in FileMaker',
 `foersteFundIDK` int(4) DEFAULT NULL,
 `foersteReferenceForDK` int(4) DEFAULT NULL,
 `PresentInDK` bit(1) NOT NULL DEFAULT 0,
@@ -89,7 +89,7 @@ INSERT INTO Taxon (
 	 vernacular_name_SE
  ) SELECT 0, DkIndexNumber, NOW(), NOW(), 1, FuldeNavnFraFUN, taxonomic_rank, FUNGenus, FUNAuthor, FunIndexCurrUseNumber, FunIndexNumber, diagnose, forvekslingsmuligheder, beskrivelse,
 	AtlasOekologi,
-	atlasBem_rkning,
+	atlasBemaerkning,
 	foersteFundIDK,
 	foersteReferenceForDK,
 	DK_reference,
@@ -130,7 +130,7 @@ INSERT INTO Taxon (
 	 vernacular_name_NO, 
 	 vernacular_name_SE) SELECT 0, DkIndexNumber, NOW(), NOW(), 1, FuldeNavnFraFUN, taxonomic_rank, FUNGenus, FUNAuthor, FunIndexCurrUseNumber, FunIndexNumber, diagnose, forvekslingsmuligheder, beskrivelse,
 	AtlasOekologi,
-	atlasBem_rkning,
+	atlasBemaerkning,
 	foersteFundIDK,
 	foersteReferenceForDK,
 	DK_reference,
@@ -140,6 +140,9 @@ INSERT INTO Taxon (
 -- move subspecific taxa from species rank:
 
 UPDATE TaxonBase SET taxonomic_rank = FUNSubspecificCategory  where taxonomic_rank = "species" and FUNSubspecificCategory != "" AND FUNSubspecificName != ""; 
+
+UPDATE TaxonBase SET FunIndexNumber = NULL where FunIndexNumber ="";
+UPDATE TaxonBase SET  FunIndexCurrUseNumber = NULL where FunIndexCurrUseNumber = "";
 
 -- Create species
 INSERT INTO Taxon (
@@ -171,10 +174,9 @@ INSERT INTO Taxon (
 	 vernacular_name_GB, 
 	 vernacular_name_NL, 
 	 vernacular_name_NO, 
-	 vernacular_name_SE,
- 		parent_id) SELECT 0, DkIndexNumber, NOW(), NOW(), 1, FuldeNavnFraFUN, taxonomic_rank, FUNSpeciesEpithet, FUNAuthor, FunIndexCurrUseNumber, FunIndexNumber, diagnose, forvekslingsmuligheder, beskrivelse,
+	 vernacular_name_SE, parent_id) SELECT 0, DkIndexNumber, NOW(), NOW(), 1, FuldeNavnFraFUN, taxonomic_rank, FUNSpeciesEpithet, FUNAuthor, FunIndexCurrUseNumber, FunIndexNumber, diagnose, forvekslingsmuligheder, beskrivelse,
 	AtlasOekologi,
-	atlasBem_rkning,
+	atlasBemaerkning,
 	foersteFundIDK,
 	foersteReferenceForDK,
 	DK_reference,
@@ -211,10 +213,9 @@ INSERT INTO Taxon (
 		 vernacular_name_GB, 
 		 vernacular_name_NL, 
 		 vernacular_name_NO, 
-		 vernacular_name_SE,
-	 		parent_id) SELECT 0, DkIndexNumber, NOW(), NOW(), 1, FuldeNavnFraFUN, "sp.XXX", FUNSpeciesEpithet, FUNAuthor, FunIndexCurrUseNumber, FunIndexNumber, diagnose, forvekslingsmuligheder, beskrivelse,
+		 vernacular_name_SE, parent_id) SELECT 0, DkIndexNumber, NOW(), NOW(), 1, FuldeNavnFraFUN, "sp.XXX", FUNSpeciesEpithet, FUNAuthor, FunIndexCurrUseNumber, FunIndexNumber, diagnose, forvekslingsmuligheder, beskrivelse,
 		AtlasOekologi,
-		atlasBem_rkning,
+		atlasBemaerkning,
 		foersteFundIDK,
 		foersteReferenceForDK,
 		DK_reference,
@@ -240,7 +241,7 @@ INSERT INTO Taxon (
 		 update TaxonBase set taxonomic_rank = FUNSubspecificCategory where FUNSubspecificCategory IN ("f.sp.", "f.", "var.","subsp." );
 		
 		 update TaxonBase set FUNSpeciesEpithet = Art where FUNSubspecificCategory IN ("f.sp.", "f.", "var.","subsp." ) AND FUNSpeciesEpithet = "";
-		update TaxonBase set FunGenus = Sl_gt where FUNSubspecificCategory IN ("f.sp.", "f.", "var.","subsp." ) AND FunGenus = "";
+		update TaxonBase set FunGenus = Slaegt where FUNSubspecificCategory IN ("f.sp.", "f.", "var.","subsp." ) AND FunGenus = "";
 			update TaxonBase set FuldeNavnFraFUN = Fulde_navn where FUNSubspecificCategory IN ("f.sp.", "f.", "var.","subsp." ) AND FuldeNavnFraFUN = "";
 			
 	-- Temporary table for species as parents of supspecific taxa	
@@ -313,7 +314,7 @@ http://localhost:9000/api/taxons/updateallidsbynameforunacceptedspecies
 			 vernacular_name_NO, 
 			 vernacular_name_SE, parent_id) SELECT 0, DkIndexNumber, NOW(), NOW(), 1, FuldeNavnFraFUN, FUNSubspecificCategory, FUNSubspecificName, FUNAuthor, FunIndexCurrUseNumber, FunIndexNumber, diagnose, forvekslingsmuligheder, beskrivelse,
 			AtlasOekologi,
-			atlasBem_rkning,
+			atlasBemaerkning,
 			foersteFundIDK,
 			foersteReferenceForDK,
 			DK_reference,
@@ -357,7 +358,7 @@ http://localhost:9000/api/taxons/updateallidsbynameforunacceptedspecies
 			
 			-- Update orphant species:
 
-			UPDATE Taxon t, Taxon t2 set t.parent_id = t2._id where t2.TaxonName = SUBSTRING_INDEX(t.FullName, " ", 1) AND t.RankName = "species" and t2.RankName = "genus";
+			UPDATE Taxon t, Taxon t2 set t.parent_id = t2._id where t2.TaxonName = SUBSTRING_INDEX(t.FullName, " ", 1) AND t.RankName = "species" and t2.RankName = "gen.";
 
 			-- Create missing genera:
 
@@ -404,13 +405,13 @@ UPDATE Taxon t JOIN TaxonBase t2
 
 
 
-insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "regn.", SUBSTRING_INDEX(SystematicPath,", ", 1), SUBSTRING_INDEX(SystematicPath,", ", 1) FROM Taxon where RankName ="genus");
-insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "phyl.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 2),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 2) FROM Taxon where RankName ="genus");
-insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "subphyl.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 3),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 3) FROM Taxon where RankName ="genus");
-insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "class.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 4),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 4) FROM Taxon where RankName ="genus");
-insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "subclass.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 5),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 5) FROM Taxon where RankName ="genus");
-insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "ord.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 6),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 6) FROM Taxon where RankName ="genus");
-insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "fam.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 7),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 7) FROM Taxon where RankName ="genus");
+insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "regn.", SUBSTRING_INDEX(SystematicPath,", ", 1), SUBSTRING_INDEX(SystematicPath,", ", 1) FROM Taxon where RankName ="gen.");
+insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "phyl.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 2),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 2) FROM Taxon where RankName ="gen.");
+insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "subphyl.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 3),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 3) FROM Taxon where RankName ="gen.");
+insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "class.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 4),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 4) FROM Taxon where RankName ="gen.");
+insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "subclass.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 5),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 5) FROM Taxon where RankName ="gen.");
+insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "ord.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 6),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 6) FROM Taxon where RankName ="gen.");
+insert ignore into temptaxon (RankName, TaxonName, SystematicPath) (SELECT "fam.", SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 7),", ", -1), SUBSTRING_INDEX(SystematicPath, ", ", 7) FROM Taxon where RankName ="gen.");
 
 
 DELETE FROM `temptaxon` WHERE TaxonName IN ("", "undefined", "Incertae sedis");
@@ -449,7 +450,7 @@ INSERT INTO Taxon (
 	-- Sync new supergeneric taxa with index fungorum:
 	http://localhost:9000/api/taxons/syncallfunidsbynamematch
 
-SELECT SystematicPath, SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 7),", ", -1) FROM Taxon where RankName = "genus" AND TaxonName = "Cortinarius";
+SELECT SystematicPath, SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 7),", ", -1) FROM Taxon where RankName = "gen." AND TaxonName = "Hortiboletus";
 
 SELECT SystematicPath, SUBSTRING_INDEX(SUBSTRING_INDEX(SystematicPath, ", ", 6),", ", -1) FROM Taxon where RankName = "fam." AND TaxonName = "Cortinariaceae";
 
@@ -474,9 +475,9 @@ UPDATE Taxon t, Taxon t2  SET t.parent_id = t2._id WHERE  t.RankName = "regn." A
 
 select SUBSTRING_INDEX(t.SystematicPath, ", Incertae sedis", 1) from Taxon t where t.TaxonName = "Russulales" AND t.RankName = "ord."
 
-UPDATE Taxon t, Taxon t2 SET t.parent_id = t2._id where  t2.SystematicPath = SUBSTRING_INDEX(t.SystematicPath, ", Incertae sedis", 1) AND t.RankName NOT IN ("genus", "species") AND t.parent_id IS NULL;
+UPDATE Taxon t, Taxon t2 SET t.parent_id = t2._id where  t2.SystematicPath = SUBSTRING_INDEX(t.SystematicPath, ", Incertae sedis", 1) AND t.RankName NOT IN ("gen.", "sp.") AND t.parent_id IS NULL;
 
-UPDATE Taxon t, Taxon t2 SET t.parent_id = t2._id where  t2.SystematicPath = SUBSTRING_INDEX(t.SystematicPath, ", Incertae sedis", 1) AND t.RankName = "genus" AND t.parent_id IS NULL;
+UPDATE Taxon t, Taxon t2 SET t.parent_id = t2._id where  t2.SystematicPath = SUBSTRING_INDEX(t.SystematicPath, ", Incertae sedis", 1) AND t.RankName = "gen." AND t.parent_id IS NULL;
 
 
 

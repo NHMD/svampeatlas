@@ -288,6 +288,14 @@ exports.updateAllSystematicsById = function(req, res) {
 								taxon.FunIndexCurrUseNumber = FunIndexCurrUseNumber;
 							};
 							*/
+							var FunIndexTypificationNumber = parseInt(r.TYPIFICATION_x0020_DETAILS);
+							
+							if (FunIndexTypificationNumber) {
+								taxon.FunIndexTypificationNumber = FunIndexTypificationNumber;
+							} else {
+								taxon.FunIndexTypificationNumber = 0;
+							}
+							
 							taxon.SystematicPath = getSystematicPath(r, "gen.");
 							
 						//	taxon.RankName = r.INFRASPECIFIC_x0020_RANK;
@@ -316,6 +324,7 @@ exports.updateAllSystematicsByTypificationId = function(req, res) {
 	Taxon.findAll({
 		where: 
 			models.Sequelize.and(
+				{ FunIndexTypificationNumber: {ne: 0} }, { SystematicPath: { like: ",%"} },
 			      { RankName: {ne: "genus"} },
 			      { RankName: {ne: "species"} },
 				{ RankName: {ne: "supergeneric rank"} }
@@ -333,7 +342,7 @@ exports.updateAllSystematicsByTypificationId = function(req, res) {
 					}).then(function(result) {
 
 						var r = result[0].NameByKeyResult.NewDataSet.IndexFungorum;
-
+						console.log("Processing: _id "+taxon._id);
 						if (r !== undefined) {
 							/*
 							var FunIndexCurrUseNumber = r.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER;
@@ -380,8 +389,8 @@ function findCurrentUseTaxon(soapResult){
 // Updates all genera with correct systematic path and currentuse idx
 exports.updateAllFUNIdsByNameMatch = function(req, res) {
 	var where = (req.params.taxonrank === "genus") ? models.Sequelize.and(
-			      { RankName:"genus"},
-				{ FunIndexNumber: 0 }
+			      { RankName: "sp."},
+				{ FunIndexNumber: { gt: 1000000} }
 				
 			    ) : {
 			RankName: "supergeneric rank"
@@ -402,8 +411,9 @@ exports.updateAllFUNIdsByNameMatch = function(req, res) {
 				Promise.promisifyAll(client);
 		
 				Promise.reduce(taxa, function(previous, taxon) {
+					var nameParts = taxon.FullName.split(" ");
 					return client.NameSearchAsync({
-						SearchText: taxon.TaxonName,
+						SearchText: nameParts[0] +" "+ nameParts[1],
 						AnywhereInText: false,
 						MaxNumber: 25
 					}).then(function(result) {
@@ -427,7 +437,8 @@ exports.updateAllFUNIdsByNameMatch = function(req, res) {
 							} else {
 								taxon.FunIndexTypificationNumber = 0;
 							}
-					
+							taxon.FullName = r.NAME_x0020_OF_x0020_FUNGUS +" "+r.AUTHORS;
+							taxon.Author = r.AUTHORS; 
 							taxon.RankName = r.INFRASPECIFIC_x0020_RANK;
 							taxon.FunIndexNumber = r.RECORD_x0020_NUMBER;
 							taxon.GUID = r.UUID;
@@ -458,7 +469,9 @@ exports.syncAllFUNIdsByNameMatch = function(req, res) {
 		where: models.Sequelize.and(
 				{ FunIndexNumber: 0 },
 			      { RankName: {ne: "genus"} },
+			{ RankName: {ne: "gen."} },
 			      { RankName: {ne: "species"} },
+			{ RankName: {ne: "sp."} },
 				{ RankName: {ne: "supergeneric rank"} }
 			    )
 	})
@@ -494,7 +507,8 @@ exports.syncAllFUNIdsByNameMatch = function(req, res) {
 							} else {
 								taxon.FunIndexTypificationNumber = 0;
 							}
-							
+							taxon.FullName = r.NAME_x0020_OF_x0020_FUNGUS +" "+r.AUTHORS;
+							taxon.Author = r.AUTHORS; 
 							taxon.GUID = r.UUID;
 							taxon.FunIndexNumber = r.RECORD_x0020_NUMBER;
 							taxon.Author = r.AUTHORS;
