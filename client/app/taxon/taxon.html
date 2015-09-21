@@ -56,7 +56,7 @@
 			          </a>
 		  
 		  
-					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
+					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onaftersave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onaftersave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
 		
 					 <label class="control-label" for="DK_reference">DK referencer</label>
 			        <a href="#" id="DK_reference" editable-textarea="taxon.attributes.DK_reference" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
@@ -92,6 +92,32 @@
 								  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.RankName}}</td><td st-ratio="50"></td></tr>
 				
 								</table>
+			    	      </div>
+			    	    </div>
+			    	  </div>
+			    	  <!-- ########################################-->
+			    	  <!-- ########################################-->
+			    	  <div class="panel panel-default" ng-show="taxon.Children.length > 0">
+			    	    <div class="panel-heading" role="tab">
+			    	      <h4 class="panel-title">
+			    	        <a bs-collapse-toggle>
+			    	          Child taxa ({{numAcceptedChildren}} accepted of which {{numPresentInDK}} in DK. {{numSynChildren}} synonyms)
+			    	        </a>
+			    	      </h4>
+			    	    </div>
+			    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			    	      <div class="panel-body">
+							  <div class="alert alert-warning" role="alert" ng-show="taxon._id === undefined && taxon.Parent !== null && selectedParentTaxon === undefined"><strong>Suggested parent taxon.</strong> Please review this and change it if neccesary.</div>
+							  <div class="alert alert-danger" role="alert" ng-show="taxon._id === undefined && taxon.Parent === null"><strong>No parent taxon selected.</strong> Please select a parent taxon before saving.</div>
+ 							
+							<table id="children-table">
+
+ 							  <tr class="parent-taxon-table" ng-repeat="child in taxon.Children | orderBy : 'FullName'"><td class="parent-taxon-table" st-ratio="50"><a href="/taxonbase/taxon/{{child._id}}" ng-class="{'text-muted' : child.accepted_id !== child._id}">{{child.FullName}}</a> 
+							  </td><td st-ratio="50"><a ng-show="child._id === child.accepted_id" href="#" editable-checkbox="child.attributes.PresentInDK" e-title="DK" onbeforesave="Taxon.updateAttributes({id: child._id}, {PresentInDK: $data})">
+    {{ child.attributes.PresentInDK ===true && "DK" || "Not in DK" }}
+  </a></td></tr>
+ 							</table>
+							
 			    	      </div>
 			    	    </div>
 			    	  </div>
@@ -238,7 +264,7 @@
 					 <!-- ########################################-->
 		
 		
-				    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onbeforesave="validateImage()" ng-controller="TaxonCtrl">
+				    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onaftersave="validateImage()" ng-controller="TaxonCtrl">
 					<div>	<button class="btn btn-success" ng-click="newPhoto();" ng-show="!imageForm.$visible">Add photo</button> <button class="btn btn-primary" ng-click=" editImage()" ng-show="taxon.images.length > 0 && !imageForm.$visible">Update photo info</button> <button class="btn btn-danger pull-right" ng-show="taxon.images.length > 0 && !imageForm.$visible" ng-click="deleteImage()">Delete photo</button></div>
 				      <div>
 				        <!-- editable username (text with validation) -->

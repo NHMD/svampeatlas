@@ -187,10 +187,6 @@ angular.module('svampeatlasApp')
 			}
 		});
 
-		$scope.aside = {
-		  "title": "Title",
-		  "content": "Hello Aside<br />This is a multiline message!"
-		};
 		
 		$scope.toggleSimilarSpecies = buildToggler('similarAside');
 		    $scope.toggleIframe = buildToggler('iframeAside');
@@ -216,8 +212,10 @@ angular.module('svampeatlasApp')
 		           });
 		       };
 			   $scope.getIframeSrc = function(){
-			   	
-				return "http://svampe.dk/soeg/filemaker.php?DKIndex=" +$scope.taxon._id ;
+			   
+   					return "http://svampe.dk/soeg/filemaker.php?DKIndex=" +$stateParams.id;
+   		
+				
 			   }
 			   
 			   $scope.getBogtekstLength = function(){

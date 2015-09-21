@@ -37,9 +37,7 @@
 					        <md-button ng-click="closeSideNav('similarAside')" class="md-primary">
 					          Close
 					        </md-button>
-					        <md-button  class="md-primary" href="{{getIframeSrc()}}" target="_BLANK">
-					         <i class="fa fa-external-link"></i> open in new tab
-					        </md-button>
+					        
 							<table id="sibling-table">
 
 							  <tr class="parent-taxon-table" ng-repeat="sibling in taxon.siblings"><td class="parent-taxon-table" st-ratio="100"><strong><a href="/taxonbase/taxonbooklayout/{{sibling._id}}">{{sibling.FullName}}</a> <span ng-show="sibling.attributes.DKnavn">- {{sibling.attributes.DKnavn}}</span></strong><br>
