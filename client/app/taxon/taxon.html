@@ -10,7 +10,7 @@
 <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			
 			</h2>
 
-			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbase/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) <button class="btn btn-xs btn-danger pull-right"  ng-click="unlinkSynonym()" tabindex="0">Unlink synonym</button></div>
+			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon && taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbase/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) <button class="btn btn-xs btn-danger pull-right"  ng-click="unlinkSynonym()" tabindex="0">Unlink synonym</button></div>
 			<div class="alert alert-danger col-md-12" role="alert" ng-show="taxon.parent_id === null"><strong>Orphant taxon! </strong> Please add parent Taxon in the actions menu on the right. 
 
 			</div>
@@ -101,19 +101,18 @@
 			    	    <div class="panel-heading" role="tab">
 			    	      <h4 class="panel-title">
 			    	        <a bs-collapse-toggle>
-			    	          Child taxa ({{numAcceptedChildren}} accepted of which {{numPresentInDK}} in DK. {{numSynChildren}} synonyms)
+			    	          Child taxa ({{numAcceptedChildren}} accepted. {{numSynChildren}} synonyms)
 			    	        </a>
 			    	      </h4>
 			    	    </div>
 			    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			    	      <div class="panel-body">
-							  <div class="alert alert-warning" role="alert" ng-show="taxon._id === undefined && taxon.Parent !== null && selectedParentTaxon === undefined"><strong>Suggested parent taxon.</strong> Please review this and change it if neccesary.</div>
-							  <div class="alert alert-danger" role="alert" ng-show="taxon._id === undefined && taxon.Parent === null"><strong>No parent taxon selected.</strong> Please select a parent taxon before saving.</div>
+							
  							
 							<table id="children-table">
 
- 							  <tr class="parent-taxon-table" ng-repeat="child in taxon.Children | orderBy : 'FullName'"><td class="parent-taxon-table" st-ratio="50"><a href="/taxonbase/taxon/{{child._id}}" ng-class="{'text-muted' : child.accepted_id !== child._id}">{{child.FullName}}</a> 
-							  </td><td st-ratio="50"><a ng-show="child._id === child.accepted_id" href="#" editable-checkbox="child.attributes.PresentInDK" e-title="DK" onbeforesave="Taxon.updateAttributes({id: child._id}, {PresentInDK: $data})">
+ 							  <tr class="parent-taxon-table" ng-repeat="child in taxon.Children | orderBy : 'FullName'"><td class="parent-taxon-table" st-ratio="50"><a href="/taxonbase/taxon/{{child._id}}" ng-class="{'text-muted' : child.accepted_id !== null && child.accepted_id !== child._id}">{{child.FullName}}</a> 
+							  </td><td st-ratio="50"><a ng-show="child.RankID > 5000 && child._id === child.accepted_id" href="#" editable-checkbox="child.attributes.PresentInDK" e-title="DK" onbeforesave="Taxon.updateAttributes({id: child._id}, {PresentInDK: $data})">
     {{ child.attributes.PresentInDK ===true && "DK" || "Not in DK" }}
   </a></td></tr>
  							</table>
