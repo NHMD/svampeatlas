@@ -93,10 +93,10 @@ angular.module('svampeatlasApp')
 						$scope.taxon.Children = children;
 						
 						var acceptedAndSyns = _.partition($scope.taxon.Children, function(n) {
-						  return n._id === n.accepted_id;
+						  return n._id === n.accepted_id || n.accepted_id === null;
 						});
 						$scope.numAcceptedChildren  = acceptedAndSyns[0].length;
-						$scope.numPresentInDK = _.filter(acceptedAndSyns[0],function(n){ return n.attributes && n.attributes.PresentInDK;}).length -1;
+						//$scope.numPresentInDK = _.filter(acceptedAndSyns[0],function(n){ return n.attributes && n.attributes.PresentInDK;}).length -1;
 						$scope.numSynChildren  = acceptedAndSyns[1].length;
 						
 						console.log(_.filter($scope.taxon.Children, function(n) { return n._id === n.accepted_id;}).length -1);

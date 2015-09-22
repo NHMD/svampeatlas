@@ -66,15 +66,25 @@ function removeEntity(res) {
 
 // Get list of taxons
 exports.index = function(req, res) {
+	
 
+	
 	var query = {
 		offset: req.query.offset,
 		limit: req.query.limit,
-		order: req.query.order
+		order: req.query.order,
+		where: {}
 	};
-	if (req.query.where) {
-		query['where'] = JSON.parse(req.query.where);
+	
+	if(req.query.acceptedTaxaOnly){
+		_.merge(query.where, { _id : { $eq : models.sequelize.col("accepted_id")}});
+	
 	}
+
+	if (req.query.where) {
+		_.merge(query.where, JSON.parse(req.query.where));
+	} 
+	
 	if (req.query.include) {
 		var include = JSON.parse(req.query.include)
 		

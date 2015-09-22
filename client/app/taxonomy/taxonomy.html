@@ -4,13 +4,45 @@
 <div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>	
-	
-<div class="col-md-12" ng-show="isLoading">
-	<i class="fa fa-spinner fa-spin fa-2x"></i>
-</div>
-<div class="col-md-12" >
 
-<table st-persist="taxon-search-table" class="table taxontable" st-pipe="callServer" st-table="displayed">
+<div class="col-md-12" >
+	<div ng-show="!checkboxes.OrphantTaxa">
+	<p class="md-body-2">Find species, varietes and forms under selected higher taxa:</p>
+	
+    <md-chips ng-model="selectedHigherTaxa" md-autocomplete-snap md-require-match="true">
+	
+      <md-autocomplete
+	  	md-min-length="3"
+		md-no-cache="true"
+          md-selected-item="selectedItem"
+          md-search-text="searchText"
+          md-items="item in querySearch(searchText)"
+          md-item-text="item.FullName"
+          placeholder="Enter higher taxa">
+        <span md-highlight-text="searchText">{{item.FullName}}</span>
+      </md-autocomplete>
+      <md-chip-template>
+        <span>
+          <strong>{{$chip.FullName}}</strong>
+         
+        </span>
+      </md-chip-template>
+    </md-chips>
+</div>
+	<md-switch class="col-md-2" ng-model="checkboxes.acceptedTaxaOnly" aria-label="Only accepted taxa">
+	          Omit synonyms
+	        </md-switch>
+			
+	<md-switch  class="col-md-2" ng-model="checkboxes.PresentInDK" aria-label="Only DK taxa">
+	          Only DK taxa
+	        </md-switch>
+	<md-switch  class="col-md-2" ng-model="checkboxes.OrphantTaxa" aria-label="Only DK taxa">
+	          Find orphant taxa
+	        </md-switch>
+			
+<div class="col-md-5"><h3 class="md-headline pull-right">Found {{taxonCount}} taxa</h3></div>
+<md-progress-linear class="col-md-12" md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
+<table st-persist="taxon_search_table" class="table taxontable" st-pipe="callServer" st-table="displayed">
 	<thead>
 	<tr>
 		<th st-sort="_id" st-ratio="20">DkIndexNumber</th>
