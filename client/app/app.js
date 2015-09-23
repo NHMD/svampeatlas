@@ -12,7 +12,8 @@ angular.module('svampeatlasApp', [
 	'xeditable',
 	'xml',
 	'ui.bootstrap',
-	'ngMaterial'
+	'ngMaterial',
+	'LocalStorageModule'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider) {
     $urlRouterProvider
