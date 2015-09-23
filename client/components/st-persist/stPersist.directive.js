@@ -4,28 +4,29 @@ angular.module('svampeatlasApp')
 .directive('stPersist', function () {
         return {
             require: '^stTable',
-            link: function (scope, element, attr, ctrl) {
-                var nameSpace = attr.stPersist;
-
-                //save the table state every time it changes
-                scope.$watch(function () {
-                    return ctrl.tableState();
-                }, function (newValue, oldValue) {
-                    if (newValue !== oldValue) {
-                        localStorage.setItem(nameSpace, JSON.stringify(newValue));
-                    }
-                }, true);
-
-                //fetch the table state when the directive is loaded
-                if (localStorage.getItem(nameSpace)) {
-                    var savedState = JSON.parse(localStorage.getItem(nameSpace));
-                    var tableState = ctrl.tableState();
-
-                    angular.extend(tableState, savedState);
-                    ctrl.pipe();
-
-                }
-
+            link: {
+            	pre: function(scope, element, attr, ctrl){
+					var savedState = localStorage[attr.stPersist];
+					if(savedState){
+						savedState = JSON.parse(savedState);
+					}
+		            if (savedState){
+		            var  tableState = ctrl.tableState()
+		              tableState.pagination = savedState.pagination
+		              tableState.sort = savedState.sort
+		              tableState.search = savedState.search
+					  };
+            	},
+				post: function(scope, element, attr, ctrl){
+		          scope.$watch(function(){ return ctrl.tableState()},function (newVal, oldVal) {
+		            if (newVal !== undefined && newVal !== oldVal)
+		              localStorage.setItem(attr.stPersist, JSON.stringify(newVal))
+				}
+		          , true)
+				
+				}
             }
+			
         };
     });
+	

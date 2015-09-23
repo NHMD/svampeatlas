@@ -17,8 +17,8 @@ angular.module('svampeatlasApp')
 
 		};
 	})
-	.controller('FunindexCtrl', ['$scope', '$state', 'IndexFungorum', 'MycoBank', 'x2js', 'Taxon', 'TaxonIntegrationService','TaxonTypeaheadService', 'TaxonRank',
-		function($scope, $state, IndexFungorum, MycoBank, x2js, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonRank) {
+	.controller('FunindexCtrl', ['$scope', '$state', 'IndexFungorum', 'MycoBank', 'x2js', 'Taxon', 'TaxonIntegrationService','TaxonTypeaheadService', 'TaxonRank','$mdDialog',
+		function($scope, $state, IndexFungorum, MycoBank, x2js, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonRank, $mdDialog) {
 			$scope.TaxonTypeaheadService = TaxonTypeaheadService;
 			$scope.TaxonRanks = TaxonRank.query();
 			$scope.selectedTaxonAuthor = "";
@@ -151,9 +151,12 @@ angular.module('svampeatlasApp')
 				}).$promise.then(function(taxa) {
 
 					if (taxa.length === 1) {
+						$scope.showConfirm(taxa[0]);
+						/*
 						$state.go('taxonlayout-taxon', {
 							id: taxa[0]._id
 						})
+						*/
 						
 					} else if (taxa.length === 0) {
 						TaxonIntegrationService.dataSource = $scope.dataSource;
@@ -224,7 +227,22 @@ angular.module('svampeatlasApp')
 
 			};
 			
-		
+		    $scope.showConfirm = function(tx) {
+		       // Appending dialog to document.body to cover sidenav in docs app
+		       var confirm = $mdDialog.confirm()
+		             .title('Taxon already in our database:')
+		             .content('<em>'+tx.FullName+'</em><br> Open record?')
+		             .ariaLabel('Taxon exists')
+		             .ok('Yes')
+		             .cancel('No');
+		       $mdDialog.show(confirm).then(function() {
+				$state.go('taxonlayout-taxon', {
+					id: tx._id
+				})
+		       }, function() {
+		         return false;
+		       });
+		     };
 
 		}
 	]);

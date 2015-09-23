@@ -82,8 +82,8 @@ angular.module('svampeatlasApp')
 		
 
 	    $scope.callServer = function(tableState) {
+			
 
-	      $scope.isLoading = true;
 
 	      var pagination = tableState.pagination;
 
@@ -134,10 +134,18 @@ angular.module('svampeatlasApp')
 			
 		query.include = JSON.stringify(include);
 	      Taxon.query(query, function (result, headers) {
-	        $scope.displayed = result;
+	        
 			$scope.taxonCount = headers('count');
 			
-	      	 tableState.pagination.numberOfPages = Math.ceil(headers('count') / limit);//set the number of pages so the pagination can update
+				var numPages =  Math.ceil(headers('count') / limit);
+		      	 tableState.pagination.numberOfPages = numPages;//set the number of pages so the pagination can update
+				 tableState.pagination.totalItemCount = headers('count');
+				localStorage.setItem("taxon_search_table", JSON.stringify(tableState));
+			
+					$scope.paginationPages = (tableState.pagination.numberOfPages < 5) ? tableState.pagination.numberOfPages : 5;
+		
+				
+			$scope.displayed = result;
 	        $scope.isLoading = false;
 	      } );
 	    };

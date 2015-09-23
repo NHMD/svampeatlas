@@ -50,17 +50,17 @@ angular.module('svampeatlasApp')
 				}
 			} else if ($stateParams.id && $stateParams.id !== 'new') {
 
-				console.log("Found id " + $stateParams.id)
+				$scope.fetchingTaxon = true;
 				$scope.taxon = Taxon.get({
 					id: $stateParams.id
 				});
 				$scope.taxonAttributes = TaxonAttributes.get({
 					id: $stateParams.id
 				});
-				console.log($scope.taxon);
+				
 
 				$scope.taxon.$promise.then(function() {
-
+					$scope.fetchingTaxon = false;
 					$scope.saveIsClicked = false;
 
 					$scope.mergetooltip = {
