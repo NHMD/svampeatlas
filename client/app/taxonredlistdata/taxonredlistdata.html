@@ -11,9 +11,10 @@
 <div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbase/taxonredlistdata/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) </div>
 			
 			
-			<h4 ><strong>DK name: </strong> <em>{{ taxon.attributes.DKnavn || 'n/a' }}</em> </h4> <div class="checkbox"><label>Present in DK
-    <input type="checkbox" ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-  </label></div>
+			<h4 ><strong>DK name: </strong> <em>{{ taxon.attributes.DKnavn || 'n/a' }}</em> </h4> <div >
+    <md-checkbox type="checkbox" ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+	Present in DK
+  </md-checkbox ></div>
 			
 			
 			<p><small><em>{{taxon.SystematicPath}}</em></small></p>

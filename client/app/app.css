@@ -58,3 +58,25 @@
   justify-content: center; /* Optional, to align inner flex-items 
                               horizontally within the column  */
 }
+
+md-input-container.editable-controls {
+  padding: 0;
+}
+
+md-input-container.editable-controls [ng-message] {
+  position: static;
+}
+
+div.x-editable-texarea {
+
+	  display: block;
+	  padding: 9.5px;
+	  margin: 0 0 10px;
+	  font-size: 13px;
+	  line-height: 1.42857143;
+	  color: #333;
+	  background-color: #f5f5f5;
+	  border: 1px solid #ccc;
+	  border-radius: 4px;
+	
+}
