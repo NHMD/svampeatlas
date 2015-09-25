@@ -15,9 +15,10 @@
 
 			</div>
 			
-			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div class="checkbox"><label ng-show="taxon._id && taxon.RankID > 5000">Present in DK
-    <input type="checkbox" ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-  </label></div>
+			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div  ng-show="taxon._id && taxon.RankID > 5000">
+    <md-checkbox  ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+	Present in DK
+  </md-checkbox></div>
 			
 			
 			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
@@ -164,12 +165,12 @@
 			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			  	      <div class="panel-body">
 						  
-						 <div class="checkbox" ng-repeat="natureType in natureTypes">
+						 <div ng-repeat="natureType in natureTypes">
 							 
-						      <label  for="{{natureType._id}}">
-						        <input type="checkbox"  ng-model="natureType.isChecked"  id="{{natureType._id}}" ng-change="addOrRemoveNatureType(natureType)"/>
+						     
+						        <md-checkbox type="checkbox"  ng-model="natureType.isChecked"  id="{{natureType._id}}" ng-change="addOrRemoveNatureType(natureType)">
 						        {{natureType.name}}
-						      </label>
+						      </md-checkbox>
 						    </div>
 			  	      </div>
 			  	    </div>

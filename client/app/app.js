@@ -12,8 +12,7 @@ angular.module('svampeatlasApp', [
 	'xeditable',
 	'xml',
 	'ui.bootstrap',
-	'ngMaterial',
-	'LocalStorageModule'
+	'ngMaterial'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider) {
     $urlRouterProvider
@@ -64,8 +63,21 @@ angular.module('svampeatlasApp', [
     };
   })
 
-  .run(function($rootScope, $state, Auth, editableOptions) {
-	   editableOptions.theme = 'bs3'; // bootstrap3 theme.
+  .run(function($rootScope, $state, Auth, editableOptions, editableThemes) {
+	  editableOptions.theme = 'bs3'; // bootstrap3 theme.
+	  /*
+	 editableThemes['angular-material'] = {
+	    formTpl:      '<form class="editable-wrap"></form>',
+	    noformTpl:    '<span class="editable-wrap"></span>',
+	    controlsTpl:  '<md-input-container class="editable-controls" ng-class="{\'md-input-invalid\': $error}"></md-input-container>',
+	    inputTpl:     '',
+	    errorTpl:     '<div ng-messages="{message: $error}"><div class="editable-error" ng-message="message">{{$error}}</div></div>',
+	    buttonsTpl:   '<span class="editable-buttons"></span>',
+	    submitTpl:    '<md-button type="submit" class="md-raised md-primary">save</md-button>',
+	    cancelTpl:    '<md-button type="button" class="md-raised md-warn" ng-click="$form.$cancel()">cancel</md-button>'
+	  };
+*/
+	//  editableOptions.theme = 'angular-material';
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function(event, next) {
       Auth.isLoggedIn(function(loggedIn) {
