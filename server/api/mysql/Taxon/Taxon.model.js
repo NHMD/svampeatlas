@@ -42,15 +42,10 @@ module.exports = function(sequelize, DataTypes) {
 		type: DataTypes.UUID,
 		allowNull: true,
 		defaultValue: DataTypes.UUIDV1
-    },
-    IsAccepted: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-		defaultValue: true
     },    
     FunIndexCurrUseNumber: {
       type: DataTypes.INTEGER(11),
- allowNull: true,
+		allowNull: true,
     defaultValue: null,
     }, 
     FunIndexTypificationNumber: {

@@ -6,7 +6,7 @@
 				<h4 class="modal-title">Change parent taxon</h4></div>
 				<div class="modal-body">
 					<form>
-						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getPossibleParentTaxa($viewValue, $parent.taxon)" data-placement="bottom-left" placeholder="Enter taxon name" bs-typeahead>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getPossibleParentTaxa($viewValue, $parent.taxon)" data-placement="bottom-left" placeholder="Enter epithet or higher taxon name" bs-typeahead>
 					</form>	
 					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
 

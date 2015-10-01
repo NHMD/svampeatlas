@@ -100,9 +100,7 @@ angular.module('svampeatlasApp')
 		  } else {
 			  where = JSON.parse(higerTaxaPredicate);
 		  }
-  		if($scope.checkboxes.PresentInDK){
-  			_.merge(where, {PresentInDK : true});
-  		};
+  		
   		if($scope.checkboxes.OrphantTaxa){
   			_.merge(where, {parent_id : null});
   		};
@@ -118,9 +116,17 @@ angular.module('svampeatlasApp')
 		  };
 		  
 		  var attributesWhere = (tableState.search.predicateObject && tableState.search.predicateObject.attributes) ? _.mapValues(tableState.search.predicateObject.attributes, function(value, key){
+	    	
 			  
 			  return {like : value += "%"};
 		  }) : undefined;
+		  
+		  
+		if($scope.checkboxes.PresentInDK === true){
+			
+  			attributesWhere = _.merge({}, attributesWhere, {PresentInDK : true});
+  		};
+		  
 		   var include = [{
 				model: "TaxonAttributes",
 				as: "attributes",

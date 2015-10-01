@@ -22,18 +22,18 @@
 	</tr>
 	<tr>
 		
-		<th><input st-search="createdAt"></th>
-		<th><input st-search="eventname"></th>
-		<th><input st-search="description"></th>
-		<th><input st-search="Taxon.FullName"></th>
-		<th><input st-search="User.name"></th>
+		<th><input class="form-control" st-search="createdAt"></th>
+		<th><input class="form-control" st-search="eventname"></th>
+		<th><input class="form-control" st-search="description"></th>
+		<th><input class="form-control" st-search="Taxon.FullName"></th>
+		<th><input class="form-control" st-search="User.name"></th>
 	</tr>
 	</thead>
 	<tbody ng-show="!isLoading">
 	<tr ng-repeat="row in displayed">
 		<td>{{row.createdAt | date : 'medium'}}</td>
 		<td><strong>{{row.eventname}}</strong></td>
-		<td>{{row.description}}</td>
+		<td><span ng-bind-html="formatIndexFungorumLogEvent(row.description)" ng-if="row.eventname === 'Changed Index Fungorum record'"></span><span ng-if="row.eventname !== 'Changed Index Fungorum record'">{{row.description}}</span></td>
 		<td><a href="/taxonbase/taxon/{{row.Taxon._id}}">{{row.Taxon.FullName}}</a></td>
 		
 		<td>{{row.User.name}}</td>

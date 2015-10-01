@@ -21,7 +21,7 @@
   </md-checkbox></div>
 			
 			
-			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
+			<p><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{taxon.SystematicPath}}</em></small></p>
 			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon._id !== undefined && taxon._id === taxon.accepted_id && (taxon.RankName === 'sp.' || taxon.RankName === 'gen.')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button>
 			<button ng-show="taxon._id !== undefined && (taxon.RankName === 'superspecies' || taxon.RankName === 'supergenus')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Change rank level</button>
 			</p>
@@ -110,18 +110,52 @@
 			    	      <div class="panel-body">
 							
  							
-							<table id="children-table">
-
- 							  <tr class="parent-taxon-table" ng-repeat="child in taxon.Children | orderBy : 'FullName'"><td class="parent-taxon-table" st-ratio="50"><a href="/taxonbase/taxon/{{child._id}}" ng-class="{'text-muted' : child.accepted_id !== null && child.accepted_id !== child._id}">{{child.FullName}}</a> 
-							  </td><td st-ratio="50"><a ng-show="child.RankID > 5000 && child._id === child.accepted_id" href="#" editable-checkbox="child.attributes.PresentInDK" e-title="DK" onbeforesave="Taxon.updateAttributes({id: child._id}, {PresentInDK: $data})">
-    {{ child.attributes.PresentInDK ===true && "DK" || "Not in DK" }}
-  </a></td></tr>
+							<table class="table parent-taxon-table">
+							  	
+								<tbody>
+ 							  <tr ng-repeat="child in taxon.Children | orderBy : 'FullName'"><td class="parent-taxon-table" st-ratio="80"><a href="/taxonbase/taxon/{{child._id}}" ng-class="{'text-muted' : child.accepted_id !== null && child.accepted_id !== child._id}">{{child.FullName}}</a> 
+							  </td><td st-ratio="20">
+								  
+								  <md-checkbox ng-show="child.RankID > 5000 && child._id === child.accepted_id" ng-model="child.attributes.PresentInDK" ng-change="setDkPresence(child)"> DK</md-checkbox> </td></tr></tbody>
  							</table>
 							
 			    	      </div>
 			    	    </div>
 			    	  </div>
 			    	  <!-- ########################################-->
+				  	  <!-- ########################################-->
+				  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+				  	    <div class="panel-heading" role="tab">
+				  	      <h4 class="panel-title">
+				  	        <a bs-collapse-toggle>
+				  	         <i class="fa fa-exclamation-triangle text-danger" ng-show="taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== taxon.FunIndexRecord.RECORD_x0020_NUMBER || taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'"></i>  Index fungorum link
+				  	        </a>
+				  	      </h4>
+				  	    </div>
+				  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+				  	      <div class="panel-body">
+							  <div class="alert alert-warning" role="alert" ng-show="FunIndexError">{{FunIndexError}}</div>
+							<table ng-show="taxon.FunIndexRecord" class="table parent-taxon-table">
+
+							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Name of fungus:</td><td class="parent-taxon-table" st-ratio="30"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.NAME_x0020_OF_x0020_FUNGUS}} <i class="fa fa-external-link"></i></a></td>
+							  <td st-ratio="50"><button class="btn btn-danger" ng-click="funIndexModal.show()" ng-show="possibleToChangeFunRecord()">Change FunIndex record</button>
+							  <em ng-show="!possibleToChangeFunRecord() && (taxon.RankName === 'superspecies' || taxon.RankName === 'supergenus')" class="text-danger">Change of FunIndex record not possible because this super taxon has children.</em>
+							  </tr>
+							 
+							  <tr class="parent-taxon-table" ng-if="taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== taxon.FunIndexRecord.RECORD_x0020_NUMBER"><td class="parent-taxon-table" st-ratio="20">Current name:</td><td class="parent-taxon-table" st-ratio="30"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.CURRENT_x0020_NAME}} <i class="fa fa-external-link"></i></a></td><td st-ratio="50"> <em class="text-danger">Possible synonym!</em></td></tr>
+							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Classification:</td><td class="parent-taxon-table" st-ratio="80"><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{ taxon.FunIndexRecord.SystematicPath}}</em></small></td></tr>
+							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{ taxon.FunIndexRecord.AUTHORS}}</i></td><td st-ratio="50"></td></tr>
+							  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}}</td><td st-ratio="50"></td></tr>
+			
+							</table>
+			  	        
+							<!--<ul>
+								<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxonbase/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
+							</ul> -->
+				  	      </div>
+				  	    </div>
+				  	  </div>
+				  	  <!-- ########################################-->
 			  	  <!-- ########################################-->
 			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined && taxon.synonyms.length && taxon.synonyms.length >1">
 			  	    <div class="panel-heading" role="tab">
@@ -245,7 +279,7 @@
 				      </h4>
 				    </div>
 				    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
-				      <div class="panel-body">
+				      <div class="panel-body" ng-controller="ImageFormCtrl">
 					    <div>				
 							
 					     <carousel  interval="" on-carousel-change="onSlideChanged(nextSlide, direction, nextIndex)">
@@ -264,7 +298,7 @@
 					 <!-- ########################################-->
 		
 		
-				    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onaftersave="validateImage()" ng-controller="TaxonCtrl">
+				    <form editable-form name="imageForm" onaftersave="saveOrUpdateImage()" onaftersave="validateImage()" >
 					<div>	<button class="btn btn-success" ng-click="newPhoto();" ng-show="!imageForm.$visible">Add photo</button> <button class="btn btn-primary" ng-click=" editImage()" ng-show="taxon.images.length > 0 && !imageForm.$visible">Update photo info</button> <button class="btn btn-danger pull-right" ng-show="taxon.images.length > 0 && !imageForm.$visible" ng-click="deleteImage()">Delete photo</button></div>
 				      <div>
 				        <!-- editable username (text with validation) -->
@@ -312,8 +346,63 @@
 				    </form> 
 				  </div>
 				  <!-- ########################################-->
+			  	
 				</div>
+				
 				</div>
+		  	  <!-- ########################################-->
+		  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+		  	    <div class="panel-heading" role="tab">
+		  	      <h4 class="panel-title">
+		  	        <a bs-collapse-toggle>
+		  	          History log
+		  	        </a>
+		  	      </h4>
+		  	    </div>
+		  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target ng-controller="TaxonLogCtrl">
+		  	      <div class="panel-body">
+					  <table class="table taxonhistorylog" st-pipe="callServer" st-table="displayed">
+					  	<thead>
+					  	<tr>
+		
+					  		<th st-sort="createdAt" st-sort-default="reverse">Created</th>
+					  		<th st-sort="eventname">Event</th>
+					  		<th st-sort="description">Description</th>
+					  		<th st-sort="User.name">User</th>
+					  	</tr>
+					  	<tr>
+		
+					  		<th><input class="form-control" st-search="createdAt"></th>
+					  		<th><input class="form-control" st-search="eventname"></th>
+					  		<th><input class="form-control" st-search="description"></th>
+					  		<th><input class="form-control" st-search="User.name"></th>
+					  	</tr>
+					  	</thead>
+					  	<tbody ng-show="!isLoading">
+					  	<tr ng-repeat="row in displayed">
+					  		<td>{{row.createdAt | date : 'medium'}}</td>
+					  		<td><strong>{{row.eventname}}</strong></td>
+					  		<td><span ng-bind-html="formatIndexFungorumLogEvent(row.description)" ng-if="row.eventname === 'Changed Index Fungorum record'"></span><span ng-if="row.eventname !== 'Changed Index Fungorum record'">{{row.description}}</span></td>
+					  		<td>{{row.User.name}}</td>
+		
+					  	</tr>
+					  	</tbody>
+					  	<tbody ng-show="isLoading">
+					  	<tr>
+					  		<td colspan="4" class="text-center">Loading ... </td>
+					  	</tr>
+					  	</tbody>
+					  	<tfoot>
+					  	<tr>
+					  		<td class="text-center" st-pagination="" st-items-by-page="10" colspan="4">
+					  		</td>
+					  	</tr>
+					  	</tfoot>
+					  </table>
+		  	      </div>
+		  	    </div>
+		  	  </div>
+		  	  <!-- ########################################-->
 				
 				
 			

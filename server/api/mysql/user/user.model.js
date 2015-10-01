@@ -64,7 +64,7 @@ module.exports = function(sequelize, DataTypes) {
     getterMethods: {
 	// Public profile information
 	profile: function() {
-		console.log("FFFBBB " + this.facebook)
+		
 		return {
 			'_id': this._id,
 			'Initialer': this.Initialer,

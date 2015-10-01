@@ -35,12 +35,6 @@ thead, tfoot {
     flex-shrink: 0;
 }
 
-th, tbody td {
-    width: 20%; /* this can vary */
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-}
 
 tfoot {
     display: inline-block;

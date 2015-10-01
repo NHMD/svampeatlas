@@ -533,3 +533,28 @@ UPDATE Taxon t SET RankID =13000 where t.RankName = "f.";
 UPDATE Taxon t SET RankID =14000 where t.RankName = "f.sp.";
 
 CREATE TABLE TaxonRanks SELECT DISTINCT RankName, RankID FROM Taxon;
+
+
+-- drop attributes when they are moved to TaxonAttributes table
+
+ALTER TABLE `Taxon`
+  DROP `IsAccepted`,
+  DROP `diagnose`,
+  DROP `forvekslingsmuligheder`,
+  DROP `beskrivelse`,
+  DROP `oekologi`,
+  DROP `bemaerkning`,
+  DROP `foersteFundIDK`,
+  DROP `foersteReferenceForDK`,
+  DROP `PresentInDK`,
+  DROP `DK_reference`,
+  DROP `MycoKeyIDDKWebLink`,
+  DROP `internalNote`,
+  DROP `DKnavn`,
+  DROP `vernacular_name_DE`,
+  DROP `vernacular_name_Fi`,
+  DROP `vernacular_name_FR`,
+  DROP `vernacular_name_GB`,
+  DROP `vernacular_name_NL`,
+  DROP `vernacular_name_NO`,
+  DROP `vernacular_name_SE`;

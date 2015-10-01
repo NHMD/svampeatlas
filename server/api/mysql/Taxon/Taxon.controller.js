@@ -698,82 +698,93 @@ exports.create = function(req, res) {
 
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
-	
+
 	Taxon.find({
 		where: {
 			_id: req.params.id
 		}
 	})
-	.then(function(taxon){
-		if(!taxon){
-			res.send(404);
-		};
-		for(var i=0; i< taxon.attributes.length; i++){
-			taxon.set(taxon.attributes[i] , req.body[taxon.attributes[i]])
-		}
-		var changed = taxon.changed().toString();
-		
-		return [taxon.save(), changed];
-		
-	})
-	.spread(function(taxon, changed){
-		if(changed.indexOf("RankID") > -1){
-			return [taxon, models.TaxonLog.create({
-				eventname: "Changed taxonomic rank",
-				description: "New rank: "+taxon.RankName+", rank level: "+taxon.RankID,
-				user_id: req.user._id,
-				taxon_id: taxon._id
-			
-			})]
-		} else if(changed.indexOf("accepted_id") > -1){
-			return [taxon, models.TaxonLog.create({
-				eventname: "Detached synonym",
-				description: taxon.FullName+" is no longer a synonym ",
-				user_id: req.user._id,
-				taxon_id: taxon._id
-			
-			})]
-		} else {
-			return [taxon, models.TaxonLog.create({
-			eventname: "Updated taxon",
-			description: "Field(s): "+changed,
-			user_id: req.user._id,
-			taxon_id: taxon._id
-			
-		})]}
-		
-	})
-	.spread(function(taxon) {
-		return Taxon.find({
-			where: {
-				_id: taxon._id
-			},
-			include: [{
-					model: models.TaxonImages,
-					as: "images"
-				}, {
-					model: models.Taxon,
-					as: "synonyms"
-				}, {
-					model: models.Taxon,
-					as: "Parent"
-				}, {
-					model: models.Taxon,
-					as: "acceptedTaxon"
-				}
+		.then(function(taxon) {
+			if (!taxon) {
+				res.send(404);
+			};
+			var oldFunIndexNumber = taxon.FunIndexNumber;
+			for (var i = 0; i < taxon.attributes.length; i++) {
+				taxon.set(taxon.attributes[i], req.body[taxon.attributes[i]])
+			}
+			var changed = taxon.changed().toString();
 
-			]
+			return [taxon.save(), changed, oldFunIndexNumber];
+
 		})
-	})
-	.then(function(taxon){
-	
-		return res.status(200).json(taxon);
-		
-	})
-		
-		.
+		.spread(function(taxon, changed, oldFunIndexNumber) {
+			if (changed.indexOf("FunIndexNumber") > -1) {
+				return [taxon, models.TaxonLog.create({
+					eventname: "Changed Index Fungorum record",
+					description: "Old record was: " + oldFunIndexNumber + " , new record is: " + taxon.FunIndexNumber,
+					user_id: req.user._id,
+					taxon_id: taxon._id
+
+				})]
+			} else if (changed.indexOf("RankID") > -1) {
+				return [taxon, models.TaxonLog.create({
+					eventname: "Changed taxonomic rank",
+					description: "New rank: " + taxon.RankName + ", rank level: " + taxon.RankID,
+					user_id: req.user._id,
+					taxon_id: taxon._id
+
+				})]
+			} else if (changed.indexOf("accepted_id") > -1) {
+				return [taxon, models.TaxonLog.create({
+					eventname: "Detached synonym",
+					description: taxon.FullName + " is no longer a synonym ",
+					user_id: req.user._id,
+					taxon_id: taxon._id
+
+				})]
+			} else {
+				return [taxon, models.TaxonLog.create({
+					eventname: "Updated taxon",
+					description: "Field(s): " + changed,
+					user_id: req.user._id,
+					taxon_id: taxon._id
+
+				})]
+			}
+
+		})
+		.spread(function(taxon) {
+			return Taxon.find({
+				where: {
+					_id: taxon._id
+				},
+				include: [{
+						model: models.TaxonImages,
+						as: "images"
+					}, {
+						model: models.Taxon,
+						as: "synonyms"
+					}, {
+						model: models.Taxon,
+						as: "Parent"
+					}, {
+						model: models.Taxon,
+						as: "acceptedTaxon"
+					}
+
+				]
+			})
+		})
+		.then(function(taxon) {
+
+			return res.status(200).json(taxon);
+
+		})
+
+	.
 	catch (handleError(res));
 };
+
 
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
