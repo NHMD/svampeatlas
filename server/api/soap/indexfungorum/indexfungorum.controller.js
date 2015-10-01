@@ -98,14 +98,14 @@ exports.NameByKey = function(req, res) {
 			if (err) {
 				res.status(500).json(err.message)
 			};
-			var r = result.NameByKeyResult.NewDataSet.IndexFungorum;
+			var r = ( result && result.NameByKeyResult && result.NameByKeyResult.NewDataSet && result.NameByKeyResult.NewDataSet.IndexFungorum) ? result.NameByKeyResult.NewDataSet.IndexFungorum : undefined;
 			
 			if(r !== undefined){
 			var systematicPath = Taxon.getSystematicPath(r, r.INFRASPECIFIC_x0020_RANK);
 			result.NameByKeyResult.NewDataSet.IndexFungorum.SystematicPath= systematicPath;
 		};
 				res.status(200).json(result)
-		          console.log(result);
+		          //console.log(result);
 		      });
 	});
 };

@@ -3,7 +3,15 @@
 angular.module('svampeatlasApp')
   .controller('TaxonLogCtrl',['$scope','TaxonLog',  function ($scope, TaxonLog) {
    
-
+	  $scope.formatIndexFungorumLogEvent = function(description){
+		  var r = /\d+/g;
+		  var m;
+		  var formatted = description;
+		  while ((m = r.exec(description)) != null) {
+			  formatted =formatted.replace(m[0], "<a href=http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID="+m[0]+" target='_BLANK'>"+m[0]+"</a>")
+		  }
+		  return formatted;
+	  }
 
 	    $scope.displayed = [];
 
@@ -41,6 +49,11 @@ angular.module('svampeatlasApp')
 			  
 			  return {like : "%" +value + "%"};
 		  }) : undefined;
+		  
+		  //If we are on the taxon page, filter log to chosen taxon
+		  if($scope.taxon){
+		  	taxonWhere = _.merge({}, taxonWhere, {_id : $scope.taxon._id});
+		  };
 		   
   		query.include = JSON.stringify([{
 				model: "User",

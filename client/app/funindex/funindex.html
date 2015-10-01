@@ -22,7 +22,7 @@
 <div class="col-md-5"> 
 	<h4>Choose parent taxon:</h4>
 					<form>
-						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getTaxon($viewValue)" data-placement="auto" placeholder="Enter taxon name" bs-typeahead>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getTaxon($viewValue)" data-placement="auto" placeholder="Enter epithet or higher taxon name" bs-typeahead>
 					</form>	
 					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
 
@@ -105,13 +105,13 @@
 	<tr>
 		<th></th>
 		<th>
-					<input st-search="NAME_x0020_OF_x0020_FUNGUS" placeholder="search for name" class="input-sm form-control" type="search"/>
+					<input st-search="NAME_x0020_OF_x0020_FUNGUS" placeholder="search for name" class="form-control" >
 				</th>
 		<th>
-					<input st-search="AUTHORS" placeholder="search for author(s)" class="input-sm form-control" type="search"/>
+					<input st-search="AUTHORS" placeholder="search for author(s)" class="form-control" >
 				</th>
 		<th>
-					<input st-search="INFRASPECIFIC_x0020_RANK" placeholder="search for rank" class="input-sm form-control" type="search"/>
+					<input st-search="INFRASPECIFIC_x0020_RANK" placeholder="search for rank" class="form-control">
 				</th>
 		<th></th>
 	</tr>
@@ -153,13 +153,13 @@
 	<tr>
 		<th></th>
 		<th>
-					<input st-search="name" placeholder="search for name" class="input-sm form-control" type="search"/>
+					<input st-search="name" placeholder="search for name" class="form-control">
 				</th>
 		<th>
-					<input st-search="authorsabbrev_" placeholder="search for author(s)" class="input-sm form-control" type="search"/>
+					<input st-search="authorsabbrev_" placeholder="search for author(s)" class="form-control" >
 				</th>
 		<th>
-					<input st-search="rank_pt_.TargetRecord.Name" placeholder="search for rank" class="input-sm form-control" type="search"/>
+					<input st-search="rank_pt_.TargetRecord.Name" placeholder="search for rank" class="form-control" >
 				</th>
 		<th></th>
 	</tr>

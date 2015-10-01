@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum) {
 			$scope._ = _;
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
@@ -33,6 +33,15 @@ angular.module('svampeatlasApp')
 				})
 
 			};
+			
+			$scope.possibleToChangeFunRecord = function(){
+				if($scope.taxon.RankName === "superspecies" || $scope.taxon.RankName === "supergenus"){
+					return $scope.taxon.Children.length === 0;
+				} else {
+					return $scope.taxon.Children !== undefined;
+				}
+				
+			}
 
 
 
@@ -96,10 +105,10 @@ angular.module('svampeatlasApp')
 						  return n._id === n.accepted_id || n.accepted_id === null;
 						});
 						$scope.numAcceptedChildren  = acceptedAndSyns[0].length;
-						//$scope.numPresentInDK = _.filter(acceptedAndSyns[0],function(n){ return n.attributes && n.attributes.PresentInDK;}).length -1;
+						
 						$scope.numSynChildren  = acceptedAndSyns[1].length;
 						
-						console.log(_.filter($scope.taxon.Children, function(n) { return n._id === n.accepted_id;}).length -1);
+						
 						
 						if (children.length >= 1) {
 							$scope.childRank = children[0].RankID;
@@ -127,6 +136,15 @@ angular.module('svampeatlasApp')
 						} : {
 							superrankId: ($scope.taxon.Parent.RankID + $scope.childRank) / 2
 						};
+						
+						IndexFungorum.NameByKey({
+							NameKey: $scope.taxon.FunIndexNumber
+						}).$promise.then(function(NameByKeyData) {
+							$scope.taxon.FunIndexRecord = NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum;
+							$scope.FunIndexError = false;
+						}).catch (function(){
+							$scope.FunIndexError = "An error occurred, Index Fungorum may currently not be accessible"
+						})
 					})
 				});
 
@@ -140,6 +158,8 @@ angular.module('svampeatlasApp')
 					}
 
 				})
+				
+				
 
 
 			};
@@ -155,73 +175,6 @@ angular.module('svampeatlasApp')
 				}
 			}
 
-			/*       START OF IMAGE FORM HANDLING*/
-			$scope.deleteImage = function() {
-
-				return Taxon.deleteImage({
-					id: $scope.taxon._id,
-					imgid: $scope.currentImage._id
-				}).$promise.then(function() {
-
-					$state.go($state.$current, null, {
-						reload: true
-					});
-
-
-				});
-			};
-
-
-			$scope.newPhoto = function() {
-				$scope.currentImage = {}
-				$scope.imageForm.$show();
-			}
-
-			$scope.editImage = function() {
-
-				$timeout(function() {
-					$scope.imageForm.$show();
-				}, 0)
-
-			}
-
-			$scope.saveOrUpdateImage = function() {
-				if (!$scope.imageForm.$dirty) {
-					return;
-				} else if ($scope.currentImage._id !== undefined && $scope.isValidImage($scope.currentImage)) {
-
-					Taxon.updateImage({
-						id: $scope.taxon._id,
-						imgid: $scope.currentImage._id
-					}, $scope.currentImage);
-				} else if ($scope.isValidImage($scope.currentImage)) {
-					Taxon.addImage({
-						id: $scope.taxon._id
-					}, _.merge($scope.currentImage, {
-						taxon_id: $scope.taxon._id
-					})).$promise.then(function(image) {
-
-
-						$state.go($state.$current, null, {
-							reload: true
-						});
-
-
-					})
-				}
-
-			}
-			$scope.onSlideChanged = function(nextSlide, direction, nextIndex) {
-
-				$scope.currentImage = $scope.taxon.images[nextIndex];
-
-			}
-
-			$scope.isValidImage = function(img) {
-				return img.uri !== undefined && img.thumburi !== undefined
-			};
-
-			/*       END OF IMAGE FORM HANDLING*/
 
 			$scope.saveNewTaxon = function(taxon) {
 				$scope.saveIsClicked = true;
@@ -267,7 +220,12 @@ angular.module('svampeatlasApp')
 					});
 				})
 			};
-
+			$scope.setDkPresence = function(child){
+				
+				Taxon.updateAttributes({id: child._id}, child.attributes)
+				console.log(child._id +" : "+child.attributes.PresentInDK)
+			};
+			
 			$scope.unlinkSynonym = function() {
 				$scope.taxon.accepted_id = $scope.taxon._id;
 				$scope.taxon.$update().then(function(t) {
@@ -329,6 +287,12 @@ angular.module('svampeatlasApp')
 			$scope.synonymModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/taxon/synonym-modal.tpl.html',
+				show: false
+			});
+			
+			$scope.funIndexModal = $modal({
+				scope: $scope,
+				templateUrl: 'app/taxon/funindex-modal.tpl.html',
 				show: false
 			});
 

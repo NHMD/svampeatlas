@@ -1,0 +1,91 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog modal-lg" id="funindexmodal">
+		<div class="modal-content" ng-controller="FunIdxModalCtrl">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title">Change Index Fungorum record <span ng-if="taxon.attributes.DKnavn">for {{taxon.attributes.DKnavn}}</span></h4></div>
+				<div class="modal-body">
+					<div class="row">
+					<form class="form">
+					  <div class="form-group col-md-3">
+					    <label for="searchText">Search for taxon:</label>
+					    <input type="text" class="form-control" id="SearchText" placeholder="searchText" ng-model="searchParams.SearchText">
+					  </div>
+					  <div class="form-group col-md-3">
+					    <label for="MaxNumber">Max number of records:</label>
+					    <input type="number" class="form-control" id="MaxNumber" ng-value=100 ng-model="searchParams.MaxNumber">
+					  </div>
+					  <div class="form-group col-md-2">
+						  <label class="col-md-12 inline-checkboxgroup-label">Anywhere in text:</label>
+  
+					    <label class="radio-inline">
+					      <input type="radio" name="anywhereInText" id="anywhereInText1"  ng-model="searchParams.AnywhereInText" value="true">
+					      Yes
+					    </label>
+ 
+  
+ 
+					    <label class="radio-inline">
+					      <input type="radio" name="anywhereInText" id="anywhereInText2"  ng-model="searchParams.AnywhereInText" value="false">
+					      No
+					    </label>
+
+					  </div>
+					   <div class="form-group col-md-2">
+					  <button  class="btn btn-primary" ng-click="getDataFromFUN()">GO!</button>
+					</div>
+					</form>
+					<div class="col-md-12" ng-show="funIdxrowCollection">
+					<table st-table="displayedFunIdxCollection" st-safe-src="funIdxrowCollection" class="table table-striped">
+						<thead>
+						<tr>
+							<th></th>
+							<th st-sort="NAME_x0020_OF_x0020_FUNGUS">Name</th>
+							<th st-sort="AUTHORS">Author</th>
+							<th st-sort="INFRASPECIFIC_x0020_RANK">Rank</th>
+							<th>Link</th>
+						</tr>
+						<tr>
+							<th></th>
+							<th>
+										<input st-search="NAME_x0020_OF_x0020_FUNGUS" placeholder="search for name" class="form-control" >
+									</th>
+							<th>
+										<input st-search="AUTHORS" placeholder="search for author(s)" class="form-control">
+									</th>
+							<th>
+										<input st-search="INFRASPECIFIC_x0020_RANK" placeholder="search for rank" class="form-control">
+									</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+		
+						<tr ng-repeat="row in displayedFunIdxCollection">
+							<td><button class="btn btn-primary" ng-click="showConfirm(row)">Use this</button></td>
+							<td>{{row.NAME_x0020_OF_x0020_FUNGUS}} <i class="fa fa-warning text-warning" ng-if="row.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== row.RECORD_x0020_NUMBER" data-title="Possibly invalid or synonym. Please review carefully." bs-tooltip></i></td>
+							<td>{{row.AUTHORS}}</td>
+							<td>{{row.INFRASPECIFIC_x0020_RANK}}</td>
+							<td><a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{row.RECORD_x0020_NUMBER}}" target="_BLANK">Index Fungorum</a></td>
+		
+						</tr>
+						</tbody>
+						<tfoot>
+									<tr>
+										<td colspan="5" class="text-center">
+											<div st-pagination="" st-items-by-page="50" st-displayed-pages="7"></div>
+										</td>
+									</tr>
+								</tfoot>
+					</table>
+					</div>
+		</div>
+		
+				<div class="modal-footer">
+					<div class="col-md-12">
+					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> 
+					</div>
+				</div>
+			
+		</div>
+	</div>

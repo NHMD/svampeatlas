@@ -45,26 +45,27 @@
 <table st-persist="taxon_search_table" class="table taxontable" st-pipe="callServer" st-table="displayed">
 	<thead>
 	<tr>
-		<th st-sort="_id" st-ratio="20">DkIndexNumber</th>
-		<th st-sort="FullName">Full name</th>
-		<th st-sort="TaxonName">Taxon name</th>
-		<th st-sort="RankName">Taxon rank</th>
+		<th st-sort="_id" st-ratio="10">DkIndexNr</th>
+		<th st-sort="FullName" st-ratio="40">Full name</th>
+		<th st-sort="TaxonName">Epithet</th>
+		<th st-sort="RankName" st-ratio="10">Taxon rank</th>
 		<th st-sort="attributes.DKnavn">Dansk navn</th>
 	</tr>
 	<tr>
-		<th><input st-search="_id" st-ratio="20"></th>
-		<th><input st-search="FullName"></th>
-		<th><input st-search="TaxonName"></th>
-		<th><input st-search="RankName"></th>
-		<th><input st-search="attributes.DKnavn"></th>
+		<th st-ratio="10"><input class="form-control" st-search="_id" ></th>
+		<th st-ratio="40"><input class="form-control" st-search="FullName" ></th>
+		<th><input class="form-control" st-search="TaxonName"></th>
+		<th st-ratio="10"><input class="form-control" st-search="RankName"></th>
+		<th><input class="form-control" st-search="attributes.DKnavn"></th>
 	</tr>
 	</thead>
 	<tbody ng-show="!isLoading">
 	<tr ng-repeat="row in displayed">
-		<td st-ratio="20">{{row._id}}</td>
-		<td><a href="/taxonbase/taxon/{{row._id}}">{{row.FullName}}</a></td>
+		<td st-ratio="10">{{row._id}}</td>
+		<td st-ratio="40"><a href="/taxonbase/taxon/{{row._id}}">{{row.FullName}}</a> <a href="/taxonbase/taxonbooklayout/{{row._id}}"><i class="fa fa-book"></i></a>
+		</td>
 		<td>{{row.TaxonName}}</td>
-		<td>{{row.RankName}}</td>
+		<td st-ratio="10">{{row.RankName}}</td>
 		<td>{{row.attributes.DKnavn}}</td>
 	</tr>
 	</tbody>

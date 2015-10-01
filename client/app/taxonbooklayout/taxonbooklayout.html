@@ -79,17 +79,26 @@
 	
 	
 					<label class="control-label" for="diagnose">Diagnose</label>
+					<div>
 			<a href="#" id="diagnose" editable-textarea="taxon.attributes.diagnose" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			    <div class="x-editable-texarea">{{ taxon.attributes.diagnose || 'n/a' }}</div>
 			  </a>
+			  </div>
+			  
 			  <label class="control-label" for="forvekslingsmuligheder">Forvekslingsmuligheder</label>
+			  <div>
 			  <a href="#" id="forvekslingsmuligheder" editable-textarea="taxon.attributes.forvekslingsmuligheder" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			      <div class="x-editable-texarea">{{ taxon.attributes.forvekslingsmuligheder || 'n/a' }}</div>
 			    </a>
+  			  </div>
+  			  
   			  <label class="control-label" for="udbredelse">Udbredelse, hyppighed, årstid</label>
+			  <div>
   			  <a href="#" id="bogtekst_faenologi_udbredelse" editable-textarea="taxon.attributes.bogtekst_faenologi_udbredelse" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
   			      <div class="x-editable-texarea">{{ taxon.attributes.bogtekst_faenologi_udbredelse || 'n/a' }}</div>
   			    </a>
+  			  </div>
+  			
 				 <div class="row">
 				 <div class="col-md-6">
 			 <div  ng-repeat="nutritionStrategy in nutritionStrategies | limitTo: basicNutritionLimit" >
@@ -112,27 +121,33 @@
 	</div>
 	</div>
    <label class="control-label" for="oekologi">Økologi</label>
+    <div>
     <a href="#" id="oekologi" editable-textarea="taxon.attributes.oekologi" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
         <div class="x-editable-texarea">{{ taxon.attributes.oekologi || 'n/a' }}</div>
       </a>
+	  </div>
+	  
 				 <label class="control-label" for="spiselighedsrapport">Spiselighedsrapport</label>
+				 <div >
 			    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.spiselighedsrapport" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			        <div class="x-editable-texarea">{{ taxon.attributes.spiselighedsrapport || 'n/a' }}</div>
 			      </a>
+			  </div>
+			  
 				 <label class="control-label" for="beskrivelse">Beskrivelse</label>
+				 <div>
 			    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.beskrivelse" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			        <div class="x-editable-texarea">{{ taxon.attributes.beskrivelse || 'n/a' }}</div>
 			      </a>
-  				 <label class="control-label" for="BeskrivelseUK">Beskrivelse UK</label>
-  			    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.BeskrivelseUK" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-  			        <div class="x-editable-texarea">{{ taxon.attributes.BeskrivelseUK || 'n/a' }}</div>
-  			      </a>
-				  
+			  </div>
+  				
+				 
 					 <label class="control-label" for="bemaerkning">Bemærkning</label>
+					 <div>
 			        <a href="#" id="bemaerkning" editable-textarea="taxon.attributes.bemaerkning" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			            <div class="x-editable-texarea">{{ taxon.attributes.bemaerkning || 'n/a' }}</div>
 			          </a>
-		  
+		  </div>
 		  
 					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
 		
@@ -183,6 +198,13 @@
 				        <div class="x-editable-texarea">{{ taxon.attributes.bogtekst_gyldendal || 'n/a' }}</div>
 				      </a>
 			</div>
+			 <div>
+			 <label class="control-label" for="BeskrivelseUK">Beskrivelse UK</label> - <em ng-class="taxon.attributes.BeskrivelseUK.length < 550 || (taxon.attributes.BeskrivelseUK.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{taxon.attributes.BeskrivelseUK.length}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
+			
+		    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.BeskrivelseUK" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+		        <div class="x-editable-texarea">{{ taxon.attributes.BeskrivelseUK || 'n/a' }}</div>
+		      </a>
+			   </div>
 				
 				
 			

@@ -64,15 +64,19 @@ angular.module('svampeatlasApp', [
   })
 
   .run(function($rootScope, $state, Auth, editableOptions, editableThemes) {
+	  editableThemes['bs3'].submitTpl =    '<md-button type="submit" class="md-icon-button  md-primary" aria-label="Save"><span class="glyphicon glyphicon-ok"></span></md-button>';
+	  editableThemes['bs3'].cancelTpl =  '<md-button type="button" class="md-icon-button  md-warn" ng-click="$form.$cancel()" aria-label="Cancel"><span class="glyphicon glyphicon-remove"></span></md-button>';
+	  
 	  editableOptions.theme = 'bs3'; // bootstrap3 theme.
-	  /*
+
+	/*  
 	 editableThemes['angular-material'] = {
 	    formTpl:      '<form class="editable-wrap"></form>',
-	    noformTpl:    '<span class="editable-wrap"></span>',
+	    noformTpl:    '<section layout="row"  class="editable-wrap"></section>',
 	    controlsTpl:  '<md-input-container class="editable-controls" ng-class="{\'md-input-invalid\': $error}"></md-input-container>',
 	    inputTpl:     '',
 	    errorTpl:     '<div ng-messages="{message: $error}"><div class="editable-error" ng-message="message">{{$error}}</div></div>',
-	    buttonsTpl:   '<span class="editable-buttons"></span>',
+	    buttonsTpl:   '<section class="editable-buttons"></section>',
 	    submitTpl:    '<md-button type="submit" class="md-raised md-primary">save</md-button>',
 	    cancelTpl:    '<md-button type="button" class="md-raised md-warn" ng-click="$form.$cancel()">cancel</md-button>'
 	  };

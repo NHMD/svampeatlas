@@ -42,6 +42,13 @@ th, tbody td {
     display: inline-block;
 }
 
+table.taxonhistorylog th, table.taxonhistorylog tbody td {
+    width: 25%; /* this can vary */
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
 tfoot {
     display: inline-block;
 }
