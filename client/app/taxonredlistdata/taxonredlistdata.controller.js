@@ -1,16 +1,16 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonRedListDataCtrl', ['$scope', 'Taxon',  '$state' ,'$stateParams', '$timeout', 'TaxonRedListData',
-		function($scope, Taxon, $state, $stateParams, $timeout, TaxonRedListData) {
+	.controller('TaxonRedListDataCtrl', ['$scope', 'Taxon',  '$state' ,'$stateParams', '$timeout', 'TaxonRedListData', 'ErrorHandlingService',
+		function($scope, Taxon, $state, $stateParams, $timeout, TaxonRedListData, ErrorHandlingService) {
 		console.log("redlist")
 			$scope.Taxon = Taxon;
-		
+			$scope.stateParams = $stateParams;
 			if ($stateParams.id) {
 						
 							$scope.taxon = Taxon.get({
 								id: $stateParams.id
-							}).catch(function(err){
+							}).$promise.catch(function(err){
 					if(err.status === 404){
 						ErrorHandlingService.handleTaxon404();
 					}
