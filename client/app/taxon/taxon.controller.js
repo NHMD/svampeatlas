@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'ErrorHandlingService', '$mdDialog',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, ErrorHandlingService, $mdDialog) {
 			$scope._ = _;
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
@@ -42,10 +42,37 @@ angular.module('svampeatlasApp')
 				}
 				
 			}
-
+			$scope.detachFromFunRecord = function(){
+				
+			var confirm = $mdDialog.confirm()
+				.title('Detach Index Fungorum record ?')
+				.ariaLabel('Detach Index Fungorum record')
+				.ok('Yes')
+				.cancel('No');
+			$mdDialog.show(confirm).then(function() {
+				
+				$scope.taxon.FunIndexNumber = null;
+				$scope.taxon.FunIndexCurrUseNumber = null;
+				$scope.taxon.FunIndexTypificationNumber = 0;
+				
+				return Taxon.update({
+					id: $scope.taxon._id
+				}, $scope.taxon).$promise.then(function(){
+					delete $scope.taxon.FunIndexRecord;
+				})
+				
+				
+			}, function() {
+				return false;
+			});
+				
+				
+				
+			}
 
 
 			$scope.$timeout = $timeout;
+			$scope.stateParams = $stateParams;
 
 			if ($stateParams.id && $stateParams.id === 'new') {
 				$scope.taxon = {};
@@ -62,7 +89,7 @@ angular.module('svampeatlasApp')
 				$scope.fetchingTaxon = true;
 				$scope.taxon = Taxon.get({
 					id: $stateParams.id
-				});
+				})
 				$scope.taxonAttributes = TaxonAttributes.get({
 					id: $stateParams.id
 				});
@@ -157,6 +184,10 @@ angular.module('svampeatlasApp')
 						}).isChecked = true;
 					}
 
+				}).catch(function(err){
+					if(err.status === 404){
+						ErrorHandlingService.handleTaxon404();
+					}
 				})
 				
 				

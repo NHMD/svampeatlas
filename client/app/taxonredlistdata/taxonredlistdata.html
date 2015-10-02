@@ -4,11 +4,11 @@
 <div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>	
-	    	<div class="row">
+	    	<div class="row"  ng-if="stateParams.id">
 			<div class="col-md-6" >
 			<h2>{{taxon.FullName}}</h2>
 			
-<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbase/taxonredlistdata/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) </div>
+<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon && taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbase/taxonredlistdata/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) </div>
 			
 			
 			<h4 ><strong>DK name: </strong> <em>{{ taxon.attributes.DKnavn || 'n/a' }}</em> </h4> <div >
@@ -59,7 +59,8 @@
 			
 			
 			</div>
-			<div class="row"><button class="btn btn-primary" ng-show="redListDataIsDirty === true"  ng-click="saveImportedRedlistData()">Save imported redlist data</button> <button class="btn btn-primary" ng-show="redListDataIsDirty === true"  ng-click="discardImportedRedlistData()">Discard imported redlist data</button></row>
+			<div class="row"  ng-if="stateParams.id">
+				<button class="btn btn-primary" ng-show="redListDataIsDirty === true"  ng-click="saveImportedRedlistData()">Save imported redlist data</button> <button class="btn btn-primary" ng-show="redListDataIsDirty === true"  ng-click="discardImportedRedlistData()">Discard imported redlist data</button></row>
 			
 			<h3 class="text-danger">Rødliste: </h3>
 	

@@ -719,13 +719,23 @@ exports.update = function(req, res) {
 		})
 		.spread(function(taxon, changed, oldFunIndexNumber) {
 			if (changed.indexOf("FunIndexNumber") > -1) {
-				return [taxon, models.TaxonLog.create({
-					eventname: "Changed Index Fungorum record",
-					description: "Old record was: " + oldFunIndexNumber + " , new record is: " + taxon.FunIndexNumber,
+				if(taxon.FunIndexNumber === null){
+					return [taxon, models.TaxonLog.create({
+					eventname: "Detached Index Fungorum record",
+					description: "Old record was: " + oldFunIndexNumber,
 					user_id: req.user._id,
 					taxon_id: taxon._id
 
 				})]
+			} else {
+				return [taxon, models.TaxonLog.create({
+				eventname: "Changed Index Fungorum record",
+				description: "Old record was: " + oldFunIndexNumber + " , new record is: " + taxon.FunIndexNumber,
+				user_id: req.user._id,
+				taxon_id: taxon._id
+					})]
+			}
+			
 			} else if (changed.indexOf("RankID") > -1) {
 				return [taxon, models.TaxonLog.create({
 					eventname: "Changed taxonomic rank",

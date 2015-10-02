@@ -1,21 +1,22 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonBookLayoutCtrl', ['$q','$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonRedListData','TaxonTypeaheadService', 'TaxonAttributes','NatureTypes', 'NutritionStrategies','$state' ,'$stateParams', '$timeout', '$modal', '$mdSidenav', '$mdUtil', '$log',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonRedListData, TaxonTypeaheadService,TaxonAttributes, NatureTypes,NutritionStrategies, $state, $stateParams, $timeout, $modal, $mdSidenav, $mdUtil, $log) {
-			console.log("book")
+	.controller('TaxonBookLayoutCtrl', ['$q','$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonRedListData','TaxonTypeaheadService', 'TaxonAttributes','NatureTypes', 'NutritionStrategies','$state' ,'$stateParams', '$timeout', '$modal', '$mdSidenav', '$mdUtil', '$log','ErrorHandlingService',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonRedListData, TaxonTypeaheadService,TaxonAttributes, NatureTypes,NutritionStrategies, $state, $stateParams, $timeout, $modal, $mdSidenav, $mdUtil, $log, ErrorHandlingService) {
+			
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
 			$scope.nutritionStrategies = NutritionStrategies.query();
 			$scope.basicNutritionLimit = 2;
 			$scope.biotrofNutrionLimit = 10;
 			$scope.$timeout = $timeout;
-
- if ($stateParams.id && $stateParams.id !== 'new') {
-				console.log("Found id " + $stateParams.id)
+			$scope.stateParams = $stateParams;
+ if ($stateParams.id) {
+				
 				$scope.taxon = Taxon.get({
 					id: $stateParams.id
-				});
+				})
+				
 				$scope.taxonAttributes	= TaxonAttributes.get({
 					id: $stateParams.id
 				});
@@ -25,6 +26,10 @@ angular.module('svampeatlasApp')
 					$scope.taxon.siblings = Taxon.getSiblings({
 									id: $scope.taxon._id
 								});
+				}).catch(function(err){
+					if(err.status === 404){
+						ErrorHandlingService.handleTaxon404();
+					}
 				});
 
 				$scope.redlistdata = TaxonRedListData.query({where: { taxon_id: $stateParams.id}, year: 2009}).$promise.then(function(res){
@@ -41,6 +46,23 @@ angular.module('svampeatlasApp')
 					}, true);
 
 				})
+				
+				$scope.taxon.$promise.then(function(){
+				$scope.getNameWithoutAuthor = function(){
+				
+				 
+						var parts = $scope.taxon.SystematicPath.split(", ");
+				
+						if($scope.taxon.RankID > 10000)
+						{return parts[parts.length-3]+" "+parts[parts.length-2]+" "+$scope.taxon.RankName+" "+parts[parts.length-1]}
+						else if($scope.taxon.RankID === 10000){
+							return parts[parts.length-2]+" "+parts[parts.length-1]
+						} else {
+							return $scope.taxon.TaxonName;
+						}	
+				
+				}
+			});
 				
 				$q.all([$scope.taxon.$promise, $scope.natureTypes.$promise]).then(function(){
 					
@@ -170,22 +192,7 @@ angular.module('svampeatlasApp')
 			
 			
 			
-			$scope.taxon.$promise.then(function(){
-			$scope.getNameWithoutAuthor = function(){
-				
-				 
-					var parts = $scope.taxon.SystematicPath.split(", ");
-				
-					if($scope.taxon.RankID > 10000)
-					{return parts[parts.length-3]+" "+parts[parts.length-2]+" "+$scope.taxon.RankName+" "+parts[parts.length-1]}
-					else if($scope.taxon.RankID === 10000){
-						return parts[parts.length-2]+" "+parts[parts.length-1]
-					} else {
-						return $scope.taxon.TaxonName;
-					}	
-				
-			}
-		});
+			
 
 		
 		$scope.toggleSimilarSpecies = buildToggler('similarAside');
