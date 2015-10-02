@@ -229,7 +229,7 @@ angular.module('svampeatlasApp')
 						id: $scope.taxon._id
 					}, $scope.selectedParentTaxon).$promise.then(function(taxon) {
 
-						$scope.taxon = taxon;
+						_.merge($scope.taxon, taxon);
 
 					})
 				};
