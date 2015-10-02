@@ -4,7 +4,7 @@
 <div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>	
-	    	<div class="row" ng-show="!fetchingTaxon">
+	    	<div class="row" ng-show="!fetchingTaxon" ng-if="stateParams.id">
 			<div class="col-md-8" >
 			<h2>{{taxon.FullName}} <button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="saveIsClicked || taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon <i ng-show="saveIsClicked" class="fa fa-spinner fa-spin"></i></button> <button class="btn btn-danger" ng-show="taxon._id !== undefined && taxon._id === taxon.accepted_id" ng-click="synonymModal.show()" tabindex="0">Make into synonym</button>
 <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			
@@ -68,7 +68,7 @@
 			<div class="col-md-1" ng-show="taxon._id !== undefined">
 
 			</div>
-			<div class="col-md-6" >
+			<div class="col-md-6"  ng-if="stateParams.id">
 				<div class="panel-group" role="tablist" aria-multiselectable="true" bs-collapse>
 			    	  <!-- ########################################-->
 			    	  <div class="panel panel-default">
@@ -135,10 +135,20 @@
 				  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 				  	      <div class="panel-body">
 							  <div class="alert alert-warning" role="alert" ng-show="FunIndexError">{{FunIndexError}}</div>
+							 <button class="btn btn-danger" ng-click="funIndexModal.show()" ng-show="!taxon.FunIndexRecord">Attach FunIndex record</button> 
 							<table ng-show="taxon.FunIndexRecord" class="table parent-taxon-table">
-
+							  	<thead>
+							  	<tr>
+		
+							  		<th st-ratio="20"></th>
+							  		<th st-ratio="30"></th>
+									<th st-ratio="50"> <button class="btn btn-danger" ng-click="detachFromFunRecord()">Detach FunIndex record</button></th>
+							  	</tr>
+							  
+							  	</thead>
+								<tbody>
 							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Name of fungus:</td><td class="parent-taxon-table" st-ratio="30"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.NAME_x0020_OF_x0020_FUNGUS}} <i class="fa fa-external-link"></i></a></td>
-							  <td st-ratio="50"><button class="btn btn-danger" ng-click="funIndexModal.show()" ng-show="possibleToChangeFunRecord()">Change FunIndex record</button>
+							  <td st-ratio="50"><button class="btn btn-danger" ng-click="funIndexModal.show()" ng-show="possibleToChangeFunRecord()">Change FunIndex record</button> 
 							  <em ng-show="!possibleToChangeFunRecord() && (taxon.RankName === 'superspecies' || taxon.RankName === 'supergenus')" class="text-danger">Change of FunIndex record not possible because this super taxon has children.</em>
 							  </tr>
 							 
@@ -146,7 +156,7 @@
 							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Classification:</td><td class="parent-taxon-table" st-ratio="80"><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{ taxon.FunIndexRecord.SystematicPath}}</em></small></td></tr>
 							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{ taxon.FunIndexRecord.AUTHORS}}</i></td><td st-ratio="50"></td></tr>
 							  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}}</td><td st-ratio="50"></td></tr>
-			
+			</tbody>
 							</table>
 			  	        
 							<!--<ul>

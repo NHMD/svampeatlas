@@ -6,11 +6,15 @@ angular.module('svampeatlasApp')
 		console.log("redlist")
 			$scope.Taxon = Taxon;
 		
-			if ($stateParams.id && $stateParams.id !== 'new') {
+			if ($stateParams.id) {
 						
 							$scope.taxon = Taxon.get({
 								id: $stateParams.id
-							});
+							}).catch(function(err){
+					if(err.status === 404){
+						ErrorHandlingService.handleTaxon404();
+					}
+				});
 							
 				
 							$scope.allyearsredlistdata = TaxonRedListData.query({where: { taxon_id: $stateParams.id}, order: "year DESC"}).$promise.then(function(res){

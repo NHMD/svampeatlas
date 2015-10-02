@@ -4,7 +4,7 @@
 <div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>	
-	    	<div class="row">
+	    	<div class="row"  ng-if="stateParams.id">
 				<md-button ng-click="toggleIframe()"
 				            class="md-primary">
 				            Maps, graphs from atlas
@@ -75,7 +75,7 @@
 			</div>
 
 <div class="row">
-			<div class="col-md-6" ng-show="taxon._id !== undefined">
+			<div class="col-md-6" ng-show="taxon._id !== undefined"  ng-if="stateParams.id">
 	
 	
 					<label class="control-label" for="diagnose">Diagnose</label>
@@ -158,7 +158,7 @@
 		
 			</div>
 			
-			<div class="col-md-6" >
+			<div class="col-md-6"  ng-if="stateParams.id">
 				<md-whiteframe class="md-whiteframe-z3" layout="column" layout-padding layout-margin>
 				    
 				  
