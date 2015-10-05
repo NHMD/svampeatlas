@@ -10,7 +10,9 @@ angular.module('svampeatlasApp')
 						
 							$scope.taxon = Taxon.get({
 								id: $stateParams.id
-							}).$promise.catch(function(err){
+							}).$promise.then(function(taxon){
+								$scope.taxon = taxon;
+							}).catch(function(err){
 					if(err.status === 404){
 						ErrorHandlingService.handleTaxon404();
 					}
