@@ -64,9 +64,11 @@
 			
 			<h3 class="text-danger">Rødliste: </h3>
 	
-			<tabset >
-			  	<tab ng-repeat="redlistdata in allyearsredlistdata" heading="{{redlistdata.year +' ('+redlistdata.VerbatimStatus+')'}}"  >
-  	    
+	
+	
+			 <div  bs-tabs>
+			
+  	    <div ng-repeat="redlistdata in allyearsredlistdata" title="{{redlistdata.year +' ('+redlistdata.VerbatimStatus+')'}}"  bs-pane>
 			  	   
 	   		   <div class="row" >
 	   			   <div class="col-md-6" >
@@ -272,8 +274,8 @@
  				  </div>
  				  
  	   </div>
-	  	    </tab>
-	 </tabset>
+	  	    </div>
+	 </div>
 </div>
 <div class="col-md-12">
 
