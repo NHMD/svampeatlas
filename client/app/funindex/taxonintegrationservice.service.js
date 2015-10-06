@@ -24,14 +24,14 @@ angular.module('svampeatlasApp')
 						thisTaxon.FunIndexNumber = taxon.RECORD_x0020_NUMBER;
 						thisTaxon.GUID = taxon.UUID;
 						thisTaxon.RankName = taxon.INFRASPECIFIC_x0020_RANK;
-						thisTaxon.RankID = that.getRankID(taxon.INFRASPECIFIC_x0020_RANK);
+						//thisTaxon.RankID = that.getRankID(taxon.INFRASPECIFIC_x0020_RANK);
 						thisTaxon.TaxonName = that.getTaxonName(taxon);
 						if (parents.length > 0) {
 							thisTaxon.Parent = parents[0];
 						} else {
 							thisTaxon.Parent = null;
 						}
-
+						thisTaxon.RankID = (that.getRankID(taxon.INFRASPECIFIC_x0020_RANK) === -1 && thisTaxon.Parent !== null) ? thisTaxon.Parent.RankID +1 : that.getRankID(taxon.INFRASPECIFIC_x0020_RANK);
 						return thisTaxon;
 
 					});
@@ -76,14 +76,14 @@ angular.module('svampeatlasApp')
 						thisTaxon.FunIndexNumber = taxon.mycobanknr_;
 
 						thisTaxon.RankName = taxon.RankName;
-						thisTaxon.RankID = that.getRankID(taxon.RankName);
+						
 						thisTaxon.TaxonName = taxon.epithet_;
 						if (parents.length > 0) {
 							thisTaxon.Parent = parents[0];
 						} else {
 							thisTaxon.Parent = null;
 						}
-
+						thisTaxon.RankID = (that.getRankID(taxon.RankName) === -1 && thisTaxon.Parent !== null) ? thisTaxon.Parent.RankID +1 : that.getRankID(taxon.RankName);
 						return thisTaxon;
 
 					});
@@ -139,6 +139,15 @@ angular.module('svampeatlasApp')
 					case "gen.":
 						return 5000;
 						break;
+					case "subgen.":
+						return 5100;
+						break;
+					case "sect.":
+						return 5200;
+						break;
+					case "ser.":
+						return 5300;
+						break;
 					case "sp.":
 						return 10000;
 						break;
@@ -154,9 +163,11 @@ angular.module('svampeatlasApp')
 					case "f.sp.":
 						return 14000;
 						break;
+					default :
+						return -1;
 				};
 			}
-		};
+		}; 
 
 
 	});

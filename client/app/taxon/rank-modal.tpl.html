@@ -3,12 +3,14 @@
 		<div class="modal-content">
 			
 			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
-				<h4 class="modal-title">Change taxon rank to {{superrank}}</h4></div>
+				<h4 class="modal-title" ng-if="taxon.RankID === 5000 || taxon.RankID === 10000">Change taxon rank to {{superrank}}</h4>
+				<h4 class="modal-title" ng-if="taxon.RankID !== 5000 && taxon.RankID !== 10000">Adjust Rank level</h4>
+			</div>
 				<div class="modal-body">
 					
 					
-					<div ng-show="superrank === 'superspecies'" class="alert alert-warning" role="alert">You are changing the rank to {{superrank}}. Please select an appropriate Rank level. If the taxon represent a group of species (s.lato) you should pick a rank level fairly close to <strong>{{childName}}</strong>. If it is a subgenus or a high level clade you should choose a rank closer to <strong>{{taxon.Parent.FullName}} </strong></br>Note that raising a taxon rank will unlink the taxon to <strong>index fungorum</strong> and you may want to create a new taxon for {{taxon.FullName}} s. stricto.</div>
-					<div ng-show="superrank === 'supergenus'" class="alert alert-warning" role="alert">You are changing the rank to {{superrank}}. Please select an appropriate Rank level. If the taxon represent a group of genera (e.g. Boletus s.lato) you should pick a rank level fairly close to <strong>{{childName}}</strong>. If it is a higher level clade you should choose a rank closer to <strong>{{taxon.Parent.FullName}} </strong></br>Note that raising a taxon rank will unlink the taxon to <strong>index fungorum</strong> and you may want to create a new taxon for {{taxon.FullName}} s. stricto.</div>
+					<div ng-show="superrank === 'superspecies'" class="alert alert-warning" role="alert"><span ng-show="taxon.RankID === 10000">You are changing the rank to {{superrank}}. </span>Please select an appropriate Rank level. If the taxon represent a group of species (s.lato) you should pick a rank level fairly close to <strong>{{childName}}</strong>. If it is a subgenus or a high level clade you should choose a rank closer to <strong>{{taxon.Parent.FullName}} </strong></br><span ng-show="taxon.RankID === 10000">Note that raising a taxon rank will unlink the taxon to <strong>index fungorum</strong> and you may want to create a new taxon for {{taxon.FullName}} s. stricto.</span></div>
+					<div ng-show="superrank === 'supergenus'" class="alert alert-warning" role="alert"><span ng-show="taxon.RankID === 5000">You are changing the rank to {{superrank}}. </span>Please select an appropriate Rank level. If the taxon represent a group of genera (e.g. Boletus s.lato) you should pick a rank level fairly close to <strong>{{childName}}</strong>. If it is a higher level clade you should choose a rank closer to <strong>{{taxon.Parent.FullName}} </strong></br><span ng-show="taxon.RankID === 5000">Note that raising a taxon rank will unlink the taxon to <strong>index fungorum</strong> and you may want to create a new taxon for {{taxon.FullName}} s. stricto.</span></div>
 					<div layout>
 					      <div flex="10" layout layout-align="center center">
 					        <span class="md-body-1">{{taxon.Parent.FullName}} ({{taxon.Parent.RankName}})</span>

@@ -92,3 +92,13 @@ form[name="imageForm"] > div {
 .tab-pane {
 	margin-top: 10px;	
 }
+
+table.fullname-examples {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: auto; /* this can vary */
+	
+}

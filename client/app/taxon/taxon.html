@@ -5,10 +5,41 @@
 	
 </div>	
 	    	<div class="row" ng-show="!fetchingTaxon" ng-if="stateParams.id">
-			<div class="col-md-8" >
-			<h2>{{taxon.FullName}} <button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="saveIsClicked || taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon <i ng-show="saveIsClicked" class="fa fa-spinner fa-spin"></i></button> <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="synonymModal.show()" tabindex="0">Make into synonym</button>
+			<div class="col-md-12" >
+			<div class="col-md-4" ng-show="taxon.$promise && taxon._id !== undefined">	
+				<h4 ng-if="!taxon.FunIndexNumber"><strong>Full Name: </strong> <a href="#" editable-text="taxon.FullName"  onaftersave="taxon.$update()"><em>{{ taxon.FullName }}</em></a> </h4>
+				<h4 ng-if="!taxon.FunIndexNumber"><strong>Taxon Name / epithet: </strong> <a href="#" editable-text="taxon.TaxonName"  onaftersave="taxon.$update()"><em>{{ taxon.TaxonName }}</em></a></h4>
+				<h4 ng-if="!taxon.FunIndexNumber"><strong>Author: </strong> <a href="#" editable-text="taxon.Author"  onaftersave="taxon.$update()"><em>{{ taxon.Author || 'n/a'}}</em></a></h4>
+			</div>	
+			<div class="alert alert-warning col-md-8" role="alert" ng-if="taxon.$promise && !taxon.FunIndexNumber && taxon._id !== undefined">
+				<strong>Examples of Fullname / Taxon name combinations:</strong>
+				<table class="table fullname-examples">
+					<thead>
+						<tr>
+							<th st-ratio="50">Full Name</th><th st-ratio="25">Name / Epithet</th><th st-ratio="25">Author</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td st-ratio="50">Boletus sensu lato</td><td st-ratio="25">Boletus</td><td st-ratio="25"></td>
+						</tr>
+						<tr>
+							<td st-ratio="50"> Amanita franchetii sensu auct</td><td st-ratio="25">franchetii</td><td st-ratio="25"></td>
+						</tr>
+						<tr>
+							<td st-ratio="50"> Hebeloma sinapizans sensu A. H. Smith</td><td st-ratio="25">sinapizans</td><td st-ratio="25"></td>
+						</tr>
+					</tbody>
+				</table>
+			
+			</div>
+				
+			<h2><span ng-show="taxon._id === undefined || taxon.FunIndexNumber">{{taxon.FullName}} </span>
+				
+				<button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="saveIsClicked || taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon <i ng-show="saveIsClicked" class="fa fa-spinner fa-spin"></i></button> <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="synonymModal.show()" tabindex="0">Make into synonym</button>
 <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			
 			</h2>
+			
 
 			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon && taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbase/taxon/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a>  <button class="btn btn-xs btn-danger pull-right"  ng-click="unlinkSynonym()" tabindex="0">Unlink synonym</button></div>
 			<div class="alert alert-danger col-md-12" role="alert" ng-show="taxon.parent_id === null"><strong>Orphant taxon! </strong> Please add parent Taxon in the actions menu on the right. 
@@ -23,7 +54,7 @@
 			
 			<p><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{taxon.SystematicPath}}</em></small></p>
 			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon._id !== undefined && taxon._id === taxon.accepted_id && (taxon.RankName === 'sp.' || taxon.RankName === 'gen.')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button>
-			<button ng-show="taxon._id !== undefined && (taxon.RankName === 'superspecies' || taxon.RankName === 'supergenus')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Change rank level</button>
+			<button ng-show="taxon._id !== undefined && ((taxon.RankID < 10000 &&  taxon.RankID > 5000)|| (taxon.RankID > 4000 &&  taxon.RankID < 5000))" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Change rank level</button>
 			</p>
 			</div>
 			<div class="col-md-4" >

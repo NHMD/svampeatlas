@@ -8,35 +8,42 @@ angular.module('svampeatlasApp')
 			$scope.natureTypes = NatureTypes.query();
 
 			$scope.changeRankAndSave = function(taxon) {
-
-				taxon.RankName = $scope.superrank;
-				taxon.RankID = $scope.selectedSuperRankID.superrankId;
+				// If the taxon was a species or genus we are changing it to superspecies and therefore deattacing from fun, otherwise we are just canging rank level
+				if(taxon.RankID === 5000 || taxon.RankID === 10000){
+					taxon.RankName = $scope.superrank;
 				taxon.FunIndexNumber = null;
 				taxon.FunIndexCurrUseNumber = null;
 				taxon.FunIndexTypificationNumber = 0;
 				taxon.GUID = "";
 				if ($scope.superrank === "superspecies") {
-					taxon.FullName = taxon.Parent.TaxonName + " " + taxon.TaxonName + " s. lato";
+					taxon.FullName = taxon.Parent.TaxonName + " " + taxon.TaxonName + " sensu lato";
 					taxon.Author = "";
 				};
 				if ($scope.superrank === "supergenus") {
-					taxon.FullName = taxon.TaxonName + " s. lato";
+					taxon.FullName = taxon.TaxonName + " sensu lato";
 					taxon.Author = "";
 				};
+			}
+				
+				
+				taxon.RankID = $scope.selectedSuperRankID.superrankId;
 
 				//$scope.selectedSuperRankID = undefined;
-
-				taxon.$update().then(function(t) {
-					$scope.taxon = t;
+				var children = taxon.Children;
+				taxon.$update().then(function() {
+					$scope.taxon = taxon;
+					$scope.taxon.Children = children;
+					$scope.attachFunRecord();
 					//$state.go('taxonlayout-taxon', {id: taxon._id}, {inherit: false, notify: false});
+					$scope.calculateParentRanksForSlider($scope.taxon.Children);
 					$scope.rankModal.hide();
 				})
 
 			};
 			
 			$scope.possibleToChangeFunRecord = function(){
-				if($scope.taxon.RankName === "superspecies" || $scope.taxon.RankName === "supergenus"){
-					return $scope.taxon.Children.length === 0;
+				if(($scope.taxon.RankID < 10000 && $scope.taxon.RankID > 5000) || ($scope.taxon.RankID < 5000 && $scope.taxon.RankID > 4000)){
+					return $scope.taxon.Children !== undefined && $scope.taxon.Children.length === 0;
 				} else {
 					return $scope.taxon.Children !== undefined;
 				}
@@ -69,7 +76,45 @@ angular.module('svampeatlasApp')
 				
 				
 			}
+			
+			
+			
+			$scope.calculateParentRanksForSlider = function(children){
+				
+				if ($scope.taxon.RankID < 10001 && $scope.taxon.RankID > 5000) {
+					$scope.superrank = "superspecies";
+				} else if ($scope.taxon.RankID < 5001 && $scope.taxon.RankID > 4000) {
+					$scope.superrank = "supergenus";
+				};
+				
+				if (children.length >= 1) {
+					$scope.childRank = children[0].RankID;
+					if ($scope.taxon.RankID === 5000 && $scope.childRank >= 10000) {
+						$scope.childName = "Genus"
+						$scope.childRank = 5000;
+					} else if ($scope.taxon.RankID === 10000 && $scope.childRank >= 10000) {
+						$scope.childName = "Species"
+						$scope.childRank = 10000;
+					} else {
+						$scope.childName = children[0].TaxonName;
+					}
 
+				} else {
+					if ($scope.superrank === "superspecies") {
+						$scope.childRank = 10000;
+						$scope.childName = "Species";
+					} else if ($scope.superrank === "supergenus") {
+						$scope.childRank = 5000;
+						$scope.childName = "Genus";
+					};
+				};
+				
+				$scope.selectedSuperRankID = (($scope.taxon.RankID < 10000 && $scope.taxon.RankID > 5000) || ($scope.taxon.RankID < 5000 && $scope.taxon.RankID > 4000)) ? {
+					superrankId: $scope.taxon.RankID
+				} : {
+					superrankId: ($scope.taxon.Parent.RankID + $scope.childRank) / 2
+				};
+			}
 
 			$scope.$timeout = $timeout;
 			$scope.stateParams = $stateParams;
@@ -79,7 +124,6 @@ angular.module('svampeatlasApp')
 				if (TaxonIntegrationService.taxon) {
 					TaxonIntegrationService.taxon.then(function(taxon) {
 						$scope.taxon = new Taxon(taxon);
-						$scope.taxon.PresentInDK = false;
 						console.log($scope.taxon)
 					})
 
@@ -95,6 +139,7 @@ angular.module('svampeatlasApp')
 				});
 				
 
+				
 				$scope.taxon.$promise.then(function() {
 					$scope.fetchingTaxon = false;
 					$scope.saveIsClicked = false;
@@ -109,11 +154,7 @@ angular.module('svampeatlasApp')
 						"checked": false
 					};
 
-					if ($scope.taxon.RankName === "sp.") {
-						$scope.superrank = "superspecies";
-					} else if ($scope.taxon.RankName === "gen.") {
-						$scope.superrank = "supergenus";
-					};
+				
 
 
 					 Taxon.query({
@@ -135,43 +176,12 @@ angular.module('svampeatlasApp')
 						
 						$scope.numSynChildren  = acceptedAndSyns[1].length;
 						
+						$scope.calculateParentRanksForSlider($scope.taxon.Children);
 						
 						
-						if (children.length >= 1) {
-							$scope.childRank = children[0].RankID;
-							if ($scope.taxon.RankID === 5000 && $scope.childRank >= 10000) {
-								$scope.childName = "Genus"
-								$scope.childRank = 5000;
-							} else if ($scope.taxon.RankID === 10000 && $scope.childRank >= 10000) {
-								$scope.childName = "Species"
-								$scope.childRank = 10000;
-							} else {
-								$scope.childName = children[0].TaxonName;
-							}
-
-						} else {
-							if ($scope.superrank === "superspecies") {
-								$scope.childRank = 10000;
-								$scope.childName = "Species";
-							} else if ($scope.superrank === "supergenus") {
-								$scope.childRank = 5000;
-								$scope.childName = "Genus";
-							};
-						};
-						$scope.selectedSuperRankID = ($scope.taxon.RankName === "superspecies" || $scope.taxon.RankName === "supergenus") ? {
-							superrankId: $scope.taxon.RankID
-						} : {
-							superrankId: ($scope.taxon.Parent.RankID + $scope.childRank) / 2
-						};
+						$scope.attachFunRecord();
 						
-						IndexFungorum.NameByKey({
-							NameKey: $scope.taxon.FunIndexNumber
-						}).$promise.then(function(NameByKeyData) {
-							$scope.taxon.FunIndexRecord = NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum;
-							$scope.FunIndexError = false;
-						}).catch (function(){
-							$scope.FunIndexError = "An error occurred, Index Fungorum may currently not be accessible"
-						})
+						
 					})
 				});
 
@@ -194,6 +204,17 @@ angular.module('svampeatlasApp')
 
 
 			};
+			
+			$scope.attachFunRecord= function(){
+				IndexFungorum.NameByKey({
+					NameKey: $scope.taxon.FunIndexNumber
+				}).$promise.then(function(NameByKeyData) {
+					$scope.taxon.FunIndexRecord = NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum;
+					$scope.FunIndexError = false;
+				}).catch (function(){
+					$scope.FunIndexError = "An error occurred, Index Fungorum may currently not be accessible"
+				})
+			}
 
 			$scope.TaxonTypeaheadService = TaxonTypeaheadService;
 
@@ -211,12 +232,17 @@ angular.module('svampeatlasApp')
 				$scope.saveIsClicked = true;
 				taxon.$save().then(function(t) {
 					$scope.taxon = t;
+					$scope.attachFunRecord();
+					$scope.taxon.Children = [];
+					$scope.calculateParentRanksForSlider([]);
+					
 					$state.go('taxonlayout-taxon', {
 						id: taxon._id
 					}, {
 						inherit: false,
 						notify: false
 					});
+					
 				})
 			}
 
