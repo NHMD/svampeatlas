@@ -19,6 +19,8 @@ angular.module('svampeatlasApp')
 				$scope.rowCollection = undefined;
 				IndexFungorum.NameSearch($scope.searchParams).$promise.then(function(data) {
 					var rows = (Array.isArray(data.NameSearchResult.NewDataSet.IndexFungorum)) ? data.NameSearchResult.NewDataSet.IndexFungorum : [data.NameSearchResult.NewDataSet.IndexFungorum];
+					
+					
 					$scope.funIdxrowCollection = _.filter(rows, function(tx){
 						return TaxonIntegrationService.getRankID(tx.INFRASPECIFIC_x0020_RANK) > $scope.taxon.Parent.RankID;
 					});
@@ -47,7 +49,9 @@ angular.module('svampeatlasApp')
 					return false;
 				});
 			};
-
+			
+			
+			
 			$scope.setIdxFungorumRecord = function(row) {
 
 				IndexFungorum.NameByKey({
@@ -58,6 +62,17 @@ angular.module('svampeatlasApp')
 					
 					return TaxonIntegrationService.taxon.then(function(taxon) {
 						
+						
+						if($scope.taxon.Children.length === 0 || taxon.RankId < $scope.taxon.Children[$scope.taxon.Children.length -1].RankID){
+							
+						
+						
+						// It should be possible to move a taxon down to sp or gen, but subgen. sect etc should be kept as superspecies:
+						
+						if(($scope.taxon.RankName === "superspecies" && taxon.RankName !== 'sp.')|| ($scope.taxon.RankName === "supergenus" && taxon.RankName !== 'gen.')) {
+							taxon.RankName = $scope.taxon.RankName;
+							taxon.RankID = $scope.taxon.RankID;
+						}
 						_.merge($scope.taxon, taxon);
 						$scope.taxon.FunIndexRecord = NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum;
 						console.log($scope.taxon)
@@ -67,6 +82,21 @@ angular.module('svampeatlasApp')
 						}, $scope.taxon).$promise.then(function(){
 							$scope.funIndexModal.hide();
 						})
+						}
+						// Tried to lower a superspecies sp. but the superspecies had child taxa at species level
+						else {
+							var parentEl = angular.element("#funindexmodal");
+						    $mdDialog.show(
+						        $mdDialog.alert()
+			         		   	.parent(parentEl)
+						          .clickOutsideToClose(false)
+						          .title('Hierarchy error!')
+						          .content('The selected Index Fungorum taxon has a taxon rank equal to or lower than a child taxon of <em>'+$scope.taxon.FullName+'</em><br> You must either set a new parent taxon on the children in question or choose another Index Fungorum record')
+						          .ariaLabel('Hierarchy error')
+						          .ok('Ok')
+			          
+						      );
+						}
 						
 
 					});
