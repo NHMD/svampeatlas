@@ -127,6 +127,8 @@ angular.module('svampeatlasApp')
 						console.log($scope.taxon)
 					})
 
+				} else {
+					$state.go('taxonomy')
 				}
 			} else if ($stateParams.id && $stateParams.id !== 'new') {
 
@@ -243,6 +245,10 @@ angular.module('svampeatlasApp')
 						notify: false
 					});
 					
+				})
+				.catch(function(err){
+					$scope.saveIsClicked = false;
+					ErrorHandlingService.handleTaxon500();
 				})
 			}
 

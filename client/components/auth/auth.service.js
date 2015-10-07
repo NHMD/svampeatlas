@@ -19,6 +19,10 @@ angular.module('svampeatlasApp')
     }
 
     return {
+		
+		authorizeRoute : function(role){
+			
+		},
 
       /**
        * Authenticate user and save token
