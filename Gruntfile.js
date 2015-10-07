@@ -278,7 +278,7 @@ module.exports = function (grunt) {
 	uglify: {
 	    options: {
 	      mangle: {
-	        except: ['app/taxon/parent-modal.tpl.html', 'app/taxon/rank-modal.tpl.html', 'app/taxon/synonym-modal.tpl.html','app/taxon/funindex-modal.tpl.html', 'Resource', 'object', 'disabled']
+	        except: ['app/admin/modal.tpl.html', 'app/taxon/parent-modal.tpl.html', 'app/taxon/rank-modal.tpl.html', 'app/taxon/synonym-modal.tpl.html','app/taxon/funindex-modal.tpl.html', 'Resource', 'object', 'disabled']
 	      }
 	    }
 	},

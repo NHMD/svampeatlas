@@ -20,6 +20,22 @@ angular.module('svampeatlasApp')
 					  $state.go('taxonomy');
 				      })
 
+			},
+			
+			handleTaxon500: function() {
+			   
+			    $mdDialog.show(
+			        $mdDialog.alert()
+			          
+			          .clickOutsideToClose(false)
+			          .title('A server error has occurred')
+			          .content('Please try again later. If the problem persists, contact the system administrator.')
+			          .ariaLabel('Server error')
+			          .ok('Ok')
+			          
+			      )
+				  
+
 			}
 
 		};
