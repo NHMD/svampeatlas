@@ -134,7 +134,32 @@ angular.module('svampeatlasApp')
 				url: '/api/taxons/:id/nutritionstrategies',
 				isArray: true
 			},
-			getSiblings: {
+			'addSpeciesHypothesis': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/specieshypothesis',
+				isArray: false
+			},
+			'deleteSpeciesHypothesis': {
+				method: 'DELETE',
+				params: {
+					id: '@_id',
+					specieshypothesis: 'specieshypothesis'
+				},
+				url: '/api/taxons/:id/specieshypothesis/:specieshypothesis',
+				isArray: false
+			},
+			'getSpeciesHypothesis': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/specieshypothesis',
+				isArray: true
+			},
+			'getSiblings': {
 				method: 'GET',
 				params: {
 					id: '@_id'

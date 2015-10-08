@@ -14,7 +14,7 @@ function responseWithResult(res, statusCode) {
 	statusCode = statusCode || 200;
 	return function(entity) {
 		if (entity) {
-			return res.json(statusCode, entity);
+			return res.status(statusCode).json(entity);
 		}
 	};
 }
@@ -93,7 +93,7 @@ exports.index = function(req, res) {
 				res.set('limit', req.query.limit);
 			};
 
-			return res.json(200, TaxonLog.rows);
+			return res.status(200).json(TaxonLog.rows);
 		})
 		.
 	catch (handleError(res));

@@ -11,21 +11,21 @@
 
 var _ = require('lodash');
 var models = require('../')
-var Naturtype = models.Naturtype;
+var TaxonSpeciesHypothesis = models.TaxonSpeciesHypothesis;
 
 function handleError(res, statusCode) {
-	statusCode = statusCode || 500;
-	return function(err) {
-		console.log(err);
-		res.status(statusCode).send(err);
-	};
+  statusCode = statusCode || 500;
+  return function(err) {
+	  
+    res.status(statusCode).send(err);
+  };
 }
 
 function responseWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
     if (entity) {
-		return res.status(statusCode).json(entity);
+      return res.json(statusCode, entity);
     }
   };
 }
@@ -62,14 +62,14 @@ function removeEntity(res) {
 
 // Get list of things
 exports.index = function(req, res) {
-  Naturtype.findAll()
+  TaxonSpeciesHypothesis.findAll()
     .then(responseWithResult(res))
     .catch(handleError(res));
 };
 
 // Get a single thing
 exports.show = function(req, res) {
-  Naturtype.find({
+  TaxonSpeciesHypothesis.find({
     where: {
       _id: req.params.id
     }
@@ -81,30 +81,16 @@ exports.show = function(req, res) {
 
 // Creates a new thing in the DB.
 exports.create = function(req, res) {
-  Naturtype.create(req.body)
+  TaxonSpeciesHypothesis.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
 
-// Updates an existing thing in the DB.
-exports.update = function(req, res) {
-  if (req.body._id) {
-    delete req.body._id;
-  }
-  Naturtype.find({
-    where: {
-      _id: req.params.id
-    }
-  })
-    .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
-    .then(responseWithResult(res))
-    .catch(handleError(res));
-};
+
 
 // Deletes a thing from the DB.
 exports.destroy = function(req, res) {
-  Naturtype.find({
+  TaxonSpeciesHypothesis.find({
     where: {
       _id: req.params.id
     }
@@ -116,48 +102,66 @@ exports.destroy = function(req, res) {
 
 
 
-exports.showTaxonNatureTypes = function(req, res) {
-	
-	//Naturtype
-	models.Taxon.find({
+exports.showSpeciesHypothesis = function(req, res){
+	models.TaxonSpeciesHypothesis.findAll({
 		where: {
-			_id: req.params.id
-		},
-		include: [ {
-				model: models.Naturtype,
-				as: 'naturtyper'
-			}
-
-		]
+			taxon_id: req.params.id
+		}
 	})
 		.then(handleEntityNotFound(res))
-		.then(function(taxon){
-			return res.status(200).json(taxon.naturtyper);
-		})
+		.then(responseWithResult(res, 200))
 		.
 	catch (handleError(res));
-};
+	
+}
 
-exports.addTaxonNatureType= function(req, res) {
+exports.addSpeciesHypothesis= function(req, res) {
 
-models.TaxonNaturtype.create({naturtype_id: req.body._id, taxon_id: req.params.id})
-    .then(responseWithResult(res, 201))
+models.TaxonSpeciesHypothesis.create({specieshypothesis: req.body.specieshypothesis, taxon_id: req.params.id})
+	.then(function(sh) {
+
+		return [sh, models.TaxonLog.create({
+			eventname: "Added species hypothesis",
+			description: req.body.specieshypothesis + " was added to this taxon",
+			user_id: req.user._id,
+			taxon_id: req.params.id
+	
+		})]
+	})
+    
+	.spread(function(sh) {
+
+		return res.status(201).json(sh);
+	})
     .catch(handleError(res));
 };
 
-exports.deleteTaxonNatureType = function(req, res) {
 
-models.TaxonNaturtype.find({
+
+exports.deleteSpeciesHypothesis = function(req, res) {
+
+models.TaxonSpeciesHypothesis.find({
     where: {
      taxon_id: req.params.id,
-		naturtype_id: 	req.params.naturtypeid
+	specieshypothesis: 	req.params.spid
     }
   })
   .then(handleEntityNotFound(res))
-  .then(function(taxonNaturtype){
-	  return models.TaxonNaturtype.destroy({where: taxonNaturtype.dataValues});
+  .then(function(taxonSpeciesHypothesis){
+	  return models.TaxonSpeciesHypothesis.destroy({where: taxonSpeciesHypothesis.dataValues});
   })
+.then(function() {
+
+	return models.TaxonLog.create({
+		eventname: "Removed species hypothesis",
+		description: req.params.spid + " was removed from this taxon",
+		user_id: req.user._id,
+		taxon_id: req.params.id
+
+	})
+})
   .then(function(){
+	 
 	  return res.status(204).send()
   })
   .catch(handleError(res));

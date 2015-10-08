@@ -185,7 +185,16 @@ module.exports = function(sequelize, DataTypes) {
     					foreignKey: "taxon_id",
     					as: "taxon"
     				});
-					
+					models.TaxonSpeciesHypothesis.belongsTo(models.Taxon, {
+					  
+					  foreignKey: 'taxon_id',
+						as: 'taxon'
+					});
+			models.Taxon
+    				.hasMany(models.TaxonSpeciesHypothesis, {
+    					foreignKey: "taxon_id",
+    					as: "specieshypothesis"
+    				});			
     		models.Taxon
     				.hasMany(models.TaxonImages, {
     					foreignKey: "taxon_id",
@@ -212,12 +221,14 @@ module.exports = function(sequelize, DataTypes) {
     				});
 					
 					*/
+			
+					
     		models.Taxon
     				.hasOne(models.TaxonAttributes, {
     					foreignKey: "taxon_id" ,
     					as: "attributes"
     				});
-					
+    		
 			
 					models.Taxon.belongsToMany(models.Naturtype, {
 					  through: models.TaxonNaturtype,

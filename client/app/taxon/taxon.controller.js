@@ -395,6 +395,24 @@ angular.module('svampeatlasApp')
 				}
 
 			}
+			
+			$scope.addSpeciesHypothesis = function(newSpeciesHypothesis){
+				
+			return	Taxon.addSpeciesHypothesis({id: $scope.taxon._id, }, {specieshypothesis: newSpeciesHypothesis})
+				.$promise.then(function(sh){
+					$scope.taxon.specieshypothesis.push(sh);
+				})
+			}
+			
+			$scope.deleteSpeciesHypothesis = function(sh){
+
+				Taxon.deleteSpeciesHypothesis({id: $scope.taxon._id, specieshypothesis: sh.specieshypothesis})
+				.$promise.then(function(){
+					_.remove($scope.taxon.specieshypothesis, function(t) {
+						return t.specieshypothesis == sh.specieshypothesis;
+					});
+				})
+			}
 
 		}
 	]);

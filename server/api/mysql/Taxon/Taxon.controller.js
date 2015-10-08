@@ -29,7 +29,7 @@ function responseWithResult(res, statusCode) {
 	statusCode = statusCode || 200;
 	return function(entity) {
 		if (entity) {
-			return res.json(statusCode, entity);
+			return res.status(statusCode).json(entity)
 		}
 	};
 }
@@ -106,8 +106,7 @@ exports.index = function(req, res) {
 			if (req.query.limit) {
 				res.set('limit', req.query.limit);
 			};
-
-			return res.json(200, taxon.rows);
+			return res.status(200).json(taxon.rows)
 		})
 		.
 	catch (handleError(res));
@@ -123,6 +122,10 @@ exports.show = function(req, res) {
 				model: models.TaxonImages,
 				as: "images"
 			}, {
+				model: models.TaxonSpeciesHypothesis,
+				as: 'specieshypothesis'
+			},
+			{
 				model: models.Taxon,
 				as: "synonyms"
 			}, {
