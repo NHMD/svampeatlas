@@ -13,7 +13,7 @@ var _ = require('lodash');
 
 var models = require('../')
 var TaxonAttributes = models.TaxonAttributes;
-var Promise = require("bluebird");
+//var Promise = require("bluebird");
 
 
 function handleError(res, statusCode) {
@@ -28,7 +28,7 @@ function responseWithResult(res, statusCode) {
 	statusCode = statusCode || 200;
 	return function(entity) {
 		if (entity) {
-			return res.json(statusCode, entity);
+			return res.status(statusCode).json(entity);
 		}
 	};
 }

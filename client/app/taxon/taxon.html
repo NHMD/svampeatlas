@@ -197,6 +197,43 @@
 				  	    </div>
 				  	  </div>
 				  	  <!-- ########################################-->
+				  	  <!-- ########################################-->
+				  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+				  	    <div class="panel-heading" role="tab">
+				  	      <h4 class="panel-title">
+				  	        <a bs-collapse-toggle>
+				  	          Unite Species Hypothesis ({{taxon.specieshypothesis.length}})
+				  	        </a>
+				  	      </h4>
+				  	    </div>
+				  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+				  	      <div class="panel-body">
+							  
+								<div class="col-md-8"> 
+								  <md-input-container style="width:70%">
+            <label>Enter species hypothesis</label>
+            <input ng-model="newSpeciesHypothesis" ng-focus="newSpeciesHypothesis = '';">
+			
+          </md-input-container>
+	  </div><div class="col-md-2"><button class="btn btn-danger" ng-disabled="!newSpeciesHypothesis" ng-click="addSpeciesHypothesis(newSpeciesHypothesis); newSpeciesHypothesis = '';"><i class="fa fa-plus"> </i>Add </button></div>
+	  						  <table class="table parent-taxon-table">
+	  							   <tr ng-repeat="sh in taxon.specieshypothesis"><td st-ratio="70">
+	  						 <a href="https://unite.ut.ee/sh/{{sh.specieshypothesis}}" target="_BLANK">{{sh.specieshypothesis}}</a>
+	  						  </td>
+						  <td st-ratio="30">
+						    					<a ng-click="deleteSpeciesHypothesis(sh)" class="trash" tabindex="0"><span class="glyphicon glyphicon-trash pull-right"></span></a>
+						    						  </td>
+													
+						  </tr>
+						  </table>
+			  	        
+							<!--<ul>
+								<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxonbase/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
+							</ul> -->
+				  	      </div>
+				  	    </div>
+				  	  </div>
+				  	  <!-- ########################################-->
 			  	  <!-- ########################################-->
 			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined && taxon.synonyms.length && taxon.synonyms.length >1">
 			  	    <div class="panel-heading" role="tab">
