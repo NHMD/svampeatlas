@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .factory('Auth', function Auth($http, User, $cookieStore, $q) {
+  .factory('Auth', function Auth($http, User, $cookies, $q) {
     /**
      * Return a callback or noop function
      *
@@ -12,18 +12,21 @@ angular.module('svampeatlasApp')
       return (angular.isFunction(cb)) ? cb : angular.noop;
     },
 
-    currentUser = {};
-
-    if ($cookieStore.get('token')) {
+ currentUser ;
+	/*
+	$interval(function(){
+	    if ($cookies.get('token')) {
+	      currentUser = User.get();
+	    }
+	}, 5000)
+	*/
+    if ($cookies.get('token')) {
       currentUser = User.get();
     }
-
+			
     return {
 		
-		authorizeRoute : function(role){
-			
-		},
-
+		
       /**
        * Authenticate user and save token
        *
@@ -37,7 +40,9 @@ angular.module('svampeatlasApp')
           password: user.password
         })
         .then(function(res) {
-          $cookieStore.put('token', res.data.token);
+			var exp = new Date();
+			exp.setHours(exp.getHours() + 5);
+          $cookies.put('token', res.data.token, {expires: exp});
           currentUser = User.get();
           safeCb(callback)();
           return res.data;
@@ -52,8 +57,8 @@ angular.module('svampeatlasApp')
        * Delete access token and user info
        */
       logout: function() {
-        $cookieStore.remove('token');
-        currentUser = {};
+        $cookies.remove('token');
+        currentUser = null;
       },
 
       /**
@@ -66,7 +71,7 @@ angular.module('svampeatlasApp')
       createUser: function(user, callback) {
         return User.save(user,
           function(data) {
-            $cookieStore.put('token', data.token);
+            $cookies.put('token', data.token);
             currentUser = User.get();
             return safeCb(callback)(null, user);
           },
@@ -95,6 +100,8 @@ angular.module('svampeatlasApp')
         }).$promise;
       },
 
+ 
+	 
       /**
        * Gets all available info on a user
        *   (synchronous|asynchronous)
@@ -103,18 +110,25 @@ angular.module('svampeatlasApp')
        * @return {Object|Promise}
        */
       getCurrentUser: function(callback) {
-        if (arguments.length === 0) {
-          return currentUser;
+		  
+		  // if theres is a user and the promise is resolved but the token has expired, reset user:
+		  
+		 if(currentUser && currentUser.$resolved && !$cookies.get('token')){
+			 currentUser = null;
+		 }
+       
+	    if (arguments.length === 0) {
+          return  currentUser;
         }
 
-        var value = (currentUser.hasOwnProperty('$promise')) ? currentUser.$promise : currentUser;
+        var value = (currentUser && currentUser.hasOwnProperty('$promise')) ? currentUser.$promise : currentUser;
         return $q.when(value)
           .then(function(user) {
             safeCb(callback)(user);
             return user;
           }, function() {
             safeCb(callback)({});
-            return {};
+            return null;
           });
       },
 
@@ -127,12 +141,12 @@ angular.module('svampeatlasApp')
        */
       isLoggedIn: function(callback) {
         if (arguments.length === 0) {
-          return currentUser.hasOwnProperty('Roles');
+          return currentUser;
         }
 
         return this.getCurrentUser(null)
           .then(function(user) {
-            var is = user.hasOwnProperty('Roles');
+            var is = user && user.hasOwnProperty('Roles');
             safeCb(callback)(is);
             return is;
           });
@@ -161,7 +175,7 @@ angular.module('svampeatlasApp')
 	  
 	  hasRole: function(role, callback) {
         if (arguments.length === 1) {
-          return _.find(currentUser.Roles, function(r) {
+          return this.getCurrentUser() && _.find(currentUser.Roles, function(r) {
 			  return r.name === role;
 			}) !== undefined;
         }
@@ -183,7 +197,7 @@ angular.module('svampeatlasApp')
        * @return {String} - a token string used for authenticating
        */
       getToken: function() {
-        return $cookieStore.get('token');
+        return $cookies.get('token');
       }
     };
   });

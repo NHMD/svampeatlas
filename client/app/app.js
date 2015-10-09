@@ -36,14 +36,14 @@ angular.module('svampeatlasApp', [
 
 	};
 })
-  .factory('authInterceptor', function($rootScope, $q, $cookieStore, $injector) {
+  .factory('authInterceptor', function($rootScope, $q, $cookies, $injector) {
     var state;
     return {
       // Add authorization token to headers
       request: function(config) {
         config.headers = config.headers || {};
-        if ($cookieStore.get('token')) {
-          config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
+        if ($cookies.get('token')) {
+          config.headers.Authorization = 'Bearer ' + $cookies.get('token');
         }
         return config;
       },
@@ -53,7 +53,7 @@ angular.module('svampeatlasApp', [
         if (response.status === 401) {
           (state || (state = $injector.get('$state'))).go('login');
           // remove any stale tokens
-          $cookieStore.remove('token');
+          $cookies.remove('token');
           return $q.reject(response);
         }
         else {
@@ -84,10 +84,16 @@ angular.module('svampeatlasApp', [
 	//  editableOptions.theme = 'angular-material';
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function(event, next) {
+		
+	
+
       Auth.isLoggedIn(function(loggedIn) {
-        if (next.authenticate && !next.authenticate(Auth) && !loggedIn) {
+        if (next.authenticate && !next.authenticate(Auth)) {
           $state.go('login');
         }
       });
+		
+	  
+	  
     });
   });
