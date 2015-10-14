@@ -25,7 +25,7 @@ module.exports = function(app) {
    app.use('/api/taxons', require('./api/mysql/Taxon'));
   app.use('/api/indexfungorum', require('./api/soap/indexfungorum'));
   app.use('/api/mycobank', require('./api/soap/mycobank'));
-
+ app.use('/api/plutof', require('./api/soap/plutof'));
   app.use('/auth', require('./auth'));
 
   // All undefined asset or api routes should return a 404

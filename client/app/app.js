@@ -45,6 +45,9 @@ angular.module('svampeatlasApp', [
         if ($cookies.get('token')) {
           config.headers.Authorization = 'Bearer ' + $cookies.get('token');
         }
+        if ($cookies.get('plutoftoken')) {
+          config.headers.PlutoFAuthorization =  $cookies.get('plutoftoken');
+        }
         return config;
       },
 
