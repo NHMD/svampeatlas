@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'ErrorHandlingService', '$mdDialog',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, ErrorHandlingService, $mdDialog) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'ErrorHandlingService', '$mdDialog',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, ErrorHandlingService, $mdDialog) {
 			$scope._ = _;
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
@@ -157,7 +157,9 @@ angular.module('svampeatlasApp')
 					};
 
 				
-
+					PlutoF.SpeciesHypothesis({search_query: $scope.taxon.FullName}).$promise.then(function(res){
+						$scope.specieshypotheses = res.results;
+					})
 
 					 Taxon.query({
 						where: {
@@ -399,6 +401,13 @@ angular.module('svampeatlasApp')
 			$scope.addSpeciesHypothesis = function(newSpeciesHypothesis){
 				
 			return	Taxon.addSpeciesHypothesis({id: $scope.taxon._id, }, {specieshypothesis: newSpeciesHypothesis})
+				.$promise.then(function(sh){
+					$scope.taxon.specieshypothesis.push(sh);
+				})
+			}
+			
+			$scope.saveSpeciesHypothesisToSvampeatlas = function(sh){
+			return	Taxon.addSpeciesHypothesis({id: $scope.taxon._id, }, {specieshypothesis: sh.name})
 				.$promise.then(function(sh){
 					$scope.taxon.specieshypothesis.push(sh);
 				})

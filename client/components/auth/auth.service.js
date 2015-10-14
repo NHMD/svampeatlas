@@ -43,7 +43,9 @@ angular.module('svampeatlasApp')
 			var exp = new Date();
 			exp.setHours(exp.getHours() + 5);
           $cookies.put('token', res.data.token, {expires: exp});
+		
           currentUser = User.get();
+		 
           safeCb(callback)();
           return res.data;
         }, function(err) {

@@ -159,8 +159,8 @@
 				  	    <div class="panel-heading" role="tab">
 				  	      <h4 class="panel-title">
 				  	        <a bs-collapse-toggle>
-				  	         <i class="fa fa-exclamation-triangle text-danger" ng-show="taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== taxon.FunIndexRecord.RECORD_x0020_NUMBER || taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'"></i>  Index fungorum link
-				  	        </a>
+				  	         <i class="fa fa-exclamation-triangle text-danger" ng-show="taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== taxon.FunIndexRecord.RECORD_x0020_NUMBER || taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1' || taxon.Author !== taxon.FunIndexRecord.AUTHORS"></i>  Index fungorum link
+				  	        </a> <img src="assets/images/LogoIF.gif" width="24" class="pull-right" alt="Index Fungorum">
 				  	      </h4>
 				  	    </div>
 				  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
@@ -185,7 +185,7 @@
 							 
 							  <tr class="parent-taxon-table" ng-if="taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== taxon.FunIndexRecord.RECORD_x0020_NUMBER"><td class="parent-taxon-table" st-ratio="20">Current name:</td><td class="parent-taxon-table" st-ratio="30"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.CURRENT_x0020_NAME}} <i class="fa fa-external-link"></i></a></td><td st-ratio="50"> <em class="text-danger">Possible synonym!</em></td></tr>
 							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Classification:</td><td class="parent-taxon-table" st-ratio="80"><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{ taxon.FunIndexRecord.SystematicPath}}</em></small></td></tr>
-							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{ taxon.FunIndexRecord.AUTHORS}}</i></td><td st-ratio="50"></td></tr>
+							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><em ng-class="{'text-danger' : taxon.Author !== taxon.FunIndexRecord.AUTHORS}">{{ taxon.FunIndexRecord.AUTHORS}}</em></td><td st-ratio="50"></td></tr>
 							  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}}</td><td st-ratio="50"></td></tr>
 			</tbody>
 							</table>
@@ -202,7 +202,7 @@
 				  	    <div class="panel-heading" role="tab">
 				  	      <h4 class="panel-title">
 				  	        <a bs-collapse-toggle>
-				  	          Unite Species Hypothesis ({{taxon.specieshypothesis.length}})
+				  	          Unite Species Hypothesis ({{taxon.specieshypothesis.length}}) <img src="assets/images/unitelogo3.png" width="48" class="pull-right" alt="Unite">
 				  	        </a>
 				  	      </h4>
 				  	    </div>
@@ -216,12 +216,28 @@
 			
           </md-input-container>
 	  </div><div class="col-md-2"><button class="btn btn-danger" ng-disabled="!newSpeciesHypothesis" ng-click="addSpeciesHypothesis(newSpeciesHypothesis); newSpeciesHypothesis = '';"><i class="fa fa-plus"> </i>Add </button></div>
-	  						  <table class="table parent-taxon-table">
+	  						  <table class="table parent-taxon-table" ng-show="taxon.specieshypothesis && taxon.specieshypothesis.length > 0"> 
+								  <tr><th st-ratio="100">Species hypotheses in our database:</th>
+								  </tr>
 	  							   <tr ng-repeat="sh in taxon.specieshypothesis"><td st-ratio="70">
 	  						 <a href="https://unite.ut.ee/sh/{{sh.specieshypothesis}}" target="_BLANK">{{sh.specieshypothesis}}</a>
 	  						  </td>
 						  <td st-ratio="30">
 						    					<a ng-click="deleteSpeciesHypothesis(sh)" class="trash" tabindex="0"><span class="glyphicon glyphicon-trash pull-right"></span></a>
+						    						  </td>
+													
+						  </tr>
+						  </table>
+						  	<p class="col-md-12" ng-show="specieshypotheses && specieshypotheses.length >0"><strong>Possible matches from Unite:</strong></p>
+	  						  <table class="table parent-taxon-table" ng-show="specieshypotheses && specieshypotheses.length >0">
+								  <tr><th st-ratio="25">Name</th><th st-ratio="25">Threshold</th><th st-ratio="25">Designators</th>
+								  <th st-ratio="25"><img src="assets/images/unitelogo3.png" width="48" class="pull-right" alt="Unite"></th>
+								  </tr>
+	  							   <tr ng-repeat="sh in specieshypotheses | orderBy:'-version'"><td st-ratio="25">
+	  						 <a href="https://unite.ut.ee/sh/{{sh.name}}" target="_BLANK">{{sh.name}}</a>
+	  						  </td><td st-ratio="25">{{sh.threshold}}</td><td st-ratio="25">{{sh.designators.toString()}}</td>
+						  <td st-ratio="25">
+						    					<a ng-click="saveSpeciesHypothesisToSvampeatlas(sh)"  tabindex="0"><span class="glyphicon glyphicon-plus pull-right"></span></a>
 						    						  </td>
 													
 						  </tr>
