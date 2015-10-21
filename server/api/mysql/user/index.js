@@ -14,6 +14,7 @@ router.post('/:id/roles/:roleid', auth.hasRole('useradmin'), controller.addRole)
 
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
+router.put('/me/language', auth.isAuthenticated(), controller.changeLanguage);
 router.get('/:id',/* auth.isAuthenticated(),*/ controller.show);
 router.post('/', controller.create);
 

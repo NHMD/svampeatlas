@@ -29,7 +29,9 @@ angular.module('svampeatlasApp')
         url: '/settings',
         templateUrl: 'app/account/settings/settings.html',
         controller: 'SettingsCtrl',
-        authenticate: true
+        authenticate: function(Auth){
+		  	return Auth.isLoggedIn();
+		  }
       });
   })
   .run(function($rootScope) {

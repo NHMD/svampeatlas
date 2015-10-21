@@ -54,7 +54,8 @@ module.exports = function(sequelize, DataTypes) {
 	Validation: {
 		type: DataTypes.INTEGER,
 		defaultValue: 0	
-	}
+	},
+	preferred_language: DataTypes.ENUM('dk', 'en')
 
   }, {
 
@@ -72,7 +73,8 @@ module.exports = function(sequelize, DataTypes) {
 			'provider': this.provider,
 			'name': this.name,
 			'Roles': this.Roles,
-			'fb': this.facebook !== null
+			'fb': this.facebook !== null,
+			'preferred_language': this.preferred_language
 		};
 	},
 

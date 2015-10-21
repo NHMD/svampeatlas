@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('TaxonomyCtrl',['$scope','Taxon', '$timeout', '$q', 'TaxonTypeaheadService', function ($scope, Taxon,$timeout, $q, TaxonTypeaheadService) {
+  .controller('TaxonomyCtrl',['$scope','Taxon', '$timeout', '$q', 'TaxonTypeaheadService','$translate', function ($scope, Taxon,$timeout, $q, TaxonTypeaheadService, $translate) {
    
 
 

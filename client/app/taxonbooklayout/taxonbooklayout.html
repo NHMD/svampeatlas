@@ -7,10 +7,10 @@
 	    	<div class="row"  ng-if="stateParams.id">
 				<md-button ng-click="toggleIframe()"
 				            class="md-primary">
-				            Maps, graphs from atlas
+				            {{'Maps, graphs from atlas' | translate}}
 				          </md-button> <md-button ng-click="toggleSimilarSpecies()"
 				            class="md-primary">
-				            Similar species
+				            {{'Similar species' | translate}}
 				          </md-button> 
 				<md-sidenav class="md-sidenav-right md-whiteframe-z2 iframe-sidenav" md-component-id="iframeAside">
 				      <md-toolbar class="md-theme-light">
@@ -19,10 +19,10 @@
 				      <md-content  layout-padding>
 				       
 				        <md-button ng-click="closeSideNav('iframeAside')" class="md-primary">
-				          Close
+				          {{'Close' | translate}}
 				        </md-button>
 				        <md-button  class="md-primary" href="{{getIframeSrc()}}" target="_BLANK">
-				         <i class="fa fa-external-link"></i> open in new tab
+				         <i class="fa fa-external-link"></i> {{'Open in new tab' | translate}}
 				        </md-button>
 						<iframe ng-src="{{getIframeSrc()}}" width="450" height="1200"></iframe>
 						
@@ -35,7 +35,7 @@
 					      <md-content  layout-padding>
 				       
 					        <md-button ng-click="closeSideNav('similarAside')" class="md-primary">
-					          Close
+					           {{'Close' | translate}}
 					        </md-button>
 					        
 							<table id="sibling-table">
@@ -59,14 +59,14 @@
 
 			</div>
 			
-			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div ng-show="taxon.RankID > 5000">
+			<h4 ng-show="taxon._id !== undefined"><strong translate>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div ng-show="taxon.RankID > 5000">
     <md-checkbox  ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-	Present in DK
+	{{'Present in DK' | translate}}
   </md-checkbox></div>
 			
 			
 			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
-			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> 
+			<p><small><strong translate>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> 
 			</p>
 			</div>
 			<div class="col-md-4" >
@@ -105,7 +105,7 @@
 				 
 			      
 			        <md-checkbox   ng-model="nutritionStrategy.isChecked"   ng-change="addOrRemoveNutritionStrategy(nutritionStrategy)">
-			        {{nutritionStrategy.name}}
+			        {{nutritionStrategy.name | translate}}
 			      </md-checkbox>
 			    </div>
 				 </div>
@@ -115,7 +115,7 @@
 	 
    
         <md-checkbox   ng-model="nutritionStrategy.isChecked"   ng-change="addOrRemoveNutritionStrategy(nutritionStrategy)"/>
-        {{nutritionStrategy.name}}
+        {{nutritionStrategy.name | translate}}
       </md-checkbox>
     </div>
 	</div>

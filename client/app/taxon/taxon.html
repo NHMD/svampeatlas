@@ -7,16 +7,16 @@
 	    	<div class="row" ng-show="!fetchingTaxon" ng-if="stateParams.id">
 			<div class="col-md-12" >
 			<div class="col-md-4" ng-show="taxon.$promise && taxon._id !== undefined">	
-				<h4 ng-if="!taxon.FunIndexNumber"><strong>Full Name: </strong> <a href="#" editable-text="taxon.FullName"  onaftersave="taxon.$update()"><em>{{ taxon.FullName }}</em></a> </h4>
-				<h4 ng-if="!taxon.FunIndexNumber"><strong>Taxon Name / epithet: </strong> <a href="#" editable-text="taxon.TaxonName"  onaftersave="taxon.$update()"><em>{{ taxon.TaxonName }}</em></a></h4>
-				<h4 ng-if="!taxon.FunIndexNumber"><strong>Author: </strong> <a href="#" editable-text="taxon.Author"  onaftersave="taxon.$update()"><em>{{ taxon.Author || 'n/a'}}</em></a></h4>
+				<h4 ng-if="!taxon.FunIndexNumber"><strong translate>Full Name: </strong> <a href="#" editable-text="taxon.FullName"  onaftersave="taxon.$update()"><em>{{ taxon.FullName }}</em></a> </h4>
+				<h4 ng-if="!taxon.FunIndexNumber"><strong translate>Taxon Name / epithet: </strong> <a href="#" editable-text="taxon.TaxonName"  onaftersave="taxon.$update()"><em>{{ taxon.TaxonName }}</em></a></h4>
+				<h4 ng-if="!taxon.FunIndexNumber"><strong translate>Author: </strong> <a href="#" editable-text="taxon.Author"  onaftersave="taxon.$update()"><em>{{ taxon.Author || 'n/a'}}</em></a></h4>
 			</div>	
 			<div class="alert alert-warning col-md-8" role="alert" ng-if="taxon.$promise && !taxon.FunIndexNumber && taxon._id !== undefined">
-				<strong>Examples of Fullname / Taxon name combinations:</strong>
+				<strong translate>Examples of Fullname / Taxon name combinations:</strong>
 				<table class="table fullname-examples">
 					<thead>
 						<tr>
-							<th st-ratio="50">Full Name</th><th st-ratio="25">Name / Epithet</th><th st-ratio="25">Author</th>
+							<th st-ratio="50" translate>Full Name</th><th st-ratio="25" translate>Name / Epithet</th><th st-ratio="25" translate>Author</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -36,7 +36,7 @@
 				
 			<h2><span ng-show="taxon._id === undefined || taxon.FunIndexNumber">{{taxon.FullName}} </span>
 				
-				<button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="saveIsClicked || taxon.Parent === null" ng-click="saveNewTaxon(taxon)">Save taxon <i ng-show="saveIsClicked" class="fa fa-spinner fa-spin"></i></button> <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="synonymModal.show()" tabindex="0">Make into synonym</button>
+				<button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="saveIsClicked || taxon.Parent === null" ng-click="saveNewTaxon(taxon)" translate>Save taxon <i ng-show="saveIsClicked" class="fa fa-spinner fa-spin"></i></button> <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="synonymModal.show()" tabindex="0" translate>Make into synonym</button>
 <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			
 			</h2>
 			
@@ -46,14 +46,14 @@
 
 			</div>
 			
-			<h4 ng-show="taxon._id !== undefined"><strong>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div  ng-show="taxon._id && taxon.RankID > 5000">
+			<h4 ng-show="taxon._id !== undefined"><strong translate>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div  ng-show="taxon._id && taxon.RankID > 5000">
     <md-checkbox  ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
-	Present in DK
+	{{'Present in DK' | translate}}
   </md-checkbox></div>
 			
 			
 			<p><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{taxon.SystematicPath}}</em></small></p>
-			<p><small><strong>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon._id !== undefined && taxon._id === taxon.accepted_id && (taxon.RankName === 'sp.' || taxon.RankName === 'gen.')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button>
+			<p><small><strong translate>Taxon rank: </strong><em> {{taxon.RankName}}</em></small> <button ng-show="taxon._id !== undefined && taxon._id === taxon.accepted_id && (taxon.RankName === 'sp.' || taxon.RankName === 'gen.')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button>
 			<button ng-show="taxon._id !== undefined && ((taxon.RankID < 10000 &&  taxon.RankID > 5000)|| (taxon.RankID > 4000 &&  taxon.RankID < 5000))" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Change rank level</button>
 			</p>
 			</div>
@@ -106,7 +106,7 @@
 			    	    <div class="panel-heading" role="tab">
 			    	      <h4 class="panel-title">
 			    	        <a bs-collapse-toggle>
-			    	       <i class="fa fa-exclamation-triangle text-danger" ng-show=" taxon.Parent === null "></i>   Parent taxon 
+			    	       <i class="fa fa-exclamation-triangle text-danger" ng-show=" taxon.Parent === null "></i>   {{'Parent taxon' | translate}}
 			    	        </a>
 			    	      </h4>
 			    	    </div>
@@ -118,7 +118,7 @@
 							  <button class="btn btn-danger" ng-show=" taxon.Parent === null " ng-click="parentModal.show()">Set parent taxon</button>
 								<table ng-show=" taxon.Parent !== null " class="table parent-taxon-table">
 
-								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30"><a href="/taxonbase/taxon/{{taxon.Parent._id}}">{{ taxon.Parent.FullName}}</a></td><td st-ratio="50"><button class="btn btn-danger" ng-click="parentModal.show()">Change parent taxon</button></td></tr>
+								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30"><a href="/taxonbase/taxon/{{taxon.Parent._id}}">{{ taxon.Parent.FullName}}</a></td><td st-ratio="50"><button class="btn btn-danger" ng-click="parentModal.show()" translate>Change parent taxon</button></td></tr>
 								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Epithet :</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.TaxonName}}</td><td st-ratio="50"></td></tr>
 								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><i>{{ taxon.Parent.Author}}</i></td><td st-ratio="50"></td></tr>
 								  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.RankName}}</td><td st-ratio="50"></td></tr>

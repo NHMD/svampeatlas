@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('LoginCtrl', function($scope, Auth, $state, $window, $location, $cookies, PlutoF) {
+  .controller('LoginCtrl', function($scope, Auth, $state, $window, $location, $cookies, $translate, PlutoF) {
     $scope.user = {};
     $scope.errors = {};
 	
@@ -17,7 +17,9 @@ angular.module('svampeatlasApp')
           password: $scope.user.password
         })
         .then(function() {
-			Auth.getCurrentUser(function(){
+			Auth.getCurrentUser(function(usr){
+				$cookies.put('preferred_language', usr.preferred_language);
+				$translate.use(usr.preferred_language);
 	    		  if(Auth.hasRole('taxonomyadmin') &&  !$cookies.get('plutoftoken')){
 					  
 					  PlutoF.GetToken().$promise.then(function(res){

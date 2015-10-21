@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams', 'Auth',
-		function($scope,  $state, $stateParams, Auth) {
+	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams', 'Auth', '$translate',
+		function($scope,  $state, $stateParams, Auth, $translate) {
 			$scope.hasRole = Auth.hasRole;
 			$scope.state = $state;
 			

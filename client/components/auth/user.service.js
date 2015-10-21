@@ -34,5 +34,12 @@ angular.module('svampeatlasApp')
 		},
 		url: '/api/users/:id/roles/:roleid'
 	},
+    setLanguage: {
+      method: 'PUT',
+      params: {
+        id:'me',
+		controller:'language'
+      }
+    }
 	  });
   });

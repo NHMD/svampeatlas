@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http ) {
+  .controller('MainCtrl', function($scope, $http, $translate ) {
    
+	
    /*
     $scope.awesomeThings = [];
 
