@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .factory('Auth', function Auth($http, User, $cookies, $q) {
+  .factory('Auth', function Auth($http, User, $cookies, $q, $translate) {
     /**
      * Return a callback or noop function
      *

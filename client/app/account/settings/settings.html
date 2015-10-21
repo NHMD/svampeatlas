@@ -41,6 +41,15 @@
       </form>
 	  </div>
 	   </div>
+	   <div class="col-sm-6">
+   	<div class="btn-group" ng-model="preferred_language" bs-radio-group >
+   	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="dk"><img src="assets/images/flags/flags/shiny/24/Denmark.png" ></label>
+   	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="en"><img src="assets/images/flags/flags/shiny/24/United-Kingdom.png"></label>
+   	  
+
+   	</div>
+		</div>
+	  
 	  <div class="col-sm-6">
 		  
           <a class="btn btn-facebook" href="" ng-show="!getCurrentUser().fb" ng-click="loginOauth('facebook')">
@@ -50,6 +59,8 @@
             <i class="fa fa-facebook"></i> Disconnect Facebook account
           </a>
 		  </div>
+		  
+		
     </div>
   </div>
 </div>

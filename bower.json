@@ -14,7 +14,7 @@
     "lodash": "~3.10.1",
     "angular-socket-io": "~0.6.0",
     "angular-ui-router": "~0.2.15",
-    "angular-translate": "2.7.0",
+    "angular-translate": "2.8.1",
     "angular-strap": "2.3.1",
     "angular-smart-table": "",
     "angular-xeditable": "",

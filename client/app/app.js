@@ -12,7 +12,8 @@ angular.module('svampeatlasApp', [
 	'xeditable',
 	'xml',
 	'ui.bootstrap',
-	'ngMaterial'
+	'ngMaterial',
+	'pascalprecht.translate'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider) {
     $urlRouterProvider
@@ -66,7 +67,7 @@ angular.module('svampeatlasApp', [
     };
   })
 
-  .run(function($rootScope, $state, Auth, editableOptions, editableThemes) {
+  .run(function($rootScope, $state, Auth, editableOptions, editableThemes, $translate, $cookies) {
 	  editableThemes['bs3'].submitTpl =    '<md-button type="submit" class="md-icon-button  md-primary" aria-label="Save"><span class="glyphicon glyphicon-ok"></span></md-button>';
 	  editableThemes['bs3'].cancelTpl =  '<md-button type="button" class="md-icon-button  md-warn" ng-click="$form.$cancel()" aria-label="Cancel"><span class="glyphicon glyphicon-remove"></span></md-button>';
 	  
@@ -87,8 +88,8 @@ angular.module('svampeatlasApp', [
 	//  editableOptions.theme = 'angular-material';
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function(event, next) {
-		
-	
+		var lang = $cookies.get("preferred_language") || "dk";
+		$translate.use(lang);
 
       Auth.isLoggedIn(function(loggedIn) {
         if (next.authenticate && !next.authenticate(Auth)) {

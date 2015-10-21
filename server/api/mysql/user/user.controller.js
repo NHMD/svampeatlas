@@ -145,6 +145,25 @@ exports.changePassword = function(req, res, next) {
 };
 
 /**
+ * Change a users language
+ */
+exports.changeLanguage = function(req, res, next) {
+  var userId = req.user._id;
+
+ return User.update(
+	 {preferred_language : req.body.language},
+	 {
+    where: {
+      _id: userId
+    }
+  })
+  .then(function(){
+  	res.send(204);
+  })
+  .catch(validationError(res));
+};
+
+/**
  * Get my info
  */
 exports.me = function(req, res, next) {
@@ -160,7 +179,8 @@ exports.me = function(req, res, next) {
 	'Initialer',
       'email',
       'provider',
-		'facebook'
+		'facebook',
+		'preferred_language'
     ],
 	include: [{
 		model: models.Role

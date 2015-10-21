@@ -81,3 +81,18 @@ div.x-editable-texarea {
 	  border-radius: 4px;
 	
 }
+
+#navbar-language-picker  {
+	margin-top: 15px;
+}
+
+
+#language-container > ul{
+  max-width: 30px !important; 
+  min-width: 30px !important; 
+}
+
+#language-container > ul > li > a{
+    width: 28px !important; 
+  padding-left: 5px !important;
+}
