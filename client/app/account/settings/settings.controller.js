@@ -5,7 +5,7 @@ angular.module('svampeatlasApp')
     $scope.errors = {};
 	
 	$scope.getCurrentUser = Auth.getCurrentUser;
-	$scope.preferred_language = $scope.getCurrentUser().preferred_language || "dk";
+	
   
     $scope.loginOauth = function(provider) {
       $window.location.href = '/auth/' + provider +'/authorize?access_token='+Auth.getToken();
