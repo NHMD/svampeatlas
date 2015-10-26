@@ -16,6 +16,7 @@ var models = require('../')
 var Taxon = models.Taxon;
 var Promise = require("bluebird");
 Promise.promisifyAll(soap);
+var nestedQueryParser = require("../nestedQueryParser")
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -66,35 +67,49 @@ function removeEntity(res) {
 
 // Get list of taxons
 exports.index = function(req, res) {
-	
 
-	
+
+
 	var query = {
 		offset: req.query.offset,
 		limit: req.query.limit,
 		order: req.query.order,
 		where: {}
 	};
-	
-	if(req.query.acceptedTaxaOnly){
-		_.merge(query.where, { _id : { $eq : models.sequelize.col("accepted_id")}});
-	
+
+	if (req.query.acceptedTaxaOnly) {
+		_.merge(query.where, {
+			_id: {
+				$eq: models.sequelize.col("accepted_id")
+			}
+		});
+
 	}
 
 	if (req.query.where) {
 		_.merge(query.where, JSON.parse(req.query.where));
-	} 
-	
+	}
+
 	if (req.query.include) {
 		var include = JSON.parse(req.query.include)
-		
-	query['include'] =	_.map(include, function(n){
-		n.model = models[n.model];
-		if(n.where) {
-			n.where = JSON.parse(n.where)
-		}
-		return n;
-		})	
+
+		query['include'] = _.map(include, function(n) {
+			n.model = models[n.model];
+			if (n.where) {
+				n.where = JSON.parse(n.where);
+
+				if (n.where.$and && n.where.$and.length > 0) {
+
+					for (var i = 0; i < n.where.$and.length; i++) {
+						n.where.$and[i] = JSON.parse(n.where.$and[i]);
+					}
+				}
+				//	n.where = nestedQueryParser.parseQueryString(n.where)
+
+			}
+			console.log(n.where)
+			return n;
+		})
 	}
 
 	Taxon.findAndCount(query)
@@ -111,6 +126,7 @@ exports.index = function(req, res) {
 		.
 	catch (handleError(res));
 };
+
 
 // Get a single taxon
 exports.show = function(req, res) {

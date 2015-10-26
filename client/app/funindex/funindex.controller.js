@@ -17,8 +17,8 @@ angular.module('svampeatlasApp')
 
 		};
 	})
-	.controller('FunindexCtrl', ['$scope', '$state', 'IndexFungorum', 'MycoBank', 'x2js', 'Taxon', 'TaxonIntegrationService','TaxonTypeaheadService', 'TaxonRank','$mdDialog',
-		function($scope, $state, IndexFungorum, MycoBank, x2js, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonRank, $mdDialog) {
+	.controller('FunindexCtrl', ['$scope', '$state', 'IndexFungorum', 'MycoBank', 'x2js', 'Taxon', 'TaxonIntegrationService','TaxonTypeaheadService', 'TaxonRank','$mdDialog', '$translate',
+		function($scope, $state, IndexFungorum, MycoBank, x2js, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonRank, $mdDialog, $translate) {
 			$scope.TaxonTypeaheadService = TaxonTypeaheadService;
 			$scope.TaxonRanks = TaxonRank.query();
 			$scope.selectedTaxonAuthor = "";
@@ -150,8 +150,8 @@ angular.module('svampeatlasApp')
 					}
 				}).$promise.then(function(taxa) {
 
-					if (taxa.length === 1) {
-						$scope.showConfirm(taxa[0]);
+					if (taxa.length > 0) {
+						$scope.showConfirm(taxa);
 						/*
 						$state.go('taxonlayout-taxon', {
 							id: taxa[0]._id
@@ -187,10 +187,8 @@ angular.module('svampeatlasApp')
 					}
 				}).$promise.then(function(taxa) {
 
-					if (taxa.length === 1) {
-						$state.go('taxonlayout-taxon', {
-							id: taxa[0]._id
-						})
+					if (taxa.length > 0) {
+						$scope.showConfirm(taxa);
 						
 					} else if (taxa.length === 0) {
 							
@@ -227,14 +225,32 @@ angular.module('svampeatlasApp')
 
 			};
 			
-		    $scope.showConfirm = function(tx) {
-		       // Appending dialog to document.body to cover sidenav in docs app
-		       var confirm = $mdDialog.confirm()
+		    $scope.showConfirm = function(taxa) {
+				
+			var tx = taxa[0];
+			var confirm;
+			if(taxa.length === 1){
+		       confirm = $mdDialog.confirm()
 		             .title('Taxon already in our database:')
 		             .content('<em>'+tx.FullName+'</em><br> Open record?')
 		             .ariaLabel('Taxon exists')
 		             .ok('Yes')
 		             .cancel('No');
+				 } else {
+					 var taxonlist = "";
+					 for(var i=0; i< taxa.length; i++){
+					 	 taxonlist += "<li><em>"+taxa[i].FullName+"</em>"+" <strong>"+taxa[i].RankName+"</strong></li>";
+					 }
+					taxonlist= '<ul>'+taxonlist+'</ul><br><strong>Index Fungorum id´s should be unique, please review these taxa.</strong><br> Open first taxon?';
+		       confirm = $mdDialog.confirm()
+		             .title('More than one taxon already in our database with this Index Fungorum record:')
+		             .content(taxonlist)
+		             .ariaLabel('Taxon exists')
+		             .ok('Yes')
+		             .cancel('No');
+				 }
+					 
+					 
 		       $mdDialog.show(confirm).then(function() {
 				$state.go('taxonlayout-taxon', {
 					id: tx._id
@@ -242,6 +258,8 @@ angular.module('svampeatlasApp')
 		       }, function() {
 		         return false;
 		       });
+			   
+			   
 		     };
 
 		}

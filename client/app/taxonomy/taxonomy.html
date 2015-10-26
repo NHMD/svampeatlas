@@ -4,30 +4,111 @@
 <div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>	
-
-<div class="col-md-12" >
-	<div ng-show="!checkboxes.OrphantTaxa">
-	<p translate class="md-body-2">Find species, varietes and forms under selected higher taxa:</p>
+			
+				<div class="panel-group" role="tablist" aria-multiselectable="false" start-collapsed="true" ng-model="extendedSearchIsOn" bs-collapse>
+			    	  <!-- ########################################-->
+			    	  <div class="panel panel-default">
+			    	    <div class="panel-heading" role="tab">
+			    	      <h4 class="panel-title">
+			    	        <a bs-collapse-toggle>
+			    	       <i class="fa fa-search"></i> {{'Extended search' | translate}}
+			    	        </a>
+			    	      </h4>
+			    	    </div>
+			    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			    	      <div class="panel-body">
+							  <div class="col-md-12" ng-show="!checkboxes.OrphantTaxa">
 	
-    <md-chips ng-model="selectedHigherTaxa" md-autocomplete-snap md-require-match="true">
+							  	
+		
+							  		
+		
+							  	<p translate class="md-title">Find species, varietes and forms under selected higher taxa:</p>
 	
-      <md-autocomplete
-	  	md-min-length="3"
-		md-no-cache="true"
-          md-selected-item="selectedItem"
-          md-search-text="searchText"
-          md-items="item in querySearch(searchText)"
-          md-item-text="item.FullName"
-          placeholder="{{'Enter higher taxon' | translate}}">
-        <span md-highlight-text="searchText">{{item.FullName}}</span>
-      </md-autocomplete>
-      <md-chip-template>
-        <span>
-          <strong>{{$chip.FullName}}</strong>
+							      <md-chips ng-model="selectedHigherTaxa" md-autocomplete-snap md-require-match="true">
+	
+							        <md-autocomplete
+							  	  	md-min-length="3"
+							  		md-no-cache="true"
+							            md-selected-item="selectedItem"
+							            md-search-text="searchText"
+							            md-items="item in querySearch(searchText)"
+							            md-item-text="item.FullName"
+							            placeholder="{{'Enter higher taxon' | translate}}">
+							          <span md-highlight-text="searchText">{{item.FullName}}</span>
+							        </md-autocomplete>
+							        <md-chip-template>
+							          <span>
+							            <strong>{{$chip.FullName}}</strong>
          
-        </span>
-      </md-chip-template>
-    </md-chips>
+							          </span>
+							        </md-chip-template>
+							      </md-chips>
+							 
+							 
+							  </div>
+							  <div class="col-md-12 taxonomy-query-section">
+							  	
+							      <md-chips ng-model="attributeConditions" ng-show="attributeConditions.length > 0" readonly="false">
+							           <md-chip-template>
+							             <strong>{{$chip.readable}}</strong>
+							           </md-chip-template>
+							         </md-chips>
+							   <md-content flex layout-padding>	
+							  <p  class="md-title taxonomy-query-section-header">{{'Add search terms on attributes' | translate}}:</p>
+
+							  <div layout layout-sm="column">
+
+	
+							          <md-input-container>
+							             <label>Attribute name</label>
+							             <md-select ng-model="attributequery.selectedAttribute">
+							               <md-option ng-repeat="(key, value) in taxonattributes" value="{{key}}">
+							                 {{key}}
+							               </md-option>
+							             </md-select>
+							           </md-input-container>
+							          <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute) !== 'boolean' && attributequery.selectedAttribute !== undefined">
+							             <label>Operator</label>
+							             <md-select ng-model="attributequery.selectedOperator">
+							               <md-option ng-repeat="operator in operators" value="{{operator}}">
+							                 {{operator}}
+							               </md-option>
+							             </md-select>
+							           </md-input-container>
+							           <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute) === 'text' || getAttributeType(attributequery.selectedAttribute) === 'number'">
+							  			<label>Query</label>
+							  			      <input ng-model="attributequery.value" type="text">
+							            </md-input-container>
+							           <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute) === 'date'">
+							  			<label>Date</label>
+							  			      <input ng-model="attributequery.value" type="text" ng-model="selectedDate" data-container="body" data-date-format="yyyy-MM-dd" name="date" autoclose="0" bs-datepicker>
+							            </md-input-container>
+		
+
+							  		  <md-input-container ng-if=" getAttributeType(attributequery.selectedAttribute) === 'boolean'">
+							  	<md-switch  ng-model="attributequery.value" aria-label="{{attributequery.selectedAttribute}} checked">
+	
+	          
+							  	        </md-switch>
+							  </md-input-container>
+
+							  		  <md-input-container ng-if="attributeQueryIsValid()">
+							  	<md-button class="md-raised md-primary" ng-click="addCondition()">Add condition</md-button>
+							  </md-input-container>
+							   </md-content>
+							 
+							  </div>
+								
+			    	      </div>
+			    	    </div>
+			    	  </div>
+			    	  <!-- ########################################-->
+				  </div>
+  
+
+
+			
 </div>
 	<md-switch class="col-md-2" ng-model="checkboxes.acceptedTaxaOnly" aria-label="Only accepted taxa" >
 	         {{ 'Omit synonyms' | translate}}
@@ -43,7 +124,7 @@
 			
 <div class="col-md-4"><h3 class="md-headline pull-right">{{'Found' | translate}} {{taxonCount}} taxa</h3></div>
 <md-progress-linear class="col-md-12" md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
-<table st-persist="taxon_search_table" class="table taxontable" st-pipe="callServer" st-table="displayed">
+<table st-persist="taxon_search_table" class="table taxonomy-table" st-pipe="callServer" st-table="displayed">
 	<thead>
 	<tr>
 		<th st-sort="_id" st-ratio="10">DkIndexNr</th>

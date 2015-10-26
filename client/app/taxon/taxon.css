@@ -9,33 +9,33 @@ table.parent-taxon-table {
 	margin-top: 10px;
 }
 
-table * {
+.taxonhistorylog table * {
     box-sizing: inherit;
     -moz-box-sizing: inherit;
 }
 
-thead {
+.taxonhistorylog thead {
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
 
-tbody {
+.taxonhistorylog tbody {
     overflow-y: scroll;
     display: inline-block;
 }
 
-thead > tr, tbody > tr, tfoot > tr {
+.taxonhistorylog thead > tr,.taxonhistorylog tbody > tr,.taxonhistorylog tfoot > tr {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
 }
 
-thead, tfoot {
+.taxonhistorylogthead, .taxonhistorylog tfoot {
     flex-shrink: 0;
 }
 
-th, tbody td {
+.taxonhistorylog th,.taxonhistorylog tbody td {
     width: 20%; /* this can vary */
     overflow-x: hidden;
     text-overflow: ellipsis;
@@ -49,11 +49,11 @@ table.taxonhistorylog th, table.taxonhistorylog tbody td {
     display: inline-block;
 }
 
-tfoot {
+.taxonhistorylog tfoot {
     display: inline-block;
 }
 
-tfoot td {
+.taxonhistorylog tfoot td {
     width: 100%;
     display: inline-block;
 }

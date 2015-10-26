@@ -1,10 +1,83 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('TaxonomyCtrl',['$scope','Taxon', '$timeout', '$q', 'TaxonTypeaheadService','$translate', function ($scope, Taxon,$timeout, $q, TaxonTypeaheadService, $translate) {
-   
-
-
+  .controller('TaxonomyCtrl',['$scope','Taxon', 'Datamodel','$timeout', '$q', 'TaxonTypeaheadService','$translate', function ($scope, Taxon, Datamodel,$timeout, $q, TaxonTypeaheadService, $translate) {
+ 
+	  
+	   $scope.taxonattributes = Datamodel.get({id: 'TaxonAttributes'});
+	   $scope.attributequery = {dateValue: new Date()};
+	  var attConds = localStorage.getItem('taxonomy_attribute_conditions');
+	    $scope.attributeConditions = (attConds) ? JSON.parse(attConds) :[];
+  	  var higherTaxa = localStorage.getItem('taxonomy_selected_higher_taxa');
+  	      $scope.selectedHigherTaxa = (higherTaxa) ? JSON.parse(higherTaxa) : [];
+	 
+  		  $scope.extendedSearchIsOn = ($scope.selectedHigherTaxa.length >0 || $scope.attributeConditions.length > 0) ? 0 : -1;
+	  
+	  
+	  
+	   $scope.getOperators = function(type){
+	   	
+		   if(type === 'text'){
+			   return ['contains', 'starts with'];
+		   }
+		   else if (type === 'number' || type === 'date'){
+		   	return ['equals', 'greater than', 'less than']
+		   } else if (type === 'boolean'){
+		   	return ['equals']
+		   }
+		
+	   }
+	   
+	   $scope.getAttributeType = function(attr){
+		   var type = ($scope.taxonattributes[attr]) ? $scope.taxonattributes[attr].type : undefined;
+		   if(!type) {
+			   return undefined;
+		   }
+		   if(type === "BIT(1)" || type === "TINYINT(1)"){
+			   return 'boolean';
+		   } else if(type === "DATETIME" || type === "TIMESTAMP"){
+			   return 'date';
+		   } else if(type && type.indexOf('INT') > -1){
+		   		return 'number'
+		   } else {
+		   	return 'text'
+		   }		   
+	   };
+	   $scope.attributeQueryIsValid = function(){
+		   return $scope.attributequery.selectedAttribute !== undefined && $scope.attributequery.selectedOperator !== undefined && $scope.attributequery.value !== undefined;
+	   }
+	   
+	   $scope.$watch('attributequery.selectedAttribute', function(newval, oldval){
+		   if(newval && newval !== oldval){
+		   	$scope.operators = $scope.getOperators($scope.getAttributeType(newval))
+		   }
+		   if($scope.getAttributeType(newval) === 'boolean'){
+			   $scope.attributequery.selectedOperator = 'equals';
+		   }
+	   });
+	   
+	   $scope.addCondition = function(){
+		   var cond = {};
+		   if($scope.attributequery.selectedOperator === "contains"){
+			   
+			   cond[$scope.attributequery.selectedAttribute] = {$like: '%'+$scope.attributequery.value+'%'};
+			   
+		   } else if($scope.attributequery.selectedOperator === "starts with"){
+			    cond[$scope.attributequery.selectedAttribute] = {$like: $scope.attributequery.value+'%'}
+		   } else if($scope.attributequery.selectedOperator === "equals"){
+			    cond[$scope.attributequery.selectedAttribute] = {$eq: $scope.attributequery.value}
+		   } else if($scope.attributequery.selectedOperator === "greater than"){
+			    cond[$scope.attributequery.selectedAttribute] = {$gt: $scope.attributequery.value}
+		   } else if($scope.attributequery.selectedOperator === "less than"){
+			   cond[$scope.attributequery.selectedAttribute] = {$lt: $scope.attributequery.value}
+		   }
+		   $scope.attributeConditions.push({readable: $scope.attributequery.selectedAttribute+" "+$scope.attributequery.selectedOperator+" "+"'"+$scope.attributequery.value+"'", dbquery : cond});
+		localStorage.setItem('taxonomy_attribute_conditions', JSON.stringify($scope.attributeConditions))
+		$scope.callServer(JSON.parse(localStorage.taxon_search_table));	
+		   $scope.attributequery = {dateValue: new Date()};
+	   }
+	   
+	   
 	    $scope.displayed = [];
 		var localStCheckBoxes = localStorage.getItem('taxonomy_search_checkboxes');
 		$scope.checkboxes = (localStCheckBoxes) ? JSON.parse(localStCheckBoxes) : {};
@@ -24,9 +97,7 @@ angular.module('svampeatlasApp')
         return results;
       }
   
-	  var higherTaxa = localStorage.getItem('taxonomy_selected_higher_taxa');
-	      $scope.selectedHigherTaxa = (higherTaxa) ? JSON.parse(higherTaxa) : [];
-	  
+	
 	     
 	    $scope.$watchCollection('selectedHigherTaxa', function(newVal, oldVal){
 			
@@ -48,6 +119,16 @@ angular.module('svampeatlasApp')
 
 	    })
 	   
+		$scope.$watchCollection('attributeConditions', function(newVal, oldVal){
+			
+			if(newVal){
+				localStorage.setItem('taxonomy_attribute_conditions', JSON.stringify(newVal));
+				$scope.callServer(JSON.parse(localStorage.taxon_search_table));	
+			}
+			
+		});
+		
+		
 		$scope.$watch('checkboxes.acceptedTaxaOnly', function(newVal, oldVal){
 			
 			if(newVal !== oldVal){
@@ -126,7 +207,22 @@ angular.module('svampeatlasApp')
 			
   			attributesWhere = _.merge({}, attributesWhere, {PresentInDK : true});
   		};
-		  
+		 var attConds = localStorage.getItem('taxonomy_attribute_conditions');
+		 
+		 if(attConds){
+			 var parsedConds = JSON.parse(attConds);
+			 if(!attributesWhere){
+				 attributesWhere = {};
+				 
+			 } ;
+				attributesWhere.$and =  _.map(parsedConds, function(c){
+		 		return JSON.stringify(c.dbquery)
+		 	});
+		
+			
+		 	
+		 }
+		 
 		   var include = [{
 				model: "TaxonAttributes",
 				as: "attributes",

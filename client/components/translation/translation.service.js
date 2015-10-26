@@ -15,7 +15,8 @@ angular.module('svampeatlasApp')
 		  'biotrof parasit' : 'biotroph parasite',
 		  'symbiotisk med insekter': 'symbiotic with insects',
 		  'endofyt i alger': 'endofyte in algae',
-		  'endofyt i planter': 'endofyte in plants'
+		  'endofyt i planter': 'endofyte in plants',
+		  'nedbryder (inkl. nekrotrof)' : 'decomposer (incl. necrotroph)'
 	    });
 	  
   	  $translateProvider.translations('dk', {
@@ -54,7 +55,35 @@ angular.module('svampeatlasApp')
 		  'Nature types': 'Naturtyper',
 		  'Images': 'Billeder',
 		  'Parent taxon' : 'Forældre-taxon',
-		  'Change parent taxon': 'Ændr forældre-taxon'
+		  'Change parent taxon': 'Ændr forældre-taxon',
+		  'Make taxon synonym of:': 'Gør taxon til synonym til:',
+		  'Possible synonym!' : 'Muligt synonym!',
+		  'This taxon may be a synonym of': 'Dette taxon er måske et synonym til',
+		  'this taxon' : 'dette taxon',
+		  'on Index Fungorum.': 'på Index Fungorum.',
+		  'Make into synonym': 'Gør til synonym',
+		  'Full taxon name' : 'Fulde taxon navn',
+		  'Enter taxon name/epithet' : 'Skriv taxon navn/epitet',
+		  'View on Index Fungorum' : 'Se på Index Fungorum',
+		  'Suggested parent taxon' : 'Forelået forældre-taxon',
+		  'Please review this and change it if neccesary' : 'Dette bør reviewes og ændres hvis nødvendigt',
+		  'No parent taxon selected': 'Intet forældre-taxon valgt',
+		  'Please select a parent taxon before saving' : 'Vælg et forældre-taxon for du gemmer',
+		  'Set parent taxon' : 'Brug forældre-taxon',
+		  'Child taxa': 'Børne-taxa',
+		  'accepted': 'accepteret',
+		  'synonyms': 'synonymer',
+		  'Images' : 'Billeder',
+		  'Nature types' : 'Naturtyper',
+		  'History log' : 'Historik',
+		  'Usage' : 'Brug',
+		  'The preferred way of creating a new taxon is importing it from' : 'Den foretrukne måde at oprette et nyt taxon på, er at importere det fra',
+		  'Alternatively it can be imported from' : 'Alternativt kan det importeres fra',
+		  'There can be reasons to create taxa manually, for example super species and super genera should always be created using the \'Manual\' option' : 'Der kan være gode grunde til at oprette taxa manuelt, f.eks skal superarter (s. lato, clades etc) oftest oprettes ved klik på \'Manuel\'',
+		  'Manual' : 'Manuel',
+		  'Choose parent taxon' : 'Vælg forældre-taxon',
+		  'Add search terms on attributes': 'Tilføj søgetermer på attributter',
+		  'Extended search': 'Udvidet søgning'
   	    });
 	 
 	
