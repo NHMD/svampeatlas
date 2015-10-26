@@ -9,6 +9,7 @@ var path = require('path');
 
 module.exports = function(app) {
 
+	 app.use('/api/datamodels', require('./api/mysql/datamodel'));
   // Insert routes below
   app.use('/api/taxonlogs', require('./api/mysql/TaxonLog'));
   app.use('/api/taxonimages', require('./api/mysql/TaxonImages'));

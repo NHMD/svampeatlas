@@ -8,23 +8,23 @@
 	<div class="btn-group" ng-model="dataSource" bs-radio-group>
 	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="IndexFungorum"> Index Fungorum</label>
 	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="MycoBank"> Mycobank</label>
-	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="Manual"> Manual</label>
+	  <label class="btn btn-default"><input type="radio" class="btn btn-default" value="Manual"> {{'Manual' | translate}}</label>
 
 	</div>
 	</div>
 	<div class="col-md-8">
-	<div class="alert alert-warning pull-right" role="alert" ><strong>Usage: </strong> The preferred way of importing a new taxon is importing it from <strong>Index Fungorum </strong>. Alternatively it can be imported from <strong>MycoBank</strong>. There can be reasons to create taxa manually, for example super species and super genera should always be created using the 'Manual' option.</div>
+	<div class="alert alert-warning pull-right" role="alert" ><strong>{{'Usage' | translate}}: </strong> {{'The preferred way of creating a new taxon is importing it from' | translate}} <strong>Index Fungorum </strong>. Alternatively it can be imported from <strong>MycoBank</strong>. {{'There can be reasons to create taxa manually, for example super species and super genera should always be created using the \'Manual\' option' | translate}}.</div>
 	<hr>
 </div>
 </div>
 
 <div class="col-md-12" ng-show="dataSource && dataSource === 'Manual'">
 <div class="col-md-5"> 
-	<h4>Choose parent taxon:</h4>
+	<h4>{{'Choose parent taxon' | translate}}:</h4>
 					<form>
-						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getTaxon($viewValue)" data-placement="auto" placeholder="Enter epithet or higher taxon name" bs-typeahead>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.selectedParentTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getTaxon($viewValue)" data-placement="auto" placeholder="{{'Enter taxon name/epithet' | translate}}" bs-typeahead>
 					</form>	
-					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
+					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>{{'Possible synonym!' | translate}} </strong> {{'This taxon may be a synonym of' | translate}} <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">{{'this taxon' | translate}}</a> {{'on Index Fungorum' | translate}} 
 
 					</div>
 					<table ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon.constructor.name === 'Resource'" class="table parent-taxon-table">
