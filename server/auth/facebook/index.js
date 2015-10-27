@@ -19,7 +19,9 @@ router
   //  failureRedirect: '/signup',
 	  failureRedirect: '/login?fberror=true',
     session: false
-  }))
+  },
+ auth.setTokenCookie
+))
 
   .get('/callback', auth.addAuthHeaderFromCookie(), auth.appendUser(), passport.authorize('facebook', {
  //   failureRedirect: '/signup',

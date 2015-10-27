@@ -382,6 +382,16 @@ module.exports = function (grunt) {
             'package.json',
             'server/**/*'
           ]
+        },{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.client %>',
+          dest: '<%= yeoman.dist %>/client',
+          src: [
+
+            'assets/images/flags/flags/shiny/16/Denmark.png',
+			 'assets/images/flags/flags/shiny/16/United-Kingdom.png'
+          ]
         }]
       },
       styles: {

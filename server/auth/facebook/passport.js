@@ -10,7 +10,6 @@ exports.setup = function(User, config) {
   },
   function(req, accessToken, refreshToken, profile, done) {
 	  
-  
 	  if(req.user){
 	  	
 	      User.update({ facebook : profile.id}, {where: {

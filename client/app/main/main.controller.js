@@ -2,8 +2,7 @@
 
 angular.module('svampeatlasApp')
   .controller('MainCtrl', function($scope, $http, $translate ) {
-   
-	
+   	
    /*
     $scope.awesomeThings = [];
 
