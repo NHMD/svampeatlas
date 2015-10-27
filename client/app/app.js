@@ -22,7 +22,8 @@ angular.module('svampeatlasApp', [
 	      // Allow same origin resource loads.
 	      'self',
 	      // Allow loading from our assets domain.  Notice the difference between * and **.
-	      'http://svampe.dk/**'
+	      'http://svampe.dk/**',
+		  'https://www.facebook.com/'
 	    ]);
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
@@ -44,7 +45,7 @@ angular.module('svampeatlasApp', [
       request: function(config) {
         config.headers = config.headers || {};
         if ($cookies.get('token')) {
-          config.headers.Authorization = 'Bearer ' + $cookies.get('token');
+          config.headers.Authorization = "Bearer " + $cookies.get('token');
         }
         if ($cookies.get('plutoftoken')) {
           config.headers.PlutoFAuthorization =  $cookies.get('plutoftoken');

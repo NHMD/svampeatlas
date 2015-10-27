@@ -23,7 +23,6 @@ function isAuthenticated() {
       // allow access_token to be passed through query parameter as well
       if (req.query && req.query.hasOwnProperty('access_token')) {
         req.headers.authorization = 'Bearer ' + req.query.access_token;
-		console.log("XXXXXXXXX TOKEN FOUND")
       }
       validateJwt(req, res, next);
     })
@@ -146,7 +145,7 @@ function setTokenCookie(req, res) {
     });
   }
   var token = signToken(req.user._id, req.user.role);
-  res.cookie('token', JSON.stringify(token));
+  res.cookie('token', token);
   res.redirect('/');
 }
 

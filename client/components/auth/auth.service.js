@@ -20,6 +20,7 @@ angular.module('svampeatlasApp')
 	    }
 	}, 5000)
 	*/
+ 
     if ($cookies.get('token')) {
       currentUser = User.get();
     }
@@ -55,6 +56,23 @@ angular.module('svampeatlasApp')
         }.bind(this));
       },
 
+      loginOauth: function(provider, callback) {
+        return $http.get('/auth/'+provider)
+        .then(function(res) {
+			var exp = new Date();
+			exp.setHours(exp.getHours() + 5);
+          $cookies.put('token', res.data.token, {expires: exp});
+		
+          currentUser = User.get();
+		 
+          safeCb(callback)();
+          return res.data;
+        }, function(err) {
+          this.logout();
+          safeCb(callback)(err.data);
+          return $q.reject(err.data);
+        }.bind(this));
+      },
       /**
        * Delete access token and user info
        */
