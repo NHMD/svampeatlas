@@ -81,10 +81,11 @@ exports.TaxonNodes = function(req, res) {
 };
 
 exports.SpeciesHypothesis = function(req, res) {
-	console.log(req.headers)
+	
 	var access_token = req.headers.plutofauthorization;
 	client.methods.taxonnodes({headers: {Authorization: "Bearer "+access_token}, parameters: {search_query : req.query.search_query, filter_type:"exact"}},function(taxon,response){
 		
+	
 		if(taxon.results && taxon.results.length > 0) {
 		
 		var access_token = req.headers.plutofauthorization;
@@ -92,7 +93,7 @@ exports.SpeciesHypothesis = function(req, res) {
 			return res.status(response.statusCode).json(data);
 		});
 	   } else {
-	   		return res.status(response.statusCode);
+	   		return res.send(404);
 	   }
 	    // raw response 
 

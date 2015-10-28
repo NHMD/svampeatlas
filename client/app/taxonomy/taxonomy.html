@@ -4,7 +4,7 @@
 <div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>	
-			
+			<div class="row">
 				<div class="panel-group" role="tablist" aria-multiselectable="false" start-collapsed="true" ng-model="extendedSearchIsOn" bs-collapse>
 			    	  <!-- ########################################-->
 			    	  <div class="panel panel-default">
@@ -106,10 +106,10 @@
 			    	  <!-- ########################################-->
 				  </div>
   
- </div>
+ </div> 
 
 			
-
+<div class="row"><div class="col-md-12">
 	<md-switch class="col-md-2" ng-model="checkboxes.acceptedTaxaOnly" aria-label="Only accepted taxa" >
 	         {{ 'Omit synonyms' | translate}}
 	        </md-switch>
@@ -163,6 +163,9 @@
 	</tr>
 	</tfoot>
 </table>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="col-md-12">

@@ -836,7 +836,7 @@ exports.addSynonym = function(req, res) {
 			accepted_id: req.params.id
 		} /* set attributes' value */ , {
 			where: {
-				accepted_id: synonymTaxon._id
+				$or: [{accepted_id: synonymTaxon._id}, {_id: synonymTaxon._id}]
 			}
 		} /* where criteria */ , {
 			transaction: t
