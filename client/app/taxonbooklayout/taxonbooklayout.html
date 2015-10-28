@@ -59,10 +59,11 @@
 
 			</div>
 			
-			<h4 ng-show="taxon._id !== undefined"><strong translate>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div ng-show="taxon.RankID > 5000">
+			<h4 ng-show="taxon._id !== undefined"><strong translate>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div  ng-show="taxon._id && taxon.RankID > 5000" layout="row" >
     <md-checkbox  ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 	{{'Present in DK' | translate}}
-  </md-checkbox></div>
+  </md-checkbox>
+</div>
 			
 			
 			<p><small><em>{{taxon.SystematicPath}}</em></small></p>
@@ -183,17 +184,21 @@
 				- <em ng-class="taxon.attributes.bogtekst_gyldendal.length < 550 || (taxon.attributes.bogtekst_gyldendal.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{getBogtekstLength()}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
 			</div>
 			</md-whiteframe>
-			<div class="col-md-12">
-			<md-switch class="col-md-7" ng-model="taxon.attributes.bog_Gyldendal_art_medtages" aria-label="Only accepted taxa">
+			<div class="col-md-12" layout="row">
+			<md-switch  ng-model="taxon.attributes.bog_Gyldendal_art_medtages" aria-label="Medtages i Noreuropas svampe" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			          Medtages i Noreuropas svampe
 			        </md-switch>
 			
-			<md-switch  class="col-md-3" ng-model="taxon.attributes.Bogtekst_stor_art" aria-label="Only DK taxa">
+			<md-switch   ng-model="taxon.attributes.Bogtekst_stor_art" aria-label="Stor art" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			          Stor art
 			        </md-switch>
+					<md-switch   ng-model="taxon.attributes.bog_gyldendal_korrekturlaest" aria-label="Korrekturlæst" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+					          Korrekturlæst
+					        </md-switch>
 				</div>
 				<div>
-					 <label class="control-label" for="bogtekst_gyldendal">Bogtekst Gyldendal </label> - <em ng-class="taxon.attributes.bogtekst_gyldendal.length < 550 || (taxon.attributes.bogtekst_gyldendal.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{taxon.attributes.bogtekst_gyldendal.length}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
+					 <label class="control-label" for="bogtekst_gyldendal">Bogtekst Gyldendal </label> - <em ng-class="taxon.attributes.bogtekst_gyldendal.length < 550 || (taxon.attributes.bogtekst_gyldendal.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{taxon.attributes.bogtekst_gyldendal.length}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em> 
+					 
 				    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.bogtekst_gyldendal" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 				        <div class="x-editable-texarea">{{ taxon.attributes.bogtekst_gyldendal || 'n/a' }}</div>
 				      </a>

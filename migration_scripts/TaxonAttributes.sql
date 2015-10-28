@@ -34,7 +34,7 @@ ADD COLUMN `BeskrivelseUK` TEXT,
  ADD COLUMN `bogtekst_gyldendal` text DEFAULT NULL,
  ADD COLUMN `bog_Gyldendal_art_medtages` boolean NOT NULL DEFAULT 0,
  ADD COLUMN `Bogtekst_stor_art` boolean NOT NULL DEFAULT 0;
-
+ALTER TABLE `TaxonAttributes` ADD `bog_gyldendal_korrekturlaest` TINYINT(1) NOT NULL DEFAULT '0' ;
 UPDATE TaxonAttributes t, TaxonBase tb SET t.spiselighedsrapport = tb.spiselighedsrapport, t.BeskrivelseUK = tb.BeskrivelseUK, t.bogtekst_faenologi_udbredelse=tb.bogtekst_faenologi_udbredelse, t.bogtekst_gyldendal=tb.bogtekst_gyldendal,  t.bog_Gyldendal_art_medtages=tb.bog_Gyldendal_art_medtages, t.Bogtekst_stor_art=tb.Bogtekst_stor_art    WHERE tb.DkIndexNumber = t.taxon_id;
 select count(*) from TaxonAttributes where spiselighedsrapport IS NOT NULL and spiselighedsrapport <> "";
 select count(*) from TaxonAttributes where BeskrivelseUK IS NOT NULL and BeskrivelseUK <> "";

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonRedListDataCtrl', ['$scope', 'Taxon',  '$state' ,'$stateParams', '$timeout', 'TaxonRedListData', 'ErrorHandlingService',
-		function($scope, Taxon, $state, $stateParams, $timeout, TaxonRedListData, ErrorHandlingService) {
+	.controller('TaxonRedListDataCtrl', ['$scope', 'Taxon',  '$state' ,'$stateParams', '$timeout', 'TaxonRedListData', 'ErrorHandlingService','$translate',
+		function($scope, Taxon, $state, $stateParams, $timeout, TaxonRedListData, ErrorHandlingService, $translate) {
 		console.log("redlist")
 			$scope.Taxon = Taxon;
 			$scope.stateParams = $stateParams;
