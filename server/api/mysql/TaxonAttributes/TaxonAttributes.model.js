@@ -92,6 +92,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
 		defaultValue: false
 	},
+	bog_gyldendal_korrekturlaest: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+		defaultValue: false
+	},
     DKnavn: {
       type: DataTypes.STRING,
       allowNull: true,
