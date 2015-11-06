@@ -84,7 +84,7 @@
 			      <a href="#" id="oekologi" editable-textarea="taxon.attributes.oekologi" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			          <div class="x-editable-texarea">{{ taxon.attributes.oekologi || 'n/a' }}</div>
 			        </a>
-					 <label class="control-label" for="bemaerkning">Bemærkning</label>
+					 <label class="control-label" for="bemaerkning">Note (ekstern)</label>
 			        <a href="#" id="bemaerkning" editable-textarea="taxon.attributes.bemaerkning" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			            <div class="x-editable-texarea">{{ taxon.attributes.bemaerkning || 'n/a' }}</div>
 			          </a>
@@ -96,6 +96,10 @@
 			        <a href="#" id="DK_reference" editable-textarea="taxon.attributes.DK_reference" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 			            <div class="x-editable-texarea">{{ taxon.attributes.DK_reference || 'n/a' }}</div>
 			          </a>
+ 					 <label class="control-label" for="internalNote">Intern note</label>
+ 			        <a href="#" id="internalNote" editable-textarea="taxon.attributes.internalNote" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+ 			            <div class="x-editable-texarea">{{ taxon.attributes.internalNote || 'n/a' }}</div>
+ 			          </a>
 		
 			</div>
 			<div class="col-md-1" ng-show="taxon._id !== undefined">
@@ -171,11 +175,12 @@
 							 <button class="btn btn-danger" ng-click="funIndexModal.show()" ng-show="!taxon.FunIndexRecord">Attach FunIndex record</button> 
 							<table ng-show="taxon.FunIndexRecord" class="table parent-taxon-table">
 							  	<thead>
-							  	<tr class="parent-taxon-table">
+							  	<tr class="parent-taxon-table" width="100%">
 		
-							  		<th st-ratio="20" class="parent-taxon-table"></th>
-							  		<th st-ratio="30" class="parent-taxon-table"></th>
-									<th st-ratio="50" class="parent-taxon-table"> <button class="btn btn-danger" ng-click="detachFromFunRecord()">Detach FunIndex record</button></th>
+							  		<th st-ratio="80" ></th>
+									<th st-ratio="20" > 
+									<button class="btn btn-danger" ng-click="detachFromFunRecord()">Detach FunIndex record</button>
+								</th>
 							  	</tr>
 							  
 							  	</thead>
