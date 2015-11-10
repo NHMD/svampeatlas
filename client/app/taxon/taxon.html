@@ -317,6 +317,29 @@
 			  	    <div class="panel-heading" role="tab">
 			  	      <h4 class="panel-title">
 			  	        <a bs-collapse-toggle>
+			  	          {{'Tags' | translate}} ( {{taxon.naturtyper.length}} )
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+						  
+						 <div ng-repeat="tag in taxonomyTags">
+							 
+						     
+						        <md-switch  ng-model="tag.isChecked"  ng-change="addOrRemoveTag(tag)">
+						        {{tag.tagname}}
+						      </md-switch>
+						    </div>
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
 			  	          Vernacular names
 			  	        </a>
 			  	      </h4>
@@ -505,7 +528,7 @@
 		  	    </div>
 		  	  </div>
 		  	  <!-- ########################################-->
-				
+	  	 
 				
 			
 	</div>		

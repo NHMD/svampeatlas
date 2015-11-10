@@ -165,7 +165,7 @@ module.exports = function(sequelize, DataTypes) {
     	timestamps: true,
     	freezeTableName: true,
     	classMethods: {
-		
+
     		associate: function(models) {
 		
     			models.Taxon
@@ -213,14 +213,17 @@ module.exports = function(sequelize, DataTypes) {
     					as: "acceptedTaxon"
     		
 					});
-					/*
-    		models.TaxonAttributes
-    				.belongsTo(models.Taxon, {
-    					foreignKey: "taxon_id" //,
-    					//as: "taxon"
-    				});
+					models.TaxonRedListData.belongsTo(models.Taxon, {
+					  
+					  foreignKey: '_id',
+						as: 'taxon'
+					});
 					
-					*/
+			models.Taxon
+    				.hasMany(models.TaxonRedListData, {
+    					foreignKey: "taxon_id",
+    					as: "redlistdata"
+    				});	
 			
 					
     		models.Taxon
@@ -250,7 +253,34 @@ module.exports = function(sequelize, DataTypes) {
 					  through: models.TaxonErnaeringsStrategi,
 					  foreignKey: 'ernaeringsstrategi_id'
 					});
-			
+					
+					models.Taxon.belongsToMany(models.TaxonomyTag, {
+					  through: models.TaxonTag,
+					  foreignKey: 'taxon_id',
+					as: 'tags'
+					});
+					models.TaxonomyTag.belongsToMany(models.Taxon, {
+					  through: models.TaxonTag,
+					  foreignKey: 'tag_id',
+						as: 'tags'
+					});
+					
+					// this is a Hack !  It seems to be impossible to build inner joins dynamically with sequelize. Therefore 25 associations are build to be able to query multiple tags at once
+					for(var i=0; i< 25; i++){
+						models.Taxon.belongsToMany(models.TaxonomyTag, {
+						  through: models.TaxonTag,
+						  foreignKey: 'taxon_id',
+						as: 'tags'+i
+						});
+						models.TaxonomyTag.belongsToMany(models.Taxon, {
+						  through: models.TaxonTag,
+						  foreignKey: 'tag_id',
+							as: 'tags'+i
+						});
+					}
+				
+				
+					
 				
     		}
 		

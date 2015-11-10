@@ -7,7 +7,12 @@ angular.module('svampeatlasApp')
 	  return $resource('/api/taxonredlistdata/:id', { id: '@_id' }, {
 	      update: {
 	        method: 'PUT' // this method issues a PUT request
-	      }
+	      },
+		'getCategories': {
+			method: 'GET',
+			url: '/api/taxonredlistdata/categories',
+			isArray: true
+		}
 	    });
    
   });

@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'ErrorHandlingService', '$mdDialog', '$translate',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, ErrorHandlingService, $mdDialog, $translate) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags) {
 			$scope._ = _;
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
-
+			$scope.taxonomyTags = TaxonomyTags.query();
 			$scope.changeRankAndSave = function(taxon) {
 				// If the taxon was a species or genus we are changing it to superspecies and therefore deattacing from fun, otherwise we are just canging rank level
 				if(taxon.RankID === 5000 || taxon.RankID === 10000){
@@ -189,12 +189,19 @@ angular.module('svampeatlasApp')
 					})
 				});
 
-				$q.all([$scope.taxon.$promise, $scope.natureTypes.$promise]).then(function() {
+				$q.all([$scope.taxon.$promise, $scope.natureTypes.$promise, $scope.taxonomyTags.$promise]).then(function() {
 
 					for (var i = 0; i < $scope.taxon.naturtyper.length; i++) {
 
 						_.find($scope.natureTypes, function(nt) {
 							return nt._id === $scope.taxon.naturtyper[i]._id;
+						}).isChecked = true;
+					}
+					
+					for (var i = 0; i < $scope.taxon.tags.length; i++) {
+
+						_.find($scope.taxonomyTags, function(tag) {
+							return tag._id === $scope.taxon.tags[i]._id;
 						}).isChecked = true;
 					}
 
@@ -392,6 +399,43 @@ angular.module('svampeatlasApp')
 					}).
 					catch (function(err) {
 						type.isChecked = !type.isChecked
+					})
+
+				}
+
+			}
+			
+			$scope.taxonHasTag = function(tagId) {
+
+				return _.find($scope.taxon.tags, function(tag) {
+					return tag._id === tagId;
+				});
+			};
+			
+			$scope.addOrRemoveTag = function(tag) {
+
+				if (tag.isChecked && !$scope.taxonHasTag(tag._id)) {
+					// create the type
+					Taxon.addTag({
+						id: $scope.taxon._id
+					}, tag).$promise.then(function() {
+						$scope.taxon.tags.push(tag)
+					}).
+					catch (function(err) {
+						tag.isChecked = !tag.isChecked
+					})
+				} else if (!tag.isChecked && $scope.taxonHasTag(tag._id)) {
+					// delete the type
+					Taxon.deleteTag({
+						id: $scope.taxon._id,
+						tagid: tag._id
+					}).$promise.then(function() {
+						_.remove($scope.taxon.tags, function(t) {
+							return t._id == tag._id;
+						});
+					}).
+					catch (function(err) {
+						tag.isChecked = !tag.isChecked
 					})
 
 				}
