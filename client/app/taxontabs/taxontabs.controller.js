@@ -13,7 +13,8 @@ angular.module('svampeatlasApp')
 				{ title:'Taxon', state: 'taxonlayout-taxon' },
 				{ title:'Red List',  state: 'taxonlayout-taxonredlistdata' },
 				{ title:'Book layout',  state: 'taxonlayout-taxonbooklayout'},
-				{ title:'Log', state: 'taxonlog'}
+				{ title:'Log', state: 'taxonlog'},
+				{ title:'Tags', state: 'taxontags'}
 			  ];
 		  
 		 /*	  

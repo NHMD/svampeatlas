@@ -1,0 +1,62 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container">
+
+<div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
+	
+</div>	
+<div class="col-md-12" layout layout-sm="column" >
+							           <md-input-container >
+							  			<label>Add new tag</label>
+							  			      <input ng-model="newTag" type="text">
+							            </md-input-container>
+		  							  		  <md-input-container ng-if="newTag">
+		  							  	<md-button class="md-raised md-primary" ng-click="addTag(newTag)">Add tag</md-button>
+		  							  </md-input-container>
+</div>	
+<div class="col-md-12" >
+
+<table class="table taxontable" st-pipe="callServer" st-table="displayed">
+	<thead>
+	<tr>
+		
+		<th st-sort="createdAt" st-sort-default="reverse">Created</th>
+		<th st-sort="tagname">Tag name</th>
+		
+		<th st-sort="User.name">User</th>
+	</tr>
+	<tr>
+		
+		<th><input class="form-control" st-search="createdAt"></th>
+		<th><input class="form-control" st-search="tagname"></th>
+		
+		<th><input class="form-control" st-search="User.name"></th>
+	</tr>
+	</thead>
+	<tbody ng-show="!isLoading">
+	<tr ng-repeat="tag in displayed">
+		<td>{{tag.createdAt | date : 'medium'}}</td>
+		<td><strong>{{tag.tagname}}</strong> <a href="" ng-click="deleteTag(tag)" ng-if="tag.tagowner === getCurrentUser()._id"><i class="fa fa-trash"></i></a></td>
+		<td>{{tag.User.name}}</td>
+	</tr>
+	</tbody>
+	<tbody ng-show="isLoading">
+	<tr>
+		<td colspan="4" class="text-center">Loading ... </td>
+	</tr>
+	</tbody>
+	<tfoot>
+	<tr>
+		<td class="text-center" st-pagination="" st-items-by-page="50" colspan="4">
+		</td>
+	</tr>
+	</tfoot>
+</table>
+</div>	
+
+</div>
+<div class="col-md-12">
+
+<div ng-include="'components/footer/footer.html'"></div>
+</div>
+
+

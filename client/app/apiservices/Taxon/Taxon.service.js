@@ -84,6 +84,31 @@ angular.module('svampeatlasApp')
 				url: '/api/taxons/:id/attributes',
 				isArray: false
 			},
+			'addTag': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/tags',
+				isArray: false
+			},
+			'deleteTag': {
+				method: 'DELETE',
+				params: {
+					id: '@_id',
+					tagid: 'tagid'
+				},
+				url: '/api/taxons/:id/tags/:tagid',
+				isArray: false
+			},
+			'getTags': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/tags',
+				isArray: true
+			},
 			'addNatureType': {
 				method: 'POST',
 				params: {

@@ -104,14 +104,25 @@ exports.index = function(req, res) {
 						n.where.$and[i] = JSON.parse(n.where.$and[i]);
 					}
 				}
+				/*
+				if(n.model === "TaxonomyTag"){
+
+							n.where._id = JSON.parse(n.where._id);
+				
+				}
+				*/
+
 				//	n.where = nestedQueryParser.parseQueryString(n.where)
 
 			}
 			console.log(n.where)
 			return n;
-		})
+		});
+		
+	
 	}
 
+	
 	Taxon.findAndCount(query)
 		.then(function(taxon) {
 			res.set('count', taxon.count);
@@ -125,6 +136,7 @@ exports.index = function(req, res) {
 		})
 		.
 	catch (handleError(res));
+	
 };
 
 
@@ -159,6 +171,9 @@ exports.show = function(req, res) {
 			}, {
 				model: models.ErnaeringsStrategi,
 				as: 'nutritionstrategies'
+			}, {
+				model: models.TaxonomyTag,
+				as: 'tags'
 			}
 
 		]

@@ -61,7 +61,7 @@
 
 	
 							          <md-input-container>
-							             <label>Attribute name</label>
+							             <label>{{'Attribute name' | translate}}</label>
 							             <md-select ng-model="attributequery.selectedAttribute">
 							               <md-option ng-repeat="(key, value) in taxonattributes" value="{{key}}">
 							                 {{key}}
@@ -98,6 +98,35 @@
 							  </md-input-container>
 							   </md-content>
 							  </div>
+							  
+							  <p  class="md-title taxonomy-query-section-header">{{'Search redlist categories' | translate}}:</p>
+						     
+							   <div layout layout-sm="column">
+ 							      <md-switch class="md-raised md-primary" ng-repeat="category in redlistCategories" ng-model="selectedRedListCategories[category.status]">{{category.status}}</md-switch>
+								  </div>
+								  
+							  <p  class="md-title taxonomy-query-section-header">{{'Search tags' | translate}}:</p>
+							   <div layout layout-sm="column">
+ 							      <md-chips ng-model="selectedTags" md-autocomplete-snap md-require-match="true">
+	
+ 							        <md-autocomplete
+ 							  	  	md-min-length="3"
+ 							  		md-no-cache="true"
+ 							            md-selected-item="selectedTag"
+ 							            md-search-text="searchTagText"
+ 							            md-items="item in tagSearch(searchTagText)"
+ 							            md-item-text="item.tagname"
+ 							            placeholder="{{'Enter tags' | translate}}">
+ 							          <span md-highlight-text="searchTagText">{{item.tagname}}</span>
+ 							        </md-autocomplete>
+ 							        <md-chip-template>
+ 							          <span>
+ 							            <strong>{{$chip.tagname}}</strong>
+         
+ 							          </span>
+ 							        </md-chip-template>
+ 							      </md-chips>
+								  </div>  
 							  </div>
 								
 			    	      </div>

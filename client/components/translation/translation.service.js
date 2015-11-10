@@ -79,7 +79,11 @@ angular.module('svampeatlasApp')
 		  'Manual' : 'Manuel',
 		  'Choose parent taxon' : 'Vælg forældre-taxon',
 		  'Add search terms on attributes': 'Tilføj søgetermer på attributter',
-		  'Extended search': 'Udvidet søgning'
+		  'Extended search': 'Udvidet søgning',
+		  'Search redlist categories': 'Søg rødlistekategorier',
+		  'Search tags': 'Søg tags',
+		  'Enter tags': 'Skriv tags',
+		  'Attribute name': 'Attribut navn'
   	    });
 	 
 	

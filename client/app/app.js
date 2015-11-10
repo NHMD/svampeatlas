@@ -15,7 +15,7 @@ angular.module('svampeatlasApp', [
 	'ngMaterial',
 	'pascalprecht.translate'
 ])
-  .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider) {
+  .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider) {
     $urlRouterProvider
       .otherwise('/');
 	  $sceDelegateProvider.resourceUrlWhitelist([
@@ -28,12 +28,13 @@ angular.module('svampeatlasApp', [
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
 	$httpProvider.interceptors.push('xmlHttpInterceptor');
+	$translateProvider.useSanitizeValueStrategy('escape');
 	
   })
 .filter('synonymsWithoutSelf', function() {
 	return function(synonyms) {
 		return _.filter(synonyms, function(s) {
-			return s.accepted_id !== s._id;;
+			return (s.accepted_id !== s._id) || s.accepted_id === null;
 		});
 
 	};

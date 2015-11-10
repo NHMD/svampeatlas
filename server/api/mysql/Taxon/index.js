@@ -6,6 +6,7 @@ var attributesController = require('../TaxonAttributes/TaxonAttributes.controlle
 var imagesController = require('../TaxonImages/TaxonImages.controller');
 var naturtypeController = require('../Naturtype/Naturtype.controller');
 var nutritionStrategyController = require('../ErnaeringsStrategi/ErnaeringStrategi.controller');
+var taxonomytagController = require('../TaxonomyTag/TaxonomyTag.controller');
 var speciesHypothesisController = require('../TaxonSpeciesHypothesis/TaxonSpeciesHypothesis.controller')
 var auth = require('../../../auth/auth.service');
 
@@ -43,6 +44,10 @@ router.delete('/:id/attributes',auth.hasRole('taxonomyadmin'),   attributesContr
 router.get('/:id/naturetypes', naturtypeController.showTaxonNatureTypes);
 router.post('/:id/naturetypes',auth.hasRole('taxonomyadmin'),  naturtypeController.addTaxonNatureType);
 router.delete('/:id/naturetypes/:naturtypeid',auth.hasRole('taxonomyadmin'),  naturtypeController.deleteTaxonNatureType);
+
+router.get('/:id/tags', taxonomytagController.showTaxonomyTags);
+router.post('/:id/tags',auth.hasRole('taxonomyadmin'),  taxonomytagController.addTaxonomyTag);
+router.delete('/:id/tags/:tagid',auth.hasRole('taxonomyadmin'),  taxonomytagController.deleteTaxonomyTag);
 
 router.get('/:id/nutritionstrategies', nutritionStrategyController.showTaxonNutritionStrategies);
 router.post('/:id/nutritionstrategies',auth.hasRole('taxonomyadmin'),  nutritionStrategyController.addTaxonNutritionStrategy);

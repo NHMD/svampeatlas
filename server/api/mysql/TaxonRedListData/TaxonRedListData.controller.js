@@ -48,6 +48,19 @@ function removeEntity(res) {
 		}
 	};
 }
+
+exports.categories = function(req, res) {
+	
+	models.sequelize.query('select  status, year from TaxonRedListData where status IS NOT NULL AND year=(select MAX(year) from TaxonRedListData) GROUP BY status' ,
+{ type: models.sequelize.QueryTypes.SELECT})
+		.then(function(categories) {
+
+			return res.status(200).json(categories);
+		})
+		.
+	catch (handleError(res));
+};
+
 // Gets list of TaxonRedListData from the DB.
 // Get list of TaxonRedListData
 exports.index = function(req, res) {
