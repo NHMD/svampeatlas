@@ -259,18 +259,18 @@
 				  	  </div>
 				  	  <!-- ########################################-->
 			  	  <!-- ########################################-->
-			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined &&  taxon.synonyms.length && (taxon.synonyms| filter: synonymsWithoutSelf).length > 0">
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined &&  taxon.synonyms.length > 1">
 			  	    <div class="panel-heading" role="tab">
 			  	      <h4 class="panel-title">
 			  	        <a bs-collapse-toggle>
-			  	          Synonyms ({{(taxon.synonyms| filter: synonymsWithoutSelf).length}})
+			  	          Synonyms ({{filteredSynonyms.length}})
 			  	        </a>
 			  	      </h4>
 			  	    </div>
 			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			  	      <div class="panel-body">
   						  <table class="table parent-taxon-table">
-  							   <tr ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><td st-ratio="70">
+  							   <tr ng-repeat="syn in taxon.synonyms | synonymsWithoutSelf as filteredSynonyms"><td st-ratio="70">
   						 <a href="/taxonbase/taxon/{{syn._id}}">{{syn.FullName}}</a>
   						  </td>
 					  <td st-ratio="13">
@@ -313,11 +313,11 @@
 			  	  </div>
 			  	  <!-- ########################################-->
 			  	  <!-- ########################################-->
-			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined || taxonomyTags.length > 0">
 			  	    <div class="panel-heading" role="tab">
 			  	      <h4 class="panel-title">
 			  	        <a bs-collapse-toggle>
-			  	          {{'Tags' | translate}} ( {{taxon.naturtyper.length}} )
+			  	          {{'Tags' | translate}} ( {{taxon.tags.length}} )
 			  	        </a>
 			  	      </h4>
 			  	    </div>
