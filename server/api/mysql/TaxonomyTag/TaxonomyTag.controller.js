@@ -162,6 +162,20 @@ exports.showTaxonomyTags = function(req, res) {
 exports.addTaxonomyTag= function(req, res) {
 
 models.TaxonTag.create({tag_id: req.body._id, taxon_id: req.params.id})
+	.then(function() {
+
+		return [models.TaxonomyTag.find({where: {_id:req.body._id}}), models.Taxon.find({where: {_id:req.params.id}})]
+	})
+	.spread(function(tag, taxon) {
+
+		return  models.TaxonLog.create({
+			eventname: "Tag added",
+			description: taxon.FullName + " (id: "+taxon._id+") was tagged: '"+tag.tagname+"'",
+			user_id: req.user._id,
+			taxon_id: taxon._id
+	
+		})
+	})
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
@@ -178,6 +192,20 @@ models.TaxonTag.find({
   .then(function(taxonTag){
 	  return models.TaxonTag.destroy({where: taxonTag.dataValues});
   })
+.then(function() {
+
+	return [models.TaxonomyTag.find({where: {_id:req.params.tagid}}), models.Taxon.find({where: {_id:req.params.id}})]
+})
+.spread(function(tag, taxon) {
+
+	return  models.TaxonLog.create({
+		eventname: "Tag removed",
+		description: "Tag: '"+tag.tagname+"' was removed from "+taxon.FullName + " (id: "+taxon._id+") ",
+		user_id: req.user._id,
+		taxon_id: taxon._id
+
+	})
+})
   .then(function(){
 	  return res.status(204).send()
   })
