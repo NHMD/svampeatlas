@@ -139,6 +139,9 @@
 
 			
 <div class="row"><div class="col-md-12">
+	 <md-input-container class="col-md-2">
+	<md-button class="md-raised md-warn" ng-click="resetSearch()"><i class="fa fa-refresh"></i> {{ 'Reset search' | translate}}</md-button>
+	</md-input-container>
 	<md-switch class="col-md-2" ng-model="checkboxes.acceptedTaxaOnly" aria-label="Only accepted taxa" >
 	         {{ 'Omit synonyms' | translate}}
 	        </md-switch>
@@ -151,7 +154,7 @@
 	{{ 'Find orphant taxa' | translate}}     
 	        </md-switch>
 			
-<div class="col-md-4"><h3 class="md-headline pull-right">{{'Found' | translate}} {{taxonCount}} taxa</h3></div>
+<div class="col-md-2"> <h4 class="md-headline pull-right">{{'Found' | translate}} {{taxonCount}} taxa</h4></div>
 <md-progress-linear class="col-md-12" md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
 <table st-persist="taxon_search_table" class="table taxonomy-table" st-pipe="callServer" st-table="displayed">
 	<thead>

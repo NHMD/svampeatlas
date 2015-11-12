@@ -3,11 +3,29 @@
 angular.module('svampeatlasApp')
 	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData',
 		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData) {
-
+			
+			$scope.resetSearch = function(){
+				localStorage.removeItem('taxonomy_attribute_conditions');
+				localStorage.removeItem('taxonomy_selected_higher_taxa');
+				localStorage.removeItem('taxonomy_higher_taxa_predicate')
+				localStorage.removeItem('taxonomy_selected_tags');
+				localStorage.removeItem('taxonomy_redlist_categories');
+				localStorage.removeItem('taxonomy_search_checkboxes');
+				localStorage.removeItem("taxon_search_table");
+				$( "input[st-search]" ).val("");
+				$scope.InitialzeSavedSettings();
+				$scope.callServerSafe();
+				
+			};
 
 			$scope.taxonattributes = Datamodel.get({
 				id: 'TaxonAttributes'
 			});
+			
+			$scope.InitialzeSavedSettings = function(){
+				
+				$scope.displayed = [];
+				
 			$scope.attributequery = {
 				dateValue: new Date()
 			};
@@ -25,8 +43,14 @@ angular.module('svampeatlasApp')
 			var redListCategories = localStorage.getItem('taxonomy_redlist_categories');
 			$scope.selectedRedListCategories = (redListCategories) ? JSON.parse(redListCategories) : {};
 			
+			var localStCheckBoxes = localStorage.getItem('taxonomy_search_checkboxes');
+			$scope.checkboxes = (localStCheckBoxes) ? JSON.parse(localStCheckBoxes) : {};
+			
 			$scope.extendedSearchIsOn = ($scope.selectedHigherTaxa.length > 0 || $scope.attributeConditions.length > 0 || $scope.selectedTags.length > 0) ? 0 : -1;
 
+		};
+		$scope.InitialzeSavedSettings();
+			
 			$scope.$watch('selectedRedListCategories', function(newval, oldval) {
 				
 				if(!_.isEmpty(newval)){
@@ -34,7 +58,7 @@ angular.module('svampeatlasApp')
 					newval.year = $scope.redlistCategories[0].year;
 				}
 				localStorage.setItem('taxonomy_redlist_categories', JSON.stringify(newval));
-				$scope.callServer(JSON.parse(localStorage.taxon_search_table));
+				$scope.callServerSafe();
 			}
 				
 			}, true);
@@ -109,16 +133,12 @@ angular.module('svampeatlasApp')
 					dbquery: cond
 				});
 				localStorage.setItem('taxonomy_attribute_conditions', JSON.stringify($scope.attributeConditions))
-				$scope.callServer(JSON.parse(localStorage.taxon_search_table));
+				$scope.callServerSafe();
 				$scope.attributequery = {
 					dateValue: new Date()
 				};
 			}
 
-
-			$scope.displayed = [];
-			var localStCheckBoxes = localStorage.getItem('taxonomy_search_checkboxes');
-			$scope.checkboxes = (localStCheckBoxes) ? JSON.parse(localStCheckBoxes) : {};
 
 			$scope.tagSearch = function(query) {
 
@@ -140,8 +160,7 @@ angular.module('svampeatlasApp')
 
 				localStorage.setItem('taxonomy_selected_tags', JSON.stringify($scope.selectedTags))
 
-
-				$scope.callServer(JSON.parse(localStorage.taxon_search_table));
+				$scope.callServerSafe();
 
 			})
 
@@ -189,7 +208,7 @@ angular.module('svampeatlasApp')
 
 
 				localStorage.setItem('taxonomy_selected_higher_taxa', JSON.stringify($scope.selectedHigherTaxa))
-				$scope.callServer(JSON.parse(localStorage.taxon_search_table));
+				$scope.callServerSafe();
 
 			})
 
@@ -197,7 +216,7 @@ angular.module('svampeatlasApp')
 
 				if (newVal) {
 					localStorage.setItem('taxonomy_attribute_conditions', JSON.stringify(newVal));
-					$scope.callServer(JSON.parse(localStorage.taxon_search_table));
+					$scope.callServerSafe();
 				}
 
 			});
@@ -230,10 +249,16 @@ angular.module('svampeatlasApp')
 			})
 			$scope.saveStateAndTriggerSearchFromCheckboxes = function() {
 				localStorage.setItem('taxonomy_search_checkboxes', JSON.stringify($scope.checkboxes))
-				$scope.callServer(JSON.parse(localStorage.taxon_search_table));
+				$scope.callServerSafe();
 			}
 
-
+			$scope.callServerSafe = function(){
+				
+				var tableState = localStorage.taxon_search_table;
+				var state = (tableState) ? JSON.parse(tableState) : {"sort":{},"search":{"predicateObject":{}},"pagination":{}};
+				$scope.callServer(state);
+				
+			}
 
 
 			$scope.callServer = function(tableState) {
@@ -282,7 +307,7 @@ angular.module('svampeatlasApp')
 
 
 					return {
-						like: value += "%"
+						like: "%" + value + "%"
 					};
 				}) : undefined;
 

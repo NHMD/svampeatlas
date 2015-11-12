@@ -83,7 +83,8 @@ angular.module('svampeatlasApp')
 		  'Search redlist categories': 'Søg rødlistekategorier',
 		  'Search tags': 'Søg tags',
 		  'Enter tags': 'Skriv tags',
-		  'Attribute name': 'Attribut navn'
+		  'Attribute name': 'Attribut navn',
+		  'Reset search': 'Nulstil'
   	    });
 	 
 	
