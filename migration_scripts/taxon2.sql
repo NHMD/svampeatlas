@@ -558,3 +558,10 @@ ALTER TABLE `Taxon`
   DROP `vernacular_name_NL`,
   DROP `vernacular_name_NO`,
   DROP `vernacular_name_SE`;
+ 
+ -- Patch for some synonyms which were not synced 
+  CREATE TABLE subspecific_syn_correct SELECT DkIndexNumber, DkIndexANDSynNumber  from TaxonBase tb JOIN Taxon t ON tb.DkIndexNumber = t._id AND  tb.DkIndexNumber <> tb.DkIndexANDSynNumber AND tb.DkIndexANDSynNumber <> "" AND t.accepted_id IS NULL;
+
+  UPDATE Taxon t, subspecific_syn_correct s SET t.accepted_id = s.DkIndexANDSynNumber WHERE t._id = s.DkIndexNumber;
+
+  DROP TABLE subspecific_syn_correct;

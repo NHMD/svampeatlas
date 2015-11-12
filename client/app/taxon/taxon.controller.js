@@ -109,7 +109,7 @@ angular.module('svampeatlasApp')
 					};
 				};
 				
-				$scope.selectedSuperRankID = (($scope.taxon.RankID < 10000 && $scope.taxon.RankID > 5000) || ($scope.taxon.RankID < 5000 && $scope.taxon.RankID > 4000)) ? {
+				$scope.selectedSuperRankID = ( $scope.taxon.Parent === null || ($scope.taxon.RankID < 10000 && $scope.taxon.RankID > 5000) || ($scope.taxon.RankID < 5000 && $scope.taxon.RankID > 4000)) ? {
 					superrankId: $scope.taxon.RankID
 				} : {
 					superrankId: ($scope.taxon.Parent.RankID + $scope.childRank) / 2

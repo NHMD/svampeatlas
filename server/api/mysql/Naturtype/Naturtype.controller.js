@@ -141,6 +141,20 @@ exports.showTaxonNatureTypes = function(req, res) {
 exports.addTaxonNatureType= function(req, res) {
 
 models.TaxonNaturtype.create({naturtype_id: req.body._id, taxon_id: req.params.id})
+	.then(function() {
+
+		return [models.Naturtype.find({where: {_id:req.body._id}}), models.Taxon.find({where: {_id:req.params.id}})]
+	})
+	.spread(function(naturtype, taxon) {
+
+		return  models.TaxonLog.create({
+			eventname: "Naturetype added",
+			description: taxon.FullName + " (id: "+taxon._id+") got associated with: '"+naturtype.name+"'",
+			user_id: req.user._id,
+			taxon_id: taxon._id
+	
+		})
+	})
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
@@ -157,8 +171,23 @@ models.TaxonNaturtype.find({
   .then(function(taxonNaturtype){
 	  return models.TaxonNaturtype.destroy({where: taxonNaturtype.dataValues});
   })
+  .then(function() {
+
+  	return [models.Naturtype.find({where: {_id:req.params.naturtypeid}}), models.Taxon.find({where: {_id:req.params.id}})]
+  })
+  .spread(function(naturtype, taxon) {
+
+  	return  models.TaxonLog.create({
+  		eventname: "Naturetype detached",
+  		description: taxon.FullName + " (id: "+taxon._id+") was detached from: '"+naturtype.name+"'",
+  		user_id: req.user._id,
+  		taxon_id: taxon._id
+
+  	})
+  })
   .then(function(){
 	  return res.status(204).send()
   })
   .catch(handleError(res));
 };
+
