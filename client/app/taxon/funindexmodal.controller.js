@@ -63,7 +63,7 @@ angular.module('svampeatlasApp')
 					return TaxonIntegrationService.taxon.then(function(taxon) {
 						
 						
-						if($scope.taxon.Children.length === 0 || taxon.RankId < $scope.taxon.Children[$scope.taxon.Children.length -1].RankID){
+						if($scope.taxon.Children.length === 0 || taxon.RankID < $scope.taxon.Children[$scope.taxon.Children.length -1].RankID){
 							
 						
 						
