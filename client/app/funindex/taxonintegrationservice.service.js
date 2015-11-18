@@ -6,17 +6,31 @@ angular.module('svampeatlasApp')
 		return {
 			setTaxon: function(taxon, source) {
 				this.taxon = undefined;
-
+				
 				var that = this;
 				if (source === "IndexFungorum") {
-					this.taxon = Taxon.query({
-						where: {
+					
+					var where;
+					var txrank = taxon.INFRASPECIFIC_x0020_RANK;
+					
+					if(txrank === "sp." || txrank === "var." || txrank=== "f." || txrank==="f.sp.") {
+						where = {
 							SystematicPath: taxon.SystematicPath
-						}
+						};
+					} else {
+						var splittedSys = taxon.SystematicPath.split(", ");
+						var suggestedSuperGenericParent = splittedSys[splittedSys.length-2];
+						where = {
+							TaxonName: suggestedSuperGenericParent
+						};
+						
+					}
+					this.taxon = Taxon.query({
+						where: where
 					}).$promise.then(function(parents) {
 						var thisTaxon = {};
 						thisTaxon.dataSource = source;
-						thisTaxon.SystematicPath = taxon.SystematicPath + ", " + that.getTaxonName(taxon);
+						
 						thisTaxon.FullName = taxon.NAME_x0020_OF_x0020_FUNGUS + " " + taxon.AUTHORS;
 						thisTaxon.Author = taxon.AUTHORS;
 						thisTaxon.FunIndexCurrUseNumber = (taxon.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER) ? taxon.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER : taxon.RECORD_x0020_NUMBER;
@@ -32,6 +46,7 @@ angular.module('svampeatlasApp')
 							thisTaxon.Parent = null;
 						}
 						thisTaxon.RankID = (that.getRankID(taxon.INFRASPECIFIC_x0020_RANK) === -1 && thisTaxon.Parent !== null) ? thisTaxon.Parent.RankID +1 : that.getRankID(taxon.INFRASPECIFIC_x0020_RANK);
+						thisTaxon.SystematicPath = (thisTaxon.RankID > 5000) ? (taxon.SystematicPath + ", " + that.getTaxonName(taxon)): taxon.SystematicPath;
 						return thisTaxon;
 
 					});
