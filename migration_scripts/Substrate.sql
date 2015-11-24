@@ -1,0 +1,9 @@
+CREATE TABLE Substrate (
+_id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(255) NOT NULL,
+name_uk VARCHAR(255)
+) ENGINE = InnoDB DEFAULT CHARSET=UTF8;
+
+ALTER TABLE Substrate add column _id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT;
+ALTER TABLE Substrate add column name_uk VARCHAR(255) ;
+LOAD DATA INFILE '/usr/local/mysql-5.6.21-osx10.8-x86_64/dataimport/substrate.csv' INTO  TABLE Substrate FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' (name);
