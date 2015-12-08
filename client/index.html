@@ -17,6 +17,7 @@
       <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
       <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css" />
       <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+      <link rel="stylesheet" href="bower_components/angular-material-icons/angular-material-icons.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
@@ -35,17 +36,18 @@
       <link rel="stylesheet" href="app/taxonredlistdata/taxonredlistdata.css">
       <link rel="stylesheet" href="app/taxontags/taxontag.css">
       <link rel="stylesheet" href="app/view-tree/view-tree.css">
+      <link rel="stylesheet" href="components/navbar-material/navbarMaterial.css">
       <!-- endinjector -->
     <!-- endbuild -->
   </head>
-  <body ng-app="svampeatlasApp">
+  <body ng-app="svampeatlasApp" >
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
     <div ui-view=""></div>
-
+<!--<div ng-include="'components/navbar-material/navbarMaterial.html'" ng-controller="NavbarMaterialCtrl" layout="row"></div> -->
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -82,6 +84,7 @@
       <script src="bower_components/angular-xml/angular-xml.js"></script>
       <script src="bower_components/angular-aria/angular-aria.js"></script>
       <script src="bower_components/angular-material/angular-material.js"></script>
+      <script src="bower_components/angular-material-icons/angular-material-icons.min.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -136,6 +139,7 @@
           <script src="components/auth/auth.service.js"></script>
           <script src="components/auth/user.service.js"></script>
           <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+          <script src="components/navbar-material/navbarMaterial.controller.js"></script>
           <script src="components/navbar/navbar.controller.js"></script>
           <script src="components/ngDisableAnimate/ngDisableAnimate.directive.js"></script>
           <script src="components/socket/socket.service.js"></script>

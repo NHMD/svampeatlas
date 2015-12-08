@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS Observation (
   primarydetermination_id INT(11),
   primaryassociatedorganism_id INT(11) ,
   vegetationtype_id INT(11),
-  ecologynote VARCHAR(510),
+  substrate_id INT(11),
+  ecologynote VARCHAR(1020),
   decimalLatitude DOUBLE NOT NULL,
   decimalLongitude DOUBLE NOT NULL,
   accuracy INT(11),
@@ -298,3 +299,144 @@ f.Bemaerkn,
 f.BemaerknIntern,
 f.input_of_data
 FROM Fungi f LEFT JOIN Users u ON f.AtlasLegInit = u.initialer WHERE f.AtlasLNR NOT IN (select _id from Observation) AND (f.date_calculated  LIKE "%?%" OR f.date_calculated  = "") AND f.date_year = "1867"  AND f.date_month = "2" AND  CAST(f.date_day AS UNSIGNED) > 28;
+
+-- Convert lat lons to POINTs
+
+CREATE TABLE ObservationPoint (
+	observation_id INT(11) primary key not null,
+	p POINT NOT NULL
+ ) ENGINE= MyISAM;
+ALTER TABLE ObservationPoint ADD SPATIAL INDEX (p);
+insert into ObservationPoint SELECT _id, GeomFromText(CONCAT('POINT(',decimalLongitude,' ',decimalLatitude, ')')) FROM Observation;
+
+
+
+---------------
+--- Substrate and VegType
+---------------
+-- show all unmapped substrate
+SELECT Substrate, count(*) from Fungi f, Observation o WHERE f.Substrate <> "" AND o._id = f.AtlasLNR AND o.substrate_id IS NULL GROUP BY Substrate ORDER BY count(*) DESC
+
+SELECT Substrate, count(*) from Fungi f WHERE f.Substrate <> ""  AND f.Substrate NOT IN (SELECT distinct name FROM Substrate) GROUP BY Substrate ORDER BY count(*) DESC
+
+-- alt der kan mappes til jord
+UPDATE Observation o, Fungi f, Substrate s SET o.substrate_id=s._id WHERE o._id=f.AtlasLNR AND f.Substrate = s.name;
+
+UPDATE Observation o, Fungi f SET o.substrate_id=1 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate = "on soil";
+
+UPDATE Observation o, Fungi f SET o.substrate_id=1 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%on soil%";
+
+UPDATE Observation o, Fungi f SET o.substrate_id=1 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%på jord%";
+
+UPDATE Observation o, Fungi f SET o.substrate_id=1 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%jord%";
+
+UPDATE Observation o, Fungi f SET o.substrate_id=1 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%soil%";
+
+-- alt der kan mappes til ved
+
+UPDATE Observation o, Fungi f SET o.substrate_id=4 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%on wood%";
+UPDATE Observation o, Fungi f SET o.substrate_id=4 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%wood%";
+UPDATE Observation o, Fungi f SET o.substrate_id=4 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%på ved%";
+
+-- alt der kan mappes til brandplet
+
+UPDATE Observation o, Fungi f SET o.substrate_id=16 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%brandplet%";
+UPDATE Observation o, Fungi f SET o.substrate_id=16 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%burned ground%"
+-- alt der kan mappes til nåle /blade
+UPDATE Observation o, Fungi f SET o.substrate_id=2 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%needles%";
+UPDATE Observation o, Fungi f SET o.substrate_id=2 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%leaves%";
+
+-- alt der kan mappes til kogler
+UPDATE Observation o, Fungi f SET o.substrate_id=7 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%cones%";
+UPDATE Observation o, Fungi f SET o.substrate_id=7 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%kogler%";
+UPDATE Observation o, Fungi f SET o.substrate_id=7 WHERE o._id=f.AtlasLNR  AND f.Substrate LIKE "%cones%";
+UPDATE Observation o, Fungi f SET o.substrate_id=7 WHERE o._id=f.AtlasLNR  AND f.Substrate LIKE "%kogler%";
+
+-- alt der kan mappes til kogler
+UPDATE Observation o, Fungi f SET o.substrate_id=12 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%ekskrementer%";
+--UPDATE Observation o, Fungi f SET o.substrate_id=12 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%kogler%";
+
+-- Extract associatedOrganism where these are placed in substrate.....
+ALTER TABLE `Fungi` CHANGE `Substrate` `Substrate` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = p.LatinName;
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = p.DKname;
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = p.DKandLatinName;
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("on ",p.LatinName);
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("on soil under ",p.LatinName);
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("with ",p.LatinName);
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("under ",p.LatinName);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("under ",p.LatinName, " (",p.DKname,")");
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("på ved fra ",p.LatinName);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("på ",p.LatinName);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("på ",p.DKname);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("på ",p.DKandLatinName);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("på ved fra ",p.DKandLatinName);
+
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("on leaves of ",p.LatinName);
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("on needles of ",p.LatinName);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("on wood of ",p.LatinName);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = CONCAT("on cones of ",p.LatinName);
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = "on deciduous wood" AND p.LatinName ="løvtræ";
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = "på ved fra løvtræer" AND p.LatinName ="løvtræ";
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate = "on wood of deciduous trees" AND p.LatinName ="løvtræ";
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate LIKE "%deciduous%" AND p.LatinName ="løvtræ";
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.Substrate LIKE "%coniferous%" AND p.LatinName ="nåletræ";
+
+
+-- Smid substrat in i ecologynote hvor dette ikke kan mappes:
+
+UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT(o.ecologynote, " [Substrat: ",f.Substrate, "]") WHERE f.Substrate <> "" AND f.Substrate NOT IN (select distinct name from Substrate) AND o._id = f.AtlasLNR AND o.ecologynote <> "";
+UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT("[Substrat: ",f.Substrate, "]") WHERE f.Substrate <> "" AND f.Substrate NOT IN (select distinct name from Substrate) AND o._id = f.AtlasLNR AND o.ecologynote = "";
+
+
+-- VegType
+SELECT VegType, count(*) from Fungi f, Observation o WHERE f.VegType <> "" AND o._id = f.AtlasLNR AND o.vegetationtype_id IS NULL GROUP BY VegType ORDER BY count(*) DESC
+
+SELECT VegType, count(*) from Fungi f WHERE f.VegType <> ""  AND f.VegType NOT IN (SELECT distinct name FROM VegetationType) GROUP BY VegType ORDER BY count(*) DESC
+
+UPDATE Observation o, Fungi f, VegetationType v SET o.vegetationtype_id = v._id where o._id=f.AtlasLNR AND f.VegType = v.name;
+
+-- Smid VegType in i ecologynote hvor dette ikke kan mappes:
+
+UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT(o.ecologynote, " [Vegetation type: ",f.VegType, "]") WHERE f.VegType <> "" AND f.VegType NOT IN (select distinct name from VegetationType) AND o._id = f.AtlasLNR AND o.ecologynote <> "";
+UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT("[Vegetation type: ",f.VegType, "]") WHERE f.VegType <> "" AND f.VegType NOT IN (select distinct name from VegetationType) AND o._id = f.AtlasLNR AND o.ecologynote = "";
+
+UPDATE Fungi f, Observation o SET o.ecologynote = f.AtlasEcoNote where f.AtlasLNR = o._id;
+
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=10 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType LIKE "%kyst- og overdrevskrat%";
+
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=6 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType = "blandskov";
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=6 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType = "nåleskov og løvskov";
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=1 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType = "Bøgeskov";
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = "Bøgeskov" AND p.LatinName="Fagus";
+
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=1 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType LIKE "%deciduous forest%";
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=4 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType = "under coniferous trees";
+
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=16 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType = "Overderv";
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=8 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType = "ellesump";
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = "ellesump" AND p.LatinName="Alnus";
+
+UPDATE Observation o, Fungi f SET o.vegetationtype_id=27 WHERE o._id=f.AtlasLNR AND  o.vegetationtype_id IS NULL AND f.VegType = "Industriel habitat";
+
+-- Extract associatedOrganism where these are placed in VegType.....
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = CONCAT("under ",p.LatinName);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = CONCAT("under ",p.LatinName, " (",p.DKname,")");
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = CONCAT("på ",p.DKname);
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = CONCAT("på ",p.LatinName, " (",p.DKname,")");
+
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = p.LatinName;
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = p.DKname;
+UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = p.DKandLatinName;
