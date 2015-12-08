@@ -9,8 +9,12 @@ LatinName VARCHAR(255) NOT NULL,
 LatinCode VARCHAR(11) 
 WoodySubstrate VARCHAR(11),
 accepted_id INT(11),
-parent_id INT(11)
+parent_id INT(11),
+defaultlist TINYINT(1) DEFAULT 0
 ) ENGINE = InnoDB DEFAULT CHARSET=UTF8;
+
+-- mark all taxa in the default list
+UPDATE PlantTaxon set defaultlist = 1;
 
 UPDATE PlantTaxon set Genus = 1 where Genus = "X";
 UPDATE PlantTaxon set Genus = 0 where Genus = "";
@@ -82,4 +86,15 @@ INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o
 INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -4), ", ", 1) = p.DKname AND p.Genus=1 ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
 INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -4), ", ", 1) = p.DKandLatinName ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
 INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -4), ", ", 1) = p.LatinName ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
- 
+
+CREATE TABLE temp_ass_org_is_mapped (
+	obs_id INT(11) PRIMARY KEY NOT NULL
+) ENGINE=InnoDB;
+
+INSERT INTO temp_ass_org_is_mapped SELECT AtlasLNR FROM PlantTaxon p, Fungi f WHERE  f.associatedOrganism= p.DKandLatinName;
+INSERT INTO temp_ass_org_is_mapped SELECT AtlasLNR FROM PlantTaxon p, Fungi f WHERE  f.associatedOrganism= p.DKname ON DUPLICATE KEY UPDATE obs_id= AtlasLNR;
+INSERT INTO temp_ass_org_is_mapped SELECT AtlasLNR FROM PlantTaxon p, Fungi f WHERE  f.associatedOrganism= p.LatinName ON DUPLICATE KEY UPDATE obs_id= AtlasLNR;
+UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT(o.ecologynote, " [Associated organism: ",f.associatedOrganism, "]") WHERE f.associatedOrganism <> "" AND f.AtlasLNR NOT IN (select obs_id from temp_ass_org_is_mapped) AND o._id = f.AtlasLNR AND o.ecologynote <> "";
+UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT("[Associated organism: ",f.associatedOrganism, "]") WHERE f.associatedOrganism <> "" AND f.AtlasLNR NOT IN (select obs_id from temp_ass_org_is_mapped) AND o._id = f.AtlasLNR AND o.ecologynote = "";
+
+DROP TABLE temp_ass_org_is_mapped;

@@ -13,6 +13,7 @@ angular.module('svampeatlasApp', [
 	'xml',
 	'ui.bootstrap',
 	'ngMaterial',
+	'ngMdIcons',
 	'pascalprecht.translate'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider) {
