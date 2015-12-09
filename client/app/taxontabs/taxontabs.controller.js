@@ -17,7 +17,7 @@ angular.module('svampeatlasApp')
 				{ title:'Tags', state: 'taxontags'}
 			  ];
 		  
-		 /*	  
+		 
 		$scope.tabs.activeTab =	 _.indexOf( $scope.tabs, _.findWhere($scope.tabs, { 'state': $state.current.name }))
 			
 			  $scope.$watch('tabs.activeTab', function(newIdx, oldIdx){
@@ -30,7 +30,7 @@ angular.module('svampeatlasApp')
   					}
 				  }
 			  })
-			 */
+			 /*	  
 		
 			  $scope.tabs.activeTab = $state.current.name;
 			  $scope.$watch('tabs.activeTab', function(newState, oldState){
@@ -46,7 +46,7 @@ angular.module('svampeatlasApp')
 			  })
 			 
 			 
-
+*/
 			
 		
 		}

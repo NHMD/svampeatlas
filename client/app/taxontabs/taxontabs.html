@@ -1,11 +1,41 @@
-
+<!--
 <div data-bs-active-pane="tabs.activeTab" bs-tabs>
 <div ng-repeat="tab in tabs" title="{{ tab.title | translate }}" name="{{ tab.state }}" disabled="{{ state.current.name.split('-')[0] !== 'taxonlayout' &&  tab.state.split('-')[0] === 'taxonlayout'}}"  bs-pane>
   </div>
   </div> 
+-->
+
+
+      <md-toolbar ng-show="!showSearch">
+        <div class="md-toolbar-tools">
+          <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
+            <ng-md-icon icon="menu"></ng-md-icon>
+          </md-button>
+          <h3>
+            TaxonBase
+          </h3>
+          <span flex></span>
+          <md-button aria-label="Search" ng-click="showSearch = !showSearch">
+            <ng-md-icon icon="search"></ng-md-icon>
+          </md-button>
+          <md-button aria-label="Open Settings" ng-click="showListBottomSheet($event)">
+            <ng-md-icon icon="more_vert"></ng-md-icon>
+          </md-button>
+        </div>
+  <md-tabs md-stretch-tabs class="md-primary" md-selected="tabs.activeTab">
+   
+    <md-tab ng-repeat="tab in tabs"  ng-class="{'md-active': tab.active}" ng-disabled="tab.disabled">
+      <md-tab-label>
+        {{tab.title}}
+       
+      </md-tab-label>
+    
+    </md-tab>
+  </md-tabs>
+      </md-toolbar>
 
 <!-- Angular material tabs  
-  <md-tabs md-selected="tabs.activeTab" md-dynamic-height>
+  <md-tabs md-stretch-tabs class="md-primary" md-selected="tabs.activeTab">
    
     <md-tab ng-repeat="tab in tabs"  ng-class="{'md-active': tab.active}" ng-disabled="tab.disabled">
       <md-tab-label>

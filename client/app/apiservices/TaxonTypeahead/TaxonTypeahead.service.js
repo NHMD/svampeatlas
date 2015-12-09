@@ -9,7 +9,7 @@ angular.module('svampeatlasApp')
 				if (viewValue === "") {
 					return [];
 				}
-				var value = (viewValue.constructor.name === 'Resource') ? viewValue.FullName : viewValue;
+				var value = (viewValue._id !== undefined) ? viewValue.FullName : viewValue;
 				
 				var params = {
 					where: {
@@ -30,7 +30,7 @@ angular.module('svampeatlasApp')
 				if (viewValue === "") {
 					return [];
 				}
-				var value = (viewValue.constructor.name === 'Resource') ? viewValue.FullName : viewValue;
+				var value = (viewValue._id !== undefined) ? viewValue.FullName : viewValue;
 				
 				var params = {
 					where: {
@@ -54,7 +54,7 @@ angular.module('svampeatlasApp')
 				if (viewValue === "") {
 					return [];
 				}
-				var value = (viewValue.constructor.name === 'Resource') ? viewValue.FullName : viewValue;
+				var value = (viewValue._id !== undefined) ? viewValue.FullName : viewValue;
 				
 				var params = {
 				where: {

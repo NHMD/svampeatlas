@@ -4,22 +4,38 @@
         <div layout="column" class="md-toolbar-tools-bottom inset">
           <user-avatar></user-avatar>
           <span></span>
-          <div>Firstname Lastname</div>
-          <div>email@domainname.com</div>
+          <div>{{ getCurrentUser().name }} ({{getCurrentUser().Initialer}})</div>
+          <div>{{ getCurrentUser().email }}</div>
         </div>
       </md-toolbar>
       <md-list>
-      <md-item ng-repeat="item in menu">
-        <a>
+	  
+	  <!--Menu items -->
+      <md-item ng-show="hasRole('useradmin')">
+        <a ui-sref="admin">
           <md-item-content md-ink-ripple layout="row" layout-align="start center">
             <div class="inset">
-              <ng-md-icon icon="{{item.icon}}"></ng-md-icon>
+              <ng-md-icon icon="group"></ng-md-icon>
             </div>
-            <div class="inset">{{item.title}}
+            <div class="inset">UserAdmin
             </div>
           </md-item-content>
         </a>
       </md-item>
+	  
+      <md-item ng-show="hasRole('taxonomyadmin')">
+        <a ui-sref="taxonomy">
+          <md-item-content md-ink-ripple layout="row" layout-align="start center">
+            <div class="inset">
+             <ng-md-icon  icon="device-hub"></ng-md-icon>
+            </div>
+            <div class="inset">TaxonBase
+            </div>
+          </md-item-content>
+        </a>
+      </md-item>
+	  
+	  
       <md-divider></md-divider>
       <md-subheader>Management</md-subheader>
       <md-item ng-repeat="item in admin">
@@ -35,7 +51,8 @@
       </md-item>
     </md-list>
     </md-sidenav>
-    <div layout="column" class="relative" layout-fill role="main">
+	  <div ui-view="" class="relative" layout-fill role="main"></div>
+<!--    <div layout="column" class="relative" layout-fill role="main">
       <md-button class="md-fab md-fab-bottom-right" aria-label="Add" ng-click="showAdd($event)">
         <ng-md-icon icon="add"></ng-md-icon>
       </md-button>
@@ -87,8 +104,10 @@
       </md-toolbar>
       <md-content flex md-scroll-y>
         <ui-view layout="column" layout-fill layout-padding >
-          <!--<div ui-view=""></div>-->
+         <div ui-view=""></div>
           
         </ui-view>
       </md-content>
-    </div>
+    </div> >-->
+	
+	

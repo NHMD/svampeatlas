@@ -1,9 +1,9 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
-<div class="container">
-
 <div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>	
+<div class="container">
+
+
 	    	<div class="row"  ng-if="stateParams.id">
 			<div class="col-md-6" >
 			<h2>{{taxon.FullName}}</h2>
@@ -278,7 +278,4 @@
 	  	    </div>
 	 </div>
 </div>
-<div class="col-md-12">
 
-<div ng-include="'components/footer/footer.html'"></div>
-</div>
