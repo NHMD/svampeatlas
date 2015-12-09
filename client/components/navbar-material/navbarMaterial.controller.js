@@ -57,24 +57,24 @@ angular.module('svampeatlasApp')
     };
    	$scope.menu = [
       {
-        link : '',
+        link : 'taxonomy',
         title: 'Dashboard',
         icon: 'dashboard'
       },
       {
-        link : '',
-        title: 'Friends',
+        link : 'admin',
+        title: 'UserAdmin',
         icon: 'group'
       },
       {
-        link : '',
-        title: 'Messages',
-        icon: 'message'
+        link : 'taxonomy',
+        title: 'TaxonBase',
+        icon: ''
       }
     ];
     $scope.admin = [
       {
-        link : '',
+        link : 'taxonomy',
         title: 'Trash',
         icon: 'delete'
       },

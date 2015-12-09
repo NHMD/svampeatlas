@@ -28,7 +28,7 @@ angular.module('svampeatlasApp')
 				if($scope.selectedTaxonRank && ($scope.selectedTaxonRank.RankName === 'superspecies' || $scope.selectedTaxonRank.RankName === 'supergenus')){
 					auhtorIsValid = true;
 				}
-				return ($scope.selectedParentTaxon !== undefined && $scope.selectedParentTaxon.constructor.name === 'Resource') 
+				return ($scope.selectedParentTaxon !== undefined && $scope.selectedParentTaxon._id !== undefined) 
 				&& $scope.selectedTaxonRank && $scope.selectedTaxonName && auhtorIsValid;
 				
 			}

@@ -1,9 +1,10 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
+<!--<div ng-include="'components/navbar/navbar.html'"></div> -->
+<div ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
+	
+</div>
 <div class="container">
 
-<div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
-</div>	
 			<div class="row">
 				<div class="panel-group" role="tablist" aria-multiselectable="false" start-collapsed="true" ng-model="extendedSearchIsOn" bs-collapse>
 			    	  <!-- ########################################-->
@@ -202,7 +203,7 @@
 </div>
 <div class="col-md-12">
 
-<div ng-include="'components/footer/footer.html'"></div>
+<!--<div ng-include="'components/footer/footer.html'"></div>-->
 </div>
 
 

@@ -1,9 +1,9 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
+	
+</div>
 <div class="container">
 
-<div class="row" ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
-</div>	
 	    	<div class="row" ng-show="!fetchingTaxon" ng-if="stateParams.id">
 			<div class="col-md-12" >
 			<div class="col-md-4" ng-show="taxon.$promise && taxon._id !== undefined">	
@@ -541,7 +541,4 @@
 
 </div>
 </div>
-<div class="col-md-12">
 
-<div ng-include="'components/footer/footer.html'"></div>
-</div>
