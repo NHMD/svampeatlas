@@ -2,10 +2,10 @@
 <div ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>
-<div class="container">
+<md-content flex md-scroll-y layout-padding>
 
 	
-			<div class="row">
+			
 				<div class="panel-group" role="tablist" aria-multiselectable="false" start-collapsed="true" ng-model="extendedSearchIsOn" bs-collapse>
 			    	  <!-- ########################################-->
 			    	  <div class="panel panel-default">
@@ -19,11 +19,7 @@
 			    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			    	      <div class="panel-body">
 							  <div class="col-md-12" ng-show="!checkboxes.OrphantTaxa">
-	
-							  	
-		
-							  		
-		
+
 							  	<p translate class="md-title">Find species, varietes and forms under selected higher taxa:</p>
 	
 							      <md-chips ng-model="selectedHigherTaxa" md-autocomplete-snap md-require-match="true">
@@ -136,10 +132,10 @@
 			    	  <!-- ########################################-->
 				  </div>
   
- </div> 
-
+ 
+</div>
 			
-<div class="row"><div class="col-md-12">
+<div class="col-md-12">
 	 <md-input-container class="col-md-2">
 	<md-button class="md-raised md-warn" ng-click="resetSearch()"><i class="fa fa-refresh"></i> {{ 'Reset search' | translate}}</md-button>
 	</md-input-container>
@@ -196,14 +192,11 @@
 	</tr>
 	</tfoot>
 </table>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="col-md-12">
 
-<!--<div ng-include="'components/footer/footer.html'"></div>-->
+
 </div>
+</div>
+</md-content>
+
 
 

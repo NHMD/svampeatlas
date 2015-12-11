@@ -1,38 +1,15 @@
-<div class="navbar navbar-default navbar-static-top" ng-controller="NavbarCtrl">
-  <div class="container">
-    <div class="navbar-header">
-      <button class="navbar-toggle" type="button" ng-click="isCollapsed = !isCollapsed">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a href="/" class="navbar-brand"><img src="assets/images/logo_clean.png" height="50" alt="Svampeatlas"></a>
-    </div>
-    <div collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
-      <ul class="nav navbar-nav">
-          
-        <li ng-repeat="item in menu" ui-sref-active="active">
-            <a translate ui-sref="{{item.state}}">{{item.title}}</a>
-        </li>
-        <li  ng-show="hasRole('taxonomyadmin')" ng-class='isTaxonBase()'>
-            <a ui-sref="taxonomy">TaxonBase</a>
-        </li>
-        <li ng-show="hasRole('useradmin')" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
-      </ul>
+      <md-toolbar ng-controller="NavbarCtrl">
+        <div class="md-toolbar-tools">
+          <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
+            <ng-md-icon icon="menu"></ng-md-icon>
+          </md-button>
+		  <ng-md-icon icon="{{states[state.current.name].icon}}" ></ng-md-icon>
+		  
+          <h3 class="inset">
+            {{states[state.current.name].name | translate}}
+          </h3>
+          <span flex></span>
 
-      <ul class="nav navbar-nav navbar-right">
-       <!--<li ng-hide="isLoggedIn()" ui-sref-active="active"><a ui-sref="signup">Sign up</a></li>--> 
-        <li ng-hide="isLoggedIn()" ui-sref-active="active"><a ui-sref="login">Login</a></li>
-        <li ng-show="isLoggedIn()"><p class="navbar-text"><i class="fa fa-user"></i> {{ getCurrentUser().name }} ({{getCurrentUser().Initialer}})</p> </li>
-        <li ng-show="isLoggedIn()" ui-sref-active="active"><a ui-sref="settings"><span class="glyphicon glyphicon-cog"></span></a></li>
-        <li ng-show="isLoggedIn()"><a ui-sref="logout" translate>Logout</a></li>
-		<li id="language-container">
-		<button id="navbar-language-picker" type="button" class="btn btn-xs btn-default" ng-model="preferred_language" data-html="1" bs-options="language.value as language.label for language in languages" bs-select>
-		  Action <span class="caret"></span>
-		</button>
-	</li>
-      </ul>
-    </div>
-  </div>
-</div>
+        </div>
+
+      </md-toolbar>

@@ -14,9 +14,9 @@
 				          </md-button> 
 				<md-sidenav class="md-sidenav-right md-whiteframe-z2 iframe-sidenav" md-component-id="iframeAside">
 				      <md-toolbar class="md-theme-light">
-				        <h1 class="md-toolbar-tools">Sidenav Right</h1>
+				        <h1 class="md-toolbar-tools">{{'Maps, graphs from atlas' | translate}}</h1>
 				      </md-toolbar>
-				      <md-content  layout-padding>
+				      <md-content  layout="row" layout-padding>
 				       
 				        <md-button ng-click="closeSideNav('iframeAside')" class="md-primary">
 				          {{'Close' | translate}}
@@ -24,20 +24,24 @@
 				        <md-button  class="md-primary" href="{{getIframeSrc()}}" target="_BLANK">
 				         <i class="fa fa-external-link"></i> {{'Open in new tab' | translate}}
 				        </md-button>
-						<iframe ng-src="{{getIframeSrc()}}" width="450" height="1200"></iframe>
+						
 						
 				      </md-content>
+					  <md-content  layout-padding>
+					  <iframe ng-src="{{getIframeSrc()}}" width="450" height="1200"></iframe>
+					   </md-content>
 				    </md-sidenav>
 					<md-sidenav class="md-sidenav-right md-whiteframe-z2 iframe-sidenav" md-component-id="similarAside">
 					      <md-toolbar class="md-theme-light">
-					        <h1 class="md-toolbar-tools">Sidenav Right</h1>
+					        <h1 class="md-toolbar-tools">{{'Similar species' | translate}}</h1>
 					      </md-toolbar>
-					      <md-content  layout-padding>
+					      <md-content layout="row"  layout-padding>
 				       
 					        <md-button ng-click="closeSideNav('similarAside')" class="md-primary">
 					           {{'Close' | translate}}
 					        </md-button>
-					        
+					         </md-content>
+							<md-content  layout-padding>
 							<table id="sibling-table">
 
 							  <tr class="parent-taxon-table" ng-repeat="sibling in taxon.siblings"><td class="parent-taxon-table" st-ratio="100"><strong><a href="/taxonbase/taxonbooklayout/{{sibling._id}}">{{sibling.FullName}}</a> <span ng-show="sibling.attributes.DKnavn">- {{sibling.attributes.DKnavn}}</span></strong><br>
