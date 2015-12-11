@@ -1,16 +1,104 @@
- <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+<md-sidenav class="md-sidenav-left md-whiteframe-z2"
+    md-component-id="left"
+    md-is-locked-open="$mdMedia('gt-md')" id="main-menu">
+
+          <md-toolbar class="md-tall md-hue-2">
+        <span flex></span>
+        <div layout="column" class="md-toolbar-tools-bottom inset">
+          <user-avatar></user-avatar>
+          <span></span>
+		  <div layout="row" >
+		  <div ng-show="isLoggedIn()">
+          <div>{{ getCurrentUser().name }} ({{getCurrentUser().Initialer}})</div>
+          <div>{{ getCurrentUser().email }}</div>
+	  </div>
+	  	<div ng-hide="isLoggedIn()" >
+	        <md-button  class="md-primary" ui-sref="login" id="login-button">
+	         <ng-md-icon icon="login"></ng-md-icon>{{'Login' | translate}}
+	        </md-button>
+			</div>
+			<div layout="row" layout-align="end center" layout-fill flex>
+			<button id="navbar-language-picker" type="button" class="btn btn-xs btn-default" ng-model="$parent.preferred_language" data-html="1" bs-options="language.value as language.label for language in languages" bs-select>
+			  Action <span class="caret"></span>
+			</button>
+			</div>
+        </div>
+		
+		<div>
+			
+		</div>
+		</div>
+      </md-toolbar>
+
+    <md-content flex role="navigation" ss-style-color="{'background-color': 'primary.default'}">
+        <ss-sidenav flex menu="menu"></ss-sidenav>
+    </md-content>
+</md-sidenav>
+
+<div layout="column" flex role="main">
+    <div ui-view layout="column"></div>
+</div>
+ <!--<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
       <md-toolbar class="md-tall md-hue-2">
         <span flex></span>
         <div layout="column" class="md-toolbar-tools-bottom inset">
           <user-avatar></user-avatar>
           <span></span>
+		  <div ng-show="isLoggedIn()">
           <div>{{ getCurrentUser().name }} ({{getCurrentUser().Initialer}})</div>
           <div>{{ getCurrentUser().email }}</div>
+	  </div>
+	  	<div ng-hide="isLoggedIn()" >
+			<a ui-sref="login">Login</a>
+			</div>
         </div>
       </md-toolbar>
+	  <md-menu-sidenav>
+	                <md-menu-sidenav-item>
+	                    <md-menu-sidenav-title>
+						
+	                        <md-toogle-menu md-ink-ripple layout="row" flex>
+							
+	                             <ng-md-icon icon="taxonomy"></ng-md-icon>
+	                            <h1 class="md-body-2" flex>TaxonBase</h1>
+								<ng-md-icon icon="expand_more"></ng-md-icon>
+								
+	                        </md-toogle-menu>
+
+	                        
+	                    </md-menu-sidenav-title>
+
+	                    <md-menu-sidenav-content>
+	                        <md-menu-sidenav-subitem ><a ng-class="{'active' : isSelected()}" class="md-button md-ink-ripple" ui-sref="taxonomy">Search taxa </a></md-menu-sidenav-subitem>
+	                        <md-menu-sidenav-subitem ><a ng-class="{'active' : isSelected()}" class="md-button md-ink-ripple" ui-sref="taxonomy-tree">Taxon tree </a></md-menu-sidenav-subitem>
+						    <md-menu-sidenav-subitem ><a ng-class="{'active' : isSelected()}" class="md-button md-ink-ripple" ui-sref="funindex">Add new taxon </a></md-menu-sidenav-subitem>
+							<md-menu-sidenav-subitem><a ng-class="{'active' : isSelected()}" class="md-button md-ink-ripple" ui-sref="taxonlog">Log </a></md-menu-sidenav-subitem>
+							<md-menu-sidenav-subitem><a ng-class="{'active' : isSelected()}" class="md-button md-ink-ripple" ui-sref="taxontags">Tags </a></md-menu-sidenav-subitem>
+							
+	                       
+	                    </md-menu-sidenav-content>
+	                </md-menu-sidenav-item>
+					
+	                <md-menu-sidenav-item>
+	                    <md-menu-sidenav-title>
+						 <a ui-sref="admin" >
+	                        <md-toogle-menu layout="row" flex>
+							
+	                             <ng-md-icon icon="group"></ng-md-icon>
+	                            <h1 class="md-body-2" flex>UserAdmin</h1>
+								
+								
+	                        </md-toogle-menu>
+							 </a>
+	                        
+	                    </md-menu-sidenav-title>
+
+	                </md-menu-sidenav-item>
+	  </md-menu-sidenav>
       <md-list>
 	  
-	  <!--Menu items -->
+
+	  <!--Menu items
       <md-item ng-show="hasRole('useradmin')">
         <a ui-sref="admin">
           <md-item-content md-ink-ripple layout="row" layout-align="start center">
@@ -27,7 +115,7 @@
         <a ui-sref="taxonomy">
           <md-item-content md-ink-ripple layout="row" layout-align="start center">
             <div class="inset">
-             <ng-md-icon  icon="device-hub"></ng-md-icon>
+             <ng-md-icon icon="taxonomy"></ng-md-icon>
             </div>
             <div class="inset">TaxonBase
             </div>
@@ -52,62 +140,6 @@
     </md-list>
     </md-sidenav>
 	  <div ui-view="" class="relative" layout-fill role="main"></div>
-<!--    <div layout="column" class="relative" layout-fill role="main">
-      <md-button class="md-fab md-fab-bottom-right" aria-label="Add" ng-click="showAdd($event)">
-        <ng-md-icon icon="add"></ng-md-icon>
-      </md-button>
-      <md-toolbar ng-show="!showSearch">
-        <div class="md-toolbar-tools">
-          <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
-            <ng-md-icon icon="menu"></ng-md-icon>
-          </md-button>
-          <h3>
-            Dashboard
-          </h3>
-          <span flex></span>
-          <md-button aria-label="Search" ng-click="showSearch = !showSearch">
-            <ng-md-icon icon="search"></ng-md-icon>
-          </md-button>
-          <md-button aria-label="Open Settings" ng-click="showListBottomSheet($event)">
-            <ng-md-icon icon="more_vert"></ng-md-icon>
-          </md-button>
-        </div>
-        <md-tabs md-stretch-tabs class="md-primary" md-selected="data.selectedIndex">
-          <md-tab id="tab1" aria-controls="tab1-content">
-            Latest
-          </md-tab>
-          <md-tab id="tab2" aria-controls="tab2-content">
-            Favorites
-          </md-tab>
-        </md-tabs>
-      </md-toolbar>
-      <md-toolbar class="md-hue-1" ng-show="showSearch">
-        <div class="md-toolbar-tools">
-          <md-button ng-click="showSearch = !showSearch" aria-label="Back">
-            <ng-md-icon icon="arrow_back"></ng-md-icon>
-          </md-button>
-          <h3 flex="10">
-            Back
-          </h3>
-          <md-input-container md-theme="input" flex>
-            <label>&nbsp;</label>
-            <input ng-model="search.who" placeholder="enter search">
-          </md-input-container>
-          <md-button aria-label="Search" ng-click="showSearch = !showSearch">
-            <ng-md-icon icon="search"></ng-md-icon>
-          </md-button>
-          <md-button aria-label="Open Settings" ng-click="showListBottomSheet($event)">
-            <ng-md-icon icon="more_vert"></ng-md-icon>
-          </md-button>
-        </div>
-       
-      </md-toolbar>
-      <md-content flex md-scroll-y>
-        <ui-view layout="column" layout-fill layout-padding >
-         <div ui-view=""></div>
-          
-        </ui-view>
-      </md-content>
-    </div> >-->
+-->
 	
 	

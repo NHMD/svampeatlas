@@ -12,11 +12,21 @@ angular.module('svampeatlasApp')
         url: '/logout?referrer',
         referrer: 'main',
         template: '',
-        controller: function($state, Auth) {
+        controller: function($state, Auth, ssSideNav) {
           var referrer = $state.params.referrer ||
                           $state.current.referrer ||
                           'main';
           Auth.logout();
+  		
+  			ssSideNav.setVisible('Logout', false);
+			
+			
+				ssSideNav.setVisible('TaxonBase', false);
+			
+			
+				ssSideNav.setVisible('UserAdmin', false);
+			
+  		
           $state.go(referrer);
         }
       })

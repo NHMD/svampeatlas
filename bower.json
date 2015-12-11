@@ -21,7 +21,8 @@
     "d3": "3.5.5",
     "angular-xml": "2.1.0",
 	"angular-material": "0.11.4",
-	"angular-material-icons": ""
+	"angular-material-icons": "",
+	"angular-material-sidenav" :"0.0.4"
   },
   "devDependencies": {
     "angular-mocks": "~1.4",

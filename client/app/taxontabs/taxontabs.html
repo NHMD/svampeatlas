@@ -6,27 +6,24 @@
 -->
 
 
-      <md-toolbar ng-show="!showSearch">
+      <md-toolbar>
         <div class="md-toolbar-tools">
           <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
             <ng-md-icon icon="menu"></ng-md-icon>
           </md-button>
-          <h3>
-            TaxonBase
+		  <ng-md-icon icon="taxonomy" ></ng-md-icon>
+		  
+          <h3 class="inset">
+            TaxonBase / {{states[state.current.name] | translate}} / {{$parent.taxon.FullName}}
           </h3>
           <span flex></span>
-          <md-button aria-label="Search" ng-click="showSearch = !showSearch">
-            <ng-md-icon icon="search"></ng-md-icon>
-          </md-button>
-          <md-button aria-label="Open Settings" ng-click="showListBottomSheet($event)">
-            <ng-md-icon icon="more_vert"></ng-md-icon>
-          </md-button>
+
         </div>
-  <md-tabs md-stretch-tabs class="md-primary" md-selected="tabs.activeTab">
+  <md-tabs md-stretch-tabs class="md-primary" md-selected="tabs.activeTab" ng-show="state.current.name.split('-')[0] === 'taxonlayout'">
    
-    <md-tab ng-repeat="tab in tabs"  ng-class="{'md-active': tab.active}" ng-disabled="tab.disabled">
+    <md-tab ng-repeat="tab in tabs"  ng-class="{'md-active': tab.active}" ng-disabled="tab.disabled" >
       <md-tab-label>
-        {{tab.title}}
+        {{tab.title | translate}}
        
       </md-tab-label>
     

@@ -1,21 +1,34 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams', 'Auth', '$translate',
-		function($scope,  $state, $stateParams, Auth, $translate) {
+	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams', 'Auth', '$translate', '$mdSidenav',
+		function($scope,  $state, $stateParams, Auth, $translate, $mdSidenav) {
 			$scope.hasRole = Auth.hasRole;
 			$scope.state = $state;
-			
+			$scope.mdSidenav = $mdSidenav;
+			$scope.toggleSidenav = function(nav){
+				$mdSidenav(nav).toggle();
+			};
+	
 			$scope.tabs = [
-			    { title:'Search taxa', state: 'taxonomy'},
-				{ title:'Taxon tree', state: 'taxonomy-tree'},
-			    { title:'Add new taxon',  state: 'funindex' },
-				{ title:'Taxon', state: 'taxonlayout-taxon' },
-				{ title:'Red List',  state: 'taxonlayout-taxonredlistdata' },
-				{ title:'Book layout',  state: 'taxonlayout-taxonbooklayout'},
-				{ title:'Log', state: 'taxonlog'},
-				{ title:'Tags', state: 'taxontags'}
+
+				{ title:'Taxon', state: 'taxonlayout-taxon'},
+				{ title:'Red List',  state: 'taxonlayout-taxonredlistdata'},
+				{ title:'Book layout',  state: 'taxonlayout-taxonbooklayout'}
 			  ];
+			  
+  			$scope.states = 
+  			    { 'taxonomy': 'Search taxa',
+				'taxonomy-tree': 'Taxon tree',
+				'funindex': 'Add new taxon',
+				'taxonlayout-taxon': 'Taxon',
+				'taxonlayout-taxonredlistdata': 'Red List',
+				'taxonlayout-taxonbooklayout': 'Book layout',
+				'taxonlog' : 'Log',
+				'taxontags' : 'Tags'
+			};
+			
+	
 		  
 		 
 		$scope.tabs.activeTab =	 _.indexOf( $scope.tabs, _.findWhere($scope.tabs, { 'state': $state.current.name }))

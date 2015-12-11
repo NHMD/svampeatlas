@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('LoginCtrl', function($scope, Auth, $state, $window, $location, $cookies, $translate, PlutoF) {
+  .controller('LoginCtrl', function($scope, Auth, $state, $window, $location, $cookies, $translate, PlutoF, ssSideNav) {
     $scope.user = {};
     $scope.errors = {};
 	
@@ -18,6 +18,16 @@ angular.module('svampeatlasApp')
         })
         .then(function() {
 			Auth.getCurrentUser(function(usr){
+				
+				if(usr){
+					ssSideNav.setVisible('Logout', true);
+				}
+				if(Auth.hasRole('taxonomyadmin')){
+					ssSideNav.setVisible('TaxonBase', true);
+				}
+				if(Auth.hasRole('useradmin')){
+					ssSideNav.setVisible('UserAdmin', true);
+				}
 				$cookies.put('preferred_language', usr.preferred_language);
 				$translate.use(usr.preferred_language);
 	    		  if(Auth.hasRole('taxonomyadmin') &&  !$cookies.get('plutoftoken')){

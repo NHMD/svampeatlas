@@ -20,23 +20,45 @@ h2 {
 .md-toolbar-tools-bottom {
   font-size: small;
 }
-.md-toolbar-tools-bottom :last-child {
-  opacity: 0.8;
-}
 
 md-toolbar:not(.md-hue-1),
 .md-fab {
   fill: #fff;
 }
 
-md-sidenav {
-  fill: #737373;
-}
 md-sidenav ng-md-icon {
-  position: relative;
-  top: 5px;
+	margin-right: 10px;
 }
 
 .user-avatar {
   border-radius: 99%;
+}
+
+#main-menu .md-button:hover, #main-menu .md-button:focus {
+    background: rgb(55, 71, 79) !important;
+}
+
+.menu .menu-toggle-list a.md-button {
+   
+    padding: 0 16px 0 52px !important;
+
+}
+
+
+#login-button {
+    box-shadow: none !important;
+    border-radius: 0;
+    /* color: white; */
+    cursor: pointer;
+    display: block;
+    align-items: inherit;
+    line-height: 40px;
+    margin: 0 !important;
+    max-height: 40px;
+    overflow: hidden;
+    padding: 0px 16px;
+    text-align: left;
+    text-decoration: none;
+    white-space: normal;
+    width: 100%;
 }
