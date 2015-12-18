@@ -1,0 +1,54 @@
+<!--<div ng-include="'components/navbar/navbar.html'"></div> -->
+<div ng-include="'components/navbar/navbar.html'"></div>
+	
+</div>
+<md-content flex md-scroll-y layout-padding>
+
+	
+
+	
+<md-progress-linear class="col-md-12" md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
+<table  class="table taxonomy-table" st-pipe="callServer" st-table="displayed">
+	<thead>
+	<tr>
+		<th st-sort="observationDate" st-ratio="10">Dato</th>
+		<th st-ratio="5"></th>
+		<th st-ratio="5"></th>
+		<th st-sort="PrimaryDetermination.Taxon.FullName" st-ratio="40" translate>Navn</th>
+		<th st-sort="Locality.name" st-ratio="40" translate>Lokalitet</th>
+		<th st-sort="PrimaryUser.name" st-ratio="40" translate>Finder</th>
+	</tr>
+	</thead>
+	<tbody ng-show="!isLoading">
+	<tr ng-repeat="row in displayed">
+		<td st-ratio="10">{{row.observationDate | date : 'dd/MM/yyyy'}}</td>
+		<td st-ratio="5"><ng-md-icon icon="camera_alt" ng-if="row.Images.length > 0"></ng-md-icon></td>
+		<th st-ratio="5"><ng-md-icon icon="chat" ng-if="row.Forum.length > 0"></th>
+		<td st-ratio="40"><em>{{row.PrimaryDetermination.Taxon.FullName}}</em></td>	
+		<td st-ratio="40">{{row.Locality.name}}</td>	
+			<td st-ratio="40">{{row.PrimaryUser.Initialer}}</td>	
+			
+		</td>
+		
+	</tr>
+	</tbody>
+	<tbody ng-show="isLoading">
+	<tr>
+		<td colspan="4" class="text-center">Loading ... </td>
+	</tr>
+	</tbody>
+	<tfoot>
+	<tr>
+		<td class="text-center" st-pagination="" st-displayed-pages="20" st-items-by-page="50" colspan="4">
+		</td>
+	</tr>
+	</tfoot>
+</table>
+
+
+
+
+</md-content>
+
+
+

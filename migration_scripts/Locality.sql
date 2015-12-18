@@ -23,6 +23,16 @@ CREATE TABLE IF NOT EXISTS Locality (
 UPDATE GazFusion set include=0 where include="";
 UPDATE GazFusion set usikkerhed=0 where usikkerhed="";
 UPDATE GazFusion set include=0 where hovedlokalitet="";
-
+UPDATE GazFusion set Northing=0 where Northing="";
+UPDATE GazFusion set Easting=0 where Easting="";
+UPDATE GazFusion set hovedlokalitet=0 where hovedlokalitet="";
 insert into Locality ( _id,  name, decimalLatitude, decimalLongitude, accuracy, utm_northing, utm_easting, utm10, kommune,source, description, moderator, include, mainlocality) 
 	select LocID, LocName, GoogleLat, GoogleLong, usikkerhed, Northing, Easting, UTM10, Kommune, Source, LocDescr, moderator, include, hovedlokalitet FROM GazFusion;
+	
+ALTER TABLE Observation ADD FOREIGN KEY (locality_id) REFERENCES Locality(_id);
+
+
+UPDATE Observation o, Fungi f SET o.verbatimLocality = f.localityFromOldBases WHERE o._id=f.AtlasLNR AND f.AtlasLocID NOT IN (select _id from Locality l);
+UPDATE Observation o, Fungi f SET o.locality_id = 1 WHERE o._id=f.AtlasLNR AND f.AtlasLocID NOT IN (select _id from Locality l);
+
+SELECT AtlasLocID, LocalityCalc, COUNT(*) FROM Fungi f WHERE AtlasLocID NOT IN (select _id from Locality) GROUP BY f.AtlasLocID;

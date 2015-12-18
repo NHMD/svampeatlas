@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS Observation (
   observationDate datetime NOT NULL,
   observationDateAccuracy ENUM('day', 'month', 'year', 'invalid') NOT NULL DEFAULT 'day',
   locality_id INT(11),
+  verbatimLocality VARCHAR(1020),
   primaryuser_id INT(11),
   verbatimLeg VARCHAR(255),
   primarydetermination_id INT(11),

@@ -34,7 +34,7 @@
 			
 			</div>
 				
-			<h2><span ng-show="taxon._id === undefined || taxon.FunIndexNumber">{{taxon.FullName}} </span>
+			<h2><span ng-show="taxon._id === undefined || taxon.FunIndexNumber"><em>{{taxon.FullName}}</em> {{taxon.Author}}</span>
 				
 				<button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="saveIsClicked || taxon.Parent === null" ng-click="saveNewTaxon(taxon)" translate>Save taxon <i ng-show="saveIsClicked" class="fa fa-spinner fa-spin"></i></button> <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="synonymModal.show()" tabindex="0" translate>Make into synonym</button>
 <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			

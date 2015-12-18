@@ -1,6 +1,6 @@
       <md-toolbar ng-controller="NavbarCtrl">
         <div class="md-toolbar-tools">
-          <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
+          <md-button ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
             <ng-md-icon icon="menu"></ng-md-icon>
           </md-button>
 		  <ng-md-icon icon="{{states[state.current.name].icon}}" ></ng-md-icon>

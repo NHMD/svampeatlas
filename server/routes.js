@@ -20,6 +20,13 @@ module.exports = function(app) {
    app.use('/api/naturetypes', require('./api/mysql/Naturtype'));
    app.use('/api/nutritionstrategies', require('./api/mysql/ErnaeringsStrategi'));
     app.use('/api/taxonomytags', require('./api/mysql/TaxonomyTag'));
+	
+	
+	app.use('/api/observations', require('./api/mysql/Observation'));
+	app.use('/api/determinations', require('./api/mysql/Determination'));
+	app.use('/api/localities', require('./api/mysql/Locality'));
+	
+	
    
   app.use('/api/things', require('./api/mysql/thing'));
   app.use('/api/users', require('./api/mysql/user'));

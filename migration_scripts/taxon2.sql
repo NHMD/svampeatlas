@@ -565,3 +565,7 @@ ALTER TABLE `Taxon`
   UPDATE Taxon t, subspecific_syn_correct s SET t.accepted_id = s.DkIndexANDSynNumber WHERE t._id = s.DkIndexNumber;
 
   DROP TABLE subspecific_syn_correct;
+  
+  
+  -- Patch to remove Author from FullName:
+  UPDATE TAXON SET FullName= TRIM(SUBSTRING_INDEX(FullName, Author, 1)) WHERE FullName LIKE CONCAT("%", Author);

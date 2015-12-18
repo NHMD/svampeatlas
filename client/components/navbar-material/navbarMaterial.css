@@ -62,3 +62,7 @@ md-sidenav ng-md-icon {
     white-space: normal;
     width: 100%;
 }
+
+.hide-sidenav-btn {
+	color: white;
+}
