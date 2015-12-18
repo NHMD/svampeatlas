@@ -31,7 +31,7 @@ angular.module('svampeatlasApp')
 						var thisTaxon = {};
 						thisTaxon.dataSource = source;
 						
-						thisTaxon.FullName = taxon.NAME_x0020_OF_x0020_FUNGUS + " " + taxon.AUTHORS;
+						thisTaxon.FullName = taxon.NAME_x0020_OF_x0020_FUNGUS;
 						thisTaxon.Author = taxon.AUTHORS;
 						thisTaxon.FunIndexCurrUseNumber = (taxon.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER) ? taxon.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER : taxon.RECORD_x0020_NUMBER;
 						thisTaxon.FunIndexTypificationNumber = that.getTypificationNumber(taxon);
@@ -84,7 +84,7 @@ angular.module('svampeatlasApp')
 						var thisTaxon = {};
 						thisTaxon.dataSource = source;
 						thisTaxon.SystematicPath =  (parents.length >0) ? parents[0].SystematicPath + ", " + taxon.epithet_  : taxon.SystematicPath + ", " + taxon.epithet_;
-						thisTaxon.FullName = taxon.name + " " + taxon.authorsabbrev_;
+						thisTaxon.FullName = taxon.name;
 						thisTaxon.Author = taxon.authorsabbrev_;
 						thisTaxon.FunIndexCurrUseNumber = taxon.FunIndexCurrUseNumber;
 						thisTaxon.FunIndexTypificationNumber = 0;

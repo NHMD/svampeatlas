@@ -47,22 +47,6 @@ angular.module('svampeatlasApp')
 
 				})
 				
-				$scope.taxon.$promise.then(function(){
-				$scope.getNameWithoutAuthor = function(){
-				
-				 
-						var parts = $scope.taxon.SystematicPath.split(", ");
-				
-						if($scope.taxon.RankID > 10000)
-						{return parts[parts.length-3]+" "+parts[parts.length-2]+" "+$scope.taxon.RankName+" "+parts[parts.length-1]}
-						else if($scope.taxon.RankID === 10000){
-							return parts[parts.length-2]+" "+parts[parts.length-1]
-						} else {
-							return $scope.taxon.TaxonName;
-						}	
-				
-				}
-			});
 				
 				$q.all([$scope.taxon.$promise, $scope.natureTypes.$promise]).then(function(){
 					

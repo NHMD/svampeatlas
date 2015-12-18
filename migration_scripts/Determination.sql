@@ -101,3 +101,6 @@ UPDATE Determination d, Users u SET d.user_id = u._id WHERE SUBSTRING_INDEX(d.ve
 UPDATE Determination d, Users u SET d.user_id = u._id WHERE SUBSTRING_INDEX(d.verbatimdeterminator, " og ", 1) = u.name AND d.user_id IS NULL;
 
 UPDATE Determination d, Users u SET d.user_id = u._id WHERE SUBSTRING_INDEX(d.verbatimdeterminator, ",", 1) = u.name AND d.user_id IS NULL;
+
+
+UPDATE Determination d, Observation o SET o.primarydetermination_id = d._id WHERE d.observation_id = o._id;

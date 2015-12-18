@@ -44,7 +44,7 @@
 							<md-content  layout-padding>
 							<table id="sibling-table">
 
-							  <tr class="parent-taxon-table" ng-repeat="sibling in taxon.siblings"><td class="parent-taxon-table" st-ratio="100"><strong><a href="/taxonbase/taxonbooklayout/{{sibling._id}}">{{sibling.FullName}}</a> <span ng-show="sibling.attributes.DKnavn">- {{sibling.attributes.DKnavn}}</span></strong><br>
+							  <tr class="parent-taxon-table" ng-repeat="sibling in taxon.siblings"><td class="parent-taxon-table" st-ratio="100"><strong><a href="/taxonbase/taxonbooklayout/{{sibling._id}}">{{sibling.FullName}} {{sibling.Author}}</a> <span ng-show="sibling.attributes.DKnavn">- {{sibling.attributes.DKnavn}}</span></strong><br>
 								  {{sibling.attributes.diagnose}}<br>
 								  {{sibling.attributes.forvekslingsmuligheder}}<br><br>
 								  {{sibling.attributes.oekologi}}
@@ -56,7 +56,7 @@
 					      </md-content>
 					    </md-sidenav>
 			<div class="col-md-8" >
-			<h2>{{taxon.FullName}} 		
+			<h2><em>{{taxon.FullName}}</em> {{taxon.Author}}		
 			</h2>
 			<div class="alert alert-warning" role="alert" ng-show="taxon.acceptedTaxon && taxon.acceptedTaxon._id !== taxon._id"><strong>Synonym of: </strong><a href="/taxonbase/taxonbooklayout/{{taxon.acceptedTaxon._id}}"> {{taxon.acceptedTaxon.FullName}}</a> ( {{taxon.acceptedTaxon.DKnavn}} 	) <button class="btn btn-xs btn-danger pull-right"  ng-click="unlinkSynonym()" tabindex="0">Unlink synonym</button></div>
 			<div class="alert alert-danger col-md-12" role="alert" ng-show="taxon.parent_id === null"><strong>Orphant taxon! </strong> Please add parent Taxon in the actions menu on the right. 
@@ -167,7 +167,7 @@
 				<md-whiteframe class="md-whiteframe-z3" layout="column" layout-padding layout-margin>
 				    
 				  
-				<h3><em>{{getNameWithoutAuthor()}}</em> <span ng-show="taxon.attributes.DKnavn">- {{taxon.attributes.DKnavn}}</span></h3>
+				<h3><em>{{taxon.FullName}}</em> <span ng-show="taxon.attributes.DKnavn">- {{taxon.attributes.DKnavn}}</span></h3>
 		      <carousel disable-ng-animate interval="">
 		        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
 		          <img ng-src="{{slide.uri}}" style="margin:auto;">

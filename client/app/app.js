@@ -42,78 +42,110 @@ angular.module('svampeatlasApp', [
 	
 	            ssSideNavSectionsProvider.initWithTheme($mdThemingProvider);
 				
-			
-	            ssSideNavSectionsProvider.initWithSections([{
-	                id: 'Administration',
-	                name: 'Administration',
-	                type: 'heading',
-	                children: [{
-						id: 'TaxonBase',
-	                    name: 'TaxonBase',
-	                    type: 'toggle',
-						hidden: true,
-						icon: 'taxonomy',
-	                    pages: [{
-	                        id: 'TaxonBase_search',
-	                        name: 'Search taxa',
-	                        state: 'taxonomy'
-							
-	                    }, {
-	                        id: 'TaxonBase_tree',
-	                        name: 'Taxon tree',
-	                        state: 'taxonomy-tree'
-	                     //   hidden: true
-	                    }, {
-	                        id: 'TaxonBase_funindex',
-	                        name: 'Add new taxon',
-	                        state: 'funindex'
-	                    }, {
-	                        id: 'TaxonBase_Log',
-	                        name: 'Log',
-	                        state: 'taxonlog'
-	                    }, {
-	                        id: 'TaxonBase_tags',
-	                        name: 'Tags',
-	                        state: 'taxontags'
-	                    }]
-	                }]
-	            }, {
-	                id: 'UserAdmin',
-					icon: 'group',
-	                name: 'UserAdmin',
-	                state: 'admin',
-	                type: 'link',
-					hidden: true
-	            }, {
-	                id: 'link_2',
-	                name: 'Link 2',
-	                state: 'common.link2',
-	                type: 'link',
-					hidden: true
-	            }, {
-	                id: 'link_3',
-	                name: 'Link 3',
-	                state: 'common.link3',
-	                type: 'link',
-	                hidden: true
-	            },  {
-	                id: 'Settings',
-	                name: 'Indstillinger',
-	                type: 'heading',
-	                children: [{
-	                id: 'Logout',
-	                name: 'Logout',
-	                state: 'logout',
-	                type: 'link',
-					icon: 'logout'	
-	            },{
-	                id: 'Profile',
-	                name: 'Profil',
-	                state: 'settings',
-	                type: 'link',
-					icon: 'person'	
-	            }]
-	            }]);
+			ssSideNavSectionsProvider.initWithSections([{
+				id: 'SearchAtlas',
+				name: 'Søg i Svampeatlas',
+				type: 'heading',
+				children: [{
+					id: 'Search',
+					name: 'Søg fund',
+					state: 'search',
+					type: 'toggle',
+					icon: 'search',
+					pages: [{
+						id: 'search_my_obs',
+						name: 'Mine observationer',
+						state: ''
+
+					},{
+						id: 'search_form',
+						name: 'Søgeformular',
+						state: 'search'
+
+					}, {
+						id: 'search_3',
+						name: 'Seneste 3 dage',
+						state: ''
+
+					}, {
+						id: 'search_7',
+						name: 'Seneste 7 dage',
+						state: ''
+
+					}]
+				}]
+			}, {
+				id: 'Administration',
+				name: 'Administration',
+				type: 'heading',
+				children: [{
+					id: 'TaxonBase',
+					name: 'TaxonBase',
+					type: 'toggle',
+					hidden: true,
+					icon: 'taxonomy',
+					pages: [{
+						id: 'TaxonBase_search',
+						name: 'Search taxa',
+						state: 'taxonomy'
+
+					}, {
+						id: 'TaxonBase_tree',
+						name: 'Taxon tree',
+						state: 'taxonomy-tree'
+						//   hidden: true
+					}, {
+						id: 'TaxonBase_funindex',
+						name: 'Add new taxon',
+						state: 'funindex'
+					}, {
+						id: 'TaxonBase_Log',
+						name: 'Log',
+						state: 'taxonlog'
+					}, {
+						id: 'TaxonBase_tags',
+						name: 'Tags',
+						state: 'taxontags'
+					}]
+				}]
+			}, {
+				id: 'UserAdmin',
+				icon: 'group',
+				name: 'UserAdmin',
+				state: 'admin',
+				type: 'link',
+				hidden: true
+			}, {
+				id: 'link_2',
+				name: 'Link 2',
+				state: 'common.link2',
+				type: 'link',
+				hidden: true
+			}, {
+				id: 'link_3',
+				name: 'Link 3',
+				state: 'common.link3',
+				type: 'link',
+				hidden: true
+			}, {
+				id: 'Settings',
+				name: 'Indstillinger',
+				type: 'heading',
+				children: [{
+					id: 'Logout',
+					name: 'Logout',
+					state: 'logout',
+					type: 'link',
+					icon: 'logout'
+				}, {
+					id: 'Profile',
+					name: 'Profil',
+					state: 'settings',
+					type: 'link',
+					icon: 'person'
+				}]
+			}]);
+
 	  
 	
   })

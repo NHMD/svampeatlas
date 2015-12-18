@@ -1,14 +1,18 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams', 'Auth', '$translate', '$mdSidenav',
-		function($scope,  $state, $stateParams, Auth, $translate, $mdSidenav) {
+	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams', 'Auth', '$translate', '$mdSidenav','$mdMedia','ssSideNav',
+		function($scope,  $state, $stateParams, Auth, $translate, $mdSidenav, $mdMedia,ssSideNav) {
 			$scope.hasRole = Auth.hasRole;
 			$scope.state = $state;
 			$scope.mdSidenav = $mdSidenav;
-			$scope.toggleSidenav = function(nav){
-				$mdSidenav(nav).toggle();
-			};
+			$scope.menu = ssSideNav;
+			$scope.openSideNav = function(){
+			
+					$scope.menu.userHasForceClosed = false;
+			
+				 $mdSidenav('left').open();
+			}
 	
 			$scope.tabs = [
 
