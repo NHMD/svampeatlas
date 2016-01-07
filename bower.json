@@ -20,9 +20,10 @@
     "angular-xeditable": "",
     "d3": "3.5.5",
     "angular-xml": "2.1.0",
-	"angular-material": "0.11.4",
+	"angular-material": "1.0.1",
 	"angular-material-icons": "",
-	"angular-material-sidenav" :"0.0.4"
+	"angular-material-sidenav" :"0.0.8",
+	"moment": "2.11.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4",

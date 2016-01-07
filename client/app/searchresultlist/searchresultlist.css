@@ -536,3 +536,8 @@
     background-color: #ffccbc;
   }
 }
+
+.scroll-table-container{
+    height:500px;
+    overflow-y:scroll;
+}

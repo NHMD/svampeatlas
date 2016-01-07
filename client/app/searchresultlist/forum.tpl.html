@@ -1,0 +1,47 @@
+<md-dialog aria-label="Forum"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2><em>{{obs.DeterminationView.Taxon_FullName}}</em>, {{obs.Locality.name}}, {{obs.observationDate | date : 'dd/MM/yyyy'}}, {{obs.PrimaryUser.name}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <ng-md-icon icon="close" aria-label="Close dialog"></ng-md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content >
+      
+        <div class="md-dialog-content" layout="column" layout-align="left center" layout-fill >
+  
+  	     <md-list>
+  	       <md-list-item class="md-3-line" ng-repeat="elm in forum">
+  	         <div class="md-list-item-text">
+  	           <h3>{{elm.content}}</h3>
+  	           <h4 class="layout-fill layout-align-end-start layout-row flex"><em>- <span ng-show="elm.user_id !== null">{{elm.User.name}},</span> {{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</em></h4>
+	          
+  	         </div>
+  	        
+  	         <md-divider ng-if="!$last" ></md-divider>
+  	       </md-list-item>
+  	     </md-list>
+  	 
+	   
+		
+        
+        
+      </div>
+    </md-dialog-content>
+   <!-- <md-dialog-actions layout="row">
+      <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+        More on Wikipedia
+      </md-button>
+      <span flex></span>
+      <md-button ng-click="answer('not useful')">
+       Not Useful
+      </md-button>
+      <md-button ng-click="answer('useful')" style="margin-right:20px;">
+        Useful
+      </md-button>
+    </md-dialog-actions> -->
+  </form>
+</md-dialog>

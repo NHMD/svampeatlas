@@ -9,7 +9,15 @@ angular.module('svampeatlasApp')
 		}, {
 			update: {
 				method: 'PUT' // this method issues a PUT request
-			}
+			},
+			'getForum': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/:id/forum',
+				isArray: true
+			},
 			
 		});
 

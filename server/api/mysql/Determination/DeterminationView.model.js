@@ -5,127 +5,166 @@ var validatePresenceOf = function(value) {
 };
 
 module.exports = function(sequelize, DataTypes) {
-  var Observation = sequelize.define('Observation', {
-
-    _id: {
-   	type: DataTypes.INTEGER,
+  var DeterminationView = sequelize.define('DeterminationView', {
+      Determination_id: {
+     	type: DataTypes.INTEGER,
+     	
    	allowNull: false,
    	primaryKey: true,
    	autoIncrement: true
-   },
-   createdAt: {
-   	type: DataTypes.DATE,
-   	allowNull: false,
-   	defaultValue: DataTypes.NOW
-   },
-   updatedAt: {
-   	type: DataTypes.DATE,
-   	allowNull: true,
-   },
-   observationDate: {
-   	type: DataTypes.DATE,
-   	allowNull: false
-   },
-   observationDateAccuracy: {
-   	type: DataTypes.ENUM('day', 'month', 'year', 'invalid'),
-   	allowNull: false,
-   	defaultValue: 'day'
-   },
-   locality_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   verbatimLocality: {
-   	type: DataTypes.STRING,
-   	allowNull: true,
-   },
-   primaryuser_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   verbatimLeg: {
-   	type: DataTypes.STRING,
-   	allowNull: true,
-   },
-   primarydetermination_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   primaryassociatedorganism_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   vegetationtype_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   substrate_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   ecologynote: {
-   	type: DataTypes.TEXT,
-   	allowNull: true,
-   },
-   decimalLatitude: {
-   	type: DataTypes.DOUBLE,
-   	allowNull: false,
-   },
-   decimalLongitude: {
-   	type: DataTypes.DOUBLE,
-   	allowNull: false,
-   },
-   accuracy: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   atlasUUID: {
+     },
+     Determination_createdAt: {
+     	type: DataTypes.DATE,
+     	allowNull: false,
+     	defaultValue: DataTypes.NOW
+     },
+     Determination_updatedAt: {
+     	type: DataTypes.DATE,
+     	allowNull: true,
+     },
+     Determination_observation_id: {
+     	type: DataTypes.INTEGER,
+     	allowNull: false,
+     },
+     Determination_taxon_id: {
+     	type: DataTypes.INTEGER,
+     	allowNull: false,
+     },
+     Determination_user_id: {
+     	type: DataTypes.INTEGER,
+     	allowNull: true,
+     },
+     Determination_confidence: {
+     	type: DataTypes.ENUM('sikker','sandsynlig','mulig'),
+     	allowNull: true
+     },
+     Determination_score: {
+     	type: DataTypes.INTEGER,
+     	allowNull: false,
+      defaultValue: 0   
+     },
+     Determination_validation: {
+     	type: DataTypes.ENUM('Godkendt','Gammelvali','Valideres','Afventer','Afvist','Slettes'),
+     	allowNull: true
+     },
+     Determination_notes: {
+     	type: DataTypes.TEXT,
+     	allowNull: true,
+     },
+  
+     Determination_validatorremarks: {
+     	type: DataTypes.STRING,
+     	allowNull: true,
+     },
+     Determination_validator_id: {
+     	type: DataTypes.INTEGER,
+     	allowNull: true,
+     },
+  
+     Determination_verbatimdeterminator: {
+     	type: DataTypes.STRING,
+     	allowNull: true
+     },
+     // tax
+      Taxon_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      Taxon_createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW
+      },
+      Taxon_updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      Taxon_Path: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      Taxon_SystematicPath: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      Taxon_Version: {
+        type: DataTypes.INTEGER(11),
+        allowNull: true,
+      },
+      Taxon_FullName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      Taxon_GUID: {
    	type: DataTypes.UUID,
    	allowNull: true,
    	defaultValue: DataTypes.UUIDV1
-   },
-   fieldnumber: {
-   	type: DataTypes.STRING,
+      },    
+      Taxon_FunIndexCurrUseNumber: {
+        type: DataTypes.INTEGER(11),
    	allowNull: true,
-   },
-   herbarium: {
-   	type: DataTypes.STRING,
-   	allowNull: true,
-   },
-   note: {
-   	type: DataTypes.TEXT,
-   	allowNull: true,
-   },
-   noteInternal: {
-   	type: DataTypes.TEXT,
-   	allowNull: true,
-   },
-   dataSource: {
-   	type: DataTypes.STRING,
-   	allowNull: true,
-   }
-
+      defaultValue: null,
+      }, 
+      Taxon_FunIndexTypificationNumber: {
+        type: DataTypes.INTEGER(11),
+        allowNull: false,
+      }, 
+      Taxon_FunIndexNumber: {
+        type: DataTypes.INTEGER(11),
+   allowNull: true,
+      defaultValue: null,
+      },
+      Taxon_RankID: {
+        type: DataTypes.INTEGER(11),
+        allowNull: false,
+      },
+      Taxon_RankName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      Taxon_TaxonName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      Taxon_Author: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+   Taxon_vernacularname_dk :{
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+	  Recorded_as_FullName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+	  Recorded_as_id: {
+        type: DataTypes.INTEGER(11),
+   	allowNull: true
+      },
+	  
+	  Taxon_redlist_status :{
+        type: DataTypes.STRING,
+        allowNull: true,
+      }
+   
   }, {
-    	tableName: 'Observation',
-    	timestamps: true,
+    	tableName: 'DeterminationView',
+    	timestamps: false,
     	freezeTableName: true,
     	classMethods: {
 
     		associate: function(models) {
 				
+		
+		
 		models.Observation
-				.hasOne(models.Determination, {
-					foreignKey: "observation_id" ,
-					as: "PrimaryDetermination"
-				});	
-		models.Observation
-				.belongsTo(models.User, {
-					foreignKey: "primaryuser_id" ,
-					as: "PrimaryUser"
-				});		
+				.hasOne(models.DeterminationView, {
+					foreignKey: "Determination_observation_id" ,
+					as: "DeterminationView"
+				});			
 				
-				
-		/*
+	/*
     			models.Taxon
     				.belongsTo(models.Taxon, {
     					foreignKey: "parent_id",
@@ -262,5 +301,5 @@ module.exports = function(sequelize, DataTypes) {
   
   });
 
-  return Observation;
+  return DeterminationView;
 };

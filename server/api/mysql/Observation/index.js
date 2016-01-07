@@ -2,6 +2,7 @@
 
 var express = require('express');
 var controller = require('./Observation.controller');
+var forumController = require('../ObservationForum/ObservationForum.controller');
 
 var auth = require('../../../auth/auth.service');
 
@@ -11,6 +12,7 @@ router.get('/', controller.index);
 
 router.get('/:id', controller.show);
 
+router.get('/:id/forum', forumController.showForumForObs);
 
 router.post('/', auth.hasRole('taxonomyadmin'), controller.create);
 router.put('/:id',auth.hasRole('taxonomyadmin'),  controller.update);

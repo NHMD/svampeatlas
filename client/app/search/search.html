@@ -1,54 +1,149 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
-<div ng-include="'components/navbar/navbar.html'"></div>
-	
-</div>
-<md-content flex md-scroll-y layout-padding>
-
+<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>
 	
 
-	
-<md-progress-linear class="col-md-12" md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
-<table  class="table taxonomy-table" st-pipe="callServer" st-table="displayed">
-	<thead>
-	<tr>
-		<th st-sort="observationDate" st-ratio="10">Dato</th>
-		<th st-ratio="5"></th>
-		<th st-ratio="5"></th>
-		<th st-sort="PrimaryDetermination.Taxon.FullName" st-ratio="40" translate>Navn</th>
-		<th st-sort="Locality.name" st-ratio="40" translate>Lokalitet</th>
-		<th st-sort="PrimaryUser.name" st-ratio="40" translate>Finder</th>
-	</tr>
-	</thead>
-	<tbody ng-show="!isLoading">
-	<tr ng-repeat="row in displayed">
-		<td st-ratio="10">{{row.observationDate | date : 'dd/MM/yyyy'}}</td>
-		<td st-ratio="5"><ng-md-icon icon="camera_alt" ng-if="row.Images.length > 0"></ng-md-icon></td>
-		<th st-ratio="5"><ng-md-icon icon="chat" ng-if="row.Forum.length > 0"></th>
-		<td st-ratio="40"><em>{{row.PrimaryDetermination.Taxon.FullName}}</em></td>	
-		<td st-ratio="40">{{row.Locality.name}}</td>	
-			<td st-ratio="40">{{row.PrimaryUser.Initialer}}</td>	
+<md-content layout-gt-sm="row" layout-padding class="md-inline-form">
+    <div>
+      <form >
+         <div layout-gt-xs="row">
+	<md-input-container class="md-block" flex-gt-xs>	
+	<label>Status</label> 
+		 <md-select aria-label="status" ng-model="search.include[0].where.Determination_validation">
+		                   
+		   <md-option value=">Godkendt">Godkendte</md-option>
+		   <md-option value="Valideres">Valideres</md-option>
+		   <md-option value="Afventer">Afventer</md-option>
+		   <md-option value="Afvist">Afviste</md-option>
+		   <md-option value="Gammelvali">Ældre fund afventer</md-option>
+		                 </md-select>
+						 </md-input-container>
+		             
+           <md-datepicker ng-model="search.fromDate" md-placeholder="Fra dato">
+           </md-datepicker>
+        
+          
+           <md-datepicker ng-model="search.toDate" md-placeholder="Til dato">
+           </md-datepicker>
+		  
+         </div>
+          <div layout-gt-xs="row">
+		  
+		   <md-input-container class="md-block" flex-gt-xs>
+		           <label>Finder</label>
+		           <input  ng-model="search.include[1].where.name" >
+		         </md-input-container>
+	  		   <md-input-container>
+	  		           <label>Initialer</label>
+	  		           <input  ng-model="search.include[1].where.Initialer">
+	  		         </md-input-container>
+		   
+          </div>
+          <div layout-gt-xs="row">
+   	   <md-input-container class="md-block" flex-gt-xs>
+   	           <label>Databasenummer</label>
+   	           <input  ng-model="search.databasenumber" >
+   	         </md-input-container>
+		   	 <md-input-container >	
+		   	<label>Rødlistestatus</label>  
+		   <md-select aria-label="rødlistestatus" id="redlist" ng-model="search.include[0].where.Taxon_redlist_status">
+  
+		     <md-option ng-value="{{['RE','CR', 'EN', 'VU', 'NT']}}">Alle rødlistede</md-option>
+		     <md-option value="RE">RE - Forsvundet</md-option>
+		     <md-option value="CR">CR - Kritisk truet</md-option>
+		     <md-option value="EN">EN - Moderat truet</md-option>
+		     <md-option value="VU">VU - Sårbar</md-option>
+		     <md-option value="NT">NT - Næsten truet</md-option>
+		     <md-option value="LC">LC - Ikke truet</md-option>
+		     <md-option value="DD">DD - Utilstrækkelige data</md-option>
+		     <md-option value="NA">NA - Ikke mulig</md-option>
+		     <md-option value="NE">NE - Ikke bedømt</md-option>
+		             </md-select>
+		   	  </md-input-container>
 			
-		</td>
+          </div>
 		
-	</tr>
-	</tbody>
-	<tbody ng-show="isLoading">
-	<tr>
-		<td colspan="4" class="text-center">Loading ... </td>
-	</tr>
-	</tbody>
-	<tfoot>
-	<tr>
-		<td class="text-center" st-pagination="" st-displayed-pages="20" st-items-by-page="50" colspan="4">
-		</td>
-	</tr>
-	</tfoot>
-</table>
 
+		<div layout-gt-xs="row">
+      <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" ng-show="!DkNames" class="md-block" flex-gt-xs>
 
+        <md-autocomplete
+  	  	md-min-length="3"
+  		md-no-cache="true"
+            md-selected-item="selectedItem"
+            md-search-text="searchText"
+            md-items="item in querySearch(searchText)"
+            md-item-text="item.FullName"
+            placeholder="{{taxonPlaceholder}}">
+          <span md-highlight-text="searchText">{{item.FullName}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{$chip.FullName}}</strong>
 
+          </span>
+        </md-chip-template>
+		
+      </md-chips>
+      <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" ng-show="DkNames" class="md-block" flex-gt-xs>
 
-</md-content>
+        <md-autocomplete
+  	  	md-min-length="3"
+  		md-no-cache="true"
+            md-selected-item="selectedItem"
+            md-search-text="searchText"
+            md-items="item in querySearch(searchText)"
+            md-item-text="item.vernacularname_dk"
+            placeholder="{{taxonPlaceholder}}">
+          <span md-highlight-text="searchText">{{item.vernacularname_dk}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{$chip.vernacularname_dk}}</strong>
+
+          </span>
+        </md-chip-template>
+		
+      </md-chips>
+	
+ 	<md-switch ng-model="DkNames" aria-label="Søg danske navne">
+ 	    Danske navne
+ 	  </md-switch>
+  </div>
+   <div layout-gt-xs="row">
+<md-switch ng-model="onlyHigherTaxa" aria-label="Højere taxa">
+    Søg i slægter, familier, ordener osv.
+  </md-switch>
+	 
+  </div>
+   <div layout-gt-xs="row">
+  <md-chips ng-model="search.selectedLocalities" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
+
+    <md-autocomplete
+  	md-min-length="3"
+	md-no-cache="true"
+        md-selected-item="selectedItem"
+        md-search-text="searchText"
+        md-items="item in querySearchLocality(searchText)"
+        md-item-text="item.name"
+        placeholder="{{'Lokalitet'}}">
+      <span md-highlight-text="searchText">{{item.name}}</span>
+    </md-autocomplete>
+    <md-chip-template>
+      <span>
+        <strong>{{$chip.name}}</strong>
+
+      </span>
+    </md-chip-template>
+	
+  </md-chips>
+  </div>
+		 <div layout-gt-xs="row">
+			
+		</div>
+        
+      </form>
+    </div>
+  </md-content>
 
 
 

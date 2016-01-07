@@ -1,4 +1,4 @@
-      <md-toolbar ng-controller="NavbarCtrl">
+      <md-toolbar ng-controller="NavbarCtrl" ng-class="{'position-fixed': mdMedia('max-width: 768px') }">
         <div class="md-toolbar-tools">
           <md-button ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
             <ng-md-icon icon="menu"></ng-md-icon>

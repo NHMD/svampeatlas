@@ -1,0 +1,43 @@
+<md-dialog aria-label="Billeder"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2><em>{{obs.DeterminationView.Taxon_FullName}}</em>, {{obs.Locality.name}}, {{obs.observationDate | date : 'dd/MM/yyyy'}}, {{obs.PrimaryUser.name}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <ng-md-icon icon="close" aria-label="Close dialog"></ng-md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      
+        <div class="md-dialog-content" layout="column" layout-align="center center" layout-padding layout-wrap layout-fill style="padding-bottom: 32px;" ng-cloak>
+	   <div layout layout-margin ng-repeat="img in obs.Images">
+		   <md-toolbar class="md-warn" ng-show="failed[img.name] === true">
+		       <div class="md-toolbar-tools">
+		         <h3 class="md-flex">{{img.name}}.jpg kunne ikke hentes.</h3>
+		       </div>
+		     </md-toolbar>
+		   <md-progress-circular md-mode="indeterminate" ng-show="loaded[img.name] !== true && failed[img.name] !== true"></md-progress-circular>
+	     <img   style="margin: auto; max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="http://130.225.98.135/svampeatlas/uploads/{{img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+	 </div>
+	   
+		
+        
+        
+      </div>
+    </md-dialog-content>
+   <!-- <md-dialog-actions layout="row">
+      <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+        More on Wikipedia
+      </md-button>
+      <span flex></span>
+      <md-button ng-click="answer('not useful')">
+       Not Useful
+      </md-button>
+      <md-button ng-click="answer('useful')" style="margin-right:20px;">
+        Useful
+      </md-button>
+    </md-dialog-actions> -->
+  </form>
+</md-dialog>

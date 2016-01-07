@@ -50,7 +50,13 @@ module.exports = function(sequelize, DataTypes) {
 					foreignKey: "observation_id",
 					as: "Forum"
 				});	
-					
+				
+
+		models.ObservationForum.belongsTo(models.User, {
+				  
+				  foreignKey: 'user_id',
+					as: 'User'
+				});			
 				
     		}
 		

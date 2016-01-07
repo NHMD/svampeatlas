@@ -36,3 +36,10 @@ UPDATE Observation o, Fungi f SET o.verbatimLocality = f.localityFromOldBases WH
 UPDATE Observation o, Fungi f SET o.locality_id = 1 WHERE o._id=f.AtlasLNR AND f.AtlasLocID NOT IN (select _id from Locality l);
 
 SELECT AtlasLocID, LocalityCalc, COUNT(*) FROM Fungi f WHERE AtlasLocID NOT IN (select _id from Locality) GROUP BY f.AtlasLocID;
+
+
+-- localities
+
+UPDATE Observation o, Fungi f, Locality l, alleposterclosestlok a set o.locality_id = l._id WHERE o._id=f.AtlasLNR AND f.AtlasLocID = 0 AND l.include = 1 and f.LocalityBasicString = l.name AND a.AtlasIDnummer = f.AtlasIDnummer AND a.distance_in_km < 1; 
+
+SELECT COUNT(*) FROM Observation o, Fungi f, Locality l, alleposterclosestlok a WHERE o._id=f.AtlasLNR AND f.AtlasLocID = 0 AND l.include = 1 and f.LocalityBasicString = l.name AND a.AtlasIDnummer = f.AtlasIDnummer AND a.distance_in_km < 1; 
