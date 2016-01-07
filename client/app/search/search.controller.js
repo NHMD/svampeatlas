@@ -36,11 +36,11 @@ angular.module('svampeatlasApp')
 					};
 						
 				var results = query ? Taxon.query({
-					where: where,
-					include:JSON.stringify([JSON.stringify({
+					where: JSON.stringify(where),
+					include: JSON.stringify([{
 						model: "Taxon",
 						as: 'acceptedTaxon'
-					})]),
+					}]),
 					limit: 30
 
 				}).$promise : [];
@@ -130,6 +130,11 @@ angular.module('svampeatlasApp')
 			 }
 			  if($scope.search.fromDate && $scope.search.toDate){
 			  	$scope.observationSearch.where.observationDate = {$between: [$scope.search.fromDate, $scope.search.toDate]}
+			  } else if($scope.search.fromDate){
+			  	$scope.observationSearch.where.observationDate = {gt: $scope.search.fromDate}
+			  }
+			  else if($scope.search.toDate){
+			  	$scope.observationSearch.where.observationDate = {lt: $scope.search.toDate}
 			  }
 			  
 		  }, true)
