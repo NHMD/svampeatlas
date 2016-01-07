@@ -132,3 +132,6 @@ div.x-editable-texarea {
 	margin-top: 10px;
 }
 
+.position-fixed {
+	position: fixed;
+}

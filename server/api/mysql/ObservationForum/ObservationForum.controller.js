@@ -176,7 +176,21 @@ exports.show = function(req, res) {
 };
 
 
-
+exports.showForumForObs = function(req, res) {
+	ObservationForum.findAll({
+		where: {
+			observation_id: req.params.id
+		} ,
+		include: [{
+				model: models.User,
+				as: 'User'
+			}]
+	})
+		.then(handleEntityNotFound(res))
+		.then(responseWithResult(res))
+		.
+	catch (handleError(res));
+}
 
 // Creates a new taxon in the DB.
 exports.create = function(req, res) {

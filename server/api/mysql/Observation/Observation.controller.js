@@ -82,43 +82,20 @@ exports.index = function(req, res) {
 	}
 
 	if (req.query.include) {
-		var include = JSON.parse(req.query.include)
-
-		query['include'] = _.map(include, function(n) {
-			n.model = models[n.model];
-			if (n.where) {
-				n.where = JSON.parse(n.where);
-
-				if (n.where.$and && n.where.$and.length > 0) {
-
-					for (var i = 0; i < n.where.$and.length; i++) {
-						n.where.$and[i] = JSON.parse(n.where.$and[i]);
-					}
-				}
-				/*
-				if(n.model === "TaxonomyTag"){
-
-							n.where._id = JSON.parse(n.where._id);
-				
-				}
-				*/
-
-				//	n.where = nestedQueryParser.parseQueryString(n.where)
-
-			}
-			console.log(n.where)
-			return n;
-		});
+		
+		var parsed = JSON.parse(req.query.include)
+		query['include'] =	_.map(parsed, function(n){
+		var n =  JSON.parse(n);
+		n.model = models[n.model];
+		return n;
+		})
 
 
 	} else {
 		query['include'] = [{
-				model: models.Determination,
-				as: "PrimaryDetermination",
-				include: [{
-					model: models.Taxon,
-					as: "Taxon"
-				}]
+				model: models.DeterminationView,
+				as: "DeterminationView",
+				attributes: ['Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID']
 			}, {
 				model: models.User,
 				as: 'PrimaryUser',
@@ -128,19 +105,23 @@ exports.index = function(req, res) {
 				as: 'Locality'
 			}, {
 				model: models.ObservationImage,
-				as: 'Images'
+				as: 'Images',
+				separate : true,
+				offset:0,
+				limit: 10
 			}, {
 				model: models.ObservationForum,
-				as: 'Forum'
+				as: 'Forum',
+				separate : true,
+				offset:0,
+				limit: 10
+				
 			}
 
-
-
-
-		]
+		] 
 	}
 
-
+	console.log(query);
 	Observation.findAndCount(query)
 		.then(function(taxon) {
 			res.set('count', taxon.count);
@@ -184,7 +165,11 @@ exports.show = function(req, res) {
 				as: 'Images'
 			}, {
 				model: models.ObservationForum,
-				as: 'Forum'
+				as: 'Forum',
+				include: [{
+						model: models.User,
+					as: "User", 
+					 fields: ['name']}]
 			}
 
 		]

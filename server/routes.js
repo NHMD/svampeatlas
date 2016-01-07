@@ -27,6 +27,7 @@ module.exports = function(app) {
 	app.use('/api/localities', require('./api/mysql/Locality'));
 	
 	
+	
    
   app.use('/api/things', require('./api/mysql/thing'));
   app.use('/api/users', require('./api/mysql/user'));

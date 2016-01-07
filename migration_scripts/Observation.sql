@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS Observation (
   FOREIGN KEY (primaryuser_id) REFERENCES Users(_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 ALTER TABLE Observation 
 ADD FOREIGN KEY (primarydetermination_id) REFERENCES Determination(_id),
 ADD FOREIGN KEY (vegetationtype_id) REFERENCES VegetationType(_id);
@@ -441,3 +442,5 @@ UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p
 UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = p.LatinName;
 UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = p.DKname;
 UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = p.DKandLatinName;
+
+

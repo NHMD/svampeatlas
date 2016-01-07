@@ -73,6 +73,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
     },
+	vernacularname_dk :{
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 	/*
     diagnose: {
       type: DataTypes.STRING,

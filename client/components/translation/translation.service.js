@@ -92,3 +92,5 @@ angular.module('svampeatlasApp')
 	
 	  
   });
+
+  

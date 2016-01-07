@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
   .controller('NavbarMaterialCtrl', function ($scope, Auth, User, $state, $translate, $cookies, $mdBottomSheet,$mdSidenav, ssSideNav,ssSideNavSharedService,$rootScope, $mdDialog, $mdMedia) {
 	
-	
+	  $scope.mdMedia = $mdMedia;
 
 	              $scope.menu = ssSideNav;
 				

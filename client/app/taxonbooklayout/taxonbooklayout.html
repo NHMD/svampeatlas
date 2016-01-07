@@ -44,7 +44,7 @@
 							<md-content  layout-padding>
 							<table id="sibling-table">
 
-							  <tr class="parent-taxon-table" ng-repeat="sibling in taxon.siblings"><td class="parent-taxon-table" st-ratio="100"><strong><a href="/taxonbase/taxonbooklayout/{{sibling._id}}">{{sibling.FullName}} {{sibling.Author}}</a> <span ng-show="sibling.attributes.DKnavn">- {{sibling.attributes.DKnavn}}</span></strong><br>
+							  <tr class="parent-taxon-table" ng-repeat="sibling in taxon.siblings"><td class="parent-taxon-table" st-ratio="100"><strong><a href="/taxonbase/taxonbooklayout/{{sibling._id}}">{{sibling.FullName}} {{sibling.Author}}</a> <span ng-show="sibling.vernacularname_dk">- {{sibling.vernacularname_dk}}</span></strong><br>
 								  {{sibling.attributes.diagnose}}<br>
 								  {{sibling.attributes.forvekslingsmuligheder}}<br><br>
 								  {{sibling.attributes.oekologi}}
@@ -63,7 +63,7 @@
 
 			</div>
 			
-			<h4 ng-show="taxon._id !== undefined"><strong translate>DK name: </strong> <a href="#" editable-text="taxon.attributes.DKnavn"  onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)"><em>{{ taxon.attributes.DKnavn || 'n/a' }}</em></a> </h4> <div  ng-show="taxon._id && taxon.RankID > 5000" layout="row" >
+			<h4 ng-show="taxon._id !== undefined"><strong translate>DK name: </strong> <a href="#" editable-text="taxon.vernacularname_dk"  onaftersave="Taxon.update({id: taxon._id}, taxon)"><em>{{ taxon.vernacularname_dk || 'n/a' }}</em></a> </h4> <div  ng-show="taxon._id && taxon.RankID > 5000" layout="row" >
     <md-checkbox  ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 	{{'Present in DK' | translate}}
   </md-checkbox>
@@ -167,7 +167,7 @@
 				<md-whiteframe class="md-whiteframe-z3" layout="column" layout-padding layout-margin>
 				    
 				  
-				<h3><em>{{taxon.FullName}}</em> <span ng-show="taxon.attributes.DKnavn">- {{taxon.attributes.DKnavn}}</span></h3>
+				<h3><em>{{taxon.FullName}}</em> <span ng-show="taxon.vernacularname_dk">- {{taxon.vernacularname_dk}}</span></h3>
 		      <carousel disable-ng-animate interval="">
 		        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
 		          <img ng-src="{{slide.uri}}" style="margin:auto;">
