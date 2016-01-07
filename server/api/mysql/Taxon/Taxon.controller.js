@@ -90,6 +90,7 @@ exports.index = function(req, res) {
 		_.merge(query.where, JSON.parse(req.query.where));
 	}
 
+/*
 	if (req.query.include) {
 		
 		var parsed = JSON.parse(req.query.include)
@@ -100,6 +101,42 @@ exports.index = function(req, res) {
 		})
 
 
+	}
+	*/
+	if (req.query.where) {
+		_.merge(query.where, JSON.parse(req.query.where));
+	}
+
+	if (req.query.include) {
+		var include = JSON.parse(req.query.include)
+
+		query['include'] = _.map(include, function(n) {
+			
+			n.model = models[n.model];
+			if (n.where) {
+				n.where = JSON.parse(n.where);
+
+				if (n.where.$and && n.where.$and.length > 0) {
+
+					for (var i = 0; i < n.where.$and.length; i++) {
+						n.where.$and[i] = JSON.parse(n.where.$and[i]);
+					}
+				}
+				/*
+				if(n.model === "TaxonomyTag"){
+							n.where._id = JSON.parse(n.where._id);
+				
+				}
+				*/
+
+				//	n.where = nestedQueryParser.parseQueryString(n.where)
+
+			}
+			console.log(n.where)
+			return n;
+		});
+		
+	
 	}
 
 	
