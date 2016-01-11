@@ -103,10 +103,14 @@ module.exports = function(sequelize, DataTypes) {
    dataSource: {
    	type: DataTypes.STRING,
    	allowNull: true,
+   },
+   geom: {
+   	type: DataTypes.GEOMETRY('POINT'),
+   	allowNull: true,
    }
 
   }, {
-    	tableName: 'Observation',
+    	tableName: 'ObservationView',
     	timestamps: true,
     	freezeTableName: true,
     	classMethods: {

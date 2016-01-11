@@ -8,7 +8,7 @@
 <md-progress-linear  md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
 
 <div class="table-responsive-vertical shadow-z-1 scroll-table-container">
-<table  class="table taxonomy-table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}" st-pagination-scroll st-pipe="callServer" st-table="displayed">
+<table  class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}" st-pagination-scroll st-pipe="callServer" st-table="displayed">
 	<thead>
 	<tr>
 		<th st-sort="observationDate" >Dato</th>
@@ -23,7 +23,7 @@
 	</thead>
 	<tbody >
 	<tr ng-repeat="row in displayed">
-		<td data-title="Dato">{{row.observationDate | date : 'dd/MM/yyyy'}}</td>
+		<td data-title="Dato">{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</span></td>
 		
 		<td data-title="Art"><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></td>
 		<td data-title="Dansk navn">{{row.DeterminationView.Taxon_vernacularname_dk}}</td>	

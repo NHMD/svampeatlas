@@ -11,7 +11,7 @@
 					<div class="alert alert-danger col-md-12 possible-funindex-syn-alert" role="alert" ng-show="$parent.selectedParentTaxon.FunIndexNumber !== $parent.selectedParentTaxon.FunIndexCurrUseNumber"><strong>Possible synonym! </strong> This taxon may be a synonym of <a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexCurrUseNumber}}" target="_BLANK">this taxon</a> on Index Fungorum. 
 
 					</div>
-					<table ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon._id !== undefined" class="table parent-taxon-table">
+					<table ng-show="$parent.selectedParentTaxon !== undefined && $parent.selectedParentTaxon._id !== undefined" class="table parent-taxon-table table-bordered">
 
 					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Full taxon name:</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.FullName}}</td><td st-ratio="50"><a href = "http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{$parent.selectedParentTaxon.FunIndexNumber}}" target="_BLANK" class="btn btn-primary" > <i class="fa fa-link"></i> View on Index Fungorum</a></td></tr>
 					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Epithet :</td><td class="parent-taxon-table" st-ratio="30">{{$parent.selectedParentTaxon.TaxonName}}</td><td st-ratio="50"></td></tr>

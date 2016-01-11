@@ -84,7 +84,12 @@ angular.module('svampeatlasApp')
 		  'Search tags': 'Søg tags',
 		  'Enter tags': 'Skriv tags',
 		  'Attribute name': 'Attribut navn',
-		  'Reset search': 'Nulstil'
+		  'Reset search': 'Nulstil',
+		  'Raise rank to' : 'Ophøj til',
+		  'superspecies': 'superart',
+		  'supergenus': 'superslægt',
+		  'Detach' : 'Afkobl',
+		  'Change' : 'Ændr'
   	    });
 	 
 	

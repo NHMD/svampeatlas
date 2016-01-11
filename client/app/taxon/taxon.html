@@ -22,7 +22,7 @@
 					<tbody>
 						<tr>
 							<td st-ratio="50">Boletus sensu lato</td><td st-ratio="25">Boletus</td><td st-ratio="25"></td>
-						</tr>
+						</tr><table>
 						<tr>
 							<td st-ratio="50"> Amanita franchetii sensu auct</td><td st-ratio="25">franchetii</td><td st-ratio="25"></td>
 						</tr>
@@ -55,7 +55,7 @@
 			
 			
 			<p><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{taxon.SystematicPath}}</em></small></p>
-			<p><small><strong translate>Taxon rank: </strong><em ng-class="{'text-danger' : taxon.RankName !== taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}"> {{taxon.RankName}}</em></small> <button ng-show="taxon._id !== undefined && taxon._id === taxon.accepted_id && (taxon.RankName === 'sp.' || taxon.RankName === 'gen.')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Raise rank to {{superrank}}</button>
+			<p><small><strong translate>Taxon rank: </strong><em ng-class="{'text-danger' : taxon.RankName !== taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}"> {{taxon.RankName}}</em></small> <button ng-show="taxon._id !== undefined && taxon._id === taxon.accepted_id && (taxon.RankName === 'sp.' || taxon.RankName === 'gen.')" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">{{'Raise rank to' | translate}} {{superrank | translate}}</button>
 			<button ng-show="taxon._id !== undefined && ((taxon.RankID < 10000 &&  taxon.RankID > 5000)|| (taxon.RankID > 4000 &&  taxon.RankID < 5000))" class="btn btn-xs btn-danger"   ng-click="rankModal.show()">Change rank level</button>
 			</p>
 			</div>
@@ -122,12 +122,12 @@
 							  <div class="alert alert-danger" role="alert" ng-show="taxon._id === undefined && taxon.Parent === null"><strong>{{'No parent taxon selected' | translate}}.</strong> {{'Please select a parent taxon before saving' | translate}}.</div>
 							  
 							  <button class="btn btn-danger" ng-show=" taxon.Parent === null " ng-click="parentModal.show()">{{'Set parent taxon' | translate}}</button>
-								<table ng-show=" taxon.Parent !== null " class="table parent-taxon-table">
+								<table ng-show=" taxon.Parent !== null " class="table table-bordered">
 
-								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">{{'Full taxon name' | translate}}:</td><td class="parent-taxon-table" st-ratio="30"><a href="/taxonbase/taxon/{{taxon.Parent._id}}">{{ taxon.Parent.FullName}}</a></td><td st-ratio="50"><button class="btn btn-danger" ng-click="parentModal.show()" translate>Change parent taxon</button></td></tr>
-								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">{{'Epithet' | translate}} :</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.TaxonName}}</td><td st-ratio="50"></td></tr>
-								  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">{{'Author(s)' | translate}}:</td><td class="parent-taxon-table" st-ratio="30"><i>{{ taxon.Parent.Author}}</i></td><td st-ratio="50"></td></tr>
-								  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">{{'Taxon rank' | translate}}:</td><td class="parent-taxon-table" st-ratio="30">{{ taxon.Parent.RankName}}</td><td st-ratio="50"></td></tr>
+								  <tr class="table-bordered"><td class="table-bordered" st-ratio="20">{{'Full taxon name' | translate}}:</td><td class="table-bordered" st-ratio="30"><a href="/taxonbase/taxon/{{taxon.Parent._id}}">{{ taxon.Parent.FullName}}</a></td><td st-ratio="50"><button class="btn btn-danger" ng-click="parentModal.show()" translate>Change parent taxon</button></td></tr>
+								  <tr class="table-bordered"><td class="table-bordered" st-ratio="20">{{'Epithet' | translate}} :</td><td class="table-bordered" st-ratio="30">{{ taxon.Parent.TaxonName}}</td><td st-ratio="50"></td></tr>
+								  <tr class="table-bordered"><td class="table-bordered" st-ratio="20">{{'Author(s)' | translate}}:</td><td class="table-bordered" st-ratio="30"><i>{{ taxon.Parent.Author}}</i></td><td st-ratio="50"></td></tr>
+								  <tr ng-show=" taxon.Parent !== null " class="table-bordered"><td class="table-bordered" st-ratio="20">{{'Taxon rank' | translate}}:</td><td class="table-bordered" st-ratio="30">{{ taxon.Parent.RankName}}</td><td st-ratio="50"></td></tr>
 				
 								</table>
 			    	      </div>
@@ -147,10 +147,10 @@
 			    	      <div class="panel-body">
 							
  							
-							<table class="table parent-taxon-table">
+							<table class="table table-bordered">
 							  	
 								<tbody>
- 							  <tr ng-repeat="child in taxon.Children | orderBy : 'FullName'"><td class="parent-taxon-table" st-ratio="80"><a href="/taxonbase/taxon/{{child._id}}" ng-class="{'text-muted' : child.accepted_id !== null && child.accepted_id !== child._id}">{{child.FullName}}</a> 
+ 							  <tr ng-repeat="child in taxon.Children | orderBy : 'FullName'"><td class="table-bordered" st-ratio="80"><a href="/taxonbase/taxon/{{child._id}}" ng-class="{'text-muted' : child.accepted_id !== null && child.accepted_id !== child._id}">{{child.FullName}}</a> 
 							  </td><td st-ratio="20">
 								  
 								  <md-checkbox ng-show="child.RankID > 5000 && child._id === child.accepted_id" ng-model="child.attributes.PresentInDK" ng-change="setDkPresence(child)"> DK</md-checkbox> </td></tr></tbody>
@@ -173,27 +173,27 @@
 				  	      <div class="panel-body">
 							  <div class="alert alert-warning" role="alert" ng-show="FunIndexError">{{FunIndexError}}</div>
 							 <button class="btn btn-danger" ng-click="funIndexModal.show()" ng-show="!taxon.FunIndexRecord">Attach FunIndex record</button> 
-							<table ng-show="taxon.FunIndexRecord" class="table parent-taxon-table">
+							<table ng-show="taxon.FunIndexRecord" class="table table-bordered">
 							  	<thead>
-							  	<tr class="parent-taxon-table" width="100%">
-		
-							  		<th st-ratio="80" ></th>
+							  	<tr class="table-bordered" width="100%">
+									
+							  		<th st-ratio="80" colspan="2"></th>
 									<th st-ratio="20" > 
-									<button class="btn btn-danger" ng-click="detachFromFunRecord()">Detach FunIndex record</button>
+									<button class="btn btn-danger" ng-click="detachFromFunRecord()">{{'Detach' | translate}} FunIndex record</button>
 								</th>
 							  	</tr>
 							  
 							  	</thead>
 								<tbody>
-							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Name of fungus:</td><td class="parent-taxon-table" st-ratio="30"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.NAME_x0020_OF_x0020_FUNGUS}} <i class="fa fa-external-link"></i></a></td>
-							  <td st-ratio="50"><button class="btn btn-danger" ng-click="funIndexModal.show()" ng-show="possibleToChangeFunRecord()">Change FunIndex record</button> 
+							  <tr class="table-bordered"><td class="table-bordered" st-ratio="20">Name of fungus:</td><td class="table-bordered" st-ratio="30"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.NAME_x0020_OF_x0020_FUNGUS}} <i class="fa fa-external-link"></i></a></td>
+							  <td st-ratio="50"><button class="btn btn-danger" ng-click="funIndexModal.show()" ng-show="possibleToChangeFunRecord()">{{'Change' | translate}} FunIndex record</button> 
 							  <em ng-show="!possibleToChangeFunRecord() && (taxon.RankName === 'superspecies' || taxon.RankName === 'supergenus')" class="text-danger">Change of FunIndex record not possible because this super taxon has children.</em>
 							  </tr>
 							 
-							  <tr class="parent-taxon-table" ng-if="taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== taxon.FunIndexRecord.RECORD_x0020_NUMBER"><td class="parent-taxon-table" st-ratio="20">Current name:</td><td class="parent-taxon-table" st-ratio="30"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.CURRENT_x0020_NAME}} <i class="fa fa-external-link"></i></a></td><td st-ratio="50"> <em class="text-danger">Possible synonym!</em></td></tr>
-							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Classification:</td><td class="parent-taxon-table" st-ratio="80"><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{ taxon.FunIndexRecord.SystematicPath}}</em></small></td></tr>
-							  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Author(s):</td><td class="parent-taxon-table" st-ratio="30"><em ng-class="{'text-danger' : taxon.Author !== taxon.FunIndexRecord.AUTHORS}">{{ taxon.FunIndexRecord.AUTHORS}}</em></td><td st-ratio="50"></td></tr>
-							  <tr ng-show=" taxon.Parent !== null " class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="20">Taxon rank:</td><td class="parent-taxon-table" st-ratio="30"><span ng-class="{'text-danger' : taxon.RankName !== taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}">{{ taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}}</span></td><td st-ratio="50"></td></tr>
+							  <tr class="table-bordered" ng-if="taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== taxon.FunIndexRecord.RECORD_x0020_NUMBER"><td class="table-bordered" st-ratio="20">Current name:</td><td class="table-bordered" st-ratio="30"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.CURRENT_x0020_NAME}} <i class="fa fa-external-link"></i></a></td><td st-ratio="50"> <em class="text-danger">Possible synonym!</em></td></tr>
+							  <tr class="table-bordered"><td class="table-bordered" st-ratio="20">Classification:</td><td class="table-bordered" st-ratio="80" colspan="2"><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{ taxon.FunIndexRecord.SystematicPath}}</em></small></td></tr>
+							  <tr class="table-bordered"><td class="table-bordered" st-ratio="20">Author(s):</td><td class="table-bordered" st-ratio="30"><em ng-class="{'text-danger' : taxon.Author !== taxon.FunIndexRecord.AUTHORS}">{{ taxon.FunIndexRecord.AUTHORS}}</em></td><td st-ratio="50" colspan="2"></td></tr>
+							  <tr ng-show=" taxon.Parent !== null " class="table-bordered"><td class="table-bordered" st-ratio="20">Taxon rank:</td><td class="table-bordered" st-ratio="30"><span ng-class="{'text-danger' : taxon.RankName !== taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}">{{ taxon.FunIndexRecord.INFRASPECIFIC_x0020_RANK}}</span></td><td st-ratio="50"></td></tr>
 			</tbody>
 							</table>
 			  	        
@@ -223,7 +223,7 @@
 			
           </md-input-container>
 	  </div><div class="col-md-2"><button class="btn btn-danger" ng-disabled="!newSpeciesHypothesis" ng-click="addSpeciesHypothesis(newSpeciesHypothesis); newSpeciesHypothesis = '';"><i class="fa fa-plus"> </i>Add </button></div>
-	  						  <table class="table parent-taxon-table" ng-show="taxon.specieshypothesis && taxon.specieshypothesis.length > 0"> 
+	  						  <table class="table table-bordered" ng-show="taxon.specieshypothesis && taxon.specieshypothesis.length > 0"> 
 								  <tr><th st-ratio="100">Species hypotheses in our database:</th>
 								  </tr>
 	  							   <tr ng-repeat="sh in taxon.specieshypothesis"><td st-ratio="70">
@@ -236,7 +236,7 @@
 						  </tr>
 						  </table>
 						  
-	  						  <table class="table parent-taxon-table" ng-show="specieshypotheses && specieshypotheses.length >0">
+	  						  <table class="table table-bordered" ng-show="specieshypotheses && specieshypotheses.length >0">
 								  <tr><th st-ratio="100">Possible matches from Unite:</th></tr>
 								  <tr><th st-ratio="25">Name</th><th st-ratio="25">Threshold</th><th st-ratio="25">Designators</th>
 								  <th st-ratio="25"><img src="assets/images/unitelogo3.png" width="48" class="pull-right" alt="Unite"></th>
@@ -269,7 +269,7 @@
 			  	    </div>
 			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			  	      <div class="panel-body">
-  						  <table class="table parent-taxon-table">
+  						  <table class="table table-bordered">
   							   <tr ng-repeat="syn in taxon.synonyms | synonymsWithoutSelf as filteredSynonyms"><td st-ratio="70">
   						 <a href="/taxonbase/taxon/{{syn._id}}">{{syn.FullName}}</a>
   						  </td>
@@ -346,7 +346,7 @@
 			  	    </div>
 			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			  	      <div class="panel-body">
-						  <table class="table parent-taxon-table">
+						  <table class="table table-bordered">
 							   <tr ><td st-ratio="100">
 						 <label class="control-label" for="vernacular_name_DE">DE: </label>
 				        <a href="#" id="vernacular_name_DE" editable-text="taxon.attributes.vernacular_name_DE" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
@@ -486,7 +486,7 @@
 		  	    </div>
 		  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target ng-controller="TaxonLogCtrl">
 		  	      <div class="panel-body">
-					  <table class="table taxonhistorylog" st-pipe="callServer" st-table="displayed">
+					  <table class="table table-bordered" st-pipe="callServer" st-table="displayed">
 					  	<thead>
 					  	<tr>
 		

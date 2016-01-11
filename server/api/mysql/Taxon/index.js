@@ -9,6 +9,7 @@ var nutritionStrategyController = require('../ErnaeringsStrategi/ErnaeringStrate
 var taxonomytagController = require('../TaxonomyTag/TaxonomyTag.controller');
 var speciesHypothesisController = require('../TaxonSpeciesHypothesis/TaxonSpeciesHypothesis.controller')
 var auth = require('../../../auth/auth.service');
+//var intparser = require('../../../components/hooks/parseLimitOffset');
 
 var router = express.Router();
 

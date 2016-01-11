@@ -153,7 +153,7 @@
 			
 <div class="col-md-2"> <h4 class="md-headline pull-right">{{'Found' | translate}} {{taxonCount}} taxa</h4></div>
 <md-progress-linear class="col-md-12" md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
-<table st-persist="taxon_search_table" class="table taxonomy-table" st-pipe="callServer" st-table="displayed">
+<table st-persist="taxon_search_table" class="table table-bordered" st-pipe="callServer" st-table="displayed">
 	<thead>
 	<tr>
 		<th st-sort="_id" st-ratio="10">DkIndexNr</th>

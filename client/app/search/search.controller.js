@@ -1,8 +1,70 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService','Taxon', 'Locality',
-		function($scope, ObservationSearchService, Taxon, Locality) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService','Taxon', 'Locality','leafletData', '$timeout',
+		function($scope, ObservationSearchService, Taxon, Locality, leafletData, $timeout) {
+			
+			L.drawLocal.draw.toolbar.buttons.polygon = 'Tegn polygon';
+			$scope.drawnItems = new L.FeatureGroup();
+			$scope.mapsettings = {
+				center: {
+					lat: 56,
+					lng: 11,
+					zoom: 6
+				},
+				drawControl: true,
+				layers: {
+					baselayers: {
+						osm: {
+						                    name: 'OpenStreetMap',
+						                    url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+						                    type: 'xyz'
+						                }
+					}
+				}
+			};
+			
+			
+		
+				leafletData.getMap().then(function(map) {
+	                $scope.map = map;
+					map.addLayer($scope.drawnItems);
+					var drawControl = new L.Control.Draw({
+							edit: {
+							        featureGroup: $scope.drawnItems
+							    },
+								draw: {
+									polyline: false,
+									circle: false,
+									marker: false,
+									rectangle: false	
+								}
+								
+						});
+						map.addControl(drawControl);
+						
+						map.on('draw:created', function (e) {
+						    var type = e.layerType,
+						        layer = e.layer;
+
+						    if (type === 'marker') {
+						        // Do marker specific actions
+						    }
+
+						    // Do whatever else you need to. (save to db, add to map etc)
+						    $scope.drawnItems.addLayer(layer);
+							
+							console.log(JSON.stringify(layer.toGeoJSON()));
+							$scope.search.geometry = layer.toGeoJSON();
+						});
+						
+					})
+			       
+			              
+						  
+			           
+			
+
 			
 			$scope.querySearchLocality = function(query) {
 				
@@ -76,7 +138,15 @@ angular.module('svampeatlasApp')
 							model: "Locality",
 							as: 'Locality',
 							where:{}
-						}, {
+						},
+						/*
+						{
+													model: "ObservationPoint",
+													as: 'Point',
+													where:{ p: "MBRContainsGeomFromText('POLYGON((11.7626589397457 55.5119544279369,11.7631613453886 55.5191206803667,11.7869689746192 55.5185809756286,11.7864622538095 55.5114148669722,11.7626589397457 55.5119544279369))')"}
+												},  
+						*/
+						{
 							model: "ObservationImage",
 							as: 'Images',
 							separate : true,
@@ -102,9 +172,10 @@ angular.module('svampeatlasApp')
 			  
 			  if($scope.search.selectedHigherTaxa.length > 0){
 				  $scope.search.include[0].where.$or = _.map($scope.search.selectedHigherTaxa, function(tx) {
+					  var path = (tx.acceptedTaxon === null) ? tx.Path : tx.acceptedTaxon.Path;
 				return {
 					Taxon_path: {
-						like: tx.acceptedTaxon.Path + "%"
+						like: path + "%"
 					}
 				}
 			})
@@ -135,6 +206,9 @@ angular.module('svampeatlasApp')
 			  }
 			  else if($scope.search.toDate){
 			  	$scope.observationSearch.where.observationDate = {lt: $scope.search.toDate}
+			  }
+			  if($scope.search.geometry){
+				  $scope.observationSearch.geometry = $scope.search.geometry;
 			  }
 			  
 		  }, true)
