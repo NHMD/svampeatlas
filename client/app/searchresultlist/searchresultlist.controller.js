@@ -4,6 +4,21 @@ angular.module('svampeatlasApp')
 	.controller('SearchListCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService',
 		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService) {
 			
+			$scope.getDate = function(observationDate, observationDateAccuracy){
+				
+				var splitted = observationDate.split(" ")[0].split("-");
+				
+				if(observationDateAccuracy === 'month'){
+					//console.log("spl "+parseInt(splitted[1]))
+					return moment.months()[parseInt(splitted[1])-1] +" "+splitted[0];
+				} else if(observationDateAccuracy === 'year'){
+					return splitted[0];
+				} else if(observationDateAccuracy === 'invalid'){
+					return "ingen dato"
+				}
+				
+			}
+			
 			
 			
 		    $scope.showImages = function(ev, row) {
@@ -46,6 +61,20 @@ angular.module('svampeatlasApp')
 		    	var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
 		    	$mdDialog.show({
 		    		controller: function($scope, $mdDialog, Observation) {
+						$scope.getDate = function(observationDate, observationDateAccuracy){
+				
+							var splitted = observationDate.split(" ")[0].split("-");
+				
+							if(observationDateAccuracy === 'month'){
+								//console.log("spl "+parseInt(splitted[1]))
+								return moment.months()[parseInt(splitted[1])-1] +" "+splitted[0];
+							} else if(observationDateAccuracy === 'year'){
+								return splitted[0];
+							} else if(observationDateAccuracy === 'invalid'){
+								return "ingen dato"
+							}
+				
+						}
 						$scope.forum = Observation.getForum({id: row._id});
 		    			$scope.obs = row;
 						$scope.cancel = function() {
@@ -108,7 +137,8 @@ angular.module('svampeatlasApp')
 							offset: offset,
 							limit: limit,
 							 where: ObservationSearchService.getSearch().where || {},
-							 include: JSON.stringify(ObservationSearchService.getSearch().include)
+							 include: JSON.stringify(ObservationSearchService.getSearch().include),
+							 geometry: ObservationSearchService.getSearch().geometry || ""
 						}).$promise.then(function(result){
 							$scope.displayed = result;
 							$scope.isLoading = false;
@@ -120,7 +150,8 @@ angular.module('svampeatlasApp')
 							offset: offset,
 							limit: limit,
 							where: ObservationSearchService.getSearch().where || {},
-							 include: JSON.stringify(ObservationSearchService.getSearch().include)
+							 include: JSON.stringify(ObservationSearchService.getSearch().include),
+							geometry: ObservationSearchService.getSearch().geometry || ""
 						}).$promise.then(function(result){
 							console.log("dataset length: "+$scope.displayed.length)
 							//remove first nodes if needed

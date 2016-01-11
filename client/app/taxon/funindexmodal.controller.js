@@ -79,7 +79,7 @@ angular.module('svampeatlasApp')
 								
 						return Taxon.update({
 							id: $scope.taxon._id
-						}, $scope.taxon).$promise.then(function(){
+						}, _.omit($scope.taxon,['Children','synonyms','attributes', 'FunIndexRecord'])).$promise.then(function(){
 							$scope.funIndexModal.hide();
 						})
 						}

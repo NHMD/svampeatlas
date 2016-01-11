@@ -22,6 +22,36 @@ o.herbarium,
 o.note ,
 o.noteInternal,
 o.dataSource ,
+p.p as geom
+FROM Observation o, ObservationPoint p where o._id=p.observation_id;
+
+
+
+
+CREATE VIEW ObservationView AS SELECT 
+o._id ,
+o.createdAt ,
+o.updatedAt ,
+o.observationDate ,
+o.observationDateAccuracy,
+o.locality_id,
+o.verbatimLocality,
+o.primaryuser_id,
+o.verbatimLeg ,
+o.primarydetermination_id,
+o.primaryassociatedorganism_id ,
+o.vegetationtype_id,
+o.substrate_id ,
+o.ecologynote ,
+o.decimalLatitude,
+o.decimalLongitude ,
+o.accuracy ,
+o.atlasUUID ,
+o.fieldnumber ,
+o.herbarium,
+o.note ,
+o.noteInternal,
+o.dataSource ,
 d._id as Determination_id ,
 d.createdAt as Determination_createdAt ,
 d.updatedAt as Determination_updatedAt ,
