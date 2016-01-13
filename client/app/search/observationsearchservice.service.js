@@ -13,6 +13,9 @@ angular.module('svampeatlasApp')
 				return this.search ;
 				
 			},
+			reset: function(){
+				this.search = {};
+			}
 			
 			}
 		
