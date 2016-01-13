@@ -163,7 +163,7 @@ angular.module('svampeatlasApp')
         if (arguments.length === 0) {
           return currentUser;
         }
-
+		
         return this.getCurrentUser(null)
           .then(function(user) {
             var is = user && user.hasOwnProperty('Roles');

@@ -1,8 +1,61 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService',
-		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService) {
+	.controller('SearchListCtrl', ['$scope', 'Auth','Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService', '$stateParams',
+		function($scope,Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams) {
+			
+			if($stateParams.searchterm){
+				ObservationSearchService.reset();
+				var search = ObservationSearchService.getSearch();
+				search.where = {};
+				search.include = [{
+									model: "DeterminationView",
+									as: "DeterminationView",
+									attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
+									where: {}
+								}, {
+									model: "User",
+									as: 'PrimaryUser',
+									attributes: ['email', 'Initialer', 'name'],
+									where: {}
+								}, {
+									model: "Locality",
+									as: 'Locality',
+									where: {}
+								},
+								{
+									model: "ObservationImage",
+									as: 'Images',
+									separate: true,
+									offset: 0,
+									limit: 10
+								}, {
+									model: "ObservationForum",
+									as: 'Forum',
+									separate: true,
+									offset: 0,
+									limit: 10
+
+								}
+
+							];
+							if($stateParams.searchterm === "mine"){
+								
+									search.include[1].where= {Initialer : Auth.getCurrentUser().Initialer}
+								
+								
+							}	else if($stateParams.searchterm === "3days"){
+								
+								search.where.observationDate= {gt: moment().subtract(3, 'days')}
+							}	else if($stateParams.searchterm === "7days"){
+								
+								search.where.observationDate= {gt: moment().subtract(7, 'days')}
+								
+							}
+				search.include = _.map(search.include, function(n) {
+								return JSON.stringify(n)
+							});	
+			}
 			
 			$scope.getDate = function(observationDate, observationDateAccuracy){
 				

@@ -5,7 +5,7 @@ angular.module('svampeatlasApp')
     $stateProvider
       .state('search-list', {
 		  
-        url: '/search/result/list',
+        url: '/search/result/list/:searchterm?',
         templateUrl: 'app/searchresultlist/searchresultlist.html',
         controller: 'SearchListCtrl'
       });

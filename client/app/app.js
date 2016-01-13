@@ -56,7 +56,8 @@ angular.module('svampeatlasApp', [
 					pages: [{
 						id: 'search_my_obs',
 						name: 'Mine observationer',
-						state: ''
+						state: 'search-list',
+						params: {searchterm: 'mine'}
 
 					},{
 						id: 'search_form',
@@ -66,12 +67,14 @@ angular.module('svampeatlasApp', [
 					}, {
 						id: 'search_3',
 						name: 'Seneste 3 dage',
-						state: ''
+						state: 'search-list',
+						params: {searchterm: '3days'}
 
 					}, {
 						id: 'search_7',
 						name: 'Seneste 7 dage',
-						state: ''
+						state: 'search-list',
+						params: {searchterm: '7days'}
 
 					}]
 				}]

@@ -157,9 +157,7 @@ exports.changeLanguage = function(req, res, next) {
       _id: userId
     }
   })
-  .then(function(){
-  	res.send(204);
-  })
+  .then(respondWith(res, 204))
   .catch(validationError(res));
 };
 
@@ -169,7 +167,7 @@ exports.changeLanguage = function(req, res, next) {
 exports.me = function(req, res, next) {
   var userId = req.user._id;
 
-  User.find({
+ return User.find({
     where: {
       _id: userId
     },
@@ -188,7 +186,7 @@ exports.me = function(req, res, next) {
   })
     .then(function(user) { // don't ever give out the password or salt
       if (!user) { return res.json(401); }
-      res.json(user.profile);
+      return res.json(user.profile);
     })
     .catch(function(err) {
       return next(err);
