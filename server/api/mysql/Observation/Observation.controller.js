@@ -80,7 +80,7 @@ exports.index = function(req, res) {
 // 'POLYGON((11.7626589397457 55.5119544279369,11.7631613453886 55.5191206803667,11.7869689746192 55.5185809756286,11.7864622538095 55.5114148669722,11.7626589397457 55.5119544279369))'
 	console.log(req.query.geometry)
 	if(req.query.geometry){
-		query.where = models.sequelize.fn('MBRContains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))
+		query.where = models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))
 	}
 
 	if (req.query.where) {

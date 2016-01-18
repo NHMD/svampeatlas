@@ -11,11 +11,15 @@ angular.module('svampeatlasApp')
                 var timeThreshold = 400;
                 var handler = function () {
                     //call next page
-                    ctrl.slice(pagination.start + itemByPage, itemByPage);
+					if((pagination.start + itemByPage) < pagination.totalItemCount){ 
+					   ctrl.slice(pagination.start + itemByPage, itemByPage);
+				   } else {
+					   return false;
+				   }
                 };
                 var prevHandler = function () {
                     //call prev page
-					if(pagination.start - itemByPage > -1){
+					if(pagination.start - itemByPage > -1 ){
 						ctrl.slice(pagination.start - itemByPage, itemByPage);
 					}
                     
@@ -42,10 +46,12 @@ angular.module('svampeatlasApp')
                                timeout.cancel(promise);
                            }
                            promise = timeout(function () {
-                               handler();
+                               var loaded = handler();
 
                                //scroll a bit up
-                               container[0].scrollTop -= 500;
+                               if(loaded !== false){
+								   container[0].scrollTop -= 500;
+							   }
 
                                promise = null;
                            }, timeThreshold);

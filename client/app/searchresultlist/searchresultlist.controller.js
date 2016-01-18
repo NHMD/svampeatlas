@@ -156,56 +156,55 @@ angular.module('svampeatlasApp')
 			$scope.mdMedia = $mdMedia;
 			
 			var lastStart = 0;
-			            var maxNodes = 1000;
+			 var maxNodes = 1000;
 
 			$scope.callServer = function(tableState) {
-
+				if($scope.count && $scope.count < tableState.pagination.start){
+					return false;
+				}
 				$scope.isLoading = true;
 
 				var pagination = tableState.pagination;
 
 				var offset = pagination.start || 0; // This is NOT the page number, but the index of item in the list that you want to use to display the table.
 				var limit = pagination.number || 500; // Number of entries showed per page.
-			
 				
+
+				
+				console.log("offset " + offset )
+				console.log("count " + $scope.count )
 	
 
 				var order = tableState.sort.predicate;
 				if (tableState.sort.reverse) {
 					order += " DESC"
 				};
-
+				var geometry = ObservationSearchService.getSearch().geometry;
 				var query = {
-					order: order,
-					offset: offset,
-					limit: limit
-				};
-
-
-
-					//if we reset (like after a search or an order)
-					if (tableState.pagination.start === 0) {
-						 Observation.query({
 							order: order,
 							offset: offset,
 							limit: limit,
 							 where: ObservationSearchService.getSearch().where || {},
-							 include: JSON.stringify(ObservationSearchService.getSearch().include),
-							 geometry: ObservationSearchService.getSearch().geometry || ""
-						}).$promise.then(function(result){
+							 include: JSON.stringify(ObservationSearchService.getSearch().include)
+						};
+
+				if(geometry){
+					query.geometry = geometry;
+				}
+
+					//if we reset (like after a search or an order)
+					if (tableState.pagination.start === 0 && lastStart <= tableState.pagination.start) {
+						 Observation.query(query, function(result, headers){
 							$scope.displayed = result;
+							$scope.count = headers('count');
+							var numPages = Math.ceil(parseInt(headers('count')) / limit);
+							tableState.pagination.numberOfPages = numPages; //set the number of pages so the pagination can update
+							tableState.pagination.totalItemCount = parseInt(headers('count'));
 							$scope.isLoading = false;
 						})
-					} else {
+					} else if(tableState.pagination.totalItemCount > $scope.displayed.length) {
 						//we load more
-						Observation.query({
-							order: order,
-							offset: offset,
-							limit: limit,
-							where: ObservationSearchService.getSearch().where || {},
-							 include: JSON.stringify(ObservationSearchService.getSearch().include),
-							geometry: ObservationSearchService.getSearch().geometry || ""
-						}).$promise.then(function(result){
+						Observation.query(query).$promise.then(function(result){
 							console.log("dataset length: "+$scope.displayed.length)
 							//remove first nodes if needed
 							if(lastStart < tableState.pagination.start){
@@ -230,6 +229,8 @@ angular.module('svampeatlasApp')
 						});
 
 	
+					} else {
+						$scope.isLoading = false;
 					}
 
 					

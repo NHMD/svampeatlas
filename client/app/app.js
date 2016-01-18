@@ -57,7 +57,8 @@ angular.module('svampeatlasApp', [
 						id: 'search_my_obs',
 						name: 'Mine observationer',
 						state: 'search-list',
-						params: {searchterm: 'mine'}
+						params: {searchterm: 'mine'},
+						requireLogin: true
 
 					},{
 						id: 'search_form',
@@ -82,34 +83,39 @@ angular.module('svampeatlasApp', [
 				id: 'Administration',
 				name: 'Administration',
 				type: 'heading',
+				requireRole: 'any',
 				children: [{
 					id: 'TaxonBase',
 					name: 'TaxonBase',
 					type: 'toggle',
-					hidden: true,
+					requireRole: 'taxonomyadmin',
 					icon: 'taxonomy',
 					pages: [{
 						id: 'TaxonBase_search',
 						name: 'Search taxa',
-						state: 'taxonomy'
+						state: 'taxonomy',
+						requireRole: 'taxonomyadmin',
 
 					}, {
 						id: 'TaxonBase_tree',
 						name: 'Taxon tree',
-						state: 'taxonomy-tree'
-						//   hidden: true
+						state: 'taxonomy-tree',
+						requireRole: 'taxonomyadmin',
 					}, {
 						id: 'TaxonBase_funindex',
 						name: 'Add new taxon',
-						state: 'funindex'
+						state: 'funindex',
+						requireRole: 'taxonomyadmin',
 					}, {
 						id: 'TaxonBase_Log',
 						name: 'Log',
-						state: 'taxonlog'
+						state: 'taxonlog',
+						requireRole: 'taxonomyadmin',
 					}, {
 						id: 'TaxonBase_tags',
 						name: 'Tags',
-						state: 'taxontags'
+						state: 'taxontags',
+						requireRole: 'taxonomyadmin',
 					}]
 				}]
 			}, {
@@ -118,7 +124,7 @@ angular.module('svampeatlasApp', [
 				name: 'UserAdmin',
 				state: 'admin',
 				type: 'link',
-				hidden: true
+				requireRole: 'useradmin',
 			}, {
 				id: 'link_2',
 				name: 'Link 2',
@@ -135,18 +141,21 @@ angular.module('svampeatlasApp', [
 				id: 'Settings',
 				name: 'Indstillinger',
 				type: 'heading',
+				requireLogin: true,
 				children: [{
 					id: 'Logout',
 					name: 'Logout',
 					state: 'logout',
 					type: 'link',
-					icon: 'logout'
+					icon: 'logout',
+					requireLogin: true
 				}, {
 					id: 'Profile',
 					name: 'Profil',
 					state: 'settings',
 					type: 'link',
-					icon: 'person'
+					icon: 'person',
+					requireLogin: true
 				}]
 			}]);
 

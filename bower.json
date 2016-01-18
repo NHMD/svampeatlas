@@ -22,7 +22,6 @@
     "angular-xml": "2.1.0",
 	"angular-material": "1.0.1",
 	"angular-material-icons": "",
-	"angular-material-sidenav" :"0.0.8",
 	"moment": "2.11.0",
 	"bower-leaflet" : "0.7.7",
 	"leaflet.draw" : "",
