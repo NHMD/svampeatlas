@@ -1,5 +1,6 @@
 'use strict';
 
+
 angular.module('svampeatlasApp')
 	.factory('Taxon', function($resource) {
 
@@ -191,7 +192,41 @@ angular.module('svampeatlasApp')
 				},
 				url: '/api/taxons/:id/siblings',
 				isArray: true
-			}
+			},
+			'setCurrentDKname': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/dknames/current',
+				isArray: false
+			},
+			'addDKname': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxons/:id/dknames',
+				isArray: false
+			},
+			'deleteDKname': {
+				method: 'DELETE',
+				params: {
+					id: '@_id',
+					nameid: 'nameid'
+				},
+				url: '/api/taxons/:id/dknames/:nameid',
+				isArray: false
+			},
+			'updateDKname': {
+				method: 'PUT',
+				params: {
+					id: '@_id',
+					nameid: 'nameid'
+				},
+				url: '/api/taxons/:id/dknames/:nameid',
+				isArray: false
+			},
 		});
 
 	});

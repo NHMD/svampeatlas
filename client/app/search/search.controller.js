@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon', 'Locality', 'leafletData', '$timeout',
-		function($scope, ObservationSearchService, Taxon, Locality, leafletData, $timeout) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout',
+		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout) {
 			ObservationSearchService.reset();
 			L.drawLocal.draw.toolbar.buttons.polygon = 'Tegn polygon';
 			$scope.drawnItems = new L.FeatureGroup();
@@ -83,18 +83,16 @@ angular.module('svampeatlasApp')
 			}
 
 			$scope.querySearch = function(query) {
+				if ($scope.DkNames === true){
+					return $scope.querySearchDkNames(query)
+				}
+				else {
 				var RankID = ($scope.onlyHigherTaxa) ? {
 					lt: 10000
 				} : {
 					gt: 5000
 				};
-				var where = ($scope.DkNames === true) ? {
-					vernacularname_dk: {
-						like: "%" + query + "%"
-					},
-					RankID: RankID
-
-				} : {
+				var where = {
 					FullName: {
 						like: "%" + query + "%"
 					},
@@ -107,6 +105,34 @@ angular.module('svampeatlasApp')
 					include: JSON.stringify([{
 						model: "Taxon",
 						as: 'acceptedTaxon'
+					}]),
+					limit: 30
+
+				}).$promise : [];
+
+				return results;
+			}
+			}
+			
+			$scope.querySearchDkNames = function(query) {
+				var RankID = ($scope.onlyHigherTaxa) ? {
+					lt: 10000
+				} : {
+					gt: 5000
+				};
+				var where = {
+					vernacularname_dk: {
+						like: "%" + query + "%"
+					}
+
+				} ;
+
+				var results = query ? TaxonDKnames.query({
+					where: JSON.stringify(where),
+					include: JSON.stringify([{
+						model: "Taxon",
+						as: "taxon",
+						where: JSON.stringify({RankID: RankID})
 					}]),
 					limit: 30
 
@@ -170,14 +196,27 @@ angular.module('svampeatlasApp')
 
 				if ($scope.search.selectedHigherTaxa.length > 0) {
 					$scope.search.include[0].where.$or = _.map($scope.search.selectedHigherTaxa, function(tx) {
+						if(tx.taxon){
+							// its a DK name with a taxon attached to it
+							var path = tx.taxon.Path ;
+							return {
+								Taxon_path: {
+									like: path + "%"
+								}
+							}
+							
+						} else {
+							// its a taxon resource
 						var path = (tx.acceptedTaxon === null) ? tx.Path : tx.acceptedTaxon.Path;
 						return {
 							Taxon_path: {
 								like: path + "%"
 							}
 						}
+					}
 					})
 				}
+				
 
 				if ($scope.search.selectedLocalities.length > 0) {
 					$scope.search.include[2].where.$or = _.map($scope.search.selectedLocalities, function(loc) {

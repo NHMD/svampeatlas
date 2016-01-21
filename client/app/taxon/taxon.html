@@ -46,7 +46,7 @@
 
 			</div>
 			
-			<h4 ng-show="taxon._id !== undefined"><strong translate>DK name: </strong> <a href="#" editable-text="taxon.vernacularname_dk"  onaftersave="Taxon.update({id: taxon._id}, taxon)"><em>{{ taxon.vernacularname_dk || 'n/a' }}</em></a> </h4> 
+			<h4 ng-show="taxon._id !== undefined"><strong translate>DK name: </strong> <em>{{ taxon.Vernacularname_DK.vernacularname_dk || 'n/a' }}</em> </h4> 
 		<div  ng-show="taxon._id && taxon.RankID > 5000" layout="row" >
     <md-checkbox  ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 	{{'Present in DK' | translate}}
@@ -331,6 +331,39 @@
 						        {{tag.tagname}}
 						      </md-switch>
 						    </div>
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
+			  	          Danish names ({{taxon.DanishNames.length}})
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+						  <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="createNewDkName()" tabindex="0" translate>Add danish name</button>
+  						  <table class="table table-bordered">
+  							   <tr ng-repeat="name in taxon.DanishNames "><td st-ratio="60">
+  						 <a href="#" editable-text="name.vernacularname_dk"  onaftersave="updateDkName(name)">{{name.vernacularname_dk}}</a>
+  						  </td>
+					  <td st-ratio="400">
+					    						<button class="btn btn-sm btn-danger" ng-disabled="newDkNameIsInProgress" ng-click="setCurrentDkName(name)" ng-if="name._id !== taxon.Vernacularname_DK._id" >Set as current</button> <button class="btn btn-sm btn-danger" ng-disabled="newDkNameIsInProgress" ng-click="deleteDkName(name)" ng-if="name._id !== taxon.Vernacularname_DK._id" >Delete</button>
+				  						        <md-checkbox type="checkbox" ng-if="name._id === taxon.Vernacularname_DK._id" ng-checked="true" ng-disabled="true">
+				  						        Current use
+				  						      </md-checkbox>
+					    						  </td>
+												 
+					  </tr>
+					  </table>
+			  	        
+						<!--<ul>
+							<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxonbase/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
+						</ul> -->
 			  	      </div>
 			  	    </div>
 			  	  </div>

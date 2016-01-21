@@ -90,22 +90,6 @@ exports.index = function(req, res) {
 		_.merge(query.where, JSON.parse(req.query.where));
 	}
 
-/*
-	if (req.query.include) {
-		
-		var parsed = JSON.parse(req.query.include)
-		query['include'] =	_.map(parsed, function(n){
-		var n =  JSON.parse(n);
-		n.model = models[n.model];
-		return n;
-		})
-
-
-	}
-	*/
-	if (req.query.where) {
-		_.merge(query.where, JSON.parse(req.query.where));
-	}
 
 	if (req.query.include) {
 		var include = JSON.parse(req.query.include)
@@ -164,6 +148,13 @@ exports.show = function(req, res) {
 			_id: req.params.id
 		},
 		include: [{
+				model: models.TaxonDKnames,
+				as: "Vernacularname_DK"
+			},{
+				model: models.TaxonDKnames,
+				as: "DanishNames"
+			},
+			{
 				model: models.TaxonImages,
 				as: "images"
 			}, {
@@ -919,6 +910,18 @@ exports.addSynonym = function(req, res) {
 			})
 			.then(function() {
 
+					return models.TaxonDKnames.update({
+						taxon_id: req.params.id
+					}, {
+						where: {
+							taxon_id: synonymTaxon._id
+						}
+					}, {
+						transaction: t
+					})
+			})
+			.then(function() {
+
 					return models.TaxonImages.update({
 						taxon_id: req.params.id
 					}, {
@@ -991,6 +994,81 @@ exports.addSynonym = function(req, res) {
 		}).
 	catch (handleError(res));
 };
+
+
+exports.setCurrentDkName = function(req, res) {
+	console.log("endpoint hit")
+	  models.sequelize.transaction(function(t) {
+		return Taxon.find({
+			where: {
+				_id: req.params.id
+			},
+			
+			include: [{
+				model: models.TaxonDKnames,
+				as: "Vernacularname_DK"
+			}, {
+				model: models.TaxonDKnames,
+				as: "DanishNames"
+			}],
+			
+			transaction: t
+		})
+			.then(function(taxon) {
+				
+				
+				var newname = req.body.vernacularname_dk;
+				
+				var oldname = taxon.Vernacularname_DK.vernacularname_dk;
+				
+				
+				console.log("New name "+newname)
+				console.log("Old name "+oldname)
+				
+				//var oldname = taxon.Vernacularname_DK.vernacularname_dk.toString();
+				//var newname = req.body;
+				taxon.vernacularname_dk_id = req.body._id;
+					
+
+					
+					return [taxon.save({
+								transaction: t
+							})
+							, oldname, newname];
+					
+				
+
+
+			})
+			
+			.spread(function(taxon, oldval, newval) {
+				console.log("found taxon " + taxon)
+				return models.TaxonLog.create({
+					eventname: "Changed danish name",
+					description: "New name: " + newval + ", old name: " + oldval + ".",
+					user_id: req.user._id,
+					taxon_id: req.params.id
+
+				}, {
+					transaction: t
+				});
+
+
+			})
+			
+
+
+	})
+	
+		.then(function() {
+
+			return res.status(201).json();
+
+		}).
+	catch (handleError(res));
+};
+
+
 
 
 exports.setParent = function(req, res) {

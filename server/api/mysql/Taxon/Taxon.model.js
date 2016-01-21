@@ -204,6 +204,23 @@ module.exports = function(sequelize, DataTypes) {
     					foreignKey: "taxon_id",
     					as: "images"
     				});
+			models.Taxon
+					.belongsTo(models.TaxonDKnames, {
+						foreignKey: "vernacularname_dk_id" ,
+						as: "Vernacularname_DK",
+						constraints: false
+					});	
+			models.TaxonDKnames
+					.belongsTo(models.Taxon, {
+						foreignKey: "taxon_id" ,
+						as: "taxon",
+						constraints: false
+					});
+    		models.Taxon
+    				.hasMany(models.TaxonDKnames, {
+    					foreignKey: "taxon_id",
+    					as: "DanishNames"
+    				});
 			
     		models.Taxon
     				.hasMany(models.Taxon, {

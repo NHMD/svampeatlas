@@ -17,6 +17,7 @@ module.exports = function(app) {
   app.use('/api/taxonredlistdata', require('./api/mysql/TaxonRedListData'));
 //  app.use('/api/redlisteditions', require('./api/mysql/RedListEditions'));
    app.use('/api/taxonattributes', require('./api/mysql/TaxonAttributes'));
+   app.use('/api/taxondknames', intparser.parseLimitOffset(), require('./api/mysql/TaxonDKnames'));
    app.use('/api/naturetypes', require('./api/mysql/Naturtype'));
    app.use('/api/nutritionstrategies', require('./api/mysql/ErnaeringsStrategi'));
     app.use('/api/taxonomytags',intparser.parseLimitOffset(), require('./api/mysql/TaxonomyTag'));
@@ -38,7 +39,7 @@ module.exports = function(app) {
   app.use('/api/mycobank', require('./api/soap/mycobank'));
  app.use('/api/plutof', require('./api/soap/plutof'));
   app.use('/api/geonames', require('./api/soap/geonames'));
-
+  app.use('/auth', require('./auth'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')

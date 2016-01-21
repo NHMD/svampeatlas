@@ -7,7 +7,8 @@ var imagesController = require('../TaxonImages/TaxonImages.controller');
 var naturtypeController = require('../Naturtype/Naturtype.controller');
 var nutritionStrategyController = require('../ErnaeringsStrategi/ErnaeringStrategi.controller');
 var taxonomytagController = require('../TaxonomyTag/TaxonomyTag.controller');
-var speciesHypothesisController = require('../TaxonSpeciesHypothesis/TaxonSpeciesHypothesis.controller')
+var speciesHypothesisController = require('../TaxonSpeciesHypothesis/TaxonSpeciesHypothesis.controller');
+var dkNamesController = require('../TaxonDKnames/TaxonDKnames.controller');
 var auth = require('../../../auth/auth.service');
 //var intparser = require('../../../components/hooks/parseLimitOffset');
 
@@ -57,6 +58,12 @@ router.delete('/:id/nutritionstrategies/:nutritionstrategyid',auth.hasRole('taxo
 router.get('/:id/specieshypothesis', speciesHypothesisController.showSpeciesHypothesis);
 router.post('/:id/specieshypothesis',auth.hasRole('taxonomyadmin'),  speciesHypothesisController.addSpeciesHypothesis);
 router.delete('/:id/specieshypothesis/:spid',auth.hasRole('taxonomyadmin'),  speciesHypothesisController.deleteSpeciesHypothesis);
+
+router.get('/:id/dknames', dkNamesController.showNames);
+router.post('/:id/dknames',auth.hasRole('taxonomyadmin'),  dkNamesController.addName);
+router.post('/:id/dknames/current/',auth.hasRole('taxonomyadmin'),  controller.setCurrentDkName);
+router.put('/:id/dknames/:nameid',auth.hasRole('taxonomyadmin'),  dkNamesController.updateName);
+router.delete('/:id/dknames/:nameid',auth.hasRole('taxonomyadmin'),  dkNamesController.deleteName);
 
 
 module.exports = router;
