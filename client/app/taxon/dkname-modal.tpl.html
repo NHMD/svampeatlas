@@ -1,0 +1,46 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title" translate>Add Danish name:</h4></div>
+				<div class="modal-body">
+					<form>
+					
+		            <div layout-gt-xs="row">
+		  
+		  		   <md-input-container class="md-block" flex-gt-xs>
+		  		           <label>Danish name</label>
+		  		           <input  ng-model="$parent.newDkName.vernacularname_dk" >
+		  		         </md-input-container>
+		  	  		   
+		   
+		            </div>
+					<div layout-gt-xs="row">
+						
+	  	  		   <md-input-container>
+	  	  		           <label>Applied latin name</label>
+	  	  		           <input  ng-model="$parent.newDkName.appliedLatinName">
+	  	  		         </md-input-container>
+					 </div>
+  					<div layout-gt-xs="row">
+						
+  	  	  		   <md-input-container>
+  	  	  		           <label>Source</label>
+  	  	  		           <input  ng-model="$parent.newDkName.source">
+  	  	  		         </md-input-container>
+  					 </div>
+					</form>	
+					
+		
+			
+			
+				
+				<div class="modal-footer">
+					<div class="col-md-12">
+					<button type="button" class="btn btn-danger" ng-click="$parent.cancelNewName(); $hide()"> <i class="fa fa-times"></i> {{'Close' | translate}}</button> <button type="button" class="btn btn-success pull-right" ng-show="true" ng-click="$parent.saveNewDkName(); $hide()"> <i class="fa fa-check"></i> {{'Save name' | translate}}!</button> 
+					</div>
+				</div>
+			
+		</div>
+	</div>

@@ -78,7 +78,7 @@
         </md-autocomplete>
         <md-chip-template>
           <span>
-            <strong>{{$chip.FullName}}</strong>
+            <strong>{{($chip.FullName) ? $chip.FullName: $chip.vernacularname_dk}}</strong>
 
           </span>
         </md-chip-template>
@@ -98,7 +98,7 @@
         </md-autocomplete>
         <md-chip-template>
           <span>
-            <strong>{{$chip.vernacularname_dk}}</strong>
+            <strong>{{($chip.FullName) ? $chip.FullName: $chip.vernacularname_dk}}</strong>
 
           </span>
         </md-chip-template>

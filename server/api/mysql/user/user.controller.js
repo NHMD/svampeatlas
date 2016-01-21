@@ -185,8 +185,8 @@ exports.me = function(req, res, next) {
 	}]
   })
     .then(function(user) { // don't ever give out the password or salt
-      if (!user) { return res.json(401); }
-      return res.json(user.profile);
+      if (!user) { return res.status(401).json(); }
+      return res.status(200).json(user.profile);
     })
     .catch(function(err) {
       return next(err);
