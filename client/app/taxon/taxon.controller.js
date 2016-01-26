@@ -410,6 +410,8 @@ angular.module('svampeatlasApp')
 
 			}
 			
+			// handles tags
+			
 			$scope.taxonHasTag = function(tagId) {
 
 				return _.find($scope.taxon.tags, function(tag) {
@@ -446,6 +448,7 @@ angular.module('svampeatlasApp')
 				}
 
 			}
+			// handles links to UNITE species hypothesis
 			
 			$scope.addSpeciesHypothesis = function(newSpeciesHypothesis){
 				
@@ -472,6 +475,7 @@ angular.module('svampeatlasApp')
 				})
 			}
 			
+			// handles an array of danish names , one of these being the cunrrent name
 			
 			$scope.setCurrentDkName = function(name){
 				$scope.newDkNameIsInProgress = true;
