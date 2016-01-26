@@ -27,7 +27,8 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false
 		},
 		appliedLatinName: DataTypes.STRING,
-		source: DataTypes.STRING
+		source: DataTypes.STRING,
+		note: DataTypes.STRING
 	}, {
 		tableName: 'TaxonDKnames',
 		//	timestamps: false,

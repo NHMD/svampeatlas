@@ -472,6 +472,7 @@ angular.module('svampeatlasApp')
 				})
 			}
 			
+			
 			$scope.setCurrentDkName = function(name){
 				$scope.newDkNameIsInProgress = true;
 				console.log(name)
@@ -486,14 +487,12 @@ angular.module('svampeatlasApp')
 			
 			
 			$scope.updateDkName = function(name){
-				Taxon.updateDKname({id: $scope.taxon._id, nameid: name._id}, name).$promise.then(function(){
-					if($scope.taxon.vernacularname_dk_id === name._id){
-						$scope.taxon.Vernacularname_DK = name;
-					}
-				})
+				
+				$scope.newDkName = name;
+				$scope.dkNameModal.show()
 			}
 			$scope.createNewDkName = function(){
-				$scope.newDkName = {taxon_id: $scope.taxon._id};
+				$scope.newDkName = {taxon_id: $scope.taxon._id, appliedLatinName: $scope.taxon.FullName};
 				$scope.dkNameModal.show()
 			}
 			
@@ -501,11 +500,20 @@ angular.module('svampeatlasApp')
 				delete $scope.newDkName;
 			}
 			
-			$scope.saveNewDkName = function(){
+			$scope.saveOrUpdateDkName = function(){
+				if($scope.newDkName.hasOwnProperty('_id')){
+				Taxon.updateDKname({id: $scope.taxon._id, nameid: $scope.newDkName._id }, $scope.newDkName).$promise.then(function(newname){
+					if($scope.taxon.vernacularname_dk_id === $scope.newDkName._id){
+						$scope.taxon.Vernacularname_DK = $scope.newDkName;
+						delete $scope.newDkName;
+					}
+				})
+			} else {
 				Taxon.addDKname({id: $scope.taxon._id}, $scope.newDkName).$promise.then(function(newname){
 					$scope.taxon.DanishNames.push(newname);
 					delete $scope.newDkName;
 				})
+			}
 			}
 			
 			$scope.deleteDkName = function(name){
@@ -532,9 +540,7 @@ angular.module('svampeatlasApp')
 				
 			}
 			
-			$scope.$watch('newDkName', function(newval, oldval){
-				console.log(newval)
-			})
+		
 
 		}
 	]);

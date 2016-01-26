@@ -349,7 +349,7 @@
 						  <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="createNewDkName()" tabindex="0" translate>Add danish name</button>
   						  <table class="table table-bordered">
   							   <tr ng-repeat="name in taxon.DanishNames "><td st-ratio="60">
-  						 <a href="#" editable-text="name.vernacularname_dk"  onaftersave="updateDkName(name)">{{name.vernacularname_dk}}</a>
+  						 <a href="#" ng-click="updateDkName(name)">{{name.vernacularname_dk}}</a>
   						  </td>
 					  <td st-ratio="400">
 					    						<button class="btn btn-sm btn-danger" ng-disabled="newDkNameIsInProgress" ng-click="setCurrentDkName(name)" ng-if="name._id !== taxon.Vernacularname_DK._id" >Set as current</button> <button class="btn btn-sm btn-danger" ng-disabled="newDkNameIsInProgress" ng-click="deleteDkName(name)" ng-if="name._id !== taxon.Vernacularname_DK._id" >Delete</button>
