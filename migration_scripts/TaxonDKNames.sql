@@ -21,3 +21,5 @@ UPDATE Taxon t, TaxonDKnames d set t.vernacularname_dk_id = d._id where d.taxon_
 ALTER TABLE TaxonDKnames
 ADD COLUMN createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ADD COLUMN updatedAt datetime DEFAULT NULL;
+
+ALTER TABLE `TaxonDKnames` ADD `note` VARCHAR(510) CHARACTER SET utf8 COLLATE utf8_bin NULL AFTER `source`;
