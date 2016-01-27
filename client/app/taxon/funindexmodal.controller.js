@@ -21,9 +21,9 @@ angular.module('svampeatlasApp')
 					var rows = (Array.isArray(data.NameSearchResult.NewDataSet.IndexFungorum)) ? data.NameSearchResult.NewDataSet.IndexFungorum : [data.NameSearchResult.NewDataSet.IndexFungorum];
 					
 					
-					$scope.funIdxrowCollection = _.filter(rows, function(tx){
+					$scope.funIdxrowCollection = ($scope.taxon.Parent) ? _.filter(rows, function(tx){
 						return TaxonIntegrationService.getRankID(tx.INFRASPECIFIC_x0020_RANK) > $scope.taxon.Parent.RankID;
-					});
+					}) : rows;
 					
 					$scope.funIsLoading = false;
 					//	console.log(data)
