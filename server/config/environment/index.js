@@ -51,7 +51,8 @@ var all = {
     clientSecret: process.env.GOOGLE_SECRET || 'secret',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
   },
-  geonames: 'svampeatlas'
+  geonames: 'svampeatlas',
+  kms: {login:"thomasstjerne", password: "splendens"}
 };
 
 // Export the config object based on the NODE_ENV

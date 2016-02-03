@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchResultMapCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout','$stateParams', 'Observation','appConstants',
-		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants) {
+	.controller('SearchResultMapCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout','$stateParams', 'Observation','appConstants','KMS',
+		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS) {
 			$scope.appConstants = appConstants;
 			var geometry = ObservationSearchService.getSearch().geometry;
 			ObservationSearchService.getSearch().include.push({
@@ -39,11 +39,87 @@ angular.module('svampeatlasApp')
 							name: 'OpenStreetMap',
 							url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 							type: 'xyz'
+						},
+					
+						topo_25: {
+							name: "4cm kort",
+							type: 'wms',
+							visible: true,
+							url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+							layerOptions: {
+								layers: "topo25_klassisk",
+								servicename: "topo25",
+								version: "1.1.1",
+								request: "GetMap",
+								format: "image/jpeg",
+								service: "WMS",
+								styles: "default",
+								exceptions: "application/vnd.ogc.se_inimage",
+								jpegquality: "80",
+								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+								ticket: KMS.getTicket()
+							}
+						},
+						luftfoto: {
+							name: "luftfoto",
+							type: 'wms',
+							visible: true,
+							url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+							layerOptions: {
+			        layers: "orto_foraar",
+			        servicename: "orto_foraar",
+								version: "1.1.1",
+								request: "GetMap",
+								format: "image/jpeg",
+								service: "WMS",
+								styles: "default",
+								exceptions: "application/vnd.ogc.se_inimage",
+								jpegquality: "80",
+								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+								ticket: KMS.getTicket()
+							}
 						}
 					}
 				}
 			};
-			 var leafletView = new PruneClusterForLeaflet();
+	/*		
+	var		options = {
+			    topo_25: {
+			        layers: "topo25_klassisk",
+			        servicename: "topo25",
+			        nickname: "topo_25"
+			    },
+
+			    topo_historisk_1842_1899: {
+			        layers: "dtk_hoeje_maalebordsblade",
+			        servicename: "topo20_hoeje_maalebordsblade",
+			        nickname: "topo_historisk_1842_1899"
+			    },
+			    topo_historisk_1928_1940: {
+			        layers: "dtk_lave_maalebordsblade",
+			        servicename: "topo20_lave_maalebordsblade",
+			        nickname: "topo_historisk_1928_1940"
+			    },
+			    luftfoto: {
+			        layers: "orto_foraar",
+			        servicename: "orto_foraar",
+			        nickname: "luftfoto"
+			    }
+			};
+			
+			
+	var	    baseLayers = {
+		               topo_25: L.tileLayer.wms("http://kortforsyningen.kms.dk/topo_skaermkort", $.extend({}, r, options.topo_25)),
+		             
+		               topo_historisk_1842_1899: L.tileLayer.wms("http://kortforsyningen.kms.dk/topo_skaermkort", $.extend({}, r, options.topo_historisk_1842_1899)),
+		               topo_historisk_1928_1940: L.tileLayer.wms("http://kortforsyningen.kms.dk/topo_skaermkort", $.extend({}, r, options.topo_historisk_1928_1940)),
+
+		               luftfoto: L.tileLayer.wms("http://kortforsyningen.kms.dk/topo_skaermkort", $.extend({}, r, options.luftfoto))
+		           }
+			
+			*/
+			
+			 var leafletView = new PruneClusterForLeaflet(50);
 			 
 			$scope.getMarker = function(observation){
 			/*
