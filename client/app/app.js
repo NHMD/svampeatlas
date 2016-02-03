@@ -162,6 +162,10 @@ angular.module('svampeatlasApp', [
 	  
 	
   })
+  .constant("appConstants", {
+         "imageurl": "http://130.225.98.135/svampeatlas/uploads/"
+        
+     })
 .filter('synonymsWithoutSelf', function() {
 	return function(synonyms) {
 		return _.filter(synonyms, function(s) {

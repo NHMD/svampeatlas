@@ -19,7 +19,7 @@
 		       </div>
 		     </md-toolbar>
 		   <md-progress-circular md-mode="indeterminate" ng-show="loaded[img.name] !== true && failed[img.name] !== true"></md-progress-circular>
-	     <img   style="margin: auto; max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="http://130.225.98.135/svampeatlas/uploads/{{img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+	     <img   style="margin: auto; max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
 	 </div>
 	   
 		
