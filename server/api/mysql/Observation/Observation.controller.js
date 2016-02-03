@@ -72,11 +72,13 @@ exports.index = function(req, res) {
 
 
 	var query = {
-		offset: parseInt(req.query.offset),
-		limit: parseInt(req.query.limit),
-		order: req.query.order,
+		offset: parseInt(req.query.offset) || 0,
+		limit: parseInt(req.query.limit) || 15000,
 		where: {}
 	};
+	if(req.query.order) {
+		query.order = req.query.order;
+	}
 // 'POLYGON((11.7626589397457 55.5119544279369,11.7631613453886 55.5191206803667,11.7869689746192 55.5185809756286,11.7864622538095 55.5114148669722,11.7626589397457 55.5119544279369))'
 	console.log(req.query.geometry)
 	if(req.query.geometry){
@@ -139,8 +141,8 @@ exports.index = function(req, res) {
 			};
 			return res.status(200).json(taxon.rows)
 		})
-		.
-	catch (handleError(res));
+		.catch (handleError(res));
+
 
 };
 

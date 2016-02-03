@@ -26,6 +26,8 @@
 	"bower-leaflet" : "0.7.7",
 	"leaflet.draw" : "",
 	"leaflet-draw-drag" : "",
+	"leaflet-spin" : "0.1.1",
+	"PruneCluster": "1.0.0",
 	"angular-leaflet-directive": "0.10.0"
   },
   "devDependencies": {

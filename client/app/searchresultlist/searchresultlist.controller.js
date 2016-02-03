@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', 'Auth','Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService', '$stateParams',
+	.controller('SearchListCtrl', ['$scope', 'Auth','Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService', '$stateParams', 
 		function($scope,Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams) {
-			
+		
 			if($stateParams.searchterm){
 				ObservationSearchService.reset();
 				var search = ObservationSearchService.getSearch();
@@ -52,9 +52,7 @@ angular.module('svampeatlasApp')
 								search.where.observationDate= {gt: moment().subtract(7, 'days')}
 								
 							}
-				search.include = _.map(search.include, function(n) {
-								return JSON.stringify(n)
-							});	
+					
 			}
 			
 			$scope.getDate = function(observationDate, observationDateAccuracy){
@@ -73,11 +71,32 @@ angular.module('svampeatlasApp')
 			}
 			
 			
+			ObservationSearchService.getSearch().include.push({
+					model: "ObservationImage",
+					as: 'Images',
+					separate: true,
+					offset: 0,
+					limit: 10
+				});
+				
+				ObservationSearchService.getSearch().include.push({
+									model: "ObservationForum",
+									as: 'Forum',
+									separate: true,
+									offset: 0,
+									limit: 10
+
+								});
+			
+			ObservationSearchService.getSearch().include = _.map(ObservationSearchService.getSearch().include, function(n) {
+							return JSON.stringify(n)
+						});
 			
 		    $scope.showImages = function(ev, row) {
 		    	var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
 		    	$mdDialog.show({
-		    		controller: function($scope, $mdDialog) {
+		    		controller: function($scope, $mdDialog, appConstants) {
+						$scope.imageurl = appConstants.imageurl;
 		    			$scope.obs = row;
 						$scope.loaded = {};
 						$scope.failed = {};

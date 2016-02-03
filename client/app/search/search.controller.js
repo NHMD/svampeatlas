@@ -169,21 +169,8 @@ angular.module('svampeatlasApp')
 					model: "Locality",
 					as: 'Locality',
 					where: {}
-				},
-				{
-					model: "ObservationImage",
-					as: 'Images',
-					separate: true,
-					offset: 0,
-					limit: 10
-				}, {
-					model: "ObservationForum",
-					as: 'Forum',
-					separate: true,
-					offset: 0,
-					limit: 10
-
 				}
+				
 
 			];
 
@@ -232,9 +219,8 @@ angular.module('svampeatlasApp')
 				if ($scope.search.include[0].where.Taxon_redlist_status === "ALL") {
 					$scope.search.include[0].where.Taxon_redlist_status = ['RE', 'CR', 'EN', 'VU', 'NT']
 				}
-				$scope.observationSearch.include = _.map($scope.search.include, function(n) {
-					return JSON.stringify(n)
-				});
+				$scope.observationSearch.include = $scope.search.include;
+				
 				if ($scope.search.databasenumber) {
 					$scope.observationSearch.where._id = $scope.search.databasenumber.split("-")[1] || $scope.search.databasenumber;
 				}
