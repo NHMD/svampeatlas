@@ -9,7 +9,9 @@ angular.module('svampeatlasApp')
 					model: "ObservationImage",
 					as: 'Images',
 					offset: 0,
-					limit: 1
+					limit: 1,
+				separate: true
+					
 				});
 				ObservationSearchService.getSearch().include = _.map(ObservationSearchService.getSearch().include, function(n) {
 								return JSON.stringify(n)
@@ -121,6 +123,7 @@ angular.module('svampeatlasApp')
 			
 			 var leafletView = new PruneClusterForLeaflet(50);
 			 
+			 
 			$scope.getMarker = function(observation){
 			/*
 				$scope.mapsettings.markers[observation._id] = {
@@ -131,6 +134,15 @@ angular.module('svampeatlasApp')
 				
 				observation: observation
             } */
+				
+				 
+				leafletView.RegisterMarker(new PruneCluster.Marker(observation.decimalLatitude, observation.decimalLongitude,  {observation: observation}));
+			}
+			
+		   
+
+		    leafletView.PrepareLeafletMarker = function (marker, data) {
+				var observation = data.observation;
 				var message = "";
 				if(observation.Images && observation.Images.length > 0){
 					
@@ -146,16 +158,28 @@ angular.module('svampeatlasApp')
 					message += observation.Locality.name +", ";
 				}
 				 message +=  moment(observation.observationDate).format('DD/MM/YYYY') + "<br>"+observation.PrimaryUser.name ;
-				leafletView.RegisterMarker(new PruneCluster.Marker(observation.decimalLatitude, observation.decimalLongitude,  {title: message}));
-			}
-			
-		   
-
-		    leafletView.PrepareLeafletMarker = function (marker, data) {
+				 var iconOptions = {prefix: 'fa', icon: 'circle'};
+				 if(observation.Images && observation.Images.length > 0){
+					 iconOptions.icon = 'camera';
+				 };
+				 if(observation.DeterminationView.Determination_validation === "Godkendt"){
+				 	iconOptions.markerColor = 'blue';
+					marker.category = 0;
+				 } else if(observation.DeterminationView.Determination_validation ===  "Afvist"){
+				 	iconOptions.markerColor = 'red';
+					iconOptions.icon = 'ban';
+					marker.category = 2;
+				 } else {
+				 	iconOptions.markerColor = 'orange';
+					marker.category = 1;
+				 }
+				
+				marker.setIcon(L.AwesomeMarkers.icon(iconOptions));
+				   
 		        if (marker.getPopup()) {
-		            marker.setPopupContent(data.title);
+		            marker.setPopupContent(message);
 		        } else {
-		            marker.bindPopup(data.title);
+		            marker.bindPopup(message);
 		        }
 		    };
 
@@ -163,8 +187,8 @@ angular.module('svampeatlasApp')
 				
 			map.spin(true);
 			
-			 Observation.query(query).$promise.then(function(data){
-				 
+			 Observation.query(query, function(data, headers){
+				 $scope.count = headers('count');
 				$scope.data = data;
 				
 				
