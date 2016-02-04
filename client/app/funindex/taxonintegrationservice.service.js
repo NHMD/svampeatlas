@@ -115,9 +115,9 @@ angular.module('svampeatlasApp')
 				
 			},
 			getTaxonName: function(taxon) {
-				if (taxon.INFRASPECIFIC_x0020_EPITHET) {
+				if (taxon.INFRASPECIFIC_x0020_EPITHET && typeof taxon.INFRASPECIFIC_x0020_EPITHET === 'string') {
 					return taxon.INFRASPECIFIC_x0020_EPITHET;
-				} else if (taxon.SPECIFIC_x0020_EPITHET) {
+				} else if (taxon.SPECIFIC_x0020_EPITHET && typeof taxon.SPECIFIC_x0020_EPITHET === 'string') {
 					return taxon.SPECIFIC_x0020_EPITHET;
 				} else if (taxon.NAME_x0020_OF_x0020_FUNGUS) {
 					return taxon.NAME_x0020_OF_x0020_FUNGUS

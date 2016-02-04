@@ -1,7 +1,15 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
 <div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>
-	
-
+	<md-toolbar class="md-warn" ng-show="count > data.length">
+	    <div class="md-toolbar-tools" >
+			<div layout="column">
+	      <h2 class="md-title">Din søgning gav {{count}} resultater, kun de første 15.000 vises på kortet.</h2>
+		 <h2 class="md-subhead">Prøv evt. at afgrænse din søgning yderligere.</h2>
+	 </div>
+	    </div>
+	   
+		
+	  </md-toolbar>
 <md-content layout-gt-sm="row" layout-padding class="md-inline-form">
 
 	<leaflet width="700px" height="600px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
