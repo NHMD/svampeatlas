@@ -38,4 +38,6 @@ t._id as Taxon_id ,
   t2._id Recorded_as_id,
   r.status Taxon_redlist_status  
 FROM  (Determination d JOIN Taxon t2
-ON  t2._id=d.taxon_id JOIN Taxon t ON t2.accepted_id=t._id JOIN TaxonDKnames n ON t.vernacularname_dk_id = n._id) LEFT JOIN CurrentRedListStatus r ON r.taxon_id=t._id;
+ON  t2._id=d.taxon_id JOIN Taxon t ON t2.accepted_id=t._id LEFT JOIN TaxonDKnames n ON t.vernacularname_dk_id = n._id) LEFT JOIN CurrentRedListStatus r ON r.taxon_id=t._id;
+
+
