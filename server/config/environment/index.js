@@ -52,7 +52,11 @@ var all = {
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
   },
   geonames: 'svampeatlas',
-  kms: {login:"thomasstjerne", password: "splendens"}
+  kms: {login:"thomasstjerne", password: "splendens"},
+  arcgis: {
+	      'client_id': 'QS6ITvXQsdX4F0uE',
+	      'client_secret': 'b28294483b294d778f12d6749e620387',
+  }
 };
 
 // Export the config object based on the NODE_ENV

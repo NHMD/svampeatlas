@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', 'Auth','Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService', '$stateParams', 
-		function($scope,Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams) {
+	.controller('SearchListCtrl', ['$scope', 'Auth','Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 
+		function($scope,Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state) {
 		
 			if($stateParams.searchterm){
 				ObservationSearchService.reset();
@@ -70,8 +70,15 @@ angular.module('svampeatlasApp')
 				
 			}
 			
+			$scope.search = ObservationSearchService.getSearch();
 			
-			ObservationSearchService.getSearch().include.push({
+			if(_.isEmpty($scope.search)){
+				$state.go('search')
+			};
+			// if we came directly from the map view, remove images and forum from include
+			$scope.search.include.slice(0,3);
+			$scope.search.include[0].attributes = ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
+			$scope.search.include.push({
 					model: "ObservationImage",
 					as: 'Images',
 					separate: true,
@@ -79,7 +86,7 @@ angular.module('svampeatlasApp')
 					limit: 10
 				});
 				
-				ObservationSearchService.getSearch().include.push({
+				$scope.search.include.push({
 									model: "ObservationForum",
 									as: 'Forum',
 									separate: true,
@@ -88,8 +95,8 @@ angular.module('svampeatlasApp')
 
 								});
 			
-			ObservationSearchService.getSearch().include = _.map(ObservationSearchService.getSearch().include, function(n) {
-							return JSON.stringify(n)
+			$scope.queryinclude = _.map($scope.search.include, function(n) {
+							return  JSON.stringify(n);
 						});
 			
 		    $scope.showImages = function(ev, row) {
@@ -204,7 +211,7 @@ angular.module('svampeatlasApp')
 							offset: offset,
 							limit: limit,
 							 where: ObservationSearchService.getSearch().where || {},
-							 include: JSON.stringify(ObservationSearchService.getSearch().include)
+							 include: JSON.stringify($scope.queryinclude)
 						};
 
 				if(geometry){

@@ -70,10 +70,15 @@ function removeEntity(res) {
 // Get list of Observations
 exports.index = function(req, res) {
 
-
+	if(!req.query.limit){
+		req.query.limit = 20000;
+	}
+	if(!req.query.offset){
+		req.query.offset = 0;
+	}
 	var query = {
-		offset: parseInt(req.query.offset) || 0,
-		limit: parseInt(req.query.limit) || 15000,
+		offset: parseInt(req.query.offset) ,
+		limit: parseInt(req.query.limit),
 		where: {}
 	};
 	if(req.query.order) {

@@ -9,8 +9,14 @@ angular.module('svampeatlasApp')
 
 			search : {},
 			
+			uistate: {},
+			
 			getSearch: function() {
 				return this.search ;
+				
+			},
+			getUIstate: function() {
+				return this.uistate ;
 				
 			},
 			reset: function(){
