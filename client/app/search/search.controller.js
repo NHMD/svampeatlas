@@ -3,16 +3,25 @@
 angular.module('svampeatlasApp')
 	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout',
 		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout) {
-			ObservationSearchService.reset();
+		//	ObservationSearchService.reset();
+		$scope.search = ObservationSearchService.getUIstate();
+		
 			L.drawLocal.draw.toolbar.buttons.polygon = 'Tegn polygon';
-			$scope.drawnItems = new L.FeatureGroup();
+			
+			if($scope.search.geometry){
+				$scope.drawnItems =  new L.geoJson($scope.search.geometry);
+				
+			} else {
+				$scope.drawnItems = new L.geoJson();
+			};
 			$scope.mapsettings = {
 				center: {
 					lat: 56,
 					lng: 11,
 					zoom: 6
 				},
-				drawControl: true,
+				
+				
 				layers: {
 					baselayers: {
 						osm: {
@@ -29,6 +38,7 @@ angular.module('svampeatlasApp')
 			leafletData.getMap().then(function(map) {
 				$scope.map = map;
 				map.addLayer($scope.drawnItems);
+				
 				var drawControl = new L.Control.Draw({
 					edit: {
 						featureGroup: $scope.drawnItems
@@ -41,21 +51,53 @@ angular.module('svampeatlasApp')
 					}
 
 				});
-				map.addControl(drawControl);
+				
+				var editControl = new L.Control.Draw({
+					edit: {
+						featureGroup: $scope.drawnItems
+					},
+					draw: {
+						polyline: false,
+						circle: false,
+						marker: false,
+						rectangle: false,
+						polygon: false
+					}
+
+				});
+				if($scope.drawnItems.getLayers().length === 0){
+					map.addControl(drawControl);
+				} else {
+					map.addControl(editControl);
+				}
+				
+				
 
 				map.on('draw:created', function(e) {
 					var type = e.layerType,
 						layer = e.layer;
 
-					if (type === 'marker') {
-						// Do marker specific actions
-					}
-
 					// Do whatever else you need to. (save to db, add to map etc)
 					$scope.drawnItems.addLayer(layer);
+					map.removeControl(drawControl);
+					map.addControl(editControl);
 
-					console.log(JSON.stringify(layer.toGeoJSON()));
 					$scope.search.geometry = layer.toGeoJSON();
+				});
+				
+				map.on('draw:edited', function(e) {
+					var layer = $scope.drawnItems.getLayers()[0];
+
+					$scope.search.geometry = layer.toGeoJSON();
+				});
+				
+				map.on('draw:deleted', function(e) {
+					
+
+					delete $scope.search.geometry;
+					
+					map.removeControl(editControl);
+					map.addControl(drawControl);
 				});
 
 			})
@@ -83,11 +125,11 @@ angular.module('svampeatlasApp')
 			}
 
 			$scope.querySearch = function(query) {
-				if ($scope.DkNames === true){
+				if ($scope.search.DkNames === true){
 					return $scope.querySearchDkNames(query)
 				}
 				else {
-				var RankID = ($scope.onlyHigherTaxa) ? {
+				var RankID = ($scope.search.onlyHigherTaxa) ? {
 					lt: 10000
 				} : {
 					gt: 5000
@@ -115,7 +157,7 @@ angular.module('svampeatlasApp')
 			}
 			
 			$scope.querySearchDkNames = function(query) {
-				var RankID = ($scope.onlyHigherTaxa) ? {
+				var RankID = ($scope.search.onlyHigherTaxa) ? {
 					lt: 10000
 				} : {
 					gt: 5000
@@ -142,20 +184,17 @@ angular.module('svampeatlasApp')
 			}
 
 			$scope.taxonPlaceholder = "Latinsk navn"
-			$scope.$watch('DkNames', function(newVal, oldVal) {
-				if (newVal === true) {
-					$scope.taxonPlaceholder = "Dansk navn"
-				} else {
-					$scope.taxonPlaceholder = "Latinsk navn"
-				}
-			})
+	
 
 			$scope.observationSearch = ObservationSearchService.getSearch();
-			$scope.observationSearch.where = {};
+			if(!$scope.observationSearch.where){
+				$scope.observationSearch.where = {};
+			}
 
-			$scope.search = {};
+			
 
-			$scope.search.include = [{
+			if(!$scope.search.include){
+				$scope.search.include = [{
 					model: "DeterminationView",
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
@@ -170,17 +209,21 @@ angular.module('svampeatlasApp')
 					as: 'Locality',
 					where: {}
 				}
-				
-
 			];
+		}
 
 
-			$scope.search.selectedHigherTaxa = [];
-			$scope.search.selectedLocalities = [];
+			$scope.search.selectedHigherTaxa = $scope.search.selectedHigherTaxa || [];
+			$scope.search.selectedLocalities = $scope.search.selectedLocalities || [];
 
 			//observationSearch.where.observationDate.$between[0]
 			$scope.$watch('search', function(newVal, oldVal) {
-
+				if (newVal.DkNames === true) {
+					$scope.taxonPlaceholder = "Dansk navn"
+				} else {
+					$scope.taxonPlaceholder = "Latinsk navn"
+				}
+				
 				if ($scope.search.selectedHigherTaxa.length > 0) {
 					$scope.search.include[0].where.$or = _.map($scope.search.selectedHigherTaxa, function(tx) {
 						if(tx.taxon){
@@ -215,10 +258,11 @@ angular.module('svampeatlasApp')
 					})
 				}
 
-
+				/*
 				if ($scope.search.include[0].where.Taxon_redlist_status === "ALL") {
 					$scope.search.include[0].where.Taxon_redlist_status = ['RE', 'CR', 'EN', 'VU', 'NT']
 				}
+				*/
 				$scope.observationSearch.include = $scope.search.include;
 				
 				if ($scope.search.databasenumber) {
@@ -239,6 +283,8 @@ angular.module('svampeatlasApp')
 				}
 				if ($scope.search.geometry) {
 					$scope.observationSearch.geometry = $scope.search.geometry;
+				} else {
+					delete $scope.observationSearch.geometry;
 				}
 
 			}, true)
