@@ -1,7 +1,6 @@
 CREATE VIEW CurrentRedListStatus AS SELECT taxon_id, status, year FROM TaxonRedListData WHERE year= (SELECT MAX(year) FROM TaxonRedListData);
 
 
-
 CREATE VIEW DeterminationView AS SELECT 
 d._id as Determination_id ,
 d.createdAt as Determination_createdAt ,
