@@ -32,6 +32,24 @@ module.exports = {
   },
   sequelize: {
 	  uri: 'mysql://',
+	  username: process.env.MYSQL_DB_USERNAME,
+	  password: process.env.MYSQL_DB_PASSWORD,
+	database: "svampeatlas",
+    options: {
+      logging: console.log,
+		
+	dialect: "mysql", // or 'sqlite', 'postgres', 'mariadb'
+	  host: process.env.MYSQL_DB_HOST || 'localhost',
+	  port: process.env.MYSQL_DB_PORT || 3306,
+	 // or 5432 (for postgres)
+      define: {
+        timestamps: false
+      }
+    }
+  },
+  /*
+  sequelize: {
+	  uri: 'mysql://',
 	  username: process.env.OPENSHIFT_MYSQL_DB_USERNAME,
 	  password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
 	database: "taxon",
@@ -47,4 +65,5 @@ module.exports = {
       }
     }
   },
+  */
 };
