@@ -78,6 +78,7 @@ angular.module('svampeatlasApp')
 			// if we came directly from the map view, remove images and forum from include
 			$scope.search.include.slice(0,3);
 			$scope.search.include[0].attributes = ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
+			$scope.search.include[1].attributes = ['email', 'Initialer', 'name'];
 			$scope.search.include.push({
 					model: "ObservationImage",
 					as: 'Images',

@@ -24,7 +24,7 @@ function handleError(res, statusCode) {
 function respondWith(res, statusCode) {
   statusCode = statusCode || 200;
   return function() {
-    res.send(statusCode);
+    res.send(statusCode).end();
   };
 }
 
