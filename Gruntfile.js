@@ -240,7 +240,8 @@ module.exports = function (grunt) {
             '<%= yeoman.dist %>/client/{,*/}*.js',
             '<%= yeoman.dist %>/client/{,*/}*.css',
             '<%= yeoman.dist %>/client/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-            '<%= yeoman.dist %>/client/assets/fonts/*'
+         //   '<%= yeoman.dist %>/client/assets/fonts/*',
+			'!<%= yeoman.dist %>/client/bower_components/*.{css,js}'
           ]
         }
       }
@@ -250,7 +251,7 @@ module.exports = function (grunt) {
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
     useminPrepare: {
-      html: ['<%= yeoman.client %>/index.html'],
+      html: ['<%= yeoman.client %>/index.html'],	
       options: {
         dest: '<%= yeoman.dist %>/client'
       }
@@ -260,17 +261,30 @@ module.exports = function (grunt) {
     usemin: {
       html: ['<%= yeoman.dist %>/client/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/client/{,*/}*.css'],
-      js: ['<%= yeoman.dist %>/client/{,*/}*.js'],
+      js: ['<%= yeoman.dist %>/client/{,*/}*.js', '!<%= yeoman.dist %>/client/bower_components/*.{css,js}'],
       options: {
         assetsDirs: [
+			
           '<%= yeoman.dist %>/client',
+			'<%= yeoman.dist %>/client/assets',
           '<%= yeoman.dist %>/client/assets/images'
         ],
         // This is so we update image references in our ng-templates
         patterns: {
           js: [
             [/(assets\/images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the JS to reference our revved images']
-          ]
+          ],
+		  css: [
+		              [/(images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the CSS to reference our revved images', function(match) {
+				
+		                return match.replace('images', '/assets/images');
+		              }],
+					  [/(..\/fonts\/)/g, 'Fix webfonts path', function(match) {
+					                return match.replace('../fonts/', '../assets/fonts/');
+					              }]
+					  
+		            ]
+		  
         }
       }
     },
@@ -283,6 +297,7 @@ module.exports = function (grunt) {
 	    }
 	},
 
+
     // The following *-min tasks produce minified files in the dist folder
     imagemin: {
       dist: {
@@ -291,7 +306,13 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.client %>/assets/images',
           src: '{,*/}*.{png,jpg,jpeg,gif}',
           dest: '<%= yeoman.dist %>/client/assets/images'
-        }]
+        }, {                                                 // <-- CHANGE START
+                        expand : true,
+                        flatten : true,
+                        cwd : '<%= yeoman.client %>/bower_components',
+                        src : '**/*.{png,jpg,jpeg,gif}',
+                        dest : '<%= yeoman.dist %>/client/assets/images'
+                    }  ]
       }
     },
 
@@ -365,7 +386,7 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
-            'bower_components/**/*',
+        //    'bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
             'assets/fonts/**/*',
             'index.html'
@@ -382,7 +403,16 @@ module.exports = function (grunt) {
             'package.json',
             'server/**/*'
           ]
-        },{
+        },
+		{
+		          // include font-awesome webfonts
+		          expand: true,
+		          dot: true,
+		          cwd: '<%= yeoman.client %>/bower_components/font-awesome',
+		          src: ['fonts/*.*'],
+		          dest: '<%= yeoman.dist %>/client/assets'
+		        },
+		{
           expand: true,
           dot: true,
           cwd: '<%= yeoman.client %>',

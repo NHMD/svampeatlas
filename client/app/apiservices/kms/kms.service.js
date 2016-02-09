@@ -11,7 +11,7 @@ angular.module('svampeatlasApp')
 	  } else {
 		  $http.get('/api/kms/ticket').then( function(t){
 	  		ticket = t.data;
-			$cookies.put('kfticket', ticket, {expires: moment().add(23, 'hours')})
+			$cookies.put('kfticket', ticket, {expires: moment().add(23, 'hours').toDate()})
 	  	})
 	 
 	  }

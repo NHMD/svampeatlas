@@ -27,7 +27,7 @@
 	"leaflet.draw" : "",
 	"leaflet-draw-drag" : "",
 	"leaflet-spin" : "0.1.1",
-	"PruneCluster": "1.0.0",
+	"PruneCluster": "2.0.0-beta",
 	"Leaflet.awesome-markers":"2.0.2",
 	"angular-leaflet-directive": "0.10.0"
   },
