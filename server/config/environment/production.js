@@ -9,7 +9,7 @@ module.exports = {
             undefined,
 
   // Server port
-  port:     process.env.OPENSHIFT_NODEJS_PORT ||
+  port:     process.env.NODEJS_PORT ||
             process.env.PORT ||
             8080,
   
@@ -36,7 +36,7 @@ module.exports = {
 	  password: process.env.MYSQL_DB_PASSWORD,
 	database: "svampeatlas",
     options: {
-      logging: console.log,
+      logging: false,
 		
 	dialect: "mysql", // or 'sqlite', 'postgres', 'mariadb'
 	  host: process.env.MYSQL_DB_HOST || 'localhost',
