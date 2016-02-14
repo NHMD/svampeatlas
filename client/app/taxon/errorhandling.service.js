@@ -22,7 +22,7 @@ angular.module('svampeatlasApp')
 
 			},
 			
-			handleTaxon500: function() {
+			handle500: function() {
 			   
 			    $mdDialog.show(
 			        $mdDialog.alert()

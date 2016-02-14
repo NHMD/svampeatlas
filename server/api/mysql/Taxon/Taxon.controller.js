@@ -806,11 +806,16 @@ exports.update = function(req, res) {
 
 		})
 		.spread(function(taxon) {
+			
 			return Taxon.find({
 				where: {
 					_id: taxon._id
 				},
 				include: [{
+						model: models.TaxonAttributes,
+						as: "attributes"
+					},
+					{
 						model: models.TaxonImages,
 						as: "images"
 					}, {
@@ -970,6 +975,9 @@ exports.addSynonym = function(req, res) {
 				_id: synonymTaxon._id
 			},
 			include: [{
+					model: models.TaxonAttributes,
+					as: "attributes"
+				},{
 					model: models.TaxonImages,
 					as: "images"
 				}, {

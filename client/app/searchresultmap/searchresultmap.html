@@ -1,9 +1,9 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
 <div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>
-	<md-toolbar class="md-warn" ng-show="count > data.length">
+	<md-toolbar class="md-warn" ng-show="count > 100000">
 	    <div class="md-toolbar-tools" >
 			<div layout="column">
-	      <h2 class="md-title">Din søgning gav {{count}} resultater, kun de første {{limit}} vises på kortet.</h2>
+	      <h2 class="md-title">Din søgning gav {{count}} resultater, kun de første 100000 vises på kortet.</h2>
 		 <h2 class="md-subhead">Prøv evt. at afgrænse din søgning yderligere.</h2>
 	 </div>
 	    </div>

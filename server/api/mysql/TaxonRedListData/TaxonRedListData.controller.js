@@ -51,7 +51,7 @@ function removeEntity(res) {
 
 exports.categories = function(req, res) {
 	
-	models.sequelize.query('select  status, year from TaxonRedListData where status IS NOT NULL AND year=(select MAX(year) from TaxonRedListData) GROUP BY status' ,
+	models.sequelize.query('select  status, year from TaxonRedListData where status IS NOT NULL AND year=(select MAX(year) from TaxonRedListData) GROUP BY status, year' ,
 { type: models.sequelize.QueryTypes.SELECT})
 		.then(function(categories) {
 

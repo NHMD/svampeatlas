@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchResultMapCtrl', ['$scope', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state',
-		function($scope, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state) {
+	.controller('SearchResultMapCtrl', ['$scope', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state', 'ErrorHandlingService',
+		function($scope, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService) {
 			$scope.appConstants = appConstants;
 			$scope.search = ObservationSearchService.getSearch();
 			if (_.isEmpty($scope.search)) {
@@ -11,7 +11,7 @@ angular.module('svampeatlasApp')
 			var geometry = $scope.search.geometry;
 
 			// if we came directly from the list table view, remove images and forum from include
-			$scope.search.include.slice(0, 3);
+			$scope.search.include = $scope.search.include.slice(0,3);
 
 			$scope.search.include.push({
 				model: "ObservationImage",
@@ -227,15 +227,18 @@ angular.module('svampeatlasApp')
 					marker.bindPopup(message);
 				}
 			};
-
-			leafletData.getMap().then(function(map) {
-
+			//$scope.data = [];
+			
+			$scope.fetchPage = function(map){
+				
 				map.spin(true);
-
-				Observation.query(query, function(data, headers) {
-					$scope.count = headers('count');
-					$scope.limit = headers('limit');
-					$scope.data = data;
+				query.offset = $scope.offset ;
+				query.limit = 10000 ;
+				return Observation.query(query, function(data, headers) {
+					$scope.count = parseInt(headers('count'));
+					$scope.limit = parseInt(headers('limit'));
+					$scope.offset = parseInt(headers('offset')) + 10000;
+					//$scope.data.concat(data);
 
 
 					for (var i = 0; i < data.length; i++) {
@@ -244,8 +247,37 @@ angular.module('svampeatlasApp')
 
 					//map.fitBounds($scope.mapsettings.markers.getBounds(), { padding: [20, 20] });
 					map.spin(false);
-					map.addLayer(leafletView);
+				//	map.addLayer(leafletView);
+				
+					leafletView.ProcessView();
+									
+				
+				}, function(err, headers) {
+					map.spin(false);
+					ErrorHandlingService.handle500();
+					//map.fitBounds($scope.mapsettings.markers.getBounds(), { padding: [20, 20] });
+					
+					//map.addLayer(leafletView);
+				}).$promise;
+				
+			};
+			
+
+			
+			leafletData.getMap().then(function(map) {
+				$scope.offset = 0;
+				
+				map.addLayer(leafletView);
+				$scope.$watch('offset', function(newVal, oldVal){
+						var max = ($scope.count !== undefined) ? Math.min(100000, $scope.count) : 100000;
+					if(newVal !== undefined && newVal < max){
+						$scope.fetchPage(map);
+					} else {
+					//	map.spin(false);
+						//map.addLayer(leafletView);
+					}
 				})
+				
 
 
 				$scope.$on('leafletDirectiveMarker.click', function(e, args) {
