@@ -286,7 +286,10 @@ module.exports = function (grunt) {
 					              }],
 								  [/(..\/bower_components\/font-awesome\/fonts\/)/g, 'Fix webfonts path', function(match) {
 								                return match.replace('../bower_components/font-awesome/fonts/', '../assets/fonts/');
-								              }]
+								              }],
+											  [/(..\/bower_components\/bootstrap\/fonts\/)/g, 'Fix webfonts path', function(match) {
+											                return match.replace('../bower_components/bootstrap/fonts/', '../assets/fonts/');
+											              }]
 					  
 		            ]
 		  
@@ -297,7 +300,7 @@ module.exports = function (grunt) {
 	uglify: {
 	    options: {
 	      mangle: {
-	        except: ['app/admin/modal.tpl.html', 'app/taxon/parent-modal.tpl.html', 'app/taxon/rank-modal.tpl.html', 'app/taxon/synonym-modal.tpl.html','app/taxon/funindex-modal.tpl.html', 'Resource', 'object', 'disabled', 'assets/images/flags/flags/shiny/16/Denmark.png', 'assets/images/flags/flags/shiny/16/United-Kingdom.png', 'taxonlayout-taxon', 'taxonlayout-taxonredlistdata', 'taxonlayout-taxonbooklayout']
+	        except: ['app/searchresultlist/image.tpl.html','app/searchresultlist/forum.tpl.html','app/admin/modal.tpl.html', 'app/taxon/parent-modal.tpl.html', 'app/taxon/rank-modal.tpl.html', 'app/taxon/synonym-modal.tpl.html','app/taxon/funindex-modal.tpl.html', 'Resource', 'object', 'disabled', 'assets/images/flags/flags/shiny/16/Denmark.png', 'assets/images/flags/flags/shiny/16/United-Kingdom.png', 'taxonlayout-taxon', 'taxonlayout-taxonredlistdata', 'taxonlayout-taxonbooklayout']
 	      }
 	    }
 	},
@@ -417,6 +420,14 @@ module.exports = function (grunt) {
 		          src: ['fonts/*.*'],
 		          dest: '<%= yeoman.dist %>/client/assets'
 		        },
+				{
+				          // include bootstrap webfonts
+				          expand: true,
+				          dot: true,
+				          cwd: '<%= yeoman.client %>/bower_components/bootstrap',
+				          src: ['fonts/*.*'],
+				          dest: '<%= yeoman.dist %>/client/assets'
+				        },
 		{
           expand: true,
           dot: true,

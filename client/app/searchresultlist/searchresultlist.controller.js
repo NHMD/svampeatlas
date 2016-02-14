@@ -76,7 +76,7 @@ angular.module('svampeatlasApp')
 				$state.go('search')
 			};
 			// if we came directly from the map view, remove images and forum from include
-			$scope.search.include.slice(0,3);
+			$scope.search.include = $scope.search.include.slice(0,3);
 			$scope.search.include[0].attributes = ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
 			$scope.search.include[1].attributes = ['email', 'Initialer', 'name'];
 			$scope.search.include.push({
@@ -87,7 +87,7 @@ angular.module('svampeatlasApp')
 					limit: 10
 				});
 				
-				$scope.search.include.push({
+			$scope.search.include.push({
 									model: "ObservationForum",
 									as: 'Forum',
 									separate: true,
@@ -102,8 +102,9 @@ angular.module('svampeatlasApp')
 			
 		    $scope.showImages = function(ev, row) {
 		    	var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+				
 		    	$mdDialog.show({
-		    		controller: function($scope, $mdDialog, appConstants) {
+		    		controller: ['$scope', '$mdDialog', 'appConstants', function($scope, $mdDialog, appConstants) {
 						$scope.imageurl = appConstants.imageurl;
 		    			$scope.obs = row;
 						$scope.loaded = {};
@@ -121,7 +122,7 @@ angular.module('svampeatlasApp')
 						  };
 		    			
 		    			
-		    		},
+		    		}],
 		    		templateUrl: 'app/searchresultlist/image.tpl.html',
 		    		parent: angular.element(document.body),
 		    		targetEvent: ev,
@@ -137,10 +138,15 @@ angular.module('svampeatlasApp')
 		    	});
 		    };
 			
+			
+			
+			
+			
+			
 		    $scope.showForum = function(ev, row) {
 		    	var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
 		    	$mdDialog.show({
-		    		controller: function($scope, $mdDialog, Observation) {
+		    		controller: ['$scope', '$mdDialog', 'Observation', function($scope, $mdDialog, Observation) {
 						$scope.getDate = function(observationDate, observationDateAccuracy){
 				
 							var splitted = observationDate.split(" ")[0].split("-");
@@ -162,7 +168,7 @@ angular.module('svampeatlasApp')
 						  };
 		    			
 		    			
-		    		},
+		    		}],
 		    		templateUrl: 'app/searchresultlist/forum.tpl.html',
 		    		parent: angular.element(document.body),
 		    		targetEvent: ev,

@@ -257,7 +257,7 @@ angular.module('svampeatlasApp')
 				})
 				.catch(function(err){
 					$scope.saveIsClicked = false;
-					ErrorHandlingService.handleTaxon500();
+					ErrorHandlingService.handle500();
 				})
 			}
 

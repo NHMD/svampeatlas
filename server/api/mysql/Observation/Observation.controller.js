@@ -138,10 +138,10 @@ exports.index = function(req, res) {
 	Observation.findAndCount(query)
 		.then(function(taxon) {
 			res.set('count', taxon.count);
-			if (req.query.offset) {
+			if (req.query.offset !== undefined) {
 				res.set('offset', req.query.offset);
 			};
-			if (req.query.limit) {
+			if (req.query.limit !== undefined) {
 				res.set('limit', req.query.limit);
 			};
 			return res.status(200).json(taxon.rows)
