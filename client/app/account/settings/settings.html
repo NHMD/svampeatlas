@@ -1,7 +1,8 @@
-		<div ng-include="'components/navbar/navbar.html'"></div>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-5">
+		<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
+		<md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ng-class="{'position-fixed': mdMedia('max-width: 768px') }"> </md-toolbar>
+		<md-content layout="row" layout-padding>
+			
+				<div>
 					<h1>
 						User profile
 					</h1>
@@ -35,9 +36,9 @@
 						</div>
 					</form>
 				</div>
-				<div class="col-sm-6">
+				<div >
 					<a class="btn btn-facebook" href="" ng-show="!getCurrentUser().fb" ng-click="loginOauth('facebook')"><i class="fa fa-facebook"></i> Connect with Facebook</a> <a class="btn btn-facebook" href="" ng-show="getCurrentUser().fb" ng-click="disconnectOauth('facebook')"><i class="fa fa-facebook"></i> Disconnect Facebook account</a>
 				</div>
-			</div>
 			
-		</div>
+			
+		</md-content>

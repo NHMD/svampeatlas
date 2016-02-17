@@ -1,6 +1,6 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
-<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>
-	<md-toolbar class="md-warn" ng-show="count > 100000">
+ <md-toolbar md-scroll-shrink ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
+	<md-toolbar class="md-warn" ng-show="count > 100000" >
 	    <div class="md-toolbar-tools" >
 			<div layout="column">
 	      <h2 class="md-title">Din søgning gav {{count}} resultater, kun de første 100000 vises på kortet.</h2>
@@ -10,9 +10,9 @@
 	   
 		
 	  </md-toolbar>
-<md-content layout-gt-sm="row" layout-padding class="md-inline-form">
+<md-content layout-gt-sm="row" layout-padding >
 
-	<leaflet width="700px" height="600px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
+	<div width="700px" height="600px"><leaflet width="700px" height="600px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet> </div>
   </md-content>
 
 

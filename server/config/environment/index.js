@@ -49,7 +49,11 @@ var all = {
   google: {
     clientID:     process.env.GOOGLE_ID || 'id',
     clientSecret: process.env.GOOGLE_SECRET || 'secret',
-    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback',
+	api: {
+		browserkey:'AIzaSyBU_64f_OX0zKQTYDegHXUi6FlCX7CtdYQ',
+		serverkey: 'AIzaSyCP19OgflFb39o1JagLMRgpy1b9dGUt9qM'
+	}
   },
   geonames: 'svampeatlas',
   kms: {login:"thomasstjerne", password: "splendens"},

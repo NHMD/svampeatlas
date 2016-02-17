@@ -1,4 +1,4 @@
-<md-sidenav class="md-sidenav-left md-whiteframe-z2" ng-class="{'position-fixed': mdMedia('max-width: 768px') }"
+<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" ng-class="{'position-fixed': mdMedia('max-width: 768px') }"
     md-component-id="left"
     md-is-locked-open="( $mdMedia('gt-md')) ? !menu.userHasForceClosed : false" id="main-menu">
 
@@ -97,7 +97,7 @@
 	        </md-button>
 			</div>
 			<div layout="row" layout-align="end center" layout-fill flex>
-			<button id="navbar-language-picker" type="button" class="btn btn-xs btn-default" ng-model="$parent.preferred_language" data-html="1" bs-options="language.value as language.label for language in languages" bs-select>
+			<button id="navbar-language-picker" type="button" class="btn btn-xs btn-default" ng-model="$parent.preferred_language" data-html="1" bs-options="language.value as language.label for language in languages" placeholder="language" bs-select>
 			  Action <span class="caret"></span>
 			</button> 
 				
@@ -116,8 +116,9 @@
     </md-content>
 </md-sidenav>
 
-<div layout="column" flex role="main" >
-    <div ui-view layout="column" ></div>
+<div layout="column" ui-view class="relative" layout-fill role="main" flex >
+	
+   <!-- <div ui-view layout="column" ng-cloak></div>-->
 </div>
  <!--<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
       <md-toolbar class="md-tall md-hue-2">

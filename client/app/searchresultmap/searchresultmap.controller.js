@@ -17,8 +17,7 @@ angular.module('svampeatlasApp')
 				model: "ObservationImage",
 				as: 'Images',
 				offset: 0,
-				limit: 1,
-				separate: true
+				limit: 1
 
 			});
 			$scope.queryinclude = _.map($scope.search.include, function(n) {

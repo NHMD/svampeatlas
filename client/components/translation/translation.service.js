@@ -89,7 +89,8 @@ angular.module('svampeatlasApp')
 		  'superspecies': 'superart',
 		  'supergenus': 'superslægt',
 		  'Detach' : 'Afkobl',
-		  'Change' : 'Ændr'
+		  'Change' : 'Ændr',
+		  'Initials' : 'Initialer'
   	    });
 	 
 	

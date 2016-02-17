@@ -245,6 +245,8 @@ angular.module('svampeatlasApp')
 						}
 					}
 					})
+				} else {
+					delete $scope.search.include[0].where.$or;
 				}
 				
 
@@ -256,6 +258,8 @@ angular.module('svampeatlasApp')
 							}
 						}
 					})
+				} else {
+					delete $scope.search.include[2].where.$or;
 				}
 
 				/*
@@ -263,6 +267,17 @@ angular.module('svampeatlasApp')
 					$scope.search.include[0].where.Taxon_redlist_status = ['RE', 'CR', 'EN', 'VU', 'NT']
 				}
 				*/
+				// clean empty strings from where clauses
+				for(var i=0; i < $scope.search.include.length; i++){
+					_.each($scope.search.include[i].where, function(val, key){
+						if(val === ""){
+							delete $scope.search.include[i].where[key];
+						}
+					})
+				}
+			
+				
+				
 				$scope.observationSearch.include = $scope.search.include;
 				
 				if ($scope.search.databasenumber) {

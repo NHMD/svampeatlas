@@ -13,7 +13,7 @@ module.exports = {
 		password: "splendens",
 	database: "svampeatlas",
     options: {
-      logging: false,
+      logging: console.log,
 		
 	dialect: "mysql", // or 'sqlite', 'postgres', 'mariadb'
 	port: 3306, // or 5432 (for postgres)
