@@ -1,15 +1,13 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <h1>Login</h1>
-    </div>
+<md-content layout="row" layout-padding>
+ 
+   
     <div class="col-sm-12">
       <form class="form" name="form" ng-submit="login(form)" novalidate>
 
         <div class="form-group">
-          <label>Initials</label>
+          <label translate>Initials</label>
 
           <input type="text" name="email" class="form-control" ng-model="user.Initialer" required>
         </div>
@@ -22,7 +20,7 @@
 
         <div class="form-group has-error">
           <p class="help-block" ng-show="form.email.$error.required && form.password.$error.required && submitted">
-             Please enter your email and password.
+             Please enter your initials and password.
           </p>
           <p class="help-block" ng-show="form.email.$error.email && submitted">
              Please enter a valid email.
@@ -57,6 +55,6 @@
 	  </div>
       </form>
     </div>
-  </div>
+
   <hr>
-</div>
+</md-content>

@@ -1,4 +1,6 @@
 CREATE VIEW CurrentRedListStatus AS SELECT taxon_id, status, year FROM TaxonRedListData WHERE year= (SELECT MAX(year) FROM TaxonRedListData);
+ALTER TABLE `TaxonRedListData` ADD KEY `Status` (`Status`);
+ALTER TABLE `Determination` ADD KEY `validation` (`validation`);
 
 
 CREATE VIEW DeterminationView AS SELECT 

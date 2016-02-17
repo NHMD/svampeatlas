@@ -1,8 +1,8 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
-<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>
-	
+<!--<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div> -->
+	 <md-toolbar md-scroll-shrink ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
 
-<md-content layout-gt-sm="row" layout-padding class="md-inline-form">
+<md-content layout-gt-sm="row" layout-padding class="md-inline-form" flex>
     <div>
       <form >
          <div layout-gt-xs="row">
@@ -143,7 +143,7 @@
         
       </form>
     </div>
-	<leaflet width="400px" height="456px" center="mapsettings.center" ></leaflet>
+	<div><leaflet width="400px" height="456px" center="mapsettings.center" ></leaflet></div>
   </md-content>
 
 

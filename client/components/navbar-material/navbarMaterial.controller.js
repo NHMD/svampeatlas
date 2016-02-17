@@ -40,6 +40,8 @@ angular.module('svampeatlasApp')
 	
 	
 	
+	$scope.preferred_language = $cookies.get('preferred_language') || 'dk';
+
 	
 	$scope.$watch('preferred_language', function(newval, oldval){
 		if(newval !== oldval){

@@ -223,7 +223,7 @@ angular.module('svampeatlasApp')
 			hasRole: function(role, callback) {
 				if (arguments.length === 1) {
 					if (role === "any") {
-						return this.getCurrentUser() && currentUser.Roles.length > 0;
+						return this.getCurrentUser() && currentUser.Roles && currentUser.Roles.length > 0;
 					} else {
 						return this.getCurrentUser() && _.find(currentUser.Roles, function(r) {
 							return r.name === role;
