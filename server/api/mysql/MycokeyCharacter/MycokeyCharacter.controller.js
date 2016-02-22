@@ -81,7 +81,10 @@ exports.index = function(req, res) {
 		}
 		return n;
 		})	
+	} else {
+		query['include'] = [{model: models.MycokeyCharacterGroup, as: "charactergroup" }]
 	}
+	console.log(query);
 MycokeyCharacter.findAndCount(query)
 	.then(function(character) {
 		res.set('count', character.count);

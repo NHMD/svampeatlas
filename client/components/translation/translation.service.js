@@ -90,7 +90,8 @@ angular.module('svampeatlasApp')
 		  'supergenus': 'superslægt',
 		  'Detach' : 'Afkobl',
 		  'Change' : 'Ændr',
-		  'Initials' : 'Initialer'
+		  'Initials' : 'Initialer',
+		  'Mycokey characters': 'Mycokey karakterer'
   	    });
 	 
 	
