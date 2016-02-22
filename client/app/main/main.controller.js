@@ -54,37 +54,44 @@ angular.module('svampeatlasApp')
 	Observation.query({
 		order: 'observationDate DESC',
 		limit: 50,
-		include: JSON.stringify( 
+		include: JSON.stringify(
 			[
-				JSON.stringify({model: "DeterminationView",
+				JSON.stringify({
+					model: "DeterminationView",
 					as: "DeterminationView",
-	 where: {Taxon_redlist_status : ['RE', 'CR', 'EN', 'VU', 'NT'], Determination_validation: 'Godkendt'}}),
-			JSON.stringify(	{
-								model: "ObservationImage",
-								as: 'Images',
-								offset: 0,
-								limit: 1
+					where: {
+						Taxon_redlist_status: ['RE', 'CR', 'EN', 'VU', 'NT'],
+						Determination_validation: 'Godkendt'
+					}
+				}),
+				JSON.stringify({
+					model: "ObservationImage",
+					as: 'Images',
+					offset: 0,
+					limit: 1,
+					separate: true
 
-							}),
-						JSON.stringify(	{
-																model: "User",
-																as: 'PrimaryUser',
-																attributes: ['email', 'Initialer', 'name'],
-																where: {}
-															}), 
-															JSON.stringify({
-																model: "Locality",
-																as: 'Locality',
-																where: {}
-															}),
-		]
+				}), 
+				JSON.stringify({
+					model: "User",
+					as: 'PrimaryUser',
+					attributes: ['_id','email', 'Initialer', 'name'],
+					where: {}
+				}),
+				JSON.stringify({
+					model: "Locality",
+					as: 'Locality',
+					where: {}
+				}),
+			]
 		)
-	}
-).$promise.then(function(observations){
-			console.log("succes")
-	       $scope.tiles = _.filter(observations, function(u) { return u.Images.length >0; });
+		
+	}).$promise.then(function(observations) {
+		console.log("succes")
+		$scope.tiles = _.filter(observations, function(u) {
+			return u.Images.length > 0;
+		});
 	})
-	
 
 	
 $http.jsonp('http://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=json-in-script&callback=JSON_CALLBACK')

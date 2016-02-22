@@ -85,7 +85,7 @@ exports.index = function(req, res) {
 		query.order = req.query.order;
 	}
 // 'POLYGON((11.7626589397457 55.5119544279369,11.7631613453886 55.5191206803667,11.7869689746192 55.5185809756286,11.7864622538095 55.5114148669722,11.7626589397457 55.5119544279369))'
-	console.log(req.query.geometry)
+//	console.log(req.query.geometry)
 	if(req.query.geometry){
 		query.where = models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))
 	}
@@ -93,7 +93,12 @@ exports.index = function(req, res) {
 	if (req.query.where) {
 		_.merge(query.where, JSON.parse(req.query.where));
 	}
-
+	if(req.query.group){
+		
+		query['group'] =	JSON.parse(req.query.group)
+		
+	};
+	
 	if (req.query.include) {
 		
 		var parsed = JSON.parse(req.query.include)
@@ -135,6 +140,7 @@ exports.index = function(req, res) {
 	}
 
 	console.log(query);
+	if(query.group === undefined){
 	Observation.findAndCount(query)
 		.then(function(taxon) {
 			res.set('count', taxon.count);
@@ -147,6 +153,21 @@ exports.index = function(req, res) {
 			return res.status(200).json(taxon.rows)
 		})
 		.catch (handleError(res));
+	} else {
+	Observation.findAll(query)
+		.then(function(taxon) {
+			
+			if (req.query.offset !== undefined) {
+				res.set('offset', req.query.offset);
+			};
+			if (req.query.limit !== undefined) {
+				res.set('limit', req.query.limit);
+			};
+			return res.status(200).json(taxon)
+		})
+		.catch (handleError(res));
+	}
+
 
 
 };

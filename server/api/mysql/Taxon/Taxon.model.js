@@ -287,17 +287,39 @@ module.exports = function(sequelize, DataTypes) {
 					});
 					
 					// this is a Hack !  It seems to be impossible to build inner joins dynamically with sequelize. Therefore 25 associations are build to be able to query multiple tags at once
+					//  also note that since sequelize currently (v 3.19) doesnet do limit on many-to-many correctly, we have created views on tags and morphotags to mimic one-to-many
+					
 					for(var i=0; i< 25; i++){
-						models.Taxon.belongsToMany(models.TaxonomyTag, {
-						  through: models.TaxonTag,
+					
+						models.Taxon.hasMany(models.TaxonomyTagView, {
+						 // through: models.TaxonTag,
 						  foreignKey: 'taxon_id',
 						as: 'tags'+i
 						});
+						/*
 						models.TaxonomyTag.belongsToMany(models.Taxon, {
 						  through: models.TaxonTag,
 						  foreignKey: 'tag_id',
 							as: 'tags'+i
 						});
+						*/
+						
+					};
+					
+					// this is a Hack !  It seems to be impossible to build inner joins dynamically with sequelize. Therefore 25 associations are build to be able to query multiple tags at once
+					for(var i=0; i< 25; i++){
+						models.Taxon.hasMany(models.MycokeyCharacterView, {
+						//  through: models.MycokeyGenusCharacter,
+						  foreignKey: 'taxon_id',
+						as: 'character'+i
+						});
+						/*
+						models.MycokeyCharacter.belongsToMany(models.Taxon, {
+						  through: models.MycokeyGenusCharacter,
+						  foreignKey: 'Character',
+							as: 'taxon'+i
+						});
+						*/
 					}
 				
 				
