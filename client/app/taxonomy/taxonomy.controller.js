@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData',
-		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData) {
+	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData', 'MycokeyCharacters',
+		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters) {
 			
 			$scope.resetSearch = function(){
 				localStorage.removeItem('taxonomy_attribute_conditions');
@@ -39,6 +39,9 @@ angular.module('svampeatlasApp')
 			
 			var tags = localStorage.getItem('taxonomy_selected_tags');
 			$scope.selectedTags = (tags) ? JSON.parse(tags) : [];
+			
+			var mycokeyCharacters = localStorage.getItem('taxonomy_selected_mycokeycharacters');
+			$scope.selectedMycokeyCharacters = (mycokeyCharacters) ? JSON.parse(mycokeyCharacters) : [];
 			
 			var redListCategories = localStorage.getItem('taxonomy_redlist_categories');
 			$scope.selectedRedListCategories = (redListCategories) ? JSON.parse(redListCategories) : {};
@@ -153,12 +156,35 @@ angular.module('svampeatlasApp')
 
 				return results;
 			}
+			
+			$scope.mycokeySearch = function(query) {
+
+				var results = query ? MycokeyCharacters.query({
+					where: {
+						"description DK": {
+							like: "%"+query + "%"
+						}
+					},
+					limit: 30
+				}).$promise : [];
+
+				return results;
+			}
 
 
 			$scope.$watchCollection('selectedTags', function(newVal, oldVal) {
 
 
 				localStorage.setItem('taxonomy_selected_tags', JSON.stringify($scope.selectedTags))
+
+				$scope.callServerSafe();
+
+			})
+			
+			$scope.$watchCollection('selectedMycokeyCharacters', function(newVal, oldVal) {
+
+
+				localStorage.setItem('taxonomy_selected_mycokeycharacters', JSON.stringify($scope.selectedMycokeyCharacters))
 
 				$scope.callServerSafe();
 
@@ -342,15 +368,40 @@ angular.module('svampeatlasApp')
 				var storedTags = localStorage.getItem('taxonomy_selected_tags');
 
 				if (storedTags) {
+	
+					
 					var parsedTags = JSON.parse(storedTags);
 	
 					for (var i = 0; i < parsedTags.length; i++) {
 		
 						include.push({
-							model: "TaxonomyTag",
+							model: "TaxonomyTagView",
 							as: "tags" + i,
 							where: JSON.stringify({
-								_id: parsedTags[i]._id
+								tag_id: parsedTags[i]._id
+							})
+						})
+						
+					}
+					
+
+				}
+				
+				
+				var storedMycokeyCharacters = localStorage.getItem('taxonomy_selected_mycokeycharacters');
+
+				if (storedMycokeyCharacters) {
+	
+					
+					var parsedCharacters = JSON.parse(storedMycokeyCharacters);
+	
+					for (var i = 0; i < parsedCharacters.length; i++) {
+		
+						include.push({
+							model: "MycokeyCharacterView",
+							as: "character" + i,
+							where: JSON.stringify({
+								CharacterID: parsedCharacters[i].CharacterID
 							})
 						})
 						

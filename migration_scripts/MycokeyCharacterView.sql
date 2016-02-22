@@ -1,0 +1,1 @@
+CREATE VIEW CharacterView AS select taxon_id, CharacterID, `description UK`, `description DK`, `Short text UK`, `Short text DK`, Name, CharacterGroup FROM Characters c JOIN GenusCharacters g ON c.CharacterID = g.Character;

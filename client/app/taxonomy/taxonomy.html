@@ -124,6 +124,34 @@
  							        </md-chip-template>
  							      </md-chips>
 								  </div>  
+								  
+								  
+								  
+								  <p  class="md-title taxonomy-query-section-header">{{'Search traits' | translate}}:</p>
+								   <div layout layout-sm="column">
+	 							      <md-chips ng-model="selectedMycokeyCharacters" md-autocomplete-snap md-require-match="true">
+	
+	 							        <md-autocomplete
+	 							  	  	md-min-length="3"
+	 							  		md-no-cache="true"
+	 							            md-selected-item="selectedMycokeyCharacter"
+	 							            md-search-text="searchMycokeyCharacterText"
+	 							            md-items="item in mycokeySearch(searchMycokeyCharacterText)"
+	 							            md-item-text="item['description DK']"
+	 							            placeholder="{{'Enter tags' | translate}}">
+	 							          <span md-highlight-text="searchMycokeyCharacterText">{{item['description DK']}}</span>
+	 							        </md-autocomplete>
+	 							        <md-chip-template>
+	 							          <span>
+	 							            <strong>{{$chip['description DK']}}</strong>
+         
+	 							          </span>
+	 							        </md-chip-template>
+	 							      </md-chips>
+									  </div>
+								  
+								  
+								  
 							  </div>
 								
 			    	      </div>
