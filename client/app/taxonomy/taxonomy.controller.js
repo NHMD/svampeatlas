@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
 	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData', 'MycokeyCharacters',
 		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters) {
-			
+			$scope.translate = $translate;
 			$scope.resetSearch = function(){
 				localStorage.removeItem('taxonomy_attribute_conditions');
 				localStorage.removeItem('taxonomy_selected_higher_taxa');
@@ -158,13 +158,18 @@ angular.module('svampeatlasApp')
 			}
 			
 			$scope.mycokeySearch = function(query) {
-
-				var results = query ? MycokeyCharacters.query({
-					where: {
+				console.log($translate.use());
+				console.log($translate.use());
+				var where = ($translate.use() === "en") ? { 
+							"description UK": {
+							like: "%"+query + "%"
+						} } : {
 						"description DK": {
 							like: "%"+query + "%"
-						}
-					},
+						} };
+						
+				var results = query ? MycokeyCharacters.query({
+					where: where,
 					limit: 30
 				}).$promise : [];
 

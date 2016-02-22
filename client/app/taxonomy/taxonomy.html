@@ -127,7 +127,7 @@
 								  
 								  
 								  
-								  <p  class="md-title taxonomy-query-section-header">{{'Search traits' | translate}}:</p>
+								  <p  class="md-title taxonomy-query-section-header">{{'Mycokey characters' | translate}}:</p>
 								   <div layout layout-sm="column">
 	 							      <md-chips ng-model="selectedMycokeyCharacters" md-autocomplete-snap md-require-match="true">
 	
@@ -139,11 +139,11 @@
 	 							            md-items="item in mycokeySearch(searchMycokeyCharacterText)"
 	 							            md-item-text="item['description DK']"
 	 							            placeholder="{{'Enter tags' | translate}}">
-	 							          <span md-highlight-text="searchMycokeyCharacterText">{{item['description DK']}}</span>
+	 							          <span md-highlight-text="searchMycokeyCharacterText">{{(translate.use() === 'en') ? item.charactergroup['Start description UK'] : item.charactergroup['Start description DK']}} {{(translate.use() === 'en') ?  item['description UK'] : item['description DK']}}</span>  
 	 							        </md-autocomplete>
 	 							        <md-chip-template>
 	 							          <span>
-	 							            <strong>{{$chip['description DK']}}</strong>
+	 							            <strong>{{(translate.use() === 'en') ? $chip.charactergroup['Start description UK'] : $chip.charactergroup['Start description DK']}} {{(translate.use() === 'en') ? $chip['description UK'] : $chip['description DK']}}</strong>
          
 	 							          </span>
 	 							        </md-chip-template>
