@@ -568,7 +568,7 @@ ALTER TABLE `Taxon`
   
   
   -- Patch to remove Author from FullName:
-  UPDATE TAXON SET FullName= TRIM(SUBSTRING_INDEX(FullName, Author, 1)) WHERE FullName LIKE CONCAT("%", Author);
+  UPDATE TAXON SET FullName= TRIM(SUBSTRING_INDEX(FullName, Author, 1)) WHERE FullName LIKE CONCAT("%", Author) AND Author IS NOT NULL and Author <> "";
   
   -- Move danish names to Taxon table again:
   ALTER TABLE `Taxon` ADD `vernacularname_dk` VARCHAR(255) NULL AFTER `Author`, ADD INDEX (` vernacularname_dk`) ;

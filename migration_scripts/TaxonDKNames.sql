@@ -7,10 +7,11 @@ source VARCHAR(255),
 FOREIGN KEY (taxon_id) REFERENCES TAXON(_id)
 )ENGINE = InnoDB DEFAULT CHARSET=UTF8;
 
+
 ALTER TABLE TaxonDKnames ADD UNIQUE (taxon_id, vernacularname_dk);
 
-INSERT INTO TaxonDKnames SELECT
-_id, DKIndex, anvendtDKNavn, anvendtSystNavn, kilde FROM DKNavneBrug where DKIndex <>0 ON DUPLICATE KEY UPDATE TaxonDKnames._id=TaxonDKnames._id;
+INSERT INTO taxon.TaxonDKnames SELECT
+_id, DKIndex, anvendtDKNavn, anvendtSystNavn, kilde FROM svampeatlas.DKNavneBrug where DKIndex <>0 ON DUPLICATE KEY UPDATE taxon.TaxonDKnames._id=taxon.TaxonDKnames._id;
 
 INSERT INTO TaxonDKnames(taxon_id, vernacularname_dk, appliedLatinName, source) SELECT _id, vernacularname_dk, FullName, "TaxonBasen" FROM Taxon WHERE vernacularname_dk IS NOT NULL AND vernacularname_dk <> "" ON DUPLICATE KEY UPDATE TaxonDKnames._id=TaxonDKnames._id;
 
