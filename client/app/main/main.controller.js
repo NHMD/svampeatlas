@@ -68,8 +68,7 @@ angular.module('svampeatlasApp')
 					model: "ObservationImage",
 					as: 'Images',
 					offset: 0,
-					limit: 1,
-					separate: true
+					limit: 1
 
 				}), 
 				JSON.stringify({
