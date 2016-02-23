@@ -110,7 +110,7 @@ module.exports = function(sequelize, DataTypes) {
    }
 
   }, {
-    	tableName: 'ObservationView',
+    	tableName: 'Observation',
     	timestamps: true,
     	freezeTableName: true,
     	classMethods: {

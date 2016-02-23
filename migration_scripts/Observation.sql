@@ -311,7 +311,8 @@ CREATE TABLE ObservationPoint (
 ALTER TABLE ObservationPoint ADD SPATIAL INDEX (p);
 insert into ObservationPoint SELECT _id, GeomFromText(CONCAT('POINT(',decimalLongitude,' ',decimalLatitude, ')')) FROM Observation;
 
-
+	ALTER TABLE Observation ADD COLUMN p POINT ;
+	UPDATE Observation o, ObservationPoint p SET o.p=p.p WHERE p.observation_id = o._id;
 
 ---------------
 --- Substrate and VegType
