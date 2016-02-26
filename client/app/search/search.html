@@ -2,8 +2,8 @@
 <!--<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div> -->
 	 <md-toolbar md-scroll-shrink ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
 
-<md-content layout-gt-sm="row" layout-padding class="md-inline-form" flex>
-    <div>
+<md-content layout-gt-sm="column" layout-padding class="md-inline-form" flex>
+    <div layout="row">
       <form >
          <div layout-gt-xs="row">
 	<md-input-container class="md-block" flex-gt-xs>	
@@ -142,9 +142,12 @@
 		</div>
         
       </form>
-    </div>
-	<div><leaflet width="400px" height="456px" center="mapsettings.center" ></leaflet></div>
+    
+	<div  layout-padding flex><leaflet width="400px" height="456px" center="mapsettings.center" ></leaflet></div>
+	</div>
+	
   </md-content>
 
-
-
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+	        
+	      </div>

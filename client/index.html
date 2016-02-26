@@ -49,15 +49,22 @@
       <!-- endinjector -->
     <!-- endbuild -->
   </head>
-  <body ng-app="svampeatlasApp" >
+  <body ng-app="svampeatlasApp" layout="row">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
+	<md-sidenav ng-include="'components/navbar-material/navbarMaterial.html'" ng-controller="NavbarMaterialCtrl" layout="column" class="md-sidenav-left md-whiteframe-z2" ng-class="{'position-fixed': mdMedia('max-width: 768px') }"
+	    md-component-id="left"
+	    md-is-locked-open="( $mdMedia('gt-md')) ? !menu.userHasForceClosed : false" id="main-menu"></md-sidenav>
     <!--<div ui-view=""></div>-->
-	<div ng-include="'components/navbar-material/navbarMaterial.html'" ng-controller="NavbarMaterialCtrl" layout="row"></div> 
-	<footer ng-include="'components/footer/footer.html'"></footer>
+	<div layout="column" ui-view  layout-fill role="main" flex >
+	
+	   <!--<div ui-view layout="column" ng-cloak></div>-->
+	</div>
+	<!--<div ng-include="'components/navbar-material/navbarMaterial.html'" ng-controller="NavbarMaterialCtrl" layout="row"></div> -->
+	
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <script>

@@ -89,7 +89,7 @@
   <span flex ></span>
   
     </md-toolbar> 
-<div layout="row">
+<md-content layout="row" layout-xs="column" layout-sm="column" flex>
 <md-grid-list
         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
         md-row-height-gt-md="1:1" md-row-height="2:2"
@@ -113,7 +113,7 @@
   
  
    <md-whiteframe class="md-whiteframe-12dp newsfeed" flex="33" layout>
-    <md-list>
+    <md-list layout-fill>
       <md-subheader class="md-no-sticky">Nyheder fra svampeatlas</md-subheader>
       <md-list-item class="md-3-line md-long-text" ng-repeat="item in news | limitTo : 5">
        
@@ -130,9 +130,11 @@
     </md-list>
 	 </md-whiteframe >
 
-  
-	</div> 
-
+	
+	</md-content> 
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+	        
+	      </div>  
 <!--<header class="hero-unit" id="banner" >
   <div class="container">
     <h1 translate>Danmarks svampeatlas</h1>

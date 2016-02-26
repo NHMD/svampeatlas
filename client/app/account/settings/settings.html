@@ -1,6 +1,6 @@
 		<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
 		<md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ng-class="{'position-fixed': mdMedia('max-width: 768px') }"> </md-toolbar>
-		<md-content layout="row" layout-padding>
+		<md-content layout="row"  flex md-scroll-y layout-padding>
 			
 				<div>
 					<h1>
@@ -42,3 +42,6 @@
 			
 			
 		</md-content>
+		<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+        
+		      </div>

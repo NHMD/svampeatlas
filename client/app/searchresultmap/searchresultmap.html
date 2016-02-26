@@ -10,10 +10,13 @@
 	   
 		
 	  </md-toolbar>
-<md-content layout-gt-sm="row" layout-padding >
+<md-content flex md-scroll-y layout-padding>
 
 	<div width="700px" height="600px"><leaflet width="700px" height="600px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet> </div>
+	
   </md-content>
-
-
-
+<div>
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+	        
+	      </div>
+</div>

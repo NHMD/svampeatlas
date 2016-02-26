@@ -1,6 +1,6 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="col-md-12">
+<md-content flex md-scroll-y layout-padding>
 
  <!-- <ul class="list-group">
     <li class="list-group-item" ng-repeat="user in users">
@@ -24,6 +24,7 @@
   		<th><input st-search="name"></th>
   		<th><input st-search="email"></th>
   		<th></th>
+		<th></th>
   		
   	</tr>
   	</thead>
@@ -45,10 +46,13 @@
   	</tbody>
   	<tfoot>
   	<tr>
-  		<td class="text-center" st-pagination="" st-items-by-page="50" colspan="4">
+  		<td class="text-center" st-pagination="" st-items-by-page="50" colspan="5">
   		</td>
   	</tr>
   	</tfoot>
   </table>
-  
-</div>
+
+</md-content>
+<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+        
+      </div>

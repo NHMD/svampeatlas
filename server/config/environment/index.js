@@ -26,7 +26,7 @@ var all = {
 
   // Secret for session, you will want to change this and make it an environment variable
   secrets: {
-    session: 'app-secret'
+	  session: process.env.APP_SECRET ||'A9OgflIzFb39b9dGo1JagLMRgpP1y1Ut9qMaSyC'
   },
 
  
@@ -56,7 +56,10 @@ var all = {
 	}
   },
   geonames: 'svampeatlas',
-  kms: {login:"thomasstjerne", password: "splendens"},
+  kms: 	{
+	  login:"thomasstjerne", 
+	  password: "splendens"
+  },
   arcgis: {
 	      'client_id': 'QS6ITvXQsdX4F0uE',
 	      'client_secret': 'b28294483b294d778f12d6749e620387',

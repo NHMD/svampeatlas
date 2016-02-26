@@ -22,11 +22,11 @@ module.exports = function(app) {
    app.use('/api/nutritionstrategies', require('./api/mysql/ErnaeringsStrategi'));
     app.use('/api/taxonomytags',intparser.parseLimitOffset(), require('./api/mysql/TaxonomyTag'));
 	
-	 app.use('/api/mycokeycharacters',intparser.parseLimitOffset(), require('./api/mysql/MycoKeyCharacter'));
+	 app.use('/api/mycokeycharacters',intparser.parseLimitOffset(), require('./api/mysql/MycokeyCharacter'));
 	
 	
 	app.use('/api/observations',intparser.parseLimitOffset(), require('./api/mysql/Observation'));
-	app.use('/api/observationpoints', intparser.parseLimitOffset(),require('./api/mysql/ObservationPoint'));
+//	app.use('/api/observationpoints', intparser.parseLimitOffset(),require('./api/mysql/ObservationPoint'));
 	app.use('/api/determinations',intparser.parseLimitOffset(), require('./api/mysql/Determination'));
 	app.use('/api/localities',intparser.parseLimitOffset(), require('./api/mysql/Locality'));
 	
