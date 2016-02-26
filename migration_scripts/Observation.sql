@@ -309,6 +309,7 @@ CREATE TABLE ObservationPoint (
 	p POINT NOT NULL
  ) ENGINE= MyISAM;
 ALTER TABLE ObservationPoint ADD SPATIAL INDEX (p);
+ALTER TABLE Observation ADD SPATIAL INDEX (geom);
 insert into ObservationPoint SELECT _id, GeomFromText(CONCAT('POINT(',decimalLongitude,' ',decimalLatitude, ')')) FROM Observation;
 
 	ALTER TABLE Observation ADD COLUMN p POINT ;

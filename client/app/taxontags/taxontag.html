@@ -1,7 +1,7 @@
 <div  ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
 	
 </div>	
-<md-content>
+<md-content flex md-scroll-y layout-padding>
 
 
 <div class="col-md-12" layout layout-sm="column" >
@@ -52,8 +52,10 @@
 	</tfoot>
 </table>
 </div>	
-
+	
 </md-content>
 
-
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+	        
+	      </div>
 
