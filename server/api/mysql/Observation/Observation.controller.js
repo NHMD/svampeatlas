@@ -173,7 +173,6 @@ exports.index = function(req, res) {
 };
 
 
-
 // Get a single taxon
 exports.show = function(req, res) {
 	Observation.find({
@@ -185,7 +184,15 @@ exports.show = function(req, res) {
 				as: "PrimaryDetermination",
 				include: [{
 					model: models.Taxon,
-					as: "Taxon"
+					as: "Taxon",
+					include: [{
+					model: models.Taxon,
+					as: "acceptedTaxon",
+						include: [{
+							model: models.TaxonDKnames,
+							as: "Vernacularname_DK"
+						}]
+					}]
 				}]
 			}, {
 				model: models.User,

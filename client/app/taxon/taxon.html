@@ -202,6 +202,47 @@
 				  	    </div>
 				  	  </div>
 				  	  <!-- ########################################-->
+								  	  <!-- ########################################-->
+								  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+								  	    <div class="panel-heading" role="tab">
+								  	      <h4 class="panel-title">
+								  	        <a bs-collapse-toggle>
+								  	          Dyntaxa <img src="assets/images/slu-logo-svart-web.png" width="27" class="pull-right" alt="Unite">
+								  	        </a>
+								  	      </h4>
+								  	    </div>
+								  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+								  	      <div class="panel-body">
+							  
+										<div ><button class="btn btn-primary" ng-click="getInfoFromDyntaxa()">Get Taxon names from Dyntaxa </button></div>
+										<div ng-show="dyntaxa !== undefined && dyntaxa.loading === true"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div >
+											<md-content layout-padding layout="center center">
+					  					<p ng-show="dyntaxa.noMatch">No match on {{taxon.FullName}}	in Dyntaxa.</p> 
+						  			  	<p ng-show="dyntaxa.vernacularname_se"><strong>Current swedish name:</strong> {{dyntaxa.vernacularname_se}}</p>
+					  						 </md-content>
+											  <table class="table table-bordered" ng-show="dyntaxa.latinnames && dyntaxa.latinnames.length >0">
+												  
+												  <tr><th st-ratio="30">Name</th><th st-ratio="60">Description</th><th st-ratio="10">Status</th>
+												  
+												  </tr>
+					  							   <tr ng-repeat="dtn in dyntaxa.latinnames "><td st-ratio="30">
+					  						 <a href="https://www.dyntaxa.se/Taxon/Info/{{dtn['b:Taxon'][0]['b:Id'][0]}}" target="_BLANK"><em>{{dtn['b:Name'][0]}}</em> {{dtn['b:Author'][0]}}</a> 
+										</td>	<td st-ratio="60"> <small>{{dtn['b:Description'][0]}} <br ng-if="dtn['b:Description'][0] !==''"> {{dyntaxa.getStatus(dtn)}}</small>
+					  						  </td><td st-ratio="10">
+					  						  	<strong>{{dyntaxa.currentUse(dtn)}}</strong>
+					  						  </td>
+										  
+													
+										  </tr>
+										  </table>
+			  	        
+											<!--<ul>
+												<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxonbase/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
+											</ul> -->
+								  	      </div>
+								  	    </div>
+								  	  </div>
+								  	  <!-- ########################################-->
 				  	  <!-- ########################################-->
 				  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
 				  	    <div class="panel-heading" role="tab">

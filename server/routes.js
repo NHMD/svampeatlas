@@ -39,7 +39,7 @@ module.exports = function(app) {
    app.use('/api/taxons', intparser.parseLimitOffset(), require('./api/mysql/Taxon'));
   app.use('/api/indexfungorum', require('./api/soap/indexfungorum'));
   app.use('/api/mycobank', require('./api/soap/mycobank'));
-  //   app.use('/api/dyntaxa', require('./api/soap/dyntaxa')); // TODO if mosses are included a webservice client should de set up to query DYNTAXA 
+   app.use('/api/dyntaxa', require('./api/soap/dyntaxa')); // TODO if mosses are included a webservice client should de set up to query DYNTAXA 
   app.use('/api/kms', require('./api/soap/kms'));
   app.use('/api/arcgis', require('./api/soap/arcgis'));
  app.use('/api/plutof', require('./api/soap/plutof'));
