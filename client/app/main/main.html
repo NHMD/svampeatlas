@@ -93,7 +93,7 @@
 <md-grid-list
         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
         md-row-height-gt-md="1:1" md-row-height="2:2"
-        md-gutter="12px" md-gutter-gt-sm="8px" flex="66">
+        md-gutter="12px" md-gutter-gt-sm="8px" flex-gt-sm="66">
 <md-grid-tile ng-repeat="tile in tiles | limitTo : 12"
                  
                   md-colspan-sm="1"
@@ -112,8 +112,8 @@
   </md-grid-list>
   
  
-   <md-whiteframe class="md-whiteframe-12dp newsfeed" flex="33" layout>
-    <md-list layout-fill>
+   <md-whiteframe class="md-whiteframe-12dp newsfeed" flex-gt-sm="33" layout>
+    <md-list layout-fill layout-padding>
       <md-subheader class="md-no-sticky">Nyheder fra svampeatlas</md-subheader>
       <md-list-item class="md-3-line md-long-text" ng-repeat="item in news | limitTo : 5">
        

@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', 'Auth','Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 
-		function($scope,Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state) {
+	.controller('SearchListCtrl', ['$scope', 'Auth','Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData','Observation','$mdMedia','$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService',
+		function($scope,Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService) {
 		
+			$scope.ObservationModalService = ObservationModalService;
 			if($stateParams.searchterm){
 				ObservationSearchService.reset();
 				var search = ObservationSearchService.getSearch();

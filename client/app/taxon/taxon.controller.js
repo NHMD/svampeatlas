@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies) {
 			$scope._ = _;
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
@@ -475,7 +475,79 @@ angular.module('svampeatlasApp')
 				})
 			}
 			
-			// handles an array of danish names , one of these being the cunrrent name
+			// handles integration to DynTaxa
+			$scope.loginToDyntaxa = function(){
+      		  if(!$cookies.get('dyntaxa')){
+				  
+  				return  DynTaxa.GetToken().$promise.then(function(res){
+    	      			var exp = new Date();
+    	      			exp.setHours(exp.getHours() + 24);
+    	    			 $cookies.put('dyntaxatoken', res.access_token, {expires: exp}); 
+  					
+  				  })
+      			
+      		  } else {
+				  var deferred = $q.defer();
+				  deferred.resolve()
+				  return deferred.promise;
+      		  }
+			}
+			
+			$scope.getInfoFromDyntaxa = function(){
+				
+				$scope.dyntaxa = {
+					currentUse : function(dtn){
+						return (dtn['b:Taxon'][0]['b:ScientificName'][0] !== dtn['b:Name'][0]) ? ' - ' : 'Current use';
+					},
+					getStatus: function(dtn){
+						return $scope.dyntaxa.statuses[dtn['b:StatusId'][0]][0]['b:Description'][0];
+					},
+					loading: true
+				};
+				
+    		  $scope.loginToDyntaxa().then(function(){
+				$scope.dyntaxa.rawstatuses = DynTaxa.NameStatuses();
+				  $scope.dyntaxa.rawcategories = DynTaxa.NameCategories();
+				  $scope.dyntaxa.rawnames = DynTaxa.SynonymSearch({searchstring: $scope.taxon.FullName});
+				
+				$q.all([$scope.dyntaxa.rawstatuses.$promise ,$scope.dyntaxa.rawcategories.$promise, $scope.dyntaxa.rawnames.$promise])
+				.then(function(){
+					$scope.dyntaxa.statuses = _.groupBy($scope.dyntaxa.rawstatuses, function(e){
+						return e['b:Id'][0]
+					});
+					_.each($scope.dyntaxa.rawnames, function(e){
+						if (typeof e['b:Description'][0] !== 'string'){
+							e['b:Description'][0] = "";
+						}
+					});
+					var sorted = _.groupBy($scope.dyntaxa.rawnames, function(e){
+						return e['b:CategoryId'][0]
+					});
+					$scope.dyntaxa.latinnames = sorted[0];
+					$scope.dyntaxa.swedishnames = sorted[1];
+					
+					var sweName = _.find($scope.dyntaxa.swedishnames, function(dtn){
+						return dtn['b:Taxon'][0]['b:CommonName'][0] === dtn['b:Name'][0]
+					});
+					
+					if(sweName){
+						$scope.dyntaxa.vernacularname_se = sweName['b:Taxon'][0]['b:CommonName'][0]
+					}
+						
+					$scope.dyntaxa.loading = false;
+					
+				})
+				.catch(function(err){
+					$scope.dyntaxa.loading = false;
+					$scope.dyntaxa.noMatch = true;
+				})
+				  
+    		  })
+				
+				
+			}
+			
+			// handles an array of danish names , one of these being the current name
 			
 			$scope.setCurrentDkName = function(name){
 				$scope.newDkNameIsInProgress = true;

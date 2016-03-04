@@ -186,6 +186,10 @@ angular.module('svampeatlasApp', [
         if ($cookies.get('plutoftoken')) {
           config.headers.PlutoFAuthorization =  $cookies.get('plutoftoken');
         }
+		
+        if ($cookies.get('dyntaxatoken')) {
+          config.headers.DynTaxaAuthorization =  $cookies.get('dyntaxatoken');
+        }
         return config;
       },
 
