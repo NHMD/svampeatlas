@@ -300,7 +300,7 @@ angular.module('svampeatlasApp')
 
 				var offset = pagination.start || 0; // This is NOT the page number, but the index of item in the list that you want to use to display the table.
 				var limit = pagination.number || 50; // Number of entries showed per page.
-				var where = (tableState.search.predicateObject) ? _.mapValues(_.omit(tableState.search.predicateObject, ['attributes']), function(value, key) {
+				var where = (tableState.search.predicateObject) ? _.mapValues(_.omit(tableState.search.predicateObject, ['Vernacularname_DK']), function(value, key) {
 					return {
 						like: value += "%"
 					};
@@ -362,12 +362,23 @@ angular.module('svampeatlasApp')
 					});
 
 				}
+				var dkNameWhere = (tableState.search.predicateObject && tableState.search.predicateObject.Vernacularname_DK) ? _.mapValues(tableState.search.predicateObject.Vernacularname_DK, function(value, key) {
 
+
+					return {
+						like: "%" + value + "%"
+					};
+				}) : undefined;
 
 				var include = [{
 					model: "TaxonAttributes",
 					as: "attributes",
 					where: JSON.stringify(attributesWhere)
+				},
+				{
+					model: "TaxonDKnames",
+					as: "Vernacularname_DK",
+					where: JSON.stringify(dkNameWhere)
 				}];
 
 				var storedTags = localStorage.getItem('taxonomy_selected_tags');

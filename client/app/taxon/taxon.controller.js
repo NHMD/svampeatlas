@@ -534,8 +534,29 @@ angular.module('svampeatlasApp')
 						$scope.dyntaxa.vernacularname_se = sweName['b:Taxon'][0]['b:CommonName'][0]
 					}
 						
-					$scope.dyntaxa.loading = false;
 					
+					
+					return _.find($scope.dyntaxa.rawnames, function(dtn){
+						return dtn['b:Taxon'][0]['b:ScientificName'][0] !== dtn['b:Name'][0]
+					})['b:Taxon'][0]['b:Id'][0]
+				})
+				.then(function(dyntaxa_id){
+					
+					return DynTaxa.AllParentTaxa({id: dyntaxa_id}).$promise;
+					
+				})
+				.then(function(classification){
+					$scope.dyntaxa.classification = "";
+					
+					var node = classification;
+					while(node["b:WebTaxonTreeNode"]){
+						$scope.dyntaxa.classification += node["b:WebTaxonTreeNode"][0]["b:Taxon"][0]["b:ScientificName"][0];
+						if(node["b:WebTaxonTreeNode"][0]["b:Children"][0]["b:WebTaxonTreeNode"]){
+							$scope.dyntaxa.classification += ", "
+						};
+						node = node["b:WebTaxonTreeNode"][0]["b:Children"][0];
+					}
+					$scope.dyntaxa.loading = false;
 				})
 				.catch(function(err){
 					$scope.dyntaxa.loading = false;

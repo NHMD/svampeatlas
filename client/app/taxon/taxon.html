@@ -216,9 +216,10 @@
 							  
 										<div ><button class="btn btn-primary" ng-click="getInfoFromDyntaxa()">Get Taxon names from Dyntaxa </button></div>
 										<div ng-show="dyntaxa !== undefined && dyntaxa.loading === true"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div >
-											<md-content layout-padding layout="center center">
+											<md-content layout-padding layout="column" layout="center center">
 					  					<p ng-show="dyntaxa.noMatch">No match on {{taxon.FullName}}	in Dyntaxa.</p> 
 						  			  	<p ng-show="dyntaxa.vernacularname_se"><strong>Current swedish name:</strong> {{dyntaxa.vernacularname_se}}</p>
+										<p ng-show="dyntaxa.classification"> <strong>Classification:</strong><br><small>{{dyntaxa.classification}}</small></p>
 					  						 </md-content>
 											  <table class="table table-bordered" ng-show="dyntaxa.latinnames && dyntaxa.latinnames.length >0">
 												  
