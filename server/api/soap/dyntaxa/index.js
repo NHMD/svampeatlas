@@ -10,6 +10,8 @@ router.get('/namesearch', controller.NameSearch);
 router.get('/statuses', controller.GetTaxonNameStatuses);
 router.get('/categories', controller.GetTaxonNameCategories);
 
+router.get('/classification/:taxonid', controller.AllParentTaxa);
+
 router.get('/synonyms/', controller.SynonymSearch);
 //router.get('/epithetsearch', controller.EpithetSearch);
 //router.get('/namebykey', controller.NameByKey);

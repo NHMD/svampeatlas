@@ -6,6 +6,13 @@ angular.module('svampeatlasApp')
      
     },
     {
+	AllParentTaxa: {
+			method: 'GET',
+			params: {
+				id: '@_id'
+			},
+			url: '/api/dyntaxa/classification/:id'
+		},
       NameSearch: {
         method: 'GET',
         params: {

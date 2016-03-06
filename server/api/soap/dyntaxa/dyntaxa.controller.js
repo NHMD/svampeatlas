@@ -196,6 +196,55 @@ request({url:'https://Taxon.ArtDatabankenSoa.se/TaxonService.svc/SOAP12', method
 
 };
 
+exports.AllParentTaxa = function(req, res){
+	var token =  req.headers.dyntaxaauthorization;	
+	var taxonid = req.params.taxonid;
+	var body =
+	'<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:urn="urn:WebServices.ArtDatabanken.slu.se" xmlns:art="http://schemas.datacontract.org/2004/07/ArtDatabanken.WebService.Data" xmlns:arr="http://schemas.microsoft.com/2003/10/Serialization/Arrays">'
+	    +'<soap:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">'
+		+'<wsa:To>https://taxon.artdatabankensoa.se/TaxonService.svc/SOAP12</wsa:To>'
+		+'<wsa:Action>urn:WebServices.ArtDatabanken.slu.se/ITaxonService/GetTaxonTreesBySearchCriteria</wsa:Action>'
+		+'</soap:Header>'
+	   +'<soap:Body>'
+	      +'<urn:GetTaxonTreesBySearchCriteria>'
+	         +'<urn:clientInformation>'
+	            +'<art:Token>'+token+'</art:Token>'
+	         +'</urn:clientInformation>'
+	         +'<urn:searchCriteria>'
+	            +'<art:Scope>AllParentTaxa</art:Scope>'
+	            +'<art:TaxonIds>'
+	               +'<arr:int>'+taxonid+'</arr:int>'
+	            +'</art:TaxonIds>'
+	         +'</urn:searchCriteria>'
+	      +'</urn:GetTaxonTreesBySearchCriteria>'
+	   +'</soap:Body>'
+		+'</soap:Envelope>';
+		
+		var headers = {
+			'Content-Type': 'application/soap+xml; charset=utf-8',
+			'Content-Length': body.length,
+			'SOAPAction': "urn:WebServices.ArtDatabanken.slu.se/ITaxonService/GetTaxonTreesBySearchCriteria"
+		}
+		
+		request({url:'https://Taxon.ArtDatabankenSoa.se/TaxonService.svc/SOAP12', method: "POST", body: body, headers: headers}, function(err, response, body){
+		
+			if(err) {console.log(err)};
+
+			if(parseInt(response.statusCode) === 200){
+			  var xml = /<s:Body>([\s\S])*?<\/s:Body>/.exec(body)[0]
+			
+			parser.parseStringAsync(xml).then(function (result) {
+		
+					res.status(200).json(result['s:Body']['GetTaxonTreesBySearchCriteriaResponse'][0]['GetTaxonTreesBySearchCriteriaResult'][0])
+				// ['s:Body']['GetTaxonNamesByTaxonIdResponse'][0]['GetTaxonNamesByTaxonIdResult'][0]['b:WebTaxonName']
+			    });
+			} else {
+				res.status(response.statusCode).send(body);
+			}
+
+		});
+}
+
 exports.GetTaxonNameStatuses = function(req, res){
 	var token =  req.headers.dyntaxaauthorization;	
 	var body =
