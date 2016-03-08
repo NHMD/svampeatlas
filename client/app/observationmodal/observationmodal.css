@@ -8,3 +8,12 @@
        height: 100%;
        border-radius: 0;
    }
+   
+   table.observation-detail td.rightalign {
+     text-align: right;
+   }
+   
+  .forum-divider {
+   	left: 74px;
+    width: calc(100% - 74px);
+   }

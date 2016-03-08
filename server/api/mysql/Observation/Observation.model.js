@@ -126,10 +126,29 @@ module.exports = function(sequelize, DataTypes) {
 				.belongsTo(models.User, {
 					foreignKey: "primaryuser_id" ,
 					as: "PrimaryUser"
+				});	
+				
+		models.Observation
+				.belongsTo(models.Substrate, {
+					foreignKey: "substrate_id" ,
+					as: "Substrate"
+				});	
+		models.Observation
+				.belongsTo(models.VegetationType, {
+					foreignKey: "vegetationtype_id" ,
+					as: "VegetationType"
 				});		
-				
-				
-		/*
+			/*	
+				models.Taxon.belongsToMany(models.Naturtype, {
+				  through: models.TaxonNaturtype,
+				  foreignKey: 'taxon_id',
+				as: 'naturtyper'
+				});
+				models.Naturtype.belongsToMany(models.Taxon, {
+				  through: models.TaxonNaturtype,
+				  foreignKey: 'naturtype_id'
+				});		
+		
     			models.Taxon
     				.belongsTo(models.Taxon, {
     					foreignKey: "parent_id",

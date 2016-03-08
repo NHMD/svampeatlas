@@ -98,3 +98,5 @@ UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT(o.ecologynote, " [Assoc
 UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT("[Associated organism: ",f.associatedOrganism, "]") WHERE f.associatedOrganism <> "" AND f.AtlasLNR NOT IN (select obs_id from temp_ass_org_is_mapped) AND o._id = f.AtlasLNR AND o.ecologynote = "";
 
 DROP TABLE temp_ass_org_is_mapped;
+
+ALTER TABLE `PlantTaxon` ADD `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `_id`, ADD `updatedAt` DATETIME NULL AFTER `createdAt`;
