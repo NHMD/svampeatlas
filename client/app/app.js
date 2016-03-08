@@ -17,7 +17,8 @@ angular.module('svampeatlasApp', [
 	//'ngMenuSidenav',
 	'sasrio.angular-material-sidenav',
 	'pascalprecht.translate',
-	'leaflet-directive'
+	'leaflet-directive',
+	'userAvatar'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider,$mdThemingProvider, ssSideNavSectionsProvider) {
     $urlRouterProvider

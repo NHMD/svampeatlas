@@ -5,7 +5,7 @@
           <md-button class="md-icon-button" ng-click="cancel()">
             <ng-md-icon icon="arrow_back" aria-label="Close dialog"></ng-md-icon>
           </md-button>
-        <h2><em>{{obs.DeterminationView.Taxon_FullName}}</em>, {{obs.Locality.name}}, {{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}, {{obs.PrimaryUser.name}}</h2>
+        <h2>Danmarks Svampeatlas observations-ID: {{obs._id}}</h2>
         <span flex></span>
         
       </div>
@@ -17,54 +17,70 @@
 	 <md-tabs md-dynamic-height md-border-bottom  ng-if="!$mdMedia('gt-sm')">
 	        <md-tab label="Fundoplysninger">
 	          <md-content class="md-padding">
-	            <h1 class="md-display-2">Fundoplysninger</h1>
-	            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi.</p>
+	            <span class="md-headline">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? "(" : ""}}<em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}{{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? ")": ""}}</span>
+	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
+	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
+	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
+	            <div ng-include="'app/observationmodal/fundoplysninger.tpl.html'"></div>
 	          </md-content>
 	        </md-tab>
 	        <md-tab label="Kort">
 	          <md-content class="md-padding">
-	            <h1 class="md-display-2">Kort</h1>
-	            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi. Aliquam erat volutpat. Nam placerat, tortor in ultrices porttitor, orci enim rutrum enim, vel tempor sapien arcu a tellus. Vivamus convallis sodales ante varius gravida. Curabitur a purus vel augue ultrices ultricies id a nisl. Nullam malesuada consequat diam, a facilisis tortor volutpat et. Sed urna dolor, aliquet vitae posuere vulputate, euismod ac lorem. Sed felis risus, pulvinar at interdum quis, vehicula sed odio. Phasellus in enim venenatis, iaculis tortor eu, bibendum ante. Donec ac tellus dictum neque volutpat blandit. Praesent efficitur faucibus risus, ac auctor purus porttitor vitae. Phasellus ornare dui nec orci posuere, nec luctus mauris semper.</p>
-	            <p>Morbi viverra, ante vel aliquet tincidunt, leo dolor pharetra quam, at semper massa orci nec magna. Donec posuere nec sapien sed laoreet. Etiam cursus nunc in condimentum facilisis. Etiam in tempor tortor. Vivamus faucibus egestas enim, at convallis diam pulvinar vel. Cras ac orci eget nisi maximus cursus. Nunc urna libero, viverra sit amet nisl at, hendrerit tempor turpis. Maecenas facilisis convallis mi vel tempor. Nullam vitae nunc leo. Cras sed nisl consectetur, rhoncus sapien sit amet, tempus sapien.</p>
-	            <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+	             <leaflet width="100%" height="250px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
 	          </md-content>
 	        </md-tab>
 	        <md-tab label="Billeder">
 	          <md-content class="md-padding">
-	            <h1 class="md-display-2">Billeder</h1>
-	            <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+		      <md-grid-list
+		            md-cols="1" 
+		            md-row-height-gt-md="1:1" md-row-height="4:3"
+		            md-gutter="8px" md-gutter-gt-sm="4px" >
+		        <md-grid-tile ng-repeat="img in obs.Images" >
+		          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+         
+		        </md-grid-tile>
+		      </md-grid-list>
 	          </md-content>
 	        </md-tab>
 	      </md-tabs>
- <div md-dynamic-height md-border-bottom  ng-if="$mdMedia('gt-sm')" flex>
-    <md-card flex="60">
+ <div md-dynamic-height md-border-bottom  ng-if="$mdMedia('gt-sm')" layout="row" flex>
+    <md-card flex="60" layout-fill>
      
       <md-card-title>
-        <md-card-title-text>
+        <md-card-title-text >
 		 
           <span class="md-headline">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? "(" : ""}}<em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}{{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? ")": ""}}</span>
 		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
+		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
+		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
         </md-card-title-text>
-      </md-card-title>
-      <md-card-content>
-        <p>
-          The titles of Washed Out's breakthrough song and the first single from Paracosm share the
-          two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
-        </p>
-        <p>
-          The titles of Washed Out's breakthrough song and the first single from Paracosm share the
-          two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
-        </p>
-        <p>
-          The titles of Washed Out's breakthrough song and the first single from Paracosm share the
-          two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
-        </p>
+      </md-card-title >
+      <md-card-content ng-include="'app/observationmodal/fundoplysninger.tpl.html'">
+
       </md-card-content>
-      <md-card-actions layout="row" layout-align="end center">
-        <md-button>Action 1</md-button>
-        <md-button>Action 2</md-button>
-      </md-card-actions>
+     
     </md-card>
+	
+	 <md-card flex="40" layout-padding>
+	 <leaflet width="100%" height="250px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
+	 
+	 
+     <md-grid-list
+           md-cols="1" 
+           md-row-height-gt-md="1:1" md-row-height="4:3"
+           md-gutter="8px" md-gutter-gt-sm="4px" >
+       <md-grid-tile ng-repeat="img in obs.Images" >
+         <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+         
+       </md-grid-tile>
+     </md-grid-list>
+	 
+	  <!-- <div layout layout-margin ng-repeat="img in obs.Images">
+		  
+		   <md-progress-circular md-mode="indeterminate" ng-show="loaded[img.name] !== true && failed[img.name] !== true"></md-progress-circular>
+	     <img   style="margin: auto; max-width: 100%; height:inherit;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+	 </div> -->
+ </md-card>
  </div>
      
     </md-dialog-content>

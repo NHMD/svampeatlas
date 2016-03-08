@@ -5,7 +5,7 @@ angular.module('svampeatlasApp')
 	.factory('Taxon', function($resource) {
 
 		// Public API here
-		return $resource('/api/taxons/:id', {
+		return $resource('/api/taxa/:id', {
 			id: '@_id'
 		}, {
 			update: {
@@ -16,7 +16,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/parents',
+				url: '/api/taxa/:id/parents',
 				isArray: false
 			},
 			'addImage': {
@@ -24,7 +24,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/images',
+				url: '/api/taxa/:id/images',
 				isArray: false
 			},
 			'deleteImage': {
@@ -33,7 +33,7 @@ angular.module('svampeatlasApp')
 					id: '@_id',
 					imgid: 'imgid'
 				},
-				url: '/api/taxons/:id/images/:imgid',
+				url: '/api/taxa/:id/images/:imgid',
 				isArray: false
 			},
 			'updateImage': {
@@ -42,7 +42,7 @@ angular.module('svampeatlasApp')
 					id: '@_id',
 					imgid: 'imgid'
 				},
-				url: '/api/taxons/:id/images/:imgid',
+				url: '/api/taxa/:id/images/:imgid',
 				isArray: false
 			},
 			'setParent': {
@@ -50,7 +50,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/parent',
+				url: '/api/taxa/:id/parent',
 				isArray: false
 			},
 			'addSynonym': {
@@ -58,7 +58,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/synonyms',
+				url: '/api/taxa/:id/synonyms',
 				isArray: false
 			},
 			'addAttributes': {
@@ -66,7 +66,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/attributes',
+				url: '/api/taxa/:id/attributes',
 				isArray: false
 			},
 			'deleteAttributes': {
@@ -74,7 +74,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/attributes',
+				url: '/api/taxa/:id/attributes',
 				isArray: false
 			},
 			'updateAttributes': {
@@ -82,7 +82,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/attributes',
+				url: '/api/taxa/:id/attributes',
 				isArray: false
 			},
 			'addTag': {
@@ -90,7 +90,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/tags',
+				url: '/api/taxa/:id/tags',
 				isArray: false
 			},
 			'deleteTag': {
@@ -99,7 +99,7 @@ angular.module('svampeatlasApp')
 					id: '@_id',
 					tagid: 'tagid'
 				},
-				url: '/api/taxons/:id/tags/:tagid',
+				url: '/api/taxa/:id/tags/:tagid',
 				isArray: false
 			},
 			'getTags': {
@@ -107,7 +107,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/tags',
+				url: '/api/taxa/:id/tags',
 				isArray: true
 			},
 			'addNatureType': {
@@ -115,7 +115,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/naturetypes',
+				url: '/api/taxa/:id/naturetypes',
 				isArray: false
 			},
 			'deleteNatureType': {
@@ -124,7 +124,7 @@ angular.module('svampeatlasApp')
 					id: '@_id',
 					naturetypeid: 'naturetypeid'
 				},
-				url: '/api/taxons/:id/naturetypes/:naturetypeid',
+				url: '/api/taxa/:id/naturetypes/:naturetypeid',
 				isArray: false
 			},
 			'getNatureTypes': {
@@ -132,7 +132,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/naturetypes',
+				url: '/api/taxa/:id/naturetypes',
 				isArray: true
 			},
 			'addNutritionStrategy': {
@@ -140,7 +140,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/nutritionstrategies',
+				url: '/api/taxa/:id/nutritionstrategies',
 				isArray: false
 			},
 			'deleteNutritionStrategy': {
@@ -149,7 +149,7 @@ angular.module('svampeatlasApp')
 					id: '@_id',
 					nutritionstrategyid: 'nutritionstrategyid'
 				},
-				url: '/api/taxons/:id/nutritionstrategies/:nutritionstrategyid',
+				url: '/api/taxa/:id/nutritionstrategies/:nutritionstrategyid',
 				isArray: false
 			},
 			'getNutritionStrategies': {
@@ -157,7 +157,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/nutritionstrategies',
+				url: '/api/taxa/:id/nutritionstrategies',
 				isArray: true
 			},
 			'addSpeciesHypothesis': {
@@ -165,7 +165,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/specieshypothesis',
+				url: '/api/taxa/:id/specieshypothesis',
 				isArray: false
 			},
 			'deleteSpeciesHypothesis': {
@@ -174,7 +174,7 @@ angular.module('svampeatlasApp')
 					id: '@_id',
 					specieshypothesis: 'specieshypothesis'
 				},
-				url: '/api/taxons/:id/specieshypothesis/:specieshypothesis',
+				url: '/api/taxa/:id/specieshypothesis/:specieshypothesis',
 				isArray: false
 			},
 			'getSpeciesHypothesis': {
@@ -182,7 +182,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/specieshypothesis',
+				url: '/api/taxa/:id/specieshypothesis',
 				isArray: true
 			},
 			'getSiblings': {
@@ -190,7 +190,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/siblings',
+				url: '/api/taxa/:id/siblings',
 				isArray: true
 			},
 			'setCurrentDKname': {
@@ -198,7 +198,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/dknames/current',
+				url: '/api/taxa/:id/dknames/current',
 				isArray: false
 			},
 			'addDKname': {
@@ -206,7 +206,7 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxons/:id/dknames',
+				url: '/api/taxa/:id/dknames',
 				isArray: false
 			},
 			'deleteDKname': {
@@ -215,7 +215,7 @@ angular.module('svampeatlasApp')
 					id: '@_id',
 					nameid: 'nameid'
 				},
-				url: '/api/taxons/:id/dknames/:nameid',
+				url: '/api/taxa/:id/dknames/:nameid',
 				isArray: false
 			},
 			'updateDKname': {
@@ -224,7 +224,7 @@ angular.module('svampeatlasApp')
 					id: '@_id',
 					nameid: 'nameid'
 				},
-				url: '/api/taxons/:id/dknames/:nameid',
+				url: '/api/taxa/:id/dknames/:nameid',
 				isArray: false
 			},
 		});

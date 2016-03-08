@@ -173,7 +173,7 @@ exports.index = function(req, res) {
 };
 
 
-// Get a single taxon
+// Get a single observation
 exports.show = function(req, res) {
 	Observation.find({
 		where: {
@@ -193,7 +193,13 @@ exports.show = function(req, res) {
 							as: "Vernacularname_DK"
 						}]
 					}]
-				}]
+				},
+			    {
+			   				model: models.User,
+			   				as: 'User',
+			   				attributes: ['email', 'Initialer', 'name']
+			   			}
+			]
 			}, {
 				model: models.User,
 				as: 'PrimaryUser',
@@ -211,6 +217,15 @@ exports.show = function(req, res) {
 						model: models.User,
 					as: "User", 
 					 fields: ['name']}]
+			},
+			{model: models.PlantTaxon,
+			as: 'associatedTaxa'
+			},
+			{model: models.Substrate,
+			as: 'Substrate'
+			},
+			{model: models.VegetationType,
+			as: 'VegetationType'
 			}
 
 		]

@@ -33,13 +33,14 @@ module.exports = function(app) {
 	
 	
    
-  app.use('/api/things', require('./api/mysql/thing'));
+//  app.use('/api/things', require('./api/mysql/thing'));
   app.use('/api/users', require('./api/mysql/user'));
    app.use('/api/roles', require('./api/mysql/Role'));
-   app.use('/api/taxons', intparser.parseLimitOffset(), require('./api/mysql/Taxon'));
+   app.use('/api/taxa', intparser.parseLimitOffset(), require('./api/mysql/Taxon'));
+   app.use('/api/planttaxa', intparser.parseLimitOffset(), require('./api/mysql/PlantTaxon'));
   app.use('/api/indexfungorum', require('./api/soap/indexfungorum'));
   app.use('/api/mycobank', require('./api/soap/mycobank'));
-   app.use('/api/dyntaxa', require('./api/soap/dyntaxa')); // TODO if mosses are included a webservice client should de set up to query DYNTAXA 
+   app.use('/api/dyntaxa', require('./api/soap/dyntaxa'));  
   app.use('/api/kms', require('./api/soap/kms'));
   app.use('/api/arcgis', require('./api/soap/arcgis'));
  app.use('/api/plutof', require('./api/soap/plutof'));
