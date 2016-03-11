@@ -21,6 +21,7 @@ angular.module('svampeatlasApp')
 			},
 			reset: function(){
 				this.search = {};
+				this.uistate = {};
 			}
 			
 			}

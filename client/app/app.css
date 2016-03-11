@@ -47,11 +47,15 @@ body {
 }
 
 .st-sort-ascent:before{
-  content: '\25B2';
+  content: "\f175";
+  font-family: 'fontawesome';
+  margin: 0 3px 0 0;
 }
 
 .st-sort-descent:before{
-  content: '\25BC';
+  content:  "\f176";
+  font-family: 'fontawesome';
+  margin: 0 3px 0 0;
 }
 
 .vertical-align {

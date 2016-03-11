@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.factory('Auth', function Auth($http, User, $cookies, $q, $translate) {
+	.factory('Auth', function Auth($http, User, $cookies, $q, $translate, $rootScope) {
 		/**
 		 * Return a callback or noop function
 		 *
@@ -50,6 +50,7 @@ angular.module('svampeatlasApp')
 						currentUser = User.get();
 
 						safeCb(callback)();
+						$rootScope.$broadcast('logged_in', currentUser);
 						return res.data;
 					}, function(err) {
 						this.logout();
@@ -70,6 +71,7 @@ angular.module('svampeatlasApp')
 						currentUser = User.get();
 
 						safeCb(callback)();
+						$rootScope.$broadcast('logged_in', currentUser);
 						return res.data;
 					}, function(err) {
 						this.logout();

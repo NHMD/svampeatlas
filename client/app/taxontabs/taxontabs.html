@@ -17,7 +17,8 @@
             TaxonBase / {{states[state.current.name] | translate}} / {{$parent.taxon.FullName}}
           </h3>
           <span flex></span>
-
+		   <span layout-margin ng-if="mdMedia('gt-xs')" > <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>
+		   <a href="/"><img src="assets/images/LogoSmallest.png"></a>
         </div>
   <md-tabs md-stretch-tabs class="md-primary" md-selected="tabs.activeTab" ng-show="state.current.name.split('-')[0] === 'taxonlayout'">
    

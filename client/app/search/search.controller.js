@@ -1,8 +1,34 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout',
-		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout','$mdUtil','$mdSidenav','$mdMedia',
+		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia) {
+			
+			$scope.mdMedia = $mdMedia;
+			$scope.toggleSearchMapSideNav = buildToggler('searchmapsidenav');
+			    
+			    /**
+			     * Build handler to open/close a SideNav; when animation finishes
+			     * report completion in console
+			     */
+			    function buildToggler(navID) {
+			      var debounceFn =  $mdUtil.debounce(function(){
+			            $mdSidenav(navID)
+			              .toggle()
+					  		.then(function(){
+					  			leafletData.getMap('searchformmap').then(function(map) {
+					  				map.invalidateSize()
+					  			})
+					  		})
+			             
+			          },200);
+			      return debounceFn;
+			    }
+		
+			    $scope.closeSideNav = function (nav) {
+			         $mdSidenav(nav).close()
+			           
+			       };
 		//	ObservationSearchService.reset();
 		$scope.search = ObservationSearchService.getUIstate();
 		
@@ -35,7 +61,7 @@ angular.module('svampeatlasApp')
 
 
 
-			leafletData.getMap().then(function(map) {
+			leafletData.getMap('searchformmap').then(function(map) {
 				$scope.map = map;
 				map.addLayer($scope.drawnItems);
 				

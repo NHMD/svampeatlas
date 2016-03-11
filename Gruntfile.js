@@ -579,7 +579,7 @@ module.exports = function(grunt) {
 				NODE_ENV: 'test'
 			},
 			prod: {
-				NODE_ENV: 'production'
+				NODE_ENV: 'development'
 			},
 			all: localConfig
 		},

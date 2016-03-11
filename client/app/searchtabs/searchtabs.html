@@ -14,16 +14,18 @@
 		  <ng-md-icon icon="search" ></ng-md-icon>
 		  
           <h3 class="inset">
-            Søg / {{states[state.current.name] | translate}} 
+            Søg <span ng-if="mdMedia('gt-sm')">/ {{states[state.current.name] | translate}} </span>
           </h3>
           <span flex></span>
-
+		   <span layout-margin ng-if="mdMedia('gt-xs')"> <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>
+        <a href="/"><img src="assets/images/LogoSmallest.png"></a>
         </div>
   <md-tabs md-stretch-tabs class="md-primary" md-selected="tabs.activeTab">
    
     <md-tab ng-repeat="tab in tabs"  ng-class="{'md-active': tab.active}" ng-disabled="tab.disabled" >
       <md-tab-label>
-        {{tab.title | translate}}
+	  <!-- <ng-md-icon icon="{{tab.icon}}" ng-if="mdMedia('xs')"></ng-md-icon>-->
+        <span >{{tab.title | translate}}</span>
        
       </md-tab-label>
     

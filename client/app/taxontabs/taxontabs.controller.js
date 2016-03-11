@@ -3,6 +3,7 @@
 angular.module('svampeatlasApp')
 	.controller('TaxonTabsCtrl', ['$scope',  '$state','$stateParams', 'Auth', '$translate', '$mdSidenav','$mdMedia','ssSideNav',
 		function($scope,  $state, $stateParams, Auth, $translate, $mdSidenav, $mdMedia,ssSideNav) {
+			$scope.mdMedia = $mdMedia;
 			$scope.hasRole = Auth.hasRole;
 			$scope.state = $state;
 			$scope.mdSidenav = $mdSidenav;

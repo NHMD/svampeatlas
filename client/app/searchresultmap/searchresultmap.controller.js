@@ -1,54 +1,15 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchResultMapCtrl', ['$scope', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state', 'ErrorHandlingService',
-		function($scope, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService) {
-			$scope.appConstants = appConstants;
-			$scope.search = ObservationSearchService.getSearch();
-			if (_.isEmpty($scope.search)) {
-				$state.go('search')
-			}
-			var geometry = $scope.search.geometry;
-
-			// if we came directly from the list table view, remove images and forum from include
-			$scope.search.include = $scope.search.include.slice(0,3);
-
-			$scope.search.include.push({
-				model: "ObservationImage",
-				as: 'Images',
-				offset: 0,
-				limit: 1
-
-			});
-			$scope.queryinclude = _.map($scope.search.include, function(n) {
-
-				if (n.model === "DeterminationView") {
-					n.attributes = ['Taxon_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Determination_validation'];
-				}
-				if (n.model === "Locality") {
-					n.attributes = ['name'];
-				}
-				if (n.model === "User") {
-					n.attributes = ['name'];
-				}
-				return JSON.stringify(n);
-			});
-			var query = {
-
-				where: $scope.search.where || {},
-				include: JSON.stringify($scope.queryinclude)
-			};
-
-			if (geometry) {
-				query.geometry = geometry;
-			}
-
-
+	.controller('SearchResultMapCtrl', ['$scope', '$compile', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state', 'ErrorHandlingService','ObservationModalService', '$mdMedia',
+		function($scope, $compile, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService, ObservationModalService, $mdMedia) {
+			console.log("md media "+$mdMedia('sm'))
+			var zoom = ($mdMedia('sm')) ? 5 :7;
 			$scope.mapsettings = {
 				center: {
 					lat: 56,
 					lng: 11.5,
-					zoom: 7
+					zoom: zoom
 				},
 				drawControl: true,
 				markers: {},
@@ -123,82 +84,89 @@ angular.module('svampeatlasApp')
 					}
 				}
 			};
-			/*		
-	var		options = {
-			    topo_25: {
-			        layers: "topo25_klassisk",
-			        servicename: "topo25",
-			        nickname: "topo_25"
-			    },
+			
+			
+			$scope.appConstants = appConstants;
+			$scope.search = ObservationSearchService.getSearch();
+			$scope.ObservationModalService = ObservationModalService;
+			if (_.isEmpty($scope.search)) {
+				$state.go('search')
+			}
+			var geometry = $scope.search.geometry;
 
-			    topo_historisk_1842_1899: {
-			        layers: "dtk_hoeje_maalebordsblade",
-			        servicename: "topo20_hoeje_maalebordsblade",
-			        nickname: "topo_historisk_1842_1899"
-			    },
-			    topo_historisk_1928_1940: {
-			        layers: "dtk_lave_maalebordsblade",
-			        servicename: "topo20_lave_maalebordsblade",
-			        nickname: "topo_historisk_1928_1940"
-			    },
-			    luftfoto: {
-			        layers: "orto_foraar",
-			        servicename: "orto_foraar",
-			        nickname: "luftfoto"
-			    }
+			// if we came directly from the list table view, remove images and forum from include
+			$scope.search.include = $scope.search.include.slice(0,3);
+
+			$scope.search.include.push({
+				model: "ObservationImage",
+				as: 'Images',
+				offset: 0,
+				limit: 1
+
+			});
+			$scope.queryinclude = _.map($scope.search.include, function(n) {
+
+				if (n.model === "DeterminationView") {
+					n.attributes = ['Taxon_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Determination_validation'];
+				}
+				if (n.model === "Locality") {
+					n.attributes = ['name'];
+				}
+				if (n.model === "User") {
+					n.attributes = ['name'];
+				}
+				return JSON.stringify(n);
+			});
+			var query = {
+
+				where: $scope.search.where || {},
+				include: JSON.stringify($scope.queryinclude)
 			};
-			
-			
-	var	    baseLayers = {
-		               topo_25: L.tileLayer.wms("http://kortforsyningen.kms.dk/topo_skaermkort", $.extend({}, r, options.topo_25)),
-		             
-		               topo_historisk_1842_1899: L.tileLayer.wms("http://kortforsyningen.kms.dk/topo_skaermkort", $.extend({}, r, options.topo_historisk_1842_1899)),
-		               topo_historisk_1928_1940: L.tileLayer.wms("http://kortforsyningen.kms.dk/topo_skaermkort", $.extend({}, r, options.topo_historisk_1928_1940)),
 
-		               luftfoto: L.tileLayer.wms("http://kortforsyningen.kms.dk/topo_skaermkort", $.extend({}, r, options.luftfoto))
-		           }
-			
-			*/
-
-			var leafletView = new PruneClusterForLeaflet(50);
-
-
-			$scope.getMarker = function(observation) {
-				/*
-				$scope.mapsettings.markers[observation._id] = {
-                lat: observation.decimalLatitude,
-                lng: observation.decimalLongitude,
-                
-                draggable: false,
-				
-				observation: observation
-            } */
-
-
-				leafletView.RegisterMarker(new PruneCluster.Marker(observation.decimalLatitude, observation.decimalLongitude, {
-					observation: observation
-				}));
+			if (geometry) {
+				query.geometry = geometry;
 			}
 
 
 
-			leafletView.PrepareLeafletMarker = function(marker, data) {
+
+
+			$scope.leafletView = new PruneClusterForLeaflet(50);
+			
+				
+			
+
+			$scope.getMarker = function(observation) {
+
+				$scope.leafletView.RegisterMarker(new PruneCluster.Marker(observation.decimalLatitude, observation.decimalLongitude, {
+					observation: observation
+				}));
+			}
+
+			
+
+			$scope.leafletView.PrepareLeafletMarker = function(marker, data) {
+				
 				var observation = data.observation;
-				var message = "";
+				var message = "<div layout='column'>";
 				if (observation.Images && observation.Images.length > 0) {
 
-					message += "<img src='" + $scope.appConstants.imageurl + observation.Images[0].name + ".jpg' width='200px'  ><br>";
+					message += "<div width='301px'><img src='" + $scope.appConstants.imageurl + observation.Images[0].name + ".jpg' width='300px'  ></div>";
 				}
 				if (observation.DeterminationView.Taxon_vernacularname_dk) {
-					message += "<strong>" + observation.DeterminationView.Taxon_vernacularname_dk + "</strong> (<em>" + observation.DeterminationView.Taxon_FullName + "</em>)";
+					message += "<span><strong>" + observation.DeterminationView.Taxon_vernacularname_dk + "</strong> (<em>" + observation.DeterminationView.Taxon_FullName + "</em>)</span>";
 				} else {
 					message += "<strong><em>" + observation.DeterminationView.Taxon_FullName + "</em></strong>";
 				}
-				message += "<br>";
-				if (observation.Locality) {
-					message += observation.Locality.name + ", ";
+				
+				if (observation.Locality && observation.Locality.name) {
+					message += "<span>"+observation.Locality.name + ", " +moment(observation.observationDate).format('DD/MM/YYYY') +"</span>";
+				} else {
+					message += "<span>"+moment(observation.observationDate).format('DD/MM/YYYY') +"</span>";
 				}
-				message += moment(observation.observationDate).format('DD/MM/YYYY') + "<br>" + observation.PrimaryUser.name;
+				message += "<span>"+observation.PrimaryUser.name+"</span>";
+				message += '<md-button class="md-raised"  ng-click="ObservationModalService.show($event, '+observation._id+')"> <span layout-fill>Vis mere</span> <ng-md-icon icon="arrow_forward" ></ng-md-icon></md-button>'
+			message += "</div>";
 				var iconOptions = {
 					prefix: 'fa',
 					icon: 'circle'
@@ -219,13 +187,17 @@ angular.module('svampeatlasApp')
 				}
 
 				marker.setIcon(L.AwesomeMarkers.icon(iconOptions));
-
+				
+				var compiled = $compile(message)($scope);
+				
 				if (marker.getPopup()) {
-					marker.setPopupContent(message);
+					marker.setPopupContent(compiled[0]);
 				} else {
-					marker.bindPopup(message);
+					marker.bindPopup(compiled[0]);
 				}
 			};
+			
+			
 			//$scope.data = [];
 			
 			$scope.fetchPage = function(map){
@@ -239,16 +211,19 @@ angular.module('svampeatlasApp')
 					$scope.offset = parseInt(headers('offset')) + 10000;
 					//$scope.data.concat(data);
 
+					
+						for (var i = 0; i < data.length; i++) {
+							$scope.getMarker(data[i])
+							$scope.leafletView.ProcessView();
+						};
 
-					for (var i = 0; i < data.length; i++) {
-						$scope.getMarker(data[i])
-					};
-
-					//map.fitBounds($scope.mapsettings.markers.getBounds(), { padding: [20, 20] });
-					map.spin(false);
-				//	map.addLayer(leafletView);
+						//map.fitBounds($scope.mapsettings.markers.getBounds(), { padding: [20, 20] });
+						map.spin(false);
+					//	map.addLayer($scope.leafletView);
+					
+						
 				
-					leafletView.ProcessView();
+					
 									
 				
 				}, function(err, headers) {
@@ -256,58 +231,44 @@ angular.module('svampeatlasApp')
 					ErrorHandlingService.handle500();
 					//map.fitBounds($scope.mapsettings.markers.getBounds(), { padding: [20, 20] });
 					
-					//map.addLayer(leafletView);
+					//map.addLayer($scope.leafletView);
 				}).$promise;
 				
 			};
 			
-
+			$scope.$on('leafletDirectiveMap.layeradd', function(e, args) {
+				
+				console.log(args)
+			})
 			
-			leafletData.getMap().then(function(map) {
+			$scope.$on('leafletDirectiveMap.layerremove', function(e, args) {
+				console.log(args)
+			})
+			
+			leafletData.getMap("searchresultmap").then(function(map) {
+				$timeout(function() {
+					map.invalidateSize();
+				});
 				$scope.offset = 0;
 				
-				map.addLayer(leafletView);
+				map.addLayer($scope.leafletView);	
+						
+					
+				
 				$scope.$watch('offset', function(newVal, oldVal){
-						var max = ($scope.count !== undefined) ? Math.min(100000, $scope.count) : 100000;
+						var max = ($scope.count !== undefined) ? Math.min(50000, $scope.count) : 50000;
 					if(newVal !== undefined && newVal < max){
 						$scope.fetchPage(map);
 					} else {
 					//	map.spin(false);
-						//map.addLayer(leafletView);
+						//map.addLayer($scope.leafletView);
 					}
 				})
 				
 
 
-				$scope.$on('leafletDirectiveMarker.click', function(e, args) {
-					var observation = args.model.observation;
-					var message = "";
-					if (observation.Images && observation.Images.length > 0) {
-
-						message += "<img ng-src='" + $scope.appConstants.imageurl + observation.Images[0].name + ".jpg' width='200px'  ><br>";
-					}
-					if (observation.DeterminationView.Taxon_vernacularname_dk) {
-						message += "<strong>" + observation.DeterminationView.Taxon_vernacularname_dk + "</strong> (<em>" + observation.DeterminationView.Taxon_FullName + "</em>)";
-					} else {
-						message += "<strong><em>" + observation.DeterminationView.Taxon_FullName + "</em></strong>";
-					}
-					message += "<br>";
-					if (observation.Locality) {
-						message += observation.Locality.name + ", ";
-					}
-					message += moment(observation.observationDate).format('DD/MM/YYYY') + "<br>" + observation.PrimaryUser.name;
-
-					$scope.mapsettings.markers[observation._id].message = message;
-					$scope.mapsettings.markers[observation._id].getMessageScope = function() {
-						return $scope;
-					};
-					$scope.mapsettings.markers[observation._id].compileMessage = true;
-					$scope.mapsettings.markers[observation._id].focus = true;
-
-				});
-
 			})
 
-
+		
 		}
 	]);

@@ -43,7 +43,7 @@ angular.module('svampeatlasApp')
 		  'Epithet' : 'Epitet',
 		  'Taxon rank' : 'Taxon-rang',
 		  'Taxon rank:': 'Taxon-rang:',
-		  'Present in DK': 'Tilstede i DK',
+		  'Present in DK': 'Til stede i DK',
 		  'DK name:' : 'Dansk navn:',
 		  'Maps, graphs from atlas': 'Kort og grafer fra atlas',
 		  'Similar species' : 'Lignende arter',

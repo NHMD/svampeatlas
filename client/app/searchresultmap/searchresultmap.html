@@ -1,22 +1,22 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
  <md-toolbar md-scroll-shrink ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
-	<md-toolbar class="md-warn" ng-show="count > 100000" >
-	    <div class="md-toolbar-tools" >
-			<div layout="column">
-	      <h2 class="md-title">Din søgning gav {{count}} resultater, kun de første 100000 vises på kortet.</h2>
-		 <h2 class="md-subhead">Prøv evt. at afgrænse din søgning yderligere.</h2>
-	 </div>
-	    </div>
-	   
-		
-	  </md-toolbar>
-<md-content flex md-scroll-y layout-padding>
 
-	<div width="700px" height="600px"><leaflet width="700px" height="600px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet> </div>
+<md-content flex md-scroll-y layout-padding ng-cloak>
+
+<md-whiteframe class="md-whiteframe-2dp" layout="column" layout-align="center center">
+<div layout-align="end center" layout-fill layout="row">
+	<p ng-show="offset === 0 || (offset < count)">Henter <span ng-if="offset ===0">data...</span>
+		<span ng-if="offset > 0">{{offset + 1}}-{{((offset+limit) > count  ) ? count : (offset+limit)}} af {{count}}</span></p>
+	<div ng-show="(offset > count)">
+	 <p>Din søgning gav {{count}} resultater</p>
+	 <p ng-show="count > 50000" class="md-subhead">Kun de første 50000 vises på kortet, prøv evt. at afgrænse din søgning yderligere.</p>
+ </div>
+</div>
+ <leaflet id="searchresultmap" height="600px" width="100%" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
+ 
+  </md-whiteframe>
+	
 	
   </md-content>
-<div>
-	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
-	        
-	      </div>
+
 </div>
