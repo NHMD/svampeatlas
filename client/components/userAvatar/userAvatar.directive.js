@@ -5,21 +5,36 @@ angular
 .directive('userAvatar', ["avatarService", function (avatarService) {
 	var controller = function ($scope) {
 		$scope.ImageAvailable = false;
-		if ($scope.User.facebook === null || $scope.User.facebook == undefined) {
-			$scope.GenericAvatar = avatarService.getAvatar($scope.User);
+		if($scope.User.hasOwnProperty('$promise')){
+			$scope.User.$promise.then(function(User){
+				if (User.facebook === null || User.facebook == undefined) {
+					$scope.GenericAvatar = avatarService.getAvatar(User);
+				} else {
+					$scope.ImageAvailable = true;
+				}
+			})
 		} else {
-			$scope.ImageAvailable = true;
+			if ($scope.User.facebook === null || $scope.User.facebook == undefined) {
+				$scope.GenericAvatar = avatarService.getAvatar($scope.User);
+			} else {
+				$scope.ImageAvailable = true;
+			}
 		}
+		
+		
 	};
+	
+	
 	return {
 		
 		scope: {
-			User: '=user'
+			User: '=user',
+			size: '=size'
 		},
-		template: '<div class="generic-avatar">'+
-		'<a class="thumb spacer animated fadeIn color" style="background-color:{{GenericAvatar.Background}}"></a>'+
-		'<p class="name">{{GenericAvatar.Initials}}</p>' +
-		'<a class="img" data-ng-if="ImageAvailable" style="background-image:url(http://graph.facebook.com/{{User.facebook}}/picture?width=200&height=200)"></a>' +
+		template: '<div ng-class="size===\'large\' ? \'generic-avatar-large\' : \'generic-avatar-small\'">'+
+		'<a class="thumb spacer animated fadeIn" ng-class="size===\'large\' ? \'color-large\' : \'color-small\'" style="background-color:{{GenericAvatar.Background}}"></a>'+
+		'<p ng-class="size===\'large\' ? \'name-large\' : \'name-small\'">{{GenericAvatar.Initials}}</p>' +
+		'<a ng-class="size===\'large\' ? \'img-large\' : \'img-small\'" data-ng-if="ImageAvailable" style="background-image:url(http://graph.facebook.com/{{User.facebook}}/picture?width=200&height=200)"></a>' +
 		'</div>',
 		controller: controller
 	};

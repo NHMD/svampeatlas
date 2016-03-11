@@ -3,6 +3,7 @@
 angular.module('svampeatlasApp')
 	.controller('SearchTabsCtrl', ['$scope',  '$state','$stateParams', 'Auth', '$translate', '$mdSidenav','$mdMedia','ssSideNav',
 		function($scope,  $state, $stateParams, Auth, $translate, $mdSidenav, $mdMedia,ssSideNav) {
+			$scope.mdMedia = $mdMedia;
 			$scope.hasRole = Auth.hasRole;
 			$scope.state = $state;
 			$scope.mdSidenav = $mdSidenav;
@@ -16,9 +17,9 @@ angular.module('svampeatlasApp')
 	
 			$scope.tabs = [
 
-				{ title:'Søgeformular', state: 'search'},
-				{ title:'Resultat i liste',  state: 'search-list'},
-				{ title:'Resultat på kort',  state: 'search-map'}
+				{ title:'Søgeformular', state: 'search', icon: 'search'},
+				{ title:'Resultat i liste',  state: 'search-list', icon: 'list'},
+				{ title:'Resultat på kort',  state: 'search-map', icon: 'map'}
 			  ];
 			  
   			$scope.states = 

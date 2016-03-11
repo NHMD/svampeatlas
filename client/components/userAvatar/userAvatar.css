@@ -2,35 +2,69 @@
 .useravatar{
  margin-bottom: 5px; 
 }
-.generic-avatar {
-	width: 38px;
-	height: 38px;
-	border-radius: 38px;
+.generic-avatar-small {
+	width: 40px;
+	height: 40px;
+	border-radius: 40px;
 	background: transparent;
 	box-shadow: none;
 	position: relative;
 }
-.color {
+.color-small {
   display:block;
 	background: transparent;
 	border-radius: 40px;
 	height: 40px;
 }
-.name {
+.name-small {
 	position: absolute;
 	color: #fff;
 	font-weight: normal;
 	font-size: 14px;
 	top: 10px;
-	min-width: 38px;
+	min-width: 40px;
 	text-align: center;
 }
-.img {
+.img-small {
 	top: 1px;
 	width: 40px;
 	height: 40px;
 	background-size: contain;
 	border-radius: 40px;
+	position: absolute;
+	
+}
+
+
+.generic-avatar-large {
+	width: 60px;
+	height: 60px;
+	border-radius: 60px;
+	background: transparent;
+	box-shadow: none;
+	position: relative;
+}
+.color-large {
+  display:block;
+	background: transparent;
+	border-radius: 60px;
+	height: 60px;
+}
+.name-large {
+	position: absolute;
+	color: #fff;
+	font-weight: normal;
+	font-size: 14px;
+	top: 10px;
+	min-width: 60px;
+	text-align: center;
+}
+.img-large {
+	top: 1px;
+	width: 60px;
+	height: 60px;
+	background-size: contain;
+	border-radius: 60px;
 	position: absolute;
 	
 }

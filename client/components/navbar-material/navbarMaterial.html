@@ -6,7 +6,7 @@
         <span flex></span>
         <div layout="column" class="md-toolbar-tools-bottom inset">
 			<div layout="row" >
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg ng-if="!isLoggedIn()" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="64px" height="67.5px" viewBox="32 33.75 64 67.5" enable-background="new 32 33.75 64 67.5" xml:space="preserve">
 <g>
 	<g>
@@ -80,6 +80,7 @@
 	s11.212,0.636,11.212-0.114S85.5,46.213,81.75,43.213s-12.875-4.129-14.25-4.754c-1.336-0.607-2.082-2.631-2.926-2.631
 	C64.549,35.829,64.524,35.829,64.5,35.833"/>
 </svg>
+<user-avatar class="useravatar md-avatar" size="'large'" user="User" ng-if="isLoggedIn()"></user-avatar>
  <span class="flex"></span>
  <div layout="row" layout-fill  layout-align="end start" flex>
 <a  ng-click="forceCloseSidenav()" class="hide-sidenav-btn"><i class="fa fa-angle-double-left fa-2x"></i></a>

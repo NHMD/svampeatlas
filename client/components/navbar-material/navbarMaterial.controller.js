@@ -2,9 +2,11 @@
 
 angular.module('svampeatlasApp')
   .controller('NavbarMaterialCtrl', function ($scope, Auth, User, $state, $translate, $cookies, $mdBottomSheet,$mdSidenav, ssSideNav,ssSideNavSharedService,$rootScope, $mdDialog, $mdMedia) {
-	
+      $scope.isLoggedIn = Auth.isLoggedIn;
+      $scope.hasRole = Auth.hasRole;
+      $scope.getCurrentUser = Auth.getCurrentUser;
 	  $scope.mdMedia = $mdMedia;
-
+	  $scope.User = Auth.getCurrentUser();
 	              $scope.menu = ssSideNav;
 				
 
@@ -22,23 +24,28 @@ angular.module('svampeatlasApp')
 				  };
 				  
 	$scope.languages = [{"value":"dk","label":"<img src=\"assets/images/flags/flags/shiny/16/Denmark.png\" >"},{"value":"en","label":"<img src=\"assets/images/flags/flags/shiny/16/United-Kingdom.png\">"}];
-	
 	Auth.getCurrentUser(function(usr){
 		
-		$scope.preferred_language = (usr) ? usr.preferred_language : $cookies.get("preferred_language");
-		if(Auth.hasRole('taxonomyadmin')){
-			ssSideNav.setVisible('TaxonBase', true);
-		}
-		if(Auth.hasRole('useradmin')){
-			ssSideNav.setVisible('UserAdmin', true);
-		}
+			
 		
-		if(!usr){
-			ssSideNav.setVisible('Logout', false);
-		}
+			$scope.preferred_language = (usr) ? usr.preferred_language : $cookies.get("preferred_language");
+			if(Auth.hasRole('taxonomyadmin')){
+				ssSideNav.setVisible('TaxonBase', true);
+			}
+			if(Auth.hasRole('useradmin')){
+				ssSideNav.setVisible('UserAdmin', true);
+			}
+		
+			if(!usr){
+				ssSideNav.setVisible('Logout', false);
+			}
+		})
+	
+	
+	
+	$rootScope.$on('logged_in', function(ev, usr){
+		$scope.User = usr;
 	})
-	
-	
 	
 	$scope.preferred_language = $cookies.get('preferred_language') || 'dk';
 
@@ -61,9 +68,7 @@ angular.module('svampeatlasApp')
 		}
 	});
     
-    $scope.isLoggedIn = Auth.isLoggedIn;
-    $scope.hasRole = Auth.hasRole;
-    $scope.getCurrentUser = Auth.getCurrentUser;
+    
 	
 	
 });	

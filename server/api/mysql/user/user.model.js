@@ -73,7 +73,7 @@ module.exports = function(sequelize, DataTypes) {
 			'provider': this.provider,
 			'name': this.name,
 			'Roles': this.Roles,
-			'fb': this.facebook !== null,
+			'facebook': this.facebook,
 			'preferred_language': this.preferred_language
 		};
 	},

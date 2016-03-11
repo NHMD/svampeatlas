@@ -5,7 +5,7 @@
           <md-button class="md-icon-button" ng-click="cancel()">
             <ng-md-icon icon="arrow_back" aria-label="Close dialog"></ng-md-icon>
           </md-button>
-        <h2>Danmarks Svampeatlas observations-ID: {{obs._id}}</h2>
+        <h2>ID: {{obs.PrimaryUser.Initialer}}{{(obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : ''}}-{{obs._id}}</h2>
         <span flex></span>
         
       </div>
@@ -17,19 +17,122 @@
 	 <md-tabs md-dynamic-height md-border-bottom  ng-if="!$mdMedia('gt-sm')">
 	        <md-tab label="Fundoplysninger">
 	          <md-content class="md-padding">
-	            <span class="md-headline">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? "(" : ""}}<em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}{{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? ")": ""}}</span>
+			  <div layout="column" class="inset">
+	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+				<span ng-class="{{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-sunhead':'md-headline'}}"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
 	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
-	            <div ng-include="'app/observationmodal/fundoplysninger.tpl.html'"></div>
+		  </div>
+	   	     <md-list>
+	  		 
+	   	       <md-list-item class="md-2-line md-long-text">
+	   	         <div class="md-list-item-text">	  				
+	   	           <h3>Finder</span></h3>
+	  			   <p>{{obs.PrimaryUser.name}} ({{obs.PrimaryUser.Initialer}})</p>
+	   	         </div>
+	  			   <md-divider  ng-if="!$last"></md-divider>                        
+	   	       </md-list-item>
+   	       <md-list-item class="md-2-line md-long-text">
+   	         <div class="md-list-item-text">	  				
+   	           <h3>Bestemmer</span></h3>
+  			   <p ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</p>
+   	         </div>
+  			   <md-divider  ng-if="!$last"></md-divider>                        
+   	       </md-list-item>
+   	       <md-list-item class="md-2-line md-long-text">
+   	         <div class="md-list-item-text">	  				
+   	           <h3>Lokalitet</span></h3>
+  			   <p>{{obs.Locality.name}}</p>
+   	         </div>
+  			   <md-divider  ng-if="!$last"></md-divider>                        
+   	       </md-list-item>
+    	       <md-list-item class="md-2-line md-long-text">
+    	         <div class="md-list-item-text">	  				
+    	           <h3>Dato</span></h3>
+   			   <p>{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}</p>
+    	         </div>
+   			   <md-divider  ng-if="!$last"></md-divider>                        
+    	       </md-list-item>
+    	       <md-list-item class="md-2-line md-long-text">
+    	         <div class="md-list-item-text">	  				
+    	           <h3>Vært/mykorrhizapartner</span></h3>
+   			   <p><span ng-repeat="tx in obs.associatedTaxa"> {{tx.DKandLatinName}}<span ng-if="!$last">, </span> </span></p>
+    	         </div>
+   			   <md-divider  ng-if="!$last"></md-divider>                        
+    	       </md-list-item>
+	   	       <md-list-item class="md-2-line md-long-text">
+	   	         <div class="md-list-item-text">	  				
+	   	           <h3>Substrat</span></h3>
+	  			   <p>{{obs.Substrate.name}}</p>
+	   	         </div>
+	  			   <md-divider  ng-if="!$last"></md-divider>                        
+	   	       </md-list-item>
+	   	       <md-list-item class="md-2-line md-long-text">
+	   	         <div class="md-list-item-text">	  				
+	   	           <h3>Vegetationstype</span></h3>
+	  			   <p>{{obs.VegetationType.name}}</p>
+	   	         </div>
+	  			   <md-divider  ng-if="!$last"></md-divider>                        
+	   	       </md-list-item>
+	   	       <md-list-item class="md-2-line md-long-text">
+	   	         <div class="md-list-item-text">	  				
+	   	           <h3>Kollektionsnummer</span></h3>
+	  			   <p>{{obs.fieldNumber}}</p>
+	   	         </div>
+	  			   <md-divider  ng-if="!$last"></md-divider>                        
+	   	       </md-list-item>
+	   	       <md-list-item class="md-2-line md-long-text">
+	   	         <div class="md-list-item-text">	  				
+	   	           <h3>Herbarium</span></h3>
+	  			   <p>{{obs.herbarium}}</p>
+	   	         </div>
+	  			   <md-divider  ng-if="!$last"></md-divider>                        
+	   	       </md-list-item>
+	   	       <md-list-item class="md-2-line md-long-text">
+	   	         <div class="md-list-item-text">	  				
+	   	           <h3>Økologi-kommentarer</span></h3>
+	  			   <p>{{obs.ecologynote}}</p>
+	   	         </div>
+	  			   <md-divider  ng-if="!$last"></md-divider>                        
+	   	       </md-list-item>
+	   	       <md-list-item class="md-2-line md-long-text">
+	   	         <div class="md-list-item-text">	  				
+	   	           <h3>Bemærkninger</span></h3>
+	  			   <p>{{obs.note}}</p>
+	   	         </div>
+	  			   <md-divider  ng-if="!$last"></md-divider>                        
+	   	       </md-list-item>
+        </md-list>
+		   	     <md-list>
+		  		 <md-subheader class="md-no-sticky">Kommentarer</md-subheader>
+		   	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in forum">
+		   
+		  		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
+	   
+		   	         <div class="md-list-item-text">
+		  				 <div layout="row" flex>
+		   	           <h3><span ng-show="elm.user_id !== null">{{elm.User.name}}</span></h3>
+		  			   <p class="layout-fill layout-align-end-start layout-row flex">{{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</p>
+		  		   </div>
+		  			   <p>{{elm.content}}</p>
+ 	           
+          
+		   	         </div>
+ 	        
+			 
+		  			   <md-divider class="forum-divider" ng-if="!$last"></md-divider>                        
+		   	       </md-list-item>
+		   	     </md-list>
 	          </md-content>
 	        </md-tab>
 	        <md-tab label="Kort">
 	          <md-content class="md-padding">
-	             <leaflet width="100%" height="250px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
+	             <leaflet id="observationdetailmap" width="100%" height="350px" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
+				 <md-subheader class="md-no-sticky">Præcision: {{obs.accuracy}} m</md-subheader>
 	          </md-content>
 	        </md-tab>
-	        <md-tab label="Billeder">
+	        <md-tab label="Billeder ({{obs.Images.length}})">
 	          <md-content class="md-padding">
 		      <md-grid-list
 		            md-cols="1" 
@@ -43,26 +146,86 @@
 	          </md-content>
 	        </md-tab>
 	      </md-tabs>
- <div md-dynamic-height md-border-bottom  ng-if="$mdMedia('gt-sm')" layout="row" flex>
-    <md-card flex="60" layout-fill>
+ <div md-dynamic-height md-border-bottom  ng-if="$mdMedia('gt-sm')" layout="row" layout-align="center start" flex>
+    <md-card flex="60">
      
       <md-card-title>
         <md-card-title-text >
 		 
-          <span class="md-headline">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? "(" : ""}}<em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}{{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? ")": ""}}</span>
+          <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+		  <span ng-class="{{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-sunhead':'md-headline'}}"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
 		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
 		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
         </md-card-title-text>
       </md-card-title >
-      <md-card-content ng-include="'app/observationmodal/fundoplysninger.tpl.html'">
+      <md-card-content>
+	  <table  class="table table-bordered observation-detail" st-table>
+	
+	  	<tbody >
+	  	<tr >
+	  		<td class="rightalign"><strong>Finder:</strong></td><td >{{obs.PrimaryUser.name}} ({{obs.PrimaryUser.Initialer}})</td>
+			<td class="rightalign"><strong>Bestemmer:</strong></td><td ><span ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</span></td>
+		</tr >
+	  	<tr >
+	  		<td class="rightalign"><strong>Lokalitet:</strong></td><td>{{obs.Locality.name}} </td> 
+			<td class="rightalign"><strong>Dato:</strong></td><td >{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}</td>
+		</tr >
+	  	<tr >
+	  		<td class="rightalign"><strong>Vært/mykorrhizapartner:</strong></td><td colspan="3"><span ng-repeat="tx in obs.associatedTaxa"> {{tx.DKandLatinName}}<span ng-if="!$last">, </span> </span></td> 
+			
+		</tr >
+	  	<tr >
+			<td class="rightalign"><strong>Substrat:</strong></td><td >{{obs.Substrate.name}}</td>
+	  		<td class="rightalign"><strong>Vegetationstype:</strong></td><td>{{obs.VegetationType.name}}</td> 
+			
+		</tr >
+	  	<tr >
+			<td class="rightalign"><strong>Kollektionsnummer:</strong></td><td >{{obs.fieldNumber}}</td>
+	  		<td class="rightalign"><strong>Herbarium:</strong></td><td>{{obs.herbarium}}</td> 
+			
+		</tr >
+	  	<tr >
+			<td class="rightalign"><strong>Økologi-kommentarer:</strong></td><td colspan="3">{{obs.ecologynote}}</td>
+	  		
+			
+		</tr >	
+	  	<tr >
+			<td class="rightalign"><strong>Bemærkninger:</strong></td><td colspan="3">{{obs.note}}</td>
+	  		
+			
+		</tr >	
+	  	</tbody>
+	  </table>
+        
+ 	     <md-list>
+		 <md-subheader class="md-no-sticky">Kommentarer</md-subheader>
+ 	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in forum">
+		   
+		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
+	   
+ 	         <div class="md-list-item-text">
+				 <div layout="row" flex>
+ 	           <h3><span ng-show="elm.user_id !== null">{{elm.User.name}}</span></h3>
+			   <p class="layout-fill layout-align-end-start layout-row flex">{{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</p>
+		   </div>
+			   <p>{{elm.content}}</p>
+ 	           
+          
+ 	         </div>
+ 	        
+			 
+			   <md-divider class="forum-divider" ng-if="!$last"></md-divider>                        
+ 	       </md-list-item>
+ 	     </md-list>
 
       </md-card-content>
      
     </md-card>
 	
 	 <md-card flex="40" layout-padding>
-	 <leaflet width="100%" height="250px" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
+	 <leaflet id="observationdetailmap" width="100%" height="250px" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
+	  <md-subheader class="md-no-sticky">Præcision: {{obs.accuracy}} m</md-subheader>
 	 
 	 
      <md-grid-list
