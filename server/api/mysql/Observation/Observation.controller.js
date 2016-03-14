@@ -194,9 +194,12 @@ function activeThreads(user){
 	
 	return models.sequelize.query(
 		'select distinct o.observation_id from ObservationForum o JOIN'
-		+'(SELECT observation_id, user_id, createdAt FROM ObservationForum WHERE user_id = :userid group by observation_id) a JOIN' 
-		+'(SELECT * FROM (SELECT * FROM ObservationForum ORDER BY createdAt DESC) AS s GROUP BY observation_id) b '
-		+'ON o.observation_id= a.observation_id AND a.user_id <> b.user_id AND b.observation_id = a.observation_id',
+		+' (SELECT observation_id, user_id, createdAt FROM ObservationForum WHERE user_id = :userid group by observation_id) a JOIN' 
+		+' (SELECT s1.observation_id, s1.user_id, s1.createdAt'
++' FROM ObservationForum s1'
++' LEFT JOIN ObservationForum s2 ON s1.observation_id = s2.observation_id AND s1.createdAt < s2.createdAt'
++' WHERE s2.observation_id IS NULL) b'
+		+' ON o.observation_id= a.observation_id AND a.user_id <> b.user_id AND b.observation_id = a.observation_id',
   { replacements: { userid: user._id }, type: models.sequelize.QueryTypes.SELECT }
 ).then(function(observationids) {
 	
