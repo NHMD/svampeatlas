@@ -3,7 +3,7 @@
 
 
 
-      <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-class="{'position-fixed': mdMedia('max-width: 768px') }">
+      <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" >
         <div class="md-toolbar-tools">
           <md-button ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
             <ng-md-icon icon="menu"></ng-md-icon>
@@ -16,7 +16,7 @@
 
       </md-toolbar>	
 	
-<md-content layout="column" md-scroll-y layout-align="center center" flex>
+<md-content layout="column" md-scroll-y  flex>
 <div layout="row" layout-xs="column" layout-sm="column" flex>
 <md-grid-list
         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
