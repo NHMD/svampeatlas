@@ -69,7 +69,7 @@ function removeEntity(res) {
 
 // Get list of Observations
 exports.index = function(req, res) {
-
+	
 	if(!req.query.limit){
 		req.query.limit = 20000;
 	}
@@ -84,8 +84,7 @@ exports.index = function(req, res) {
 	if(req.query.order) {
 		query.order = req.query.order;
 	}
-// 'POLYGON((11.7626589397457 55.5119544279369,11.7631613453886 55.5191206803667,11.7869689746192 55.5185809756286,11.7864622538095 55.5114148669722,11.7626589397457 55.5119544279369))'
-//	console.log(req.query.geometry)
+
 	if(req.query.geometry){
 		query.where = models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))
 	}
@@ -138,10 +137,23 @@ exports.index = function(req, res) {
 
 		] 
 	}
-
+	var activeThreadsPromise;
+	if(req.user && Boolean(req.query.activeThreadsOnly) ){
+		
+		activeThreadsPromise = activeThreads(req.user)
+	} else {
+		activeThreadsPromise = Promise.resolve(false)
+	}
 	console.log(query);
 	if(query.group === undefined){
-	Observation.findAndCount(query)
+	activeThreadsPromise.then(function(observationids){
+		if(observationids !== false){
+			query.where._id = { $in: observationids}
+		};
+		
+		return Observation.findAndCount(query)
+	})
+	
 		.then(function(taxon) {
 			res.set('count', taxon.count);
 			if (req.query.offset !== undefined) {
@@ -154,7 +166,13 @@ exports.index = function(req, res) {
 		})
 		.catch (handleError(res));
 	} else {
-	Observation.findAll(query)
+		activeThreadsPromise.then(function(observationids){
+			if(observationids !== false){
+				query.where._id = { $in: observationids}
+			};
+			return Observation.findAll(query)
+		})
+	
 		.then(function(taxon) {
 			
 			if (req.query.offset !== undefined) {
@@ -171,6 +189,23 @@ exports.index = function(req, res) {
 
 
 };
+
+function activeThreads(user){
+	
+	return models.sequelize.query(
+		'select distinct o.observation_id from ObservationForum o JOIN'
+		+'(SELECT observation_id, user_id, createdAt FROM ObservationForum WHERE user_id = :userid group by observation_id) a JOIN' 
+		+'(SELECT * FROM (SELECT * FROM ObservationForum ORDER BY createdAt DESC) AS s GROUP BY observation_id) b '
+		+'ON o.observation_id= a.observation_id AND a.user_id <> b.user_id AND b.observation_id = a.observation_id',
+  { replacements: { userid: user._id }, type: models.sequelize.QueryTypes.SELECT }
+).then(function(observationids) {
+	
+	return _.map(observationids, function(o){
+		return o.observation_id
+	})
+ 
+})
+}
 
 
 // Get a single observation

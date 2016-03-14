@@ -139,6 +139,7 @@ angular.module('svampeatlasApp')
 							order: order || 'observationDate DESC',
 							offset: offset,
 							limit: limit,
+					activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,
 							 where: ObservationSearchService.getSearch().where || {},
 							 include: JSON.stringify($scope.queryinclude)
 						};
