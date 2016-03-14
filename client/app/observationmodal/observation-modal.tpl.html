@@ -19,7 +19,7 @@
 	          <md-content class="md-padding">
 			  <div layout="column" class="inset">
 	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
-				<span ng-class="{{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-sunhead':'md-headline'}}"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
+				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
 	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
@@ -78,7 +78,7 @@
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
 	   	           <h3>Kollektionsnummer</span></h3>
-	  			   <p>{{obs.fieldNumber}}</p>
+	  			   <p>{{obs.fieldnumber}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
@@ -111,9 +111,10 @@
 		  		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
 	   
 		   	         <div class="md-list-item-text">
-		  				 <div layout="row" flex>
+		  				 <div layout-gt-xs="row" flex>
 		   	           <h3><span ng-show="elm.user_id !== null">{{elm.User.name}}</span></h3>
-		  			   <p class="layout-fill layout-align-end-start layout-row flex">{{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</p>
+					   <span ng-if="$mdMedia('gt-xs')" layout-fill flex></span>
+		  			   <p >{{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</p>
 		  		   </div>
 		  			   <p>{{elm.content}}</p>
  	           
@@ -153,7 +154,7 @@
         <md-card-title-text >
 		 
           <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
-		  <span ng-class="{{(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-sunhead':'md-headline'}}"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
+		  <span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
 		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
 		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
@@ -181,7 +182,7 @@
 			
 		</tr >
 	  	<tr >
-			<td class="rightalign"><strong>Kollektionsnummer:</strong></td><td >{{obs.fieldNumber}}</td>
+			<td class="rightalign"><strong>Kollektionsnummer:</strong></td><td >{{obs.fieldnumber}}</td>
 	  		<td class="rightalign"><strong>Herbarium:</strong></td><td>{{obs.herbarium}}</td> 
 			
 		</tr >

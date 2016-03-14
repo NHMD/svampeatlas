@@ -8,9 +8,9 @@ var auth = require('../../../auth/auth.service');
 
 var router = express.Router();
 
-router.get('/', controller.index);
+router.get('/', auth.appendUser(), controller.index);
 
-router.get('/:id', controller.show);
+router.get('/:id', auth.appendUser(), controller.show);
 
 router.get('/:id/forum', forumController.showForumForObs);
 

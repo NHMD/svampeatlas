@@ -1,6 +1,6 @@
       <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-class="{'position-fixed': mdMedia('max-width: 768px') }">
         <div class="md-toolbar-tools">
-          <md-button ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
+          <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
             <ng-md-icon icon="menu"></ng-md-icon>
           </md-button>
 		  <ng-md-icon icon="{{states[state.current.name].icon}}" ></ng-md-icon>
@@ -10,7 +10,7 @@
           </h3>
           <span flex></span>
 		 <span layout-margin ng-if="mdMedia('gt-xs')"> <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>
-		   <a href="/"><img src="assets/images/LogoSmallest.png"></a>
+		   <a href="/"><img  class="logo-upper-right" src="assets/images/LogoSmallest.png"></a>
         </div>
 
       </md-toolbar>

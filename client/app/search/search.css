@@ -2,3 +2,17 @@
 	z-index:1001;
 }
 
+
+@media screen and   (min-width: 960px) {
+  #searchmap-sidenav {
+    width: 500px !important;
+    max-width: 500px !important;
+  }
+}
+
+@media screen and  (min-width: 600px) and  (max-width: 959px) {
+  #searchmap-sidenav {
+    width: 400px !important;
+    max-width: 400px !important;
+  }
+}

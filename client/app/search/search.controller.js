@@ -327,6 +327,12 @@ angular.module('svampeatlasApp')
 				} else {
 					delete $scope.observationSearch.geometry;
 				}
+				
+				if ($scope.search.activeThreadsOnly) {
+					$scope.observationSearch.activeThreadsOnly = $scope.search.activeThreadsOnly;
+				} else {
+					delete $scope.observationSearch.activeThreadsOnly;
+				}
 
 			}, true)
 		}
