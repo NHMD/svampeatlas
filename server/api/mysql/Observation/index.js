@@ -13,6 +13,7 @@ router.get('/', auth.appendUser(), controller.index);
 router.get('/:id', auth.appendUser(), controller.show);
 
 router.get('/:id/forum', forumController.showForumForObs);
+router.post('/:id/forum', auth.isAuthenticated(), forumController.addCommentToObs);
 
 router.post('/', auth.hasRole('taxonomyadmin'), controller.create);
 router.put('/:id',auth.hasRole('taxonomyadmin'),  controller.update);

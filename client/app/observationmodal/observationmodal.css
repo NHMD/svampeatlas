@@ -17,3 +17,11 @@
    	left: 74px;
     width: calc(100% - 74px);
    }
+   
+   .comment-field {
+   	padding: 0px 16px;
+   }
+   
+   .comment-submit {
+   	margin-bottom: 42px;
+   }

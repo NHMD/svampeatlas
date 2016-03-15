@@ -37,6 +37,7 @@ CREATE TABLE ObservationForum (
 	FOREIGN KEY  (user_id) REFERENCES Users (_id)	
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE `ObservationForum` CHANGE `_id` `_id` INT(11) NOT NULL AUTO_INCREMENT;
 -- fix crappy charset
 UPDATE Mikroforum SET Bruger = REPLACE(Bruger, '&#230;', 'æ') WHERE INSTR(Bruger, '&#230;') > 0;
 UPDATE Mikroforum SET Bruger = REPLACE(Bruger, '&#248;', 'ø') WHERE INSTR(Bruger, '&#248;') > 0;
