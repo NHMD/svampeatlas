@@ -192,6 +192,29 @@ exports.showForumForObs = function(req, res) {
 	catch (handleError(res));
 }
 
+exports.addCommentToObs = (req, res) => {
+	var comment = req.body;
+	comment.observation_id = req.params.id;
+	comment.user_id = req.user._id;
+
+ObservationForum.create(comment)
+	.then(function(comment){
+		return ObservationForum.find({
+		where: {
+			_id: comment._id
+		} ,
+		include: [{
+				model: models.User,
+				as: 'User'
+			}]
+	})
+	})
+    .then(function(comment){
+    	return res.status(201).json(comment)
+    })
+    .catch(handleError(res));	
+}
+
 // Creates a new taxon in the DB.
 exports.create = function(req, res) {
 

@@ -308,6 +308,8 @@ angular.module('svampeatlasApp')
 				
 				if ($scope.search.databasenumber) {
 					$scope.observationSearch.where._id = $scope.search.databasenumber.split("-")[1] || $scope.search.databasenumber;
+				} else {
+					delete $scope.observationSearch.where._id;
 				}
 				if ($scope.search.fromDate && $scope.search.toDate) {
 					$scope.observationSearch.where.observationDate = {

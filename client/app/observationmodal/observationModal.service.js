@@ -7,9 +7,24 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'Observation', '$mdMedia', 'leafletData', 'KMS', 'ArcGis', '$timeout',
-							function($scope, $mdDialog, Observation, $mdMedia, leafletData, KMS, ArcGis, $timeout) {
-
+						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation', '$mdMedia', 'leafletData', 'KMS', 'ArcGis', '$timeout',
+							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation, $mdMedia, leafletData, KMS, ArcGis, $timeout) {
+								$scope.User = Auth.getCurrentUser();
+								$scope.isLoggedIn = Auth.isLoggedIn;
+								$scope.postComment = function(newComment){
+									$scope.sendingComment = true;
+									Observation.postComment({id: $scope.obs._id}, {content: newComment})
+									.$promise.then(function(comment){
+										$scope.forum.push(comment);
+										delete $scope.newComment;
+										$scope.sendingComment = false;
+									})
+									.catch(function(err){
+										$scope.sendingComment = false;
+										ErrorHandlingService.handle500();
+									})
+									
+								};
 								$scope.mapsettings = {
 									center: {
 										lat: 56,

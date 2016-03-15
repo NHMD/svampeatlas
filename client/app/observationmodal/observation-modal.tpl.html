@@ -124,6 +124,29 @@
 			 
 		  			   <md-divider class="forum-divider" ng-if="!$last"></md-divider>                        
 		   	       </md-list-item>
+		 	       <md-list-item class="md-3-line md-long-text comment-field" ng-if="isLoggedIn()">
+		   
+				   <user-avatar class="useravatar md-avatar" user="User" ></user-avatar> 
+	   
+		 	         <div class="md-list-item-text">
+				
+							 <div layout="row" layout-align="center end"
+
+flex>
+					   <form layout-fill>
+					   <md-input-container class="md-block">
+					             <label>Skriv kommentar</label>
+					             <textarea ng-model="$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
+					           </md-input-container>
+					   
+						   </form>
+						   <md-button class="comment-submit" ng-show="$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">Send</md-button>
+			   	        </div>
+	  				
+          
+		 	         </div>
+                
+		 	       </md-list-item>
 		   	     </md-list>
 	          </md-content>
 	        </md-tab>
@@ -217,6 +240,27 @@
  	        
 			 
 			   <md-divider class="forum-divider" ng-if="!$last"></md-divider>                        
+ 	       </md-list-item>
+ 	       <md-list-item class="md-3-line md-long-text comment-field" ng-if="isLoggedIn()">
+		   
+		   <user-avatar class="useravatar md-avatar" user="User" ></user-avatar> 
+	   
+ 	         <div class="md-list-item-text">
+				
+					 <div layout="row" layout-align="center end" flex>
+			   <form layout-fill>
+			   <md-input-container class="md-block">
+			             <label>Skriv kommentar</label>
+			             <textarea ng-model="$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
+			           </md-input-container>
+					   
+				   </form>
+				   <md-button class="comment-submit" ng-show="$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">Send</md-button>
+	   	        </div>
+	  				
+          
+ 	         </div>
+                
  	       </md-list-item>
  	     </md-list>
 

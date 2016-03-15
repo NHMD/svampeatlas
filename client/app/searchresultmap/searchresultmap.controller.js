@@ -120,6 +120,7 @@ angular.module('svampeatlasApp')
 			var query = {
 
 				where: $scope.search.where || {},
+				activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,
 				include: JSON.stringify($scope.queryinclude)
 			};
 

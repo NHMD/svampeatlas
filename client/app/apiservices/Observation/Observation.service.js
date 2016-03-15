@@ -18,6 +18,13 @@ angular.module('svampeatlasApp')
 				url: '/api/observations/:id/forum',
 				isArray: true
 			},
+			'postComment': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/:id/forum'
+			},
 			
 		});
 
