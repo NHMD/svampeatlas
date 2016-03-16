@@ -1,4 +1,4 @@
-<md-dialog aria-label="Forum" class="fullscreen-dialog" ng-cloak md-component-id="map-and-images-sidenav">
+<md-dialog aria-label="Forum" class="fullscreen-dialog" ng-cloak md-component-id="map-and-images-sidenav" id="observation-modal">
   
     <md-toolbar>
       <div class="md-toolbar-tools">
@@ -17,13 +17,19 @@
 	 <md-tabs md-dynamic-height md-border-bottom  ng-if="!$mdMedia('gt-sm')">
 	        <md-tab label="Fundoplysninger">
 	          <md-content class="md-padding">
-			  <div layout="column" class="inset">
+			  <div layout="row" class="speeddial-parent" flex>
+			  <div layout="column" class="inset" layout-fill>
 	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
 	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
 		  </div>
+		
+	  		<div class="validator-button-container" ng-if="Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'">
+		
+	  	  </div>
+	  </div>
 	   	     <md-list>
 	  		 
 	   	       <md-list-item class="md-2-line md-long-text">
@@ -37,6 +43,7 @@
    	         <div class="md-list-item-text">	  				
    	           <h3>Bestemmer</span></h3>
   			   <p ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</p>
+			   <p ng-if="obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator">{{obs.PrimaryDetermination.verbatimdeterminator}}</p>
    	         </div>
   			   <md-divider  ng-if="!$last"></md-divider>                        
    	       </md-list-item>
@@ -171,9 +178,10 @@ flex>
 	        </md-tab>
 	      </md-tabs>
  <div md-dynamic-height md-border-bottom  ng-if="$mdMedia('gt-sm')" layout="row" layout-align="center start" flex>
+	
     <md-card flex="60">
      
-      <md-card-title>
+      <md-card-title class="speeddial-parent">
         <md-card-title-text >
 		 
           <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
@@ -182,6 +190,9 @@ flex>
 		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
 		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
         </md-card-title-text>
+		<div class="validator-button-container" ng-if="Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'">
+
+	  </div>
       </md-card-title >
       <md-card-content>
 	  <table  class="table table-bordered observation-detail" st-table>
@@ -189,7 +200,10 @@ flex>
 	  	<tbody >
 	  	<tr >
 	  		<td class="rightalign"><strong>Finder:</strong></td><td >{{obs.PrimaryUser.name}} ({{obs.PrimaryUser.Initialer}})</td>
-			<td class="rightalign"><strong>Bestemmer:</strong></td><td ><span ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</span></td>
+			<td class="rightalign"><strong>Bestemmer:</strong></td><td ><span ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</span>
+		  
+		   <span ng-if="obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator">{{obs.PrimaryDetermination.verbatimdeterminator}}</span>
+			</td>
 		</tr >
 	  	<tr >
 	  		<td class="rightalign"><strong>Lokalitet:</strong></td><td>{{obs.Locality.name}} </td> 

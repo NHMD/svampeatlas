@@ -131,43 +131,31 @@ exports.index = function(req, res) {
 };
 
 
+
 // Get a single taxon
 exports.show = function(req, res) {
 	Determination.find({
 		where: {
 			_id: req.params.id
-		} /*,
+		},
+		 include: [{
+		model: models.Taxon,
+		as: "Taxon",
 		include: [{
-				model: models.TaxonImages,
-				as: "images"
-			}, {
-				model: models.TaxonSpeciesHypothesis,
-				as: 'specieshypothesis'
-			},
-			{
-				model: models.Taxon,
-				as: "synonyms"
-			}, {
-				model: models.Taxon,
-				as: "Parent"
-			}, {
-				model: models.Taxon,
-				as: "acceptedTaxon"
-			}, {
-				model: models.TaxonAttributes,
-				as: "attributes"
-			}, {
-				model: models.Naturtype,
-				as: 'naturtyper'
-			}, {
-				model: models.ErnaeringsStrategi,
-				as: 'nutritionstrategies'
-			}, {
-				model: models.TaxonomyTag,
-				as: 'tags'
-			}
-
-		] */
+		model: models.Taxon,
+		as: "acceptedTaxon",
+			include: [{
+				model: models.TaxonDKnames,
+				as: "Vernacularname_DK"
+			}]
+		}]
+	},
+    {
+   				model: models.User,
+   				as: 'User',
+   				attributes: ['email', 'Initialer', 'name']
+   			}
+]
 	})
 		.then(handleEntityNotFound(res))
 		.then(responseWithResult(res))
@@ -183,7 +171,21 @@ exports.create = function(req, res) {
 
 };
 
-
+exports.updateValidation = (req, res)=> {
+	
+	
+	Determination.find({
+		where: {
+			_id: req.params.id
+		}
+	}).then(function(determination){
+		determination.validation = req.body.validation;
+		determination.validator_id = req.user._id;
+		return determination.save({fields: ['validation', 'validator_id']})
+	}).then(function(determination){
+		return res.status(200).json(determination)
+	})
+}
 
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {

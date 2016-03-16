@@ -1,7 +1,7 @@
 'use strict';
  
 angular.module('svampeatlasApp')
-  .factory('KMS', function ($http, $cookies) {
+  .factory('KMS', function ($http, $cookies, $q) {
 	  
 
 	  var ticket;
@@ -17,7 +17,14 @@ angular.module('svampeatlasApp')
 	  }
 		  return { 
 			  getTicket: function(){
-			  return ticket}
+				  if(!$cookies.get('kfticket')){
+					  $http.get('/api/kms/ticket').then( function(t){
+				  		ticket = t.data;
+						$cookies.put('kfticket', ticket, {expires: moment().add(23, 'hours').toDate()})
+				  	})
+				  }
+			  return ticket
+			  }
 		  }
   });
   

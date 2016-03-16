@@ -5,6 +5,7 @@ angular.module('svampeatlasApp')
 		function($scope, $compile, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService, ObservationModalService, $mdMedia) {
 			console.log("md media "+$mdMedia('sm'))
 			var zoom = ($mdMedia('sm')) ? 5 :7;
+			
 			$scope.mapsettings = {
 				center: {
 					lat: 56,
@@ -55,7 +56,7 @@ angular.module('svampeatlasApp')
 								exceptions: "application/vnd.ogc.se_inimage",
 								jpegquality: "80",
 								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-								ticket: KMS.getTicket()
+								ticket : KMS.getTicket()
 							}
 						},
 						WorldImagery: {
