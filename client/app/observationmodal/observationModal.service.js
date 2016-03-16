@@ -7,10 +7,69 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation', '$mdMedia', 'leafletData', 'KMS', 'ArcGis', '$timeout',
-							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation, $mdMedia, leafletData, KMS, ArcGis, $timeout) {
+						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout',
+							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout) {
 								$scope.User = Auth.getCurrentUser();
 								$scope.isLoggedIn = Auth.isLoggedIn;
+								$scope.Auth = Auth;
+								$scope.showSimpleToast = function(text) {
+								    
+								    $mdToast.show(
+								      $mdToast.simple()
+								        .textContent(text)
+								        .position("top right" )
+										.parent(document.querySelectorAll('.speeddial-parent'))
+								        .hideDelay(3000)
+								    );
+								  };
+								$scope.updateValidation = function(validation){
+									
+									Determination.updateValidation({id: $scope.obs.PrimaryDetermination._id}, {validation: validation}).$promise
+									.then(function(determination){
+										$scope.obs.PrimaryDetermination.validation = determination.validation;
+										var txt = (determination.validation === "Afventer") ? "Bestemmelse afventer" : ("Fundet er "+determination.validation);
+										$scope.showSimpleToast(txt)
+									})
+									.catch(function(err){
+										
+										ErrorHandlingService.handle500();
+									})
+								}
+								/*
+							    $scope.showDeterminationDialog = function(ev) {
+							      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+							      $mdDialog.show({
+							        controller: ['$scope','$mdDialog', 
+									  				function($scope, $mdDialog) {
+														$scope.hide = function() {
+														    $mdDialog.hide();
+														  };
+														  $scope.cancel = function() {
+														    $mdDialog.cancel();
+														  };
+														  $scope.answer = function(answer) {
+														    $mdDialog.hide(answer);
+														  };
+									  				}],
+							        templateUrl: 'app/observationmodal/determination-modal.tmpl.html',
+							        parent: angular.element(document.body),
+							        targetEvent: ev,
+							        clickOutsideToClose:true,
+							        fullscreen: useFullScreen
+							      })
+							      .then(function(answer) {
+							        $scope.status = 'You said the information was "' + answer + '".';
+							      }, function() {
+							        $scope.status = 'You cancelled the dialog.';
+							      });
+							      $scope.$watch(function() {
+							        return $mdMedia('xs') || $mdMedia('sm');
+							      }, function(wantsFullScreen) {
+							        $scope.customFullscreen = (wantsFullScreen === true);
+							      });
+							    };
+								*/
+								
 								$scope.postComment = function(newComment){
 									$scope.sendingComment = true;
 									Observation.postComment({id: $scope.obs._id}, {content: newComment})
