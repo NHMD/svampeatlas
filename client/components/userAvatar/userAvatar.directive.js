@@ -5,7 +5,10 @@ angular
 .directive('userAvatar', ["avatarService", function (avatarService) {
 	var controller = function ($scope) {
 		$scope.ImageAvailable = false;
-		if($scope.User.hasOwnProperty('$promise')){
+		if($scope.User === null){
+			$scope.GenericAvatar = avatarService.getAvatar({ Initialer: "?"});
+		}
+		else if($scope.User.hasOwnProperty('$promise')){
 			$scope.User.$promise.then(function(User){
 				if (User.facebook === null || User.facebook == undefined) {
 					$scope.GenericAvatar = avatarService.getAvatar(User);

@@ -980,7 +980,11 @@ exports.addSynonym = function(req, res) {
 				},{
 					model: models.TaxonImages,
 					as: "images"
-				}, {
+				},{
+					model: models.TaxonDKnames,
+					as: "Vernacularname_DK"
+				},
+				 {
 					model: models.Taxon,
 					as: "synonyms"
 				}, {
@@ -1005,7 +1009,7 @@ exports.addSynonym = function(req, res) {
 
 
 exports.setCurrentDkName = function(req, res) {
-	console.log("endpoint hit")
+	
 	  models.sequelize.transaction(function(t) {
 		return Taxon.find({
 			where: {
@@ -1027,11 +1031,9 @@ exports.setCurrentDkName = function(req, res) {
 				
 				var newname = req.body.vernacularname_dk;
 				
-				var oldname = taxon.Vernacularname_DK.vernacularname_dk;
+				var oldname = (taxon.Vernacularname_DK) ? taxon.Vernacularname_DK.vernacularname_dk : undefined;
 				
-				
-				console.log("New name "+newname)
-				console.log("Old name "+oldname)
+
 				
 				//var oldname = taxon.Vernacularname_DK.vernacularname_dk.toString();
 				//var newname = req.body;
@@ -1050,7 +1052,7 @@ exports.setCurrentDkName = function(req, res) {
 			})
 			
 			.spread(function(taxon, oldval, newval) {
-				console.log("found taxon " + taxon)
+		
 				return models.TaxonLog.create({
 					eventname: "Changed danish name",
 					description: "New name: " + newval + ", old name: " + oldval + ".",

@@ -150,25 +150,15 @@ angular.module('svampeatlasApp')
 			$scope.leafletView.PrepareLeafletMarker = function(marker, data) {
 				
 				var observation = data.observation;
-				var message = "<div layout='column'>";
-				if (observation.Images && observation.Images.length > 0) {
-
-					message += "<div width='301px'><img src='" + $scope.appConstants.imageurl + observation.Images[0].name + ".jpg' width='300px'  ></div>";
-				}
-				if (observation.DeterminationView.Taxon_vernacularname_dk) {
-					message += "<span><strong>" + observation.DeterminationView.Taxon_vernacularname_dk + "</strong> (<em>" + observation.DeterminationView.Taxon_FullName + "</em>)</span>";
-				} else {
-					message += "<strong><em>" + observation.DeterminationView.Taxon_FullName + "</em></strong>";
-				}
-				
-				if (observation.Locality && observation.Locality.name) {
-					message += "<span>"+observation.Locality.name + ", " +moment(observation.observationDate).format('DD/MM/YYYY') +"</span>";
-				} else {
-					message += "<span>"+moment(observation.observationDate).format('DD/MM/YYYY') +"</span>";
-				}
-				message += "<span>"+observation.PrimaryUser.name+"</span>";
-				message += '<md-button class="md-raised"  ng-click="ObservationModalService.show($event, '+observation._id+')"> <span layout-fill>Vis mere</span> <ng-md-icon icon="arrow_forward" ></ng-md-icon></md-button>'
-			message += "</div>";
+				var message = "<div layout='column'>"
+				+ "<div width='301px' ng-if='observation.Images && observation.Images.length > 0'><img ng-src='{{imageurl + observation.Images[0].name + \".jpg\"}}' width='300px'  ></div>"
+				+"<span ng-if='observation.DeterminationView.Taxon_vernacularname_dk'><strong> {{observation.DeterminationView.Taxon_vernacularname_dk}} </strong> (<em> {{observation.DeterminationView.Taxon_FullName}} </em>)</span>"
+				+"<strong ng-if='!observation.DeterminationView.Taxon_vernacularname_dk'><em>{{observation.DeterminationView.Taxon_FullName}} </em></strong>"
+				+"<span ng-if='observation.Locality && observation.Locality.name'>{{observation.Locality.name}} , {{moment(observation.observationDate).format('DD/MM/YYYY')}} </span>"
+				+"<span ng-if='!(observation.Locality && observation.Locality.name)'>{{moment(observation.observationDate).format('DD/MM/YYYY')}} </span>"
+				+"<span>{{observation.PrimaryUser.name}}</span>"
+				+'<md-button class="md-raised"  ng-click="ObservationModalService.show($event, observation)"> <span layout-fill>Vis mere</span> <ng-md-icon icon="arrow_forward" ></ng-md-icon></md-button>'
+			    +"</div>";
 				var iconOptions = {
 					prefix: 'fa',
 					icon: 'circle'
@@ -189,8 +179,12 @@ angular.module('svampeatlasApp')
 				}
 
 				marker.setIcon(L.AwesomeMarkers.icon(iconOptions));
-				
-				var compiled = $compile(message)($scope);
+				var popupScope = $scope.$new(true);
+				popupScope.observation = observation;
+				popupScope.ObservationModalService = ObservationModalService;
+				popupScope.moment = moment;
+				popupScope.imageurl = $scope.appConstants.imageurl;
+				var compiled = $compile(message)(popupScope);
 				
 				if (marker.getPopup()) {
 					marker.setPopupContent(compiled[0]);

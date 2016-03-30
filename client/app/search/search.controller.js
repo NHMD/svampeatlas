@@ -32,7 +32,7 @@ angular.module('svampeatlasApp')
 		//	ObservationSearchService.reset();
 		$scope.search = ObservationSearchService.getUIstate();
 		
-			L.drawLocal.draw.toolbar.buttons.polygon = 'Tegn polygon';
+		//	L.drawLocal.draw.toolbar.buttons.polygon = 'Tegn polygon';
 			
 			if($scope.search.geometry){
 				$scope.drawnItems =  new L.geoJson($scope.search.geometry);
@@ -228,7 +228,7 @@ angular.module('svampeatlasApp')
 				}, {
 					model: "User",
 					as: 'PrimaryUser',
-					attributes: ['email', 'Initialer', 'name'],
+				//	attributes: ['email', 'Initialer', 'name'],
 					where: {}
 				}, {
 					model: "Locality",

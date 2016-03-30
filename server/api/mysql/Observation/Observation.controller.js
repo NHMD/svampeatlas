@@ -16,7 +16,7 @@ var Observation = models.Observation;
 var Promise = require("bluebird");
 
 var nestedQueryParser = require("../nestedQueryParser")
-
+var userTool = require("../userTool")
 var wktparse = require('wellknown');
 
 
@@ -99,10 +99,18 @@ exports.index = function(req, res) {
 	};
 	
 	if (req.query.include) {
+	
 		
 		var parsed = JSON.parse(req.query.include)
 		query['include'] =	_.map(parsed, function(n){
 		var n =  JSON.parse(n);
+		
+		if(n.model === "User"){
+			
+			n = userTool.secureUser(n);
+			
+		} 
+		
 		n.model = models[n.model];
 		return n;
 		})

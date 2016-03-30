@@ -89,6 +89,11 @@ module.exports = function(sequelize, DataTypes) {
 				.belongsTo(models.User, {
 					foreignKey: "user_id" ,
 					as: "User"
+				});	
+		models.Determination
+				.belongsTo(models.Observation, {
+					foreignKey: "observation_id" ,
+					as: "Observation"
 				});			
 	/*
     			models.Taxon

@@ -2,15 +2,15 @@
   "name": "svampeatlas",
   "version": "0.0.0",
   "dependencies": {
-    "angular": "~1.5.1",
-	"angular-animate": "~1.5.1",
+    "angular": "~1.4.4",
+	"angular-animate": "~1.4.6",
     "json3": "~3.3.1",
     "es5-shim": "~3.0.1",
     "bootstrap": "~3.1.1",
     "font-awesome": ">=4.1.0",
-    "angular-resource": "~1.5.1",
-    "angular-cookies": "~1.5.1",
-    "angular-sanitize": "~1.5.1",
+    "angular-resource": "~1.4",
+    "angular-cookies": "~1.4",
+    "angular-sanitize": "~1.4",
     "lodash": "~3.10.1",
     "angular-socket-io": "~0.6.0",
     "angular-ui-router": "~0.2.18",
@@ -23,7 +23,7 @@
 	"angular-material": "1.0.5",
 	"angular-material-icons": "",
 	"moment": "2.11.0",
-	"leaflet" : "0.7.7",
+	"bower-leaflet" : "0.7.7",
 	"leaflet.draw" : "",
 	"leaflet-draw-drag" : "",
 	"leaflet-spin" : "0.1.1",
@@ -32,10 +32,10 @@
 	"angular-leaflet-directive": "0.10.0"
   },
   "devDependencies": {
-    "angular-mocks": "~1.5",
-    "angular-scenario": "~1.5"
+    "angular-mocks": "~1.4",
+    "angular-scenario": "~1.4"
   },
   "resolutions": {
-    "angular": "~1.5"
+    "angular": "~1.4"
   }
 }

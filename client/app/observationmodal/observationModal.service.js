@@ -3,12 +3,14 @@ angular.module('svampeatlasApp')
 	.factory('ObservationModalService', function($mdDialog, appConstants) {
 
 			return {
-				show: function(ev, observation_id) {
+				show: function(ev, referencedDataRow) {
 
 
 					$mdDialog.show({
-						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout',
-							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout) {
+						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout','DeterminationModalService',
+							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService) {
+								
+								$scope.referencedDataRow = referencedDataRow;
 								$scope.User = Auth.getCurrentUser();
 								$scope.isLoggedIn = Auth.isLoggedIn;
 								$scope.Auth = Auth;
@@ -35,40 +37,9 @@ angular.module('svampeatlasApp')
 										ErrorHandlingService.handle500();
 									})
 								}
-								/*
-							    $scope.showDeterminationDialog = function(ev) {
-							      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
-							      $mdDialog.show({
-							        controller: ['$scope','$mdDialog', 
-									  				function($scope, $mdDialog) {
-														$scope.hide = function() {
-														    $mdDialog.hide();
-														  };
-														  $scope.cancel = function() {
-														    $mdDialog.cancel();
-														  };
-														  $scope.answer = function(answer) {
-														    $mdDialog.hide(answer);
-														  };
-									  				}],
-							        templateUrl: 'app/observationmodal/determination-modal.tmpl.html',
-							        parent: angular.element(document.body),
-							        targetEvent: ev,
-							        clickOutsideToClose:true,
-							        fullscreen: useFullScreen
-							      })
-							      .then(function(answer) {
-							        $scope.status = 'You said the information was "' + answer + '".';
-							      }, function() {
-							        $scope.status = 'You cancelled the dialog.';
-							      });
-							      $scope.$watch(function() {
-							        return $mdMedia('xs') || $mdMedia('sm');
-							      }, function(wantsFullScreen) {
-							        $scope.customFullscreen = (wantsFullScreen === true);
-							      });
-							    };
-								*/
+								
+							    $scope.showDeterminationDialog = DeterminationModalService.show;
+								
 								
 								$scope.postComment = function(newComment){
 									$scope.sendingComment = true;
@@ -197,10 +168,10 @@ angular.module('svampeatlasApp')
 
 								}
 								$scope.forum = Observation.getForum({
-									id: observation_id
+									id: referencedDataRow._id
 								});
 								$scope.obs = Observation.get({
-									id: observation_id
+									id: referencedDataRow._id
 								});
 
 								$scope.obs.$promise.then(function(obs) {

@@ -46,9 +46,13 @@ exports.index = function(req, res) {
 	}]
   })
     .then(function(users) {
-		res.status(200).json(users)
+		return res.status(200).json(users)
     })
-    .catch(handleError(res));
+	.catch(function(err){
+		console.log(err)
+		res.status(500).json(JSON.stringify(err))
+	});
+    //.catch(handleError(res));
 };
 
 /**

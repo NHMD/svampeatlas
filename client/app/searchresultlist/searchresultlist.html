@@ -16,6 +16,7 @@
 		</tr>
 	<tr>
 		<th ></th>
+		<th ></th>
 		<th st-sort="observationDate" >Dato</th>
 		
 		<th st-sort="DeterminationView.Taxon_FullName"  translate>Navn</th>
@@ -28,7 +29,17 @@
 	</thead>
 	<tbody ng-show="displayed.length > 0">
 	<tr ng-repeat="row in displayed">
-		<td data-title=""><ng-md-icon icon="more_horiz" ng-click="ObservationModalService.show($event, row._id)"></ng-md-icon></td>
+		<td data-title=""><ng-md-icon icon="more_horiz" ng-click="ObservationModalService.show($event, row)"></ng-md-icon></td>
+		<td data-title="Status"><md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">
+          {{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}
+        </md-tooltip>
+		<md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px')  && row.DeterminationView.Determination_validation === 'Afvist'" >
+		          {{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}
+		        </md-tooltip>
+		<ng-md-icon style="fill:red" ng-if="row.DeterminationView.Determination_validation === 'Afvist'" icon="block" ></ng-md-icon>
+			<ng-md-icon style="fill:wheat" ng-if="row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
+			<ng-md-icon style="fill:green" ng-if=" !mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
+		</td>
 		<td data-title="Dato">{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>
 		
 		<td data-title="Art"><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></td>
@@ -38,7 +49,7 @@
           {{row.PrimaryUser.name}}
         </md-tooltip>{{row.PrimaryUser.Initialer}}</span><span ng-if="mdMedia('max-width: 768px')"> {{row.PrimaryUser.name}}</span></td>	
 			
-		<td data-title=""><ng-md-icon icon="camera_alt" ng-if="row.Images.length > 0" ng-click="ObservationModalService.show($event, row._id)"></ng-md-icon> <ng-md-icon icon="forum" ng-if="row.Forum.length > 0" ng-click="ObservationModalService.show($event, row._id)"></td>
+		<td data-title=""><ng-md-icon icon="camera_alt" ng-if="row.Images.length > 0" ng-click="ObservationModalService.show($event, row)"></ng-md-icon> <ng-md-icon icon="forum" ng-if="row.Forum.length > 0" ng-click="ObservationModalService.show($event, row)"></td>
 		
 		
 	</tr>

@@ -83,7 +83,7 @@ exports.TaxonNodes = function(req, res) {
 exports.SpeciesHypothesis = function(req, res) {
 	
 	var access_token = req.headers.plutofauthorization;
-	client.methods.taxonnodes({headers: {Authorization: "Bearer "+access_token}, parameters: {search_query : req.query.search_query, filter_type:"exact"}},function(taxon,response){
+	client.methods.taxonnodes({headers: {Authorization: "Bearer "+access_token}, parameters: {q : req.query.search_query, filter_type:"exact"}},function(taxon,response){
 		
 	
 		if(taxon.results && taxon.results.length > 0) {
