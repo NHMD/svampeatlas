@@ -187,6 +187,51 @@ exports.updateValidation = (req, res)=> {
 	})
 }
 
+exports.addDeterminationToObs = (req, res)=> {
+
+	var determination = req.body;
+	determination.observation_id = req.params.id;
+	determination.user_id = req.user._id;
+	determination.validation = "Godkendt";
+	 console.log(determination)
+	 models.sequelize.transaction(function(t) {
+
+		return Determination
+			.create(determination, {
+				transaction: t
+			})
+			.then((det)=> {
+				
+				return [models.Observation.update({
+					primarydetermination_id: det._id
+				}, {
+					where: {
+						_id: req.params.id
+					} ,
+					transaction: t
+				}
+				), det]
+			})
+			
+			
+			
+
+
+	})
+	.spread((updated, det)=>{
+		
+		return models.DeterminationView.find({where: {Determination_id: det._id}})
+		
+	})
+	.then((det)=> {
+		return res.status(200).json(det);
+	})
+	.
+catch (handleError(res));
+	;
+}
+
+
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
 

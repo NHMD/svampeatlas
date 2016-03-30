@@ -2,7 +2,7 @@
 
 var crypto = require('crypto');
 var authTypes = ['github', 'twitter', 'facebook', 'google'];
-
+var _ = require('lodash');
 var validatePresenceOf = function(value) {
   return value && value.length;
 };
@@ -120,6 +120,12 @@ module.exports = function(sequelize, DataTypes) {
      * Instance Methods
      */
     instanceMethods: {
+		
+		toJSON: function () {
+		        var privateAttributes = [ 'password', 'salt' ];
+
+		        return _.omit(this.dataValues, privateAttributes);
+		      },
       /**
        * Authenticate - check if the passwords are the same
        *

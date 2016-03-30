@@ -7,6 +7,7 @@ var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var User = require('../api/mysql').User;
 var Role = require('../api/mysql').Role;
+var models = require('../api/mysql')
 var _ = require('lodash');
 var validateJwt = expressJwt({
   secret: config.secrets.session
@@ -165,6 +166,49 @@ function generateInitials(name){
 function getRandomTwoDigit(){
 	return Math.round(Math.random()*100);
 }
+/*
+ function secureInclude() {
+    return compose()
+        // Attach user to request
+        .use(function(req, res, next) {
+			if (req.query.include) {
+		
+				var parsed = JSON.parse(req.query.include)
+				console.log("###############")
+				console.log(parsed)
+				var temp =	_.map(parsed, function(n){
+				var n =  JSON.parse(n);
+		
+				if(n.model === "User"){
+			
+					if(n.attributes ){
+
+			      n.attributes =  _.difference(n.attributes , [ 'password', 'salt' ]);
+		
+					} else {
+		
+					n.attributes = ['_id',
+						'Initialer',
+						'email' ,
+						'provider',
+						'name',
+						'Roles',
+						'facebook',
+						'preferred_language'];
+			
+					}
+			
+				}
+				//n.model = models[n.model];
+				
+				})
+				req.query.include = JSON.stringify(temp)
+
+			}
+			next();
+        });
+}
+*/
 
 exports.generateInitials = generateInitials;
 exports.getRandomTwoDigit = getRandomTwoDigit;
@@ -174,3 +218,4 @@ exports.isAuthenticated = isAuthenticated;
 exports.hasRole = hasRole;
 exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;
+//exports.secureInclude = secureInclude;

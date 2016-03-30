@@ -128,7 +128,15 @@ module.exports = function(sequelize, DataTypes) {
     vernacular_name_SE: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
+    valideringskrav: {
+      type: DataTypes.INTEGER(2),
+      allowNull: false,
+    },
+    valideringsrapport: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 
   }, {
     	tableName: 'TaxonAttributes',

@@ -104,7 +104,36 @@
 			</div>
 			
 			<div class="col-md-6"  ng-if="stateParams.id">
-				<div class="panel-group" role="tablist" aria-multiselectable="true" bs-collapse>
+				
+				
+				
+				
+				<div class="panel-group" role="tablist" aria-multiselectable="true" ng-model="activePanel"  bs-collapse>
+		    	  <!-- ########################################-->
+		    	  <div class="panel panel-default">
+		    	    <div class="panel-heading" role="tab">
+		    	      <h4 class="panel-title">
+		    	        <a bs-collapse-toggle>
+		    	       <i class="fa fa-exclamation-triangle text-danger" ng-show=" taxon.Parent === null "></i>   {{'Validation' | translate}}
+		    	        </a>
+		    	      </h4>
+		    	    </div>
+		    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+		    	      <div class="panel-body">
+		  				<md-radio-group ng-model="taxon.attributes.valideringskrav" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+		  				      <md-radio-button value="2" class="md-primary">Valideres</md-radio-button>
+		  				      <md-radio-button value="1">Valideres fra nye lokaliteter </md-radio-button>
+		  				      <md-radio-button value="0">ingen validering</md-radio-button>
+		  				    </md-radio-group>
+				
+		  				 <label class="control-label" for="internalNote">valideringsrapport</label>
+		  		        <a href="#" id="internalNote" editable-textarea="taxon.attributes.valideringsrapport" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+		  		            <div class="x-editable-texarea">{{ taxon.attributes.valideringsrapport || 'n/a' }}</div>
+		  		          </a>
+		    	      </div>
+		    	    </div>
+		    	  </div>
+		    	  <!-- ########################################-->
 			    	  <!-- ########################################-->
 			    	  <div class="panel panel-default">
 			    	    <div class="panel-heading" role="tab">

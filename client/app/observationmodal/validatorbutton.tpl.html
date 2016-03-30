@@ -13,15 +13,15 @@
 	          </md-button>
 	          <md-button aria-label="reject" class="md-fab md-raised md-mini" ng-if="obs.PrimaryDetermination.validation !== 'Afventer'" ng-click="updateValidation('Afventer')">
 			   <md-tooltip md-direction="left" >Afventer</md-tooltip>
-	           <ng-md-icon icon="standby"></ng-md-icon>
+	           <ng-md-icon icon="pause"></ng-md-icon>
 	          </md-button>
 	          <md-button aria-label="reject" class="md-fab md-raised md-mini" ng-if="obs.PrimaryDetermination.validation !== 'Afvist'" ng-click="updateValidation('Afvist')">
 			   <md-tooltip md-direction="left" >Afvis</md-tooltip>
 	           <ng-md-icon icon="thumb_down"></ng-md-icon>
 	          </md-button>
-	         <!-- <md-button aria-label="add determination" class="md-fab md-raised md-mini" ng-click="showDeterminationDialog()">
+	         <md-button aria-label="add determination" class="md-fab md-raised md-mini" ng-click="showDeterminationDialog($event, referencedDataRow)">
 			  <md-tooltip md-direction="left" >Ombestem</md-tooltip>
 	            <ng-md-icon icon="undo"></ng-md-icon>
-	          </md-button> -->
+	          </md-button> 
 	        </md-fab-actions>
 	      </md-fab-speed-dial>

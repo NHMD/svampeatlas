@@ -159,8 +159,8 @@ module.exports = function(sequelize, DataTypes) {
 		
 		
 		models.Observation
-				.hasOne(models.DeterminationView, {
-					foreignKey: "Determination_observation_id" ,
+				.belongsTo(models.DeterminationView, {
+					foreignKey: "primarydetermination_id" ,
 					as: "DeterminationView"
 				});			
 				

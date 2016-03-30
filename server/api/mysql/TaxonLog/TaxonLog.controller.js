@@ -2,6 +2,7 @@
 var _ = require('lodash');
 var models = require('../')
 var TaxonLog = models.TaxonLog;
+var userTool = require("../userTool")
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -65,6 +66,14 @@ exports.index = function(req, res) {
 		var include = JSON.parse(req.query.include)
 		
 	query['include'] =	_.map(include, function(n){
+		
+		
+		if(n.model === "User"){
+			
+			n = userTool.secureUser(n);
+			
+		} 
+		
 		n.model = models[n.model];
 		if(n.where) {
 			n.where = JSON.parse(n.where)
