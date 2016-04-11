@@ -33,6 +33,7 @@
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/funindex/funindex.css">
       <link rel="stylesheet" href="app/main/main.css">
+      <link rel="stylesheet" href="app/observationform/observationform.css">
       <link rel="stylesheet" href="app/observationmodal/observationmodal.css">
       <link rel="stylesheet" href="app/search/search.css">
       <link rel="stylesheet" href="app/searchresultlist/searchresultlist.css">
@@ -117,6 +118,7 @@
       <script src="bower_components/PruneCluster/dist/PruneCluster.js"></script>
       <script src="bower_components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js"></script>
       <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+      <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -137,7 +139,9 @@
           <script src="app/apiservices/NatureTypes/NatureTypes.service.js"></script>
           <script src="app/apiservices/NutritionStrategies/NutritionStrategies.service.js"></script>
           <script src="app/apiservices/Observation/Observation.service.js"></script>
+          <script src="app/apiservices/PlantTaxon/PlantTaxon.service.js"></script>
           <script src="app/apiservices/Role/Role.service.js"></script>
+          <script src="app/apiservices/Substrate/Substrate.service.js"></script>
           <script src="app/apiservices/Taxon/Taxon.service.js"></script>
           <script src="app/apiservices/TaxonAttributes/TaxonAttributes.service.js"></script>
           <script src="app/apiservices/TaxonDKnames/TaxonDKnames.service.js"></script>
@@ -146,6 +150,7 @@
           <script src="app/apiservices/TaxonRedListData/TaxonRedListData.service.js"></script>
           <script src="app/apiservices/TaxonTypeahead/TaxonTypeahead.service.js"></script>
           <script src="app/apiservices/TaxonomyTags/TaxonomyTags.service.js"></script>
+          <script src="app/apiservices/VegetationType/VegetationType.service.js"></script>
           <script src="app/apiservices/arcgis/arcgis.service.js"></script>
           <script src="app/apiservices/dyntaxa/dyntaxa.service.js"></script>
           <script src="app/apiservices/indexfungorum/indexfungorum.service.js"></script>
@@ -157,6 +162,8 @@
           <script src="app/funindex/taxonintegrationservice.service.js"></script>
           <script src="app/main/main.controller.js"></script>
           <script src="app/main/main.js"></script>
+          <script src="app/observationform/geojsonutils.service.js"></script>
+          <script src="app/observationform/observationForm.service.js"></script>
           <script src="app/observationmodal/determinationModal.service.js"></script>
           <script src="app/observationmodal/observationModal.service.js"></script>
           <script src="app/search/observationsearchservice.service.js"></script>

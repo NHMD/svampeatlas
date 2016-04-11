@@ -1,0 +1,13 @@
+
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+   	height: 300px;
+    text-align: center;
+    padding: 50px 10px;
+
+}
+
+.img-preview {
+	padding: 0 !important;
+}

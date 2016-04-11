@@ -37,7 +37,7 @@ module.exports = {
 		ApplicationIdentifier: 'Svampeatlas',
 		Password: 'VAtEpVdLDFZd%HdaumA4aWsSDaP+tM'
 	},
-
+	uploaddir: 'client/uploads/',
 	seedDB: false
 };
 

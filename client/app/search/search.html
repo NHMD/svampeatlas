@@ -148,6 +148,39 @@
 	
   </md-chips>
   </div>
+   <div layout="row" class="validator-button-container" flex>
+	   <span layout-fill flex></span>
+	   <md-button class="md-fab md-warn" aria-label="Nulstil formular" ng-click="resetForm()">
+	               <ng-md-icon icon="autorenew"></ng-md-icon>
+	           </md-button>
+			   
+	   
+
+
+
+
+	<md-fab-speed-dial  md-direction="up"
+	                         class='md-scale'>
+	        <md-fab-trigger>
+	          <md-button aria-label="menu" class="md-fab md-warn">
+		  
+	            <ng-md-icon icon="search"></ng-md-icon>
+	          </md-button>
+	        </md-fab-trigger>
+	        <md-fab-actions>
+          <md-button aria-label="liste" class="md-fab md-raised md-mini" ng-click="state.go('search-list')">
+		  <md-tooltip md-direction="left" >Resultat i liste</md-tooltip>
+            <ng-md-icon icon="list"></ng-md-icon>
+          </md-button>
+	          <md-button aria-label="map" class="md-fab md-raised md-mini" ng-click="state.go('search-map')">
+			  <md-tooltip md-direction="left" >Resultat på kort</md-tooltip>
+	            <ng-md-icon icon="map"></ng-md-icon>
+	          </md-button>
+	          
+	        </md-fab-actions>
+	      </md-fab-speed-dial>
+
+  </div>
 		 
         
       </form>

@@ -44,6 +44,8 @@ module.exports = {
 			}
 		}
 	},
+	
+	uploaddir: 'client/uploads/',
 	/*
   sequelize: {
 	  uri: 'mysql://',

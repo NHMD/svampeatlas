@@ -18,7 +18,8 @@ angular.module('svampeatlasApp', [
 	'sasrio.angular-material-sidenav',
 	'pascalprecht.translate',
 	'leaflet-directive',
-	'userAvatar'
+	'userAvatar',
+	'ngFileUpload'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider,$mdThemingProvider, ssSideNavSectionsProvider) {
     $urlRouterProvider
@@ -28,7 +29,8 @@ angular.module('svampeatlasApp', [
 	      'self',
 	      // Allow loading from our assets domain.  Notice the difference between * and **.
 	      'http://svampe.dk/**',
-		  'https://www.facebook.com/'
+		  'https://www.facebook.com/',
+		  'http://api.gbif.org/'
 	    ]);
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
