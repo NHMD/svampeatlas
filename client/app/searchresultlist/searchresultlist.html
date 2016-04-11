@@ -1,9 +1,13 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
  <md-toolbar  ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
 	
+   <md-button class="md-fab md-warn md-fab-bottom-right" aria-label="Tilføj observation" ng-click="ObservationFormService.show($event)">
+               <ng-md-icon icon="add"></ng-md-icon>
+           </md-button>
 
 <md-content flex md-scroll-y layout-padding ng-cloak>
-
+	   
+			   
 	<div class="table-responsive-vertical shadow-z-1">
 
 

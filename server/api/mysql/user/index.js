@@ -6,7 +6,7 @@ var auth = require('../../../auth/auth.service');
 
 var router = express.Router();
 
-router.get('/', auth.hasRole('useradmin'), controller.index);
+router.get('/', controller.index);
 router.delete('/:id', auth.hasRole('useradmin'), controller.destroy);
 router.delete('/:id/roles/:roleid', auth.hasRole('useradmin'), controller.removeRole);
 

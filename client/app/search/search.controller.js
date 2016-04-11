@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout','$mdUtil','$mdSidenav','$mdMedia',
-		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia) {
-			
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout','$mdUtil','$mdSidenav','$mdMedia', '$state',
+		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state) {
+			$scope.state = $state;
 			$scope.mdMedia = $mdMedia;
 			$scope.toggleSearchMapSideNav = buildToggler('searchmapsidenav');
-			    
+			$scope.resetForm = function(){
+				
+				ObservationSearchService.reset();
+				$state.reload();
+			}    
 			    /**
 			     * Build handler to open/close a SideNav; when animation finishes
 			     * report completion in console

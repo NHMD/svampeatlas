@@ -33,7 +33,8 @@ function respondWith(res, statusCode) {
  * restriction: 'admin'
  */
 exports.index = function(req, res) {
-  User.findAll({
+	
+	var q = {
     attributes: [
       '_id',
       'name',
@@ -44,7 +45,18 @@ exports.index = function(req, res) {
 	include: [{
 		model: models.Role
 	}]
-  })
+  };
+	if(req.query.where){
+		q.where = JSON.parse(req.query.where);
+	
+	}
+	
+	if(req.query.limit){
+		q.limit = parseInt(req.query.limit);
+	
+	};
+	
+  User.findAll(q)
     .then(function(users) {
 		return res.status(200).json(users)
     })

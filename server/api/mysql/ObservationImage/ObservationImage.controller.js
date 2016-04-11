@@ -10,10 +10,13 @@
 'use strict';
 
 var _ = require('lodash');
-
+var fs = require('fs');
+var shortid = require('shortid');
 var models = require('../')
 var ObservationImage = models.ObservationImage;
+var Observation = models.Observation;
 var Promise = require("bluebird");
+Promise.promisifyAll(fs);
 
 var nestedQueryParser = require("../nestedQueryParser")
 
@@ -176,7 +179,50 @@ exports.show = function(req, res) {
 };
 
 
+exports.addImagesToObs = function(req, res) {
 
+	return Observation.find({
+		where: {
+			_id: req.params.id
+		},
+		include: [{
+			model: models.User,
+			as: 'PrimaryUser',
+			attributes: ['Initialer']
+		}]
+	}).then(function(obs) {
+
+		var prefix = obs.PrimaryUser.Initialer.toUpperCase() + obs.observationDate.getFullYear() + "-" + obs._id;
+		var promises = [];
+
+		_.each(req.files, function(f) {
+			var fname = prefix + "_" + shortid.generate();
+			promises.push(
+				fs.renameAsync(f.path, f.destination + fname + ".jpg")
+				.then(function() {
+					return ObservationImage.create({
+						observation_id: obs._id,
+						hide: false,
+						name: fname
+					})
+				})
+			)
+		})
+
+		return Promise.all(promises)
+
+
+	}).
+	then(function(promises) {
+		return res.status(201).json(promises)
+	})
+		.
+	catch (function(err) {
+		console.log(err)
+		return res.status(500).json(err)
+	})
+
+}
 
 // Creates a new taxon in the DB.
 exports.create = function(req, res) {

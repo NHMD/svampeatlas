@@ -19,6 +19,8 @@ module.exports = function(app) {
    app.use('/api/taxonattributes', require('./api/mysql/TaxonAttributes'));
    app.use('/api/taxondknames', intparser.parseLimitOffset(), require('./api/mysql/TaxonDKnames'));
    app.use('/api/naturetypes', require('./api/mysql/Naturtype'));
+   app.use('/api/vegetationtypes', require('./api/mysql/VegetationType'));
+   app.use('/api/substrate', require('./api/mysql/Substrate'));
    app.use('/api/nutritionstrategies', require('./api/mysql/ErnaeringsStrategi'));
     app.use('/api/taxonomytags',intparser.parseLimitOffset(), require('./api/mysql/TaxonomyTag'));
 	
