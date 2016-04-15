@@ -192,7 +192,7 @@ flex>
       </md-card-title >
       <md-card-content>
 
-        <form>
+        <form name="observationForm">
 			
 	 		<div  layout-margin >
 	        <md-chips md-max-chips=1 ng-model="newTaxon" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
@@ -245,7 +245,7 @@ flex>
 				        md-search-text="searchText"
 				        md-items="item in querySearchLocality(searchText)"
 				        md-item-text="item.name"
-				        placeholder="{{(selectedLocality.length ===0) ? 'Lokalitet' : ''}}"
+				        placeholder="Lokalitet"
 						ng-disabled="selectedLocality.length > 0">
 				      <span md-highlight-text="searchText">{{item.name}}</span>
 				    </md-autocomplete>
@@ -261,23 +261,32 @@ flex>
 				            <label>Lokalitet</label>
 				            <input ng-model="foreignLocalityString" disabled>
 				          </md-input-container>
+						  
+			              <md-datepicker ng-model="observationDate" md-placeholder="Dato">
+			              </md-datepicker>
 			  </div> 
 			   <div layout-margin layout="row">
 				   <md-input-container>
 				           <label>Substrat</label>
-				           <md-select ng-model="selectedSubstrate">
+				           <md-select name="substrate" ng-model="$parent.selectedSubstrate" required>
 				             <md-option ng-repeat="sub in substrates" value="{{sub._id}}" >
 				               {{sub.name}}
 				             </md-option>
 				           </md-select>
+						   <div class="errors" ng-messages="observationForm.substrate.$error" ng-if="observationForm.$dirty && observationForm.substrate.$touched && !$parent.selectedSubstrate">
+						           <div ng-message="required">Obligatorisk</div>
+						         </div>
 				         </md-input-container>
 	 				   <md-input-container>
 	 				           <label>Vegetationstype</label>
-	 				           <md-select ng-model="selectedVegetationType">
+	 				           <md-select ng-model="$parent.selectedVegetationType" name="vegetationType">
 	 				             <md-option ng-repeat="veg in vegetationtypes" value="{{veg._id}}" >
 	 				               {{veg.name}}
 	 				             </md-option>
 	 				           </md-select>
+							   <div class="errors" ng-messages="observationForm.vegetationType.$error" ng-if="observationForm.$dirty && observationForm.vegetationType.$touched && !$parent.selectedVegetationType">
+							           <div ng-message="required">Obligatorisk</div>
+							         </div>
 	 				         </md-input-container>
 			   </div>
 			   <div layout-margin layout="row">
@@ -330,12 +339,12 @@ flex>
  				    </md-chip-template>
 	
  				  </md-chips>
-				  
+				 
 			   </div>
 			   <div layout-margin layout="column">
 				   <md-input-container class="md-block">
 				             <label>Økologi-kommentar</label>
-				             <textarea ng-model="ecologynote" md-maxlength="800" rows="5" md-select-on-focus></textarea>
+				             <textarea ng-model="$parent.ecologynote" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
 			   </div>
  			   <div layout-margin layout="row">
@@ -393,17 +402,17 @@ flex>
 			  <div layout-margin layout="row">
 				  <md-input-container class="md-block" flex-gt-sm>
 				              <label>Kollektionsnummer</label>
-				              <input ng-model="fieldNumber">
+				              <input ng-model="$parent.fieldnumber">
 				            </md-input-container>
 		  				  <md-input-container class="md-block" flex-gt-sm>
 		  				              <label>Herbarium</label>
-		  				              <input ng-model="herbarium">
+		  				              <input ng-model="$parent.herbarium">
 		  				            </md-input-container>
 			  </div>
 			   <div layout-margin layout="column">
 				   <md-input-container class="md-block">
 				             <label>Kommentarer til fundet</label>
-				             <textarea ng-model="note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
+				             <textarea ng-model="$parent.note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
 			   </div>
 			  
@@ -425,7 +434,12 @@ flex>
 				         <ng-md-icon icon="file_upload" ></ng-md-icon>
 				       </md-button>
 					 
-				      
+   				 <md-button  ng-show="observationIsValid()"
+   				                  aria-label="Publicer observation"
+   				                  class="md-icon-button" 
+   								  ng-click="submitObservation()">
+   				         <ng-md-icon icon="save" ></ng-md-icon>
+   				       </md-button>  
 				     
 			   </div>
 			    <!--############################################################-->

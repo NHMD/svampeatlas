@@ -96,7 +96,7 @@ angular.module('svampeatlasApp')
 			var geometry = $scope.search.geometry;
 
 			// if we came directly from the list table view, remove images and forum from include
-			$scope.search.include = $scope.search.include.slice(0,3);
+			$scope.search.include = $scope.search.include.slice(0,4);
 
 			$scope.search.include.push({
 				model: "ObservationImage",
@@ -216,10 +216,14 @@ angular.module('svampeatlasApp')
 						//map.fitBounds($scope.mapsettings.markers.getBounds(), { padding: [20, 20] });
 						map.spin(false);
 					//	map.addLayer($scope.leafletView);
+					var b = $scope.leafletView.Cluster.ComputeBounds($scope.leafletView.Cluster._markers);
+					var bounds = new L.LatLngBounds(
+					            new L.LatLng(b.minLat, b.maxLng),
+					            new L.LatLng(b.maxLat, b.minLng));
 					
-						
+						map.fitBounds(bounds);
 				
-					
+						var test;
 									
 				
 				}, function(err, headers) {

@@ -43,3 +43,5 @@ SELECT AtlasLocID, LocalityCalc, COUNT(*) FROM Fungi f WHERE AtlasLocID NOT IN (
 UPDATE Observation o, Fungi f, Locality l, alleposterclosestlok a set o.locality_id = l._id WHERE o._id=f.AtlasLNR AND f.AtlasLocID = 0 AND l.include = 1 and f.LocalityBasicString = l.name AND a.AtlasIDnummer = f.AtlasIDnummer AND a.distance_in_km < 1; 
 
 SELECT COUNT(*) FROM Observation o, Fungi f, Locality l, alleposterclosestlok a WHERE o._id=f.AtlasLNR AND f.AtlasLocID = 0 AND l.include = 1 and f.LocalityBasicString = l.name AND a.AtlasIDnummer = f.AtlasIDnummer AND a.distance_in_km < 1; 
+
+

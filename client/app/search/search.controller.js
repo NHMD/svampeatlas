@@ -221,7 +221,7 @@ angular.module('svampeatlasApp')
 				$scope.observationSearch.where = {};
 			}
 
-			
+		//	$scope.search.includeForeign = false;
 
 			if(!$scope.search.include){
 				$scope.search.include = [{
@@ -237,8 +237,15 @@ angular.module('svampeatlasApp')
 				}, {
 					model: "Locality",
 					as: 'Locality',
-					where: {}
-				}
+					where: {},
+					required: true
+				},
+				{
+										model: "GeoNames",
+										as: 'GeoNames',
+										where: {},
+										required: false
+									}
 			];
 		}
 
@@ -253,6 +260,7 @@ angular.module('svampeatlasApp')
 				} else {
 					$scope.taxonPlaceholder = "Latinsk navn"
 				}
+				$scope.search.include[2].required = !$scope.search.includeForeign;
 				
 				if ($scope.search.selectedHigherTaxa.length > 0) {
 					$scope.search.include[0].where.$or = _.map($scope.search.selectedHigherTaxa, function(tx) {

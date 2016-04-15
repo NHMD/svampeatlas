@@ -267,6 +267,9 @@ exports.show = function(req, res) {
 			{model: models.PlantTaxon,
 			as: 'associatedTaxa'
 			},
+			{model: models.User,
+			as: 'users'	
+			},
 			{model: models.Substrate,
 			as: 'Substrate'
 			},
@@ -287,11 +290,95 @@ exports.show = function(req, res) {
 
 
 
-
-// Creates a new taxon in the DB.
+// Creates a new Observation in the DB.
 exports.create = function(req, res) {
 
+	var determination = req.body.determination;
+	var observation = req.body;
+	observation.geom = models.sequelize.fn('GeomFromText', 'POINT (' + req.body.decimalLongitude + ' ' + req.body.decimalLatitude + ')');
+
+	return models.sequelize.transaction(function(t) {
+
+		var gnames = (req.body.geoname) ? models.GeoNames.upsert(req.body.geoname, {
+			transaction: t
+		}) : Promise.resolve(true);
+
+		return gnames.then(function(gname) {
+			return models.Observation.create(req.body, {
+				transaction: t
+			})
+		}).then(function(obs) {
+
+			var geoname = (req.body.geoname) ? models.GeoNames.upsert(req.body.geoname, {
+				transaction: t
+			}) : true;
+
+			return [models.Taxon.find({
+				where: {
+					_id: determination.taxon_id
+				},
+				include: [{
+					model: models.Taxon,
+					as: "acceptedTaxon",
+					include: [{
+						model: models.TaxonAttributes,
+						as: "attributes",
+						fields: ['validation']
+					}]
+				}]
+			}, {
+				transaction: t
+			}), obs]
+		})
+			.spread(function(taxon, obs, geoname) {
+
+				determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Afventer';
+				determination.observation_id = obs._id;
+				return [models.Determination.create(determination, {
+					transaction: t
+				}), obs]
+
+			})
+			.spread(function(det, obs) {
+
+				obs.primarydetermination_id = det._id;
+				var associated = _.map(req.body.associatedOrganisms, function(a) {
+					return {
+						observation_id: obs._id,
+						planttaxon_id: a._id
+					}
+				})
+				var finders = _.map(req.body.users, function(u) {
+					return {
+						observation_id: obs._id,
+						user_id: u._id
+					}
+				})
+				return [obs.save({
+					transaction: t
+				}), models.ObservationPlantTaxon.bulkCreate(associated, {
+					transaction: t
+				}), models.ObservationUser.bulkCreate(finders, {
+					transaction: t
+				})];
+			})
+			.spread(function(obs) {
+				return obs
+			})
+
+	}).then(function(obs) {
+
+		return res.status(201).json(obs)
+	})
+		.
+	catch (handleError(res));
+
+
+
 };
+
+
+
 
 
 
