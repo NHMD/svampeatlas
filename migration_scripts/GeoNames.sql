@@ -1,0 +1,14 @@
+CREATE TABLE GeoNames (
+geonameId int(11) NOT NULL PRIMARY KEY,
+createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updatedAt datetime DEFAULT NULL,
+name VARCHAR(255) NOT NULL,
+lat DECIMAL(10, 8) NOT NULL,
+lng DECIMAL(11, 8) NOT NULL,
+countryName VARCHAR(255),
+countryCode VARCHAR(10),
+fcodeName VARCHAR(255),
+fclName VARCHAR(255)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `GeoNames` ADD `adminName1` VARCHAR(255) NOT NULL AFTER `name`;

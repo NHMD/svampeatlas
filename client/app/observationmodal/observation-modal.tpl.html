@@ -34,8 +34,8 @@
 	  		 
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Finder</span></h3>
-	  			   <p>{{obs.PrimaryUser.name}} ({{obs.PrimaryUser.Initialer}})</p>
+	   	           <h3>Finder(e)</span></h3>
+	  			   <p><span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span></p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
@@ -199,7 +199,10 @@ flex>
 	
 	  	<tbody >
 	  	<tr >
-	  		<td class="rightalign"><strong>Finder:</strong></td><td >{{obs.PrimaryUser.name}} ({{obs.PrimaryUser.Initialer}})</td>
+	  		<td class="rightalign"><strong>Finder(e):</strong></td><td >
+			
+			<span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>
+			</td>
 			<td class="rightalign"><strong>Bestemmer:</strong></td><td ><span ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</span>
 		  
 		   <span ng-if="obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator">{{obs.PrimaryDetermination.verbatimdeterminator}}</span>

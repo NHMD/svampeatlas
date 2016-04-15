@@ -446,3 +446,6 @@ UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p
 UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p._id WHERE o.primaryassociatedorganism_id IS NULL AND o._id=f.AtlasLNR AND f.VegType = p.DKandLatinName;
 
 
+ALTER TABLE Observation ADD COLUMN geonameId INT(11) default NULL;
+ALTER TABLE `Observation`
+ADD  FOREIGN KEY (`geonameId`) REFERENCES `GeoNames` (`geonameId`);

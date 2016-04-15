@@ -5,13 +5,12 @@ var validatePresenceOf = function(value) {
 };
 
 module.exports = function(sequelize, DataTypes) {
-  var Observation = sequelize.define('Observation', {
-
-    _id: {
+  var GeoNames = sequelize.define('GeoNames', {
+	  
+geonameId : {
    	type: DataTypes.INTEGER,
    	allowNull: false,
-   	primaryKey: true,
-   	autoIncrement: true
+   	primaryKey: true
    },
    createdAt: {
    	type: DataTypes.DATE,
@@ -21,143 +20,58 @@ module.exports = function(sequelize, DataTypes) {
    updatedAt: {
    	type: DataTypes.DATE,
    	allowNull: true,
-   },
-   observationDate: {
-   	type: DataTypes.DATE,
-   	allowNull: false
-   },
-   observationDateAccuracy: {
-   	type: DataTypes.ENUM('day', 'month', 'year', 'invalid'),
-   	allowNull: false,
-   	defaultValue: 'day'
-   },
-   locality_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   verbatimLocality: {
+   },   
+   name: {
    	type: DataTypes.STRING,
-   	allowNull: true,
-   },
-   primaryuser_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   verbatimLeg: {
-   	type: DataTypes.STRING,
-   	allowNull: true,
-   },
-   primarydetermination_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   primaryassociatedorganism_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   vegetationtype_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   substrate_id: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
-   },
-   ecologynote: {
-   	type: DataTypes.TEXT,
-   	allowNull: true,
-   },
-   decimalLatitude: {
-   	type: DataTypes.DOUBLE,
    	allowNull: false,
    },
-   decimalLongitude: {
-   	type: DataTypes.DOUBLE,
+   adminName1: {
+   	type: DataTypes.STRING,
    	allowNull: false,
    },
-   accuracy: {
-   	type: DataTypes.INTEGER,
-   	allowNull: true,
+   lat: {
+   	type: DataTypes.DECIMAL(10,8),
+   	allowNull: false,
    },
-   atlasUUID: {
-   	type: DataTypes.UUID,
-   	allowNull: true,
-   	defaultValue: DataTypes.UUIDV1
+   lng: {
+   	type: DataTypes.DECIMAL(11,8),
+   	allowNull: false,
    },
-   fieldnumber: {
-   	type: DataTypes.STRING,
-   	allowNull: true,
-   },
-   herbarium: {
-   	type: DataTypes.STRING,
-   	allowNull: true,
-   },
-   note: {
-   	type: DataTypes.TEXT,
-   	allowNull: true,
-   },
-   noteInternal: {
-   	type: DataTypes.TEXT,
-   	allowNull: true,
-   },
-   dataSource: {
-   	type: DataTypes.STRING,
-   	allowNull: true,
-   },
-   geom: {
-   	type: DataTypes.GEOMETRY('POINT'),
-   	allowNull: true,
-   }
 
+countryName: {
+   	type: DataTypes.STRING,
+   	allowNull: false,
+   },
+countryCode: {
+   	type: DataTypes.STRING,
+   	allowNull: false,
+   },
+fcodeName: {
+   	type: DataTypes.STRING,
+   	allowNull: false,
+   },
+fclName: {
+   	type: DataTypes.STRING,
+   	allowNull: false,
+   }
   }, {
-    	tableName: 'Observation',
+    	tableName: 'GeoNames',
     	timestamps: true,
     	freezeTableName: true,
     	classMethods: {
 
     		associate: function(models) {
 				
-		models.Observation
-				.hasOne(models.Determination, {
-					foreignKey: "observation_id" ,
-					as: "PrimaryDetermination"
-				});	
-		models.Observation
-				.belongsTo(models.User, {
-					foreignKey: "primaryuser_id" ,
-					as: "PrimaryUser"
-				});	
-				
-		models.Observation
-				.belongsTo(models.Substrate, {
-					foreignKey: "substrate_id" ,
-					as: "Substrate"
-				});	
-		models.Observation
-				.belongsTo(models.VegetationType, {
-					foreignKey: "vegetationtype_id" ,
-					as: "VegetationType"
-				});	
-				models.Observation.belongsToMany(models.User, {
-				  through: models.ObservationUser,
-				  foreignKey: 'observation_id',
-				as: 'users'
-				});
-				models.User.belongsToMany(models.Observation, {
-				  through: models.ObservationUser,
-				  foreignKey: 'user_id'
-				});				
-			/*	
-				models.Taxon.belongsToMany(models.Naturtype, {
-				  through: models.TaxonNaturtype,
-				  foreignKey: 'taxon_id',
-				as: 'naturtyper'
-				});
-				models.Naturtype.belongsToMany(models.Taxon, {
-				  through: models.TaxonNaturtype,
-				  foreignKey: 'naturtype_id'
-				});		
 		
+		
+					
+		models.Observation
+				.belongsTo(models.GeoNames, {
+					foreignKey: "geonameId" ,
+					as: "GeoNames"
+				});		
+				
+	/*
     			models.Taxon
     				.belongsTo(models.Taxon, {
     					foreignKey: "parent_id",
@@ -294,5 +208,5 @@ module.exports = function(sequelize, DataTypes) {
   
   });
 
-  return Observation;
+  return GeoNames;
 };
