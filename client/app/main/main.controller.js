@@ -27,8 +27,8 @@ angular.module('svampeatlasApp')
 		
 	};
 	$scope.getImageUrl = function(tile){
-		if(moment(tile.observationDate).year() < 2015){
-			return appConstants.imageurl+tile.Images[0].name +".JPG";
+		if(moment(tile.observationDate).year() !== 2015 ){
+			return appConstants.imageurl(tile)+tile.Images[0].name +".JPG";
 		} else {
 			return "http://svampe.dk/atlas/uploads/"+tile.Images[0].name +".JPG";
 		}

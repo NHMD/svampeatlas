@@ -151,7 +151,7 @@ angular.module('svampeatlasApp')
 				
 				var observation = data.observation;
 				var message = "<div layout='column'>"
-				+ "<div width='301px' ng-if='observation.Images && observation.Images.length > 0'><img ng-src='{{imageurl + observation.Images[0].name + \".jpg\"}}' width='300px'  ></div>"
+				+ "<div width='301px' ng-if='observation.Images && observation.Images.length > 0'><img ng-src='{{imageurl(observation) + observation.Images[0].name + \".jpg\"}}' width='300px'  ></div>"
 				+"<span ng-if='observation.DeterminationView.Taxon_vernacularname_dk'><strong> {{observation.DeterminationView.Taxon_vernacularname_dk}} </strong> (<em> {{observation.DeterminationView.Taxon_FullName}} </em>)</span>"
 				+"<strong ng-if='!observation.DeterminationView.Taxon_vernacularname_dk'><em>{{observation.DeterminationView.Taxon_FullName}} </em></strong>"
 				+"<span ng-if='observation.Locality && observation.Locality.name'>{{observation.Locality.name}} , {{moment(observation.observationDate).format('DD/MM/YYYY')}} </span>"

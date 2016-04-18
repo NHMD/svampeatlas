@@ -7,6 +7,7 @@
 var errors = require('./components/errors');
 var path = require('path');
 var intparser = require('./components/hooks/parseLimitOffset');
+var express = require('express');
 module.exports = function(app) {
 
 	 app.use('/api/datamodels', require('./api/mysql/datamodel'));
@@ -53,6 +54,7 @@ module.exports = function(app) {
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')
    .get(errors[404]);
 
+app.use('/uploads', express.static('../uploads'));
   // All other routes should redirect to the index.html
   app.route('/*')
     .get(function(req, res) {

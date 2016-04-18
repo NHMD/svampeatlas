@@ -100,3 +100,4 @@ UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT("[Associated organism: 
 DROP TABLE temp_ass_org_is_mapped;
 
 ALTER TABLE `PlantTaxon` ADD `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `_id`, ADD `updatedAt` DATETIME NULL AFTER `createdAt`;
+ALTER TABLE `PlantTaxon` CHANGE `DKname` `DKname` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
