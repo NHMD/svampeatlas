@@ -199,7 +199,7 @@ angular.module('svampeatlasApp')
 											draggable: false
 										}
 										leafletData.getMap('observationdetailmap').then(function(map) {
-											if (obs.Locality._id > 0) {
+											if (obs.Locality) {
 												$scope.changeBaseLayer("topo_25")
 											} else {
 												$scope.changeBaseLayer("WorldTopoMap")

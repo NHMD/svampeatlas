@@ -7,443 +7,66 @@
           </md-button>
         <h2>Opret fund</h2>
         <span flex></span>
-        
+			 <md-button ngf-select ng-model="files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-capture="'camera'" ngf-resize="{width: 1200, height: 800, quality: .8,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true"
+			                  aria-label="Tilføj billeder"
+			                  class="md-icon-button" >
+			         <ng-md-icon icon="camera_alt" ></ng-md-icon>
+			       </md-button>
+		 
+			 
+		 <md-button  ng-disabled="!observationIsValid()"
+		                  aria-label="Publicer observation"
+		                  class="md-icon-button" 
+						  ng-click="submitObservation()">
+		         <ng-md-icon icon="send" ></ng-md-icon>
+		       </md-button>
       </div>
     </md-toolbar>
       
     <md-dialog-content>
 
 		  
-	 <md-tabs md-dynamic-height md-border-bottom  ng-if="!$mdMedia('gt-sm')">
+	 <md-tabs md-dynamic-height md-border-bottom  ng-if="!$mdMedia('gt-sm')" md-selected="$parent.selectedTabIndex">
 	        <md-tab label="Fundoplysninger">
-	          <md-content class="md-padding">
-			  <div layout="row" class="speeddial-parent" flex>
-			  <div layout="column" class="inset" layout-fill>
-	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
-				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
-	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
-	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
-	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
-		  </div>
-		
-	  		<div class="validator-button-container" ng-if="Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'">
-		
-	  	  </div>
-	  </div>
-	   	     <md-list>
-	  		 
-	   	       <md-list-item class="md-2-line md-long-text">
-	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Finder</span></h3>
-	  			   <p>{{obs.PrimaryUser.name}} ({{obs.PrimaryUser.Initialer}})</p>
-	   	         </div>
-	  			   <md-divider  ng-if="!$last"></md-divider>                        
-	   	       </md-list-item>
-   	       <md-list-item class="md-2-line md-long-text">
-   	         <div class="md-list-item-text">	  				
-   	           <h3>Bestemmer</span></h3>
-  			   <p ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</p>
-			   <p ng-if="obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator">{{obs.PrimaryDetermination.verbatimdeterminator}}</p>
-   	         </div>
-  			   <md-divider  ng-if="!$last"></md-divider>                        
-   	       </md-list-item>
-   	       <md-list-item class="md-2-line md-long-text">
-   	         <div class="md-list-item-text">	  				
-   	           <h3>Lokalitet</span></h3>
-  			   <p>{{obs.Locality.name}}</p>
-   	         </div>
-  			   <md-divider  ng-if="!$last"></md-divider>                        
-   	       </md-list-item>
-    	       <md-list-item class="md-2-line md-long-text">
-    	         <div class="md-list-item-text">	  				
-    	           <h3>Dato</span></h3>
-   			   <p>{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}</p>
-    	         </div>
-   			   <md-divider  ng-if="!$last"></md-divider>                        
-    	       </md-list-item>
-    	       <md-list-item class="md-2-line md-long-text">
-    	         <div class="md-list-item-text">	  				
-    	           <h3>Vært/mykorrhizapartner</span></h3>
-   			   <p><span ng-repeat="tx in obs.associatedTaxa"> {{tx.DKandLatinName}}<span ng-if="!$last">, </span> </span></p>
-    	         </div>
-   			   <md-divider  ng-if="!$last"></md-divider>                        
-    	       </md-list-item>
-	   	       <md-list-item class="md-2-line md-long-text">
-	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Substrat</span></h3>
-	  			   <p>{{obs.Substrate.name}}</p>
-	   	         </div>
-	  			   <md-divider  ng-if="!$last"></md-divider>                        
-	   	       </md-list-item>
-	   	       <md-list-item class="md-2-line md-long-text">
-	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Vegetationstype</span></h3>
-	  			   <p>{{obs.VegetationType.name}}</p>
-	   	         </div>
-	  			   <md-divider  ng-if="!$last"></md-divider>                        
-	   	       </md-list-item>
-	   	       <md-list-item class="md-2-line md-long-text">
-	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Kollektionsnummer</span></h3>
-	  			   <p>{{obs.fieldnumber}}</p>
-	   	         </div>
-	  			   <md-divider  ng-if="!$last"></md-divider>                        
-	   	       </md-list-item>
-	   	       <md-list-item class="md-2-line md-long-text">
-	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Herbarium</span></h3>
-	  			   <p>{{obs.herbarium}}</p>
-	   	         </div>
-	  			   <md-divider  ng-if="!$last"></md-divider>                        
-	   	       </md-list-item>
-	   	       <md-list-item class="md-2-line md-long-text">
-	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Økologi-kommentarer</span></h3>
-	  			   <p>{{obs.ecologynote}}</p>
-	   	         </div>
-	  			   <md-divider  ng-if="!$last"></md-divider>                        
-	   	       </md-list-item>
-	   	       <md-list-item class="md-2-line md-long-text">
-	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Bemærkninger</span></h3>
-	  			   <p>{{obs.note}}</p>
-	   	         </div>
-	  			   <md-divider  ng-if="!$last"></md-divider>                        
-	   	       </md-list-item>
-        </md-list>
-		   	     <md-list>
-		  		 <md-subheader class="md-no-sticky">Kommentarer</md-subheader>
-		   	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in forum">
-		   
-		  		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
-	   
-		   	         <div class="md-list-item-text">
-		  				 <div layout-gt-xs="row" flex>
-		   	           <h3><span ng-show="elm.user_id !== null">{{elm.User.name}}</span></h3>
-					   <span ng-if="$mdMedia('gt-xs')" layout-fill flex></span>
-		  			   <p >{{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</p>
-		  		   </div>
-		  			   <p>{{elm.content}}</p>
- 	           
-          
-		   	         </div>
- 	        
-			 
-		  			   <md-divider class="forum-divider" ng-if="!$last"></md-divider>                        
-		   	       </md-list-item>
-		 	       <md-list-item class="md-3-line md-long-text comment-field" ng-if="isLoggedIn()">
-		   
-				   <user-avatar class="useravatar md-avatar" user="User" ></user-avatar> 
-	   
-		 	         <div class="md-list-item-text">
-				
-							 <div layout="row" layout-align="center end"
+	          <md-content class="md-padding" ng-include="'app/observationform/observation-form.tpl.html'">
 
-flex>
-					   <form layout-fill>
-					   <md-input-container class="md-block">
-					             <label>Skriv kommentar</label>
-					             <textarea ng-model="$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
-					           </md-input-container>
-					   
-						   </form>
-						   <md-button class="comment-submit" ng-show="$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">Send</md-button>
-			   	        </div>
-	  				
-          
-		 	         </div>
-                
-		 	       </md-list-item>
-		   	     </md-list>
 	          </md-content>
 	        </md-tab>
 	        <md-tab label="Kort">
 	          <md-content class="md-padding">
-	             <leaflet id="observationdetailmap" width="100%" height="350px" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
-				 <md-subheader class="md-no-sticky">Præcision: {{obs.accuracy}} m</md-subheader>
+		   	 <leaflet id="observationformmap" width="100%" height="400" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers"  controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
+	 		 <md-subheader class="md-no-sticky" ng-if="selectedLocality.length === 1">{{selectedLocality[0].name}}</md-subheader>
+		   	 <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}}</md-subheader>
+		   	  <md-subheader class="md-no-sticky" ng-if="precision">Præcision: {{precision}} m</md-subheader>
 	          </md-content>
 	        </md-tab>
-	        <md-tab label="Billeder ({{obs.Images.length}})">
+	        <md-tab label="Billeder ({{$parent.files.length}})" ng-if="$parent.files.length > 0">
 	          <md-content class="md-padding">
-		      <md-grid-list
-		            md-cols="1" 
-		            md-row-height-gt-md="1:1" md-row-height="4:3"
-		            md-gutter="8px" md-gutter-gt-sm="4px" >
-		        <md-grid-tile ng-repeat="img in obs.Images" >
-		          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
-         
-		        </md-grid-tile>
-		      </md-grid-list>
+			  
+		 	<md-card ng-repeat="file in $parent.files" >
+		 	<md-card-header layout="row" layout-align="end start" class="img-preview" flex="nogrow">
+		
+		  
+		         <md-button class="md-icon-button" aria-label="Remove" >
+		           <ng-md-icon icon="close" ng-click="$parent.removeImageFromUpload(file)"></ng-md-icon>
+		         </md-button> 
+		 	</md-card-header>
+	
+		 	<md-card-content layout-align="center center">
+		 	 <img ngf-src="file"  ngf-resize="{width: 300, height: 300}" >
+		 	 </md-card-content>
+	 
+		 	</md-card>
 	          </md-content>
 	        </md-tab>
 	      </md-tabs>
  <div md-dynamic-height md-border-bottom  ng-if="$mdMedia('gt-sm')" layout="row" layout-align="center start" flex>
 	
-    <md-card flex="60">
-     
-      <md-card-title class="speeddial-parent">
-        <md-card-title-text >
-		 
-         
-		 
-		 
-        </md-card-title-text>
-		<!-- <div class="validator-button-container" ng-if="Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"> </div>-->
-      </md-card-title >
-      <md-card-content>
+    <md-card flex="60" ng-include="'app/observationform/observation-form.tpl.html'">
 
-        <form name="observationForm">
-			
-	 		<div  layout-margin >
-	        <md-chips md-max-chips=1 ng-model="newTaxon" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
 
-	          <md-autocomplete
-	    	  	md-min-length="3"
-	    		md-no-cache="true"
-	              md-selected-item="selectedItem"
-	              md-search-text="searchText"
-	              md-items="item in querySearch(searchText)"
-	              md-item-text="item.FullName"
-	              placeholder="{{(newTaxon.length ===0) ? 'Skriv taxon' : ''}}"
-	 			 ng-disabled="newTaxon.length >0"
-	 			flex >
-	            <span md-highlight-text="searchText" ng-if="!$parent.DkNames">{{($parent.onlyHigherTaxa) ? item.FullName +' sp.' : item.FullName}}</span>
-				<span md-highlight-text="searchText" ng-if="$parent.DkNames">{{($parent.onlyHigherTaxa) ? 'Art af ' +item.Vernacularname_DK.vernacularname_dk : item.Vernacularname_DK.vernacularname_dk}}</span>
-	          </md-autocomplete>
-	          <md-chip-template>
-	            <span ng-if="!$parent.onlyHigherTaxa">
-	 			   <strong ng-if="$chip.Vernacularname_DK">{{$chip.Vernacularname_DK.vernacularname_dk | capitalize}} (</strong>
-	              <strong><em>{{$chip.FullName}}</em> {{$chip.Author}}</strong>
-				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
-	            </span>
-	            <span ng-if="$parent.onlyHigherTaxa">
-	 			   <strong ng-if="$chip.Vernacularname_DK">Art af {{$chip.Vernacularname_DK.vernacularname_dk}} (</strong>
-	              <strong><em>{{$chip.FullName}} sp.</em></strong>
-				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
-	            </span>
-	          </md-chip-template>
-		
-	        </md-chips>
-	 	      </div>
-		 		  <div layout="row" layout-margin>
-				   	<md-switch ng-model="$parent.DkNames" aria-label="Søg danske navne" ng-show="newTaxon.length ===0">
-				   	    Danske navne
-				   	  </md-switch>
-		 	   <md-switch ng-model="$parent.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
-		 	       Søg i slægter, familier, ordener osv.
-		 	     </md-switch>
-		 	 </div>
-			 <md-whiteframe class="md-whiteframe-2dp" layout layout-align="center center" layout-padding layout-margin ng-if="taxonAttrs && taxonAttrs.valideringsrapport">
-			     <span>{{taxonAttrs.valideringsrapport}}</span>
-			   </md-whiteframe>
-			  <div layout-margin layout="row">
-				  <md-chips ng-model="selectedLocality" md-autocomplete-snap md-require-match="true" class="md-block" ng-if="!foreignLocality" flex-gt-xs>
-
-				    <md-autocomplete
-					
-				        md-selected-item="selectedItem"
-				        md-search-text="searchText"
-				        md-items="item in querySearchLocality(searchText)"
-				        md-item-text="item.name"
-				        placeholder="Lokalitet"
-						ng-disabled="selectedLocality.length > 0">
-				      <span md-highlight-text="searchText">{{item.name}}</span>
-				    </md-autocomplete>
-				    <md-chip-template>
-				      <span>
-				        <strong>{{$chip.name}}</strong>
-
-				      </span>
-				    </md-chip-template>
+        
 	
-				  </md-chips>
-				<md-input-container ng-if="foreignLocality" class="md-block" flex-gt-xs>
-				            <label>Lokalitet</label>
-				            <input ng-model="foreignLocalityString" disabled>
-				          </md-input-container>
-						  
-			              <md-datepicker ng-model="observationDate" md-placeholder="Dato">
-			              </md-datepicker>
-			  </div> 
-			   <div layout-margin layout="row">
-				   <md-input-container>
-				           <label>Substrat</label>
-				           <md-select name="substrate" ng-model="$parent.selectedSubstrate" required>
-				             <md-option ng-repeat="sub in substrates" value="{{sub._id}}" >
-				               {{sub.name}}
-				             </md-option>
-				           </md-select>
-						   <div class="errors" ng-messages="observationForm.substrate.$error" ng-if="observationForm.$dirty && observationForm.substrate.$touched && !$parent.selectedSubstrate">
-						           <div ng-message="required">Obligatorisk</div>
-						         </div>
-				         </md-input-container>
-	 				   <md-input-container>
-	 				           <label>Vegetationstype</label>
-	 				           <md-select ng-model="$parent.selectedVegetationType" name="vegetationType">
-	 				             <md-option ng-repeat="veg in vegetationtypes" value="{{veg._id}}" >
-	 				               {{veg.name}}
-	 				             </md-option>
-	 				           </md-select>
-							   <div class="errors" ng-messages="observationForm.vegetationType.$error" ng-if="observationForm.$dirty && observationForm.vegetationType.$touched && !$parent.selectedVegetationType">
-							           <div ng-message="required">Obligatorisk</div>
-							         </div>
-	 				         </md-input-container>
-			   </div>
-			   <div layout-margin layout="row">
- 				  <md-chips ng-model="associatedOrganism" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
-
- 				    <md-autocomplete
- 					
-					
- 				        md-selected-item="selectedItem"
- 				        md-search-text="searchText"
- 				        md-items="item in querySearchPlantTaxon(searchText)"
- 				        md-item-text="item.DKandLatinName"
- 				        placeholder="{{'Skriv vært' }}"
- 						>
- 				      <span md-highlight-text="searchText">{{item.DKandLatinName}}</span>
- 				    </md-autocomplete>
- 				    <md-chip-template>
- 				      <span>
- 				        <strong>{{$chip.DKandLatinName}}</strong>
-
- 				      </span>
- 				    </md-chip-template>
-	
- 				  </md-chips>
- 			
-			   	
-			  </div>
-				  <div layout-margin layout="column">
- 			   	<md-switch ng-model="$parent.extendedAssociatedOrganismSearch" aria-label="Udvidet søgning" >
- 			   	    Udvidet værtssøgning
- 			   	  </md-switch>
- 				  <md-chips ng-model="associatedOrganismImport" md-autocomplete-snap md-require-match="true" class="md-block" ng-if="$parent.extendedAssociatedOrganismSearch" flex-gt-xs>
-
- 				    <md-autocomplete
- 					md-no-cache="true"
-					md-min-length="3"
- 				        md-selected-item="selectedItem"
- 				        md-search-text="searchText"
- 				        md-items="item in querySearchGBIFPlantTaxon(searchText)"
- 				        md-item-text="item.canonicalName"
- 				        placeholder="{{'Udvidet værtssøgning' }}"
- 						>
- 				      <span md-highlight-text="searchText">{{item.canonicalName}} ({{item.rank}})</span>
- 				    </md-autocomplete>
- 				    <md-chip-template>
- 				      <span>
- 				        <strong>{{$chip.canonicalName}} ({{$chip.rank}})</strong>
-
- 				      </span>
- 				    </md-chip-template>
-	
- 				  </md-chips>
-				 
-			   </div>
-			   <div layout-margin layout="column">
-				   <md-input-container class="md-block">
-				             <label>Økologi-kommentar</label>
-				             <textarea ng-model="$parent.ecologynote" md-maxlength="800" rows="5" md-select-on-focus></textarea>
-				           </md-input-container>
-			   </div>
- 			   <div layout-margin layout="row">
-  				  <md-chips ng-model="users" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
-
-  				    <md-autocomplete
- 					
-					
-  				        md-selected-item="selectedItem"
-  				        md-search-text="searchText"
-  				        md-items="item in querySearchUser(searchText)"
-  				        md-item-text="item.name"
-  				        placeholder="{{'Tilføj finder(e)' }}"
-  						>
-  				      <span md-highlight-text="searchText">{{item.name}} ({{item.Initialer}})</span>
-  				    </md-autocomplete>
-  				    <md-chip-template>
-  				      <span>
-  				        <strong>{{$chip.name}} ({{$chip.Initialer}})</strong>
-
-  				      </span>
-  				    </md-chip-template>
-	
-  				  </md-chips>
- 			
-			   	
- 			  </div>
-			  
- 			   <div layout-margin layout="row">
-  				  <md-chips ng-model="determiner" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
-
-  				    <md-autocomplete
- 					
-					
-  				        md-selected-item="selectedItem"
-  				        md-search-text="searchText"
-  				        md-items="item in querySearchUser(searchText)"
-  				        md-item-text="item.name"
-  				        placeholder="{{'Bestemmer' }}"
-						ng-disabled="determiner.length >0"
-  						>
-  				      <span md-highlight-text="searchText">{{item.name}} ({{item.Initialer}})</span>
-  				    </md-autocomplete>
-  				    <md-chip-template>
-  				      <span>
-  				        <strong>{{$chip.name}} ({{$chip.Initialer}})</strong>
-
-  				      </span>
-  				    </md-chip-template>
-	
-  				  </md-chips>
- 			
-			   	
- 			  </div>
-			  <div layout-margin layout="row">
-				  <md-input-container class="md-block" flex-gt-sm>
-				              <label>Kollektionsnummer</label>
-				              <input ng-model="$parent.fieldnumber">
-				            </md-input-container>
-		  				  <md-input-container class="md-block" flex-gt-sm>
-		  				              <label>Herbarium</label>
-		  				              <input ng-model="$parent.herbarium">
-		  				            </md-input-container>
-			  </div>
-			   <div layout-margin layout="column">
-				   <md-input-container class="md-block">
-				             <label>Kommentarer til fundet</label>
-				             <textarea ng-model="$parent.note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
-				           </md-input-container>
-			   </div>
-			  
-			  <!--############################################################-->
-			   
-			   <div>
-				  
-					   
-				    
-					 <md-button ngf-select ng-model="$parent.files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-capture="'camera'" ngf-resize="{width: 1200, height: 800, quality: .8,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true"
-					                  aria-label="Tilføj billeder"
-					                  class="md-icon-button" >
-					         <ng-md-icon icon="camera_alt" ></ng-md-icon>
-					       </md-button>
-				 <md-button ng-if="files.length > 0" 
-				                  aria-label="Upload billeder"
-				                  class="md-icon-button" 
-								  ng-click="uploadFiles(files)">
-				         <ng-md-icon icon="file_upload" ></ng-md-icon>
-				       </md-button>
-					 
-   				 <md-button  ng-show="observationIsValid()"
-   				                  aria-label="Publicer observation"
-   				                  class="md-icon-button" 
-   								  ng-click="submitObservation()">
-   				         <ng-md-icon icon="save" ></ng-md-icon>
-   				       </md-button>  
-				     
-			   </div>
-			    <!--############################################################-->
-		</form>
  	    
       </md-card-content>
      
@@ -451,7 +74,7 @@ flex>
 	
 	 <md-card flex="40" layout-padding>
 	 <leaflet id="observationformmap" width="100%" height="400" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers"  controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
-	 
+	
 	 <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}}</md-subheader>
 	  <md-subheader class="md-no-sticky" ng-if="precision">Præcision: {{precision}} m</md-subheader>
 	 

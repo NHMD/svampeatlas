@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     DKname: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     DKandLatinName: {
       type: DataTypes.STRING,

@@ -50,7 +50,8 @@
    	       <md-list-item class="md-2-line md-long-text">
    	         <div class="md-list-item-text">	  				
    	           <h3>Lokalitet</span></h3>
-  			   <p>{{obs.Locality.name}}</p>
+  			   <p ng-if="obs.Locality">{{obs.Locality.name}}</p>
+			   <p ng-if="!obs.Locality && obs.verbatimLocality">{{obs.verbatimLocality}}</p>
    	         </div>
   			   <md-divider  ng-if="!$last"></md-divider>                        
    	       </md-list-item>
@@ -209,7 +210,8 @@ flex>
 			</td>
 		</tr >
 	  	<tr >
-	  		<td class="rightalign"><strong>Lokalitet:</strong></td><td>{{obs.Locality.name}} </td> 
+	  		<td class="rightalign"><strong>Lokalitet:</strong></td><td><span ng-if="obs.Locality">{{obs.Locality.name}}</span>
+			   <span ng-if="!obs.Locality && obs.verbatimLocality">{{obs.verbatimLocality}}</span></td> 
 			<td class="rightalign"><strong>Dato:</strong></td><td >{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}</td>
 		</tr >
 	  	<tr >
@@ -295,7 +297,7 @@ flex>
            md-row-height-gt-md="1:1" md-row-height="4:3"
            md-gutter="8px" md-gutter-gt-sm="4px" >
        <md-grid-tile ng-repeat="img in obs.Images" >
-         <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+         <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl(obs)+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
          
        </md-grid-tile>
      </md-grid-list>

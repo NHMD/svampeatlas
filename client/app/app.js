@@ -166,7 +166,13 @@ angular.module('svampeatlasApp', [
 	
   })
   .constant("appConstants", {
-         "imageurl": "http://130.225.98.135/svampeatlas/uploads/"
+         "imageurl": function(obs){
+			 if(new Date(obs.observationDate).getFullYear() < 2015){
+			 	return "http://130.225.98.135/svampeatlas/uploads/";
+			 } else {
+			 	return "/uploads/"
+			 }
+         }
         
      })
 .filter('synonymsWithoutSelf', function() {

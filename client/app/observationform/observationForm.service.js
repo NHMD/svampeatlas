@@ -7,8 +7,8 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload',
-							function($scope, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload) {
+						controller: ['$scope', '$q','$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload',
+							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload) {
 								$scope.substrates = Substrate.query();
 								$scope.vegetationtypes = VegetationType.query();
 								$scope.$mdMedia = $mdMedia;
@@ -573,7 +573,13 @@ angular.module('svampeatlasApp')
 								$scope.files = [];
 
 
-
+								$scope.selectedTabIndex =0;
+								
+								$scope.$watch('files', function(newVal, oldVal){
+									if(newVal && newVal.length > 0){
+										$scope.selectedTabIndex =2;
+									}
+								})
 					
 
 								$scope.removeImageFromUpload = function(img) {
@@ -584,28 +590,51 @@ angular.module('svampeatlasApp')
 
 								}
 								// END IMAGES
+								$scope.processassociatedOrganismImport = function() {
+									var promises = [];
+									 _.each($scope.associatedOrganismImport, function(e) {
+										 promises.push(PlantTaxon.save({
 
+											DKandLatinName: e.species,
+											LatinName: e.species,
+											gbiftaxon_id: e.nubKey
+										}).$promise.then(function(planttaxon){
+											$scope.associatedOrganism.push(planttaxon);
+											_.remove($scope.associatedOrganismImport, function(e){
+												return e.nubKey === planttaxon.gbiftaxon_id;
+											})
+										}))
+									
+									})
+									
+									return $q.all(promises)
+								}
+								
+								
 
 								$scope.submitObservation = function() {
 									var determination = {
 										taxon_id: $scope.newTaxon[0]._id,
 										user_id: $scope.determiner[0]._id
 									};
+									
+									
+									
 									var obs = {
 										observationDate: $scope.observationDate,
 										primaryuser_id: $scope.users[0]._id,
-										primaryassociatedorganism_id: $scope.associatedOrganism[0]._id,
+										
 										substrate_id: $scope.selectedSubstrate,
 										vegetationtype_id: $scope.selectedVegetationType,
 										ecologynote: $scope.ecologynote,
-										decimalLatitude: $scope.mapsettings.markers.position.lat,
-										decimalLongitude: $scope.mapsettings.markers.position.lng,
+										
 										accuracy: $scope.precision,
 										fieldnumber: $scope.fieldnumber,
 										herbarium: $scope.herbarium,
 										note: $scope.note,
 										determination: determination,
 										associatedOrganisms: $scope.associatedOrganism,
+										associatedOrganismImport: $scope.associatedOrganismImport,
 										users: $scope.users
 										
 									};
@@ -615,6 +644,15 @@ angular.module('svampeatlasApp')
 										
 									}
 									
+									if(!$scope.mapsettings.markers.position && $scope.selectedLocality.length === 1){
+										obs.decimalLatitude =$scope.selectedLocality[0].decimalLatitude;
+										obs.decimalLongitude = $scope.selectedLocality[0].decimalLongitude;
+										obs.accuracy = 2500;
+									} else {
+										obs.decimalLatitude= $scope.mapsettings.markers.position.lat;
+										obs.decimalLongitude = $scope.mapsettings.markers.position.lng;
+									}
+									
 									if($scope.foreignLocality){
 										obs.geoname = $scope.foreignLocality;
 										obs.verbatimLocality = $scope.foreignLocalityString;
@@ -622,8 +660,17 @@ angular.module('svampeatlasApp')
 										obs.geonameId = $scope.foreignLocality.geonameId;
 									}
 									
-									Observation.save(obs)
-										.$promise.then(function(obs) {
+									
+									var importPromise = ($scope.associatedOrganismImport.length > 0) ? $scope.processassociatedOrganismImport() : $q.resolve();
+									
+									importPromise.then(function(){
+										if ($scope.associatedOrganism.length > 0) {
+											obs.primaryassociatedorganism_id = $scope.associatedOrganism[0]._id;
+										}
+										return Observation.save(obs).$promise;
+									})
+									
+										.then(function(obs) {
 
 											if ($scope.files && $scope.files.length) {
 
@@ -655,6 +702,7 @@ angular.module('svampeatlasApp')
 									catch (function(err) {
 										alert("error")
 									})
+									
 								};
 							}
 						],

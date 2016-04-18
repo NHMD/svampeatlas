@@ -90,7 +90,7 @@
 			          </a>
 		  
 		  
-					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onaftersave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onaftersave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
+					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
 		
 					 <label class="control-label" for="DK_reference">DK referencer</label>
 			        <a href="#" id="DK_reference" editable-textarea="taxon.attributes.DK_reference" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">

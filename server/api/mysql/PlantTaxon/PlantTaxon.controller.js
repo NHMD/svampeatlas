@@ -153,7 +153,12 @@ exports.show = function(req, res) {
 
 // Creates a new thing in the DB.
 exports.create = function(req, res) {
-  PlantTaxon.create(req.body)
+	
+		
+	PlantTaxon.find({where: {LatinName: req.body.LatinName}}).then(function(planttaxon){
+		return (planttaxon) ? Promise.resolve(planttaxon) : PlantTaxon.create(req.body);
+	})
+  
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 };
