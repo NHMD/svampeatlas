@@ -141,7 +141,8 @@ angular.module('svampeatlasApp')
 										q.where = {
 											FullName: {
 												like: "%" + query + "%"
-											}
+											},
+											RankID: RankID
 										};
 
 
