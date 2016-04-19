@@ -45,7 +45,7 @@ module.exports = {
 		}
 	},
 	
-	uploaddir: '../uploads/',
+	uploaddir: '/home/atlas/uploads/',
 	/*
   sequelize: {
 	  uri: 'mysql://',
