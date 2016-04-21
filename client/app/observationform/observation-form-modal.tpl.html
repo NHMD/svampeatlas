@@ -5,7 +5,8 @@
           <md-button class="md-icon-button" ng-click="cancel()">
             <ng-md-icon icon="arrow_back" aria-label="Close dialog"></ng-md-icon>
           </md-button>
-        <h2>Opret fund</h2>
+        <h2 ng-if="!obs">Opret fund</h2>
+		<h2 ng-if="obs">{{obs.PrimaryUser.Initialer}}{{(obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : ''}}-{{obs._id}}</h2>
         <span flex></span>
 			 <md-button ngf-select ng-model="files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-capture="'camera'" ngf-resize="{width: 1200, height: 800, quality: .8,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true"
 			                  aria-label="Tilføj billeder"

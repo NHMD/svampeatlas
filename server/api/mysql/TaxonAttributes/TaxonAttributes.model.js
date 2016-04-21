@@ -132,10 +132,12 @@ module.exports = function(sequelize, DataTypes) {
     valideringskrav: {
       type: DataTypes.INTEGER(2),
       allowNull: false,
+		defaultValue: 2
     },
     valideringsrapport: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
+		
     },
 
   }, {

@@ -233,7 +233,7 @@ angular.module('svampeatlasApp')
 			$scope.isValidYear = function(year) {
 				var yearPattern = /^(17|18|19|20)\d{2}$/
 
-				if (!yearPattern.test(year) || (parseInt(year) > new Date().getFullYear())) {
+				if (parseInt(year) !== 0 && (!yearPattern.test(year) || (parseInt(year) > new Date().getFullYear()))) {
 					return "You must enter a valid year";
 				}
 			}
