@@ -3,14 +3,18 @@ angular.module('svampeatlasApp')
 	.factory('ObservationFormService', function($mdDialog, appConstants) {
 
 			return {
-				show: function(ev) {
+				show: function(ev, row) {
 
 
 					$mdDialog.show({
-						controller: ['$scope', '$q','$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload',
+						controller: ['$scope', '$q','$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 
 							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload) {
-								$scope.substrates = Substrate.query();
-								$scope.vegetationtypes = VegetationType.query();
+								
+								
+								
+							
+								
+								
 								$scope.$mdMedia = $mdMedia;
 								$scope.newTaxon = [];
 								$scope.selectedLocality = [];
@@ -18,10 +22,168 @@ angular.module('svampeatlasApp')
 								$scope.associatedOrganismImport = [];
 								$scope.determiner = [];
 								$scope.users = [];
-								$scope.currentUser = User.get();
-								$scope.users.push($scope.currentUser);
-								$scope.determiner.push($scope.currentUser);
-								$scope.observationDate = new Date();
+								$scope.currentUser = Auth.getCurrentUser();
+								
+								$scope.$watchCollection('selectedLocality', function(newVal) {
+									if (newVal && newVal[0] && newVal[0]._id) {
+
+										if (newVal[0]._id > 0) {
+											$scope.changeBaseLayer("topo_25")
+										} else {
+											$scope.changeBaseLayer("WorldTopoMap")
+										}
+
+										$scope.mapsettings.center = {
+											lat: newVal[0].decimalLatitude,
+											lng: newVal[0].decimalLongitude,
+											zoom: 14
+										}
+
+
+
+									}
+								})
+								
+								// wrap initial load of obs in timeout to increase speed
+								$timeout(function(){
+									
+									$scope.obsPromise = (row) ? Observation.get({id:row._id}).$promise : $q.resolve(false);
+									$scope.obsPromise.then(function(obs){
+										// edit mode
+										if(obs){
+											$scope.obs = obs;
+										
+											if(obs.Locality){
+												$scope.selectedLocality.push(obs.Locality);
+											};
+											$scope.newTaxon.push(obs.PrimaryDetermination.Taxon);
+											$scope.users = obs.users;
+											$scope.determiner.push(obs.PrimaryDetermination.User)
+											$scope.associatedOrganism = obs.associatedTaxa;
+											$scope.observationDate = new Date(obs.observationDate);
+											$scope.ecologynote = obs.ecologynote;
+										
+											$scope.precision = obs.accuracy;
+										
+											$scope.fieldnumber = obs.fieldnumber;
+											$scope.herbarium = obs.herbarium;
+											$scope.note = obs.note;
+										
+											$scope.mapsettings.markers.position = {
+												lat: obs.decimalLatitude,
+												lng: obs.decimalLongitude,
+												layer: 'position'
+
+											}
+											
+											$scope.mapsettings.center = {
+												lat: obs.decimalLatitude,
+												lng: obs.decimalLongitude,
+												zoom: 14
+											}
+											
+											if(obs.GeoNames){
+												$scope.foreignLocalityString = obs.verbatimLocality;
+												$scope.foreignLocality = obs.GeoNames
+											}
+										
+										} else {
+											$scope.users.push($scope.currentUser);
+											$scope.determiner.push($scope.currentUser);
+											$scope.observationDate = new Date();
+										}
+									
+										return obs;
+									
+									})
+									.then(function(obs){
+											Substrate.query().$promise.then(function(substrates){
+												$scope.substrates = substrates;
+											
+												if(obs){
+													$scope.selectedSubstrate = obs.substrate_id;
+												}
+										
+											});
+										 VegetationType.query().$promise.then(function(vegetationtypes){
+												$scope.vegetationtypes =  vegetationtypes;
+											
+												if(obs){
+													$scope.selectedVegetationType = obs.vegetationtype_id;
+												}
+											
+											});
+									})
+									
+									leafletData.getMap('observationformmap').then(function(map) {
+
+										$timeout(function() {
+											map.invalidateSize();
+										});
+
+										map.on('click', function(e) {
+										
+
+											$scope.precision = $scope.getMarkerPrecision(map.getZoom());
+
+											$scope.mapsettings.markers.position = {
+												lat: e.latlng.lat,
+												lng: e.latlng.lng,
+												layer: 'position'
+
+											}
+										
+										
+											$scope.mapsettings.center.lat = e.latlng.lat;
+											$scope.mapsettings.center.lng = e.latlng.lng;
+										
+
+											if ($scope.mapsettings.center.zoom < 10) {
+												$scope.mapsettings.center.zoom = 10
+											} else if ($scope.mapsettings.center.zoom >= 10 && $scope.mapsettings.center.zoom < 18) {
+												$scope.mapsettings.center.zoom++;
+											}
+											//console.log("########## "+GeoJsonUtils.inDK($scope.mapsettings.center))
+
+											if (!GeoJsonUtils.inDK($scope.mapsettings.markers.position)) {
+												$http({
+													method: 'GET',
+													url: '/api/geonames/findnearby',
+													params: {
+														lat: $scope.mapsettings.markers.position.lat,
+														lng: $scope.mapsettings.markers.position.lng
+													}
+												}).then(function(res) {
+													var direction = GeoJsonUtils.direction($scope.mapsettings.markers.position, res.data.geonames[0]);
+
+													$scope.foreignLocalityString = res.data.geonames[0].countryName + ", " + res.data.geonames[0].adminName1 + ", " + (Math.round(res.data.geonames[0].distance * 1000)) + " m " + direction + " " + res.data.geonames[0].name + " (" + res.data.geonames[0].fcodeName + ")";
+													$scope.foreignLocality = res.data.geonames[0];
+
+													$scope.selectedLocality = [];
+												});
+											} else {
+												if($scope.showLocalitiesOnMap){
+													$scope.setNearbyLocalities();
+												}
+												delete $scope.foreignLocalityString;
+												delete $scope.foreignLocality;
+											}
+										});
+
+
+										//map.invalidateSize(false)
+
+									})
+									
+									
+								})
+								
+								// End timeout
+								
+								
+								
+								
+								
 								$scope.$watchCollection('newTaxon', function(newVal) {
 									if (newVal && newVal[0] && newVal[0]._id) {
 										TaxonAttributes.get({
@@ -50,31 +212,9 @@ angular.module('svampeatlasApp')
 									return valid;
 									
 								}
+
+
 								
-								$scope.$watchCollection('selectedLocality', function(newVal) {
-									if (newVal && newVal[0] && newVal[0]._id) {
-
-										if (newVal[0]._id > 0) {
-											$scope.changeBaseLayer("topo_25")
-										} else {
-											$scope.changeBaseLayer("WorldTopoMap")
-										}
-
-										$scope.mapsettings.center = {
-											lat: newVal[0].decimalLatitude,
-											lng: newVal[0].decimalLongitude,
-											zoom: 14
-										}
-
-
-
-									}
-								})
-
-								$scope.determination = {
-									confidence: 'sikker'
-								};
-
 
 								$scope.querySearchLocality = function(query) {
 
@@ -326,7 +466,7 @@ angular.module('svampeatlasApp')
 								};
 
 
-								function getMarkerPrecision(zoom) {
+								 $scope.getMarkerPrecision = function(zoom) {
 
 									if (zoom <= 6) {
 										return 50000;
@@ -506,65 +646,7 @@ angular.module('svampeatlasApp')
 									
 								});
 								
-								leafletData.getMap('observationformmap').then(function(map) {
 
-									$timeout(function() {
-										map.invalidateSize();
-									});
-
-									map.on('click', function(e) {
-										
-
-										$scope.precision = getMarkerPrecision(map.getZoom());
-
-										$scope.mapsettings.markers.position = {
-											lat: e.latlng.lat,
-											lng: e.latlng.lng,
-											layer: 'position'
-
-										}
-										
-										
-										$scope.mapsettings.center.lat = e.latlng.lat;
-										$scope.mapsettings.center.lng = e.latlng.lng;
-										
-
-										if ($scope.mapsettings.center.zoom < 10) {
-											$scope.mapsettings.center.zoom = 10
-										} else if ($scope.mapsettings.center.zoom >= 10 && $scope.mapsettings.center.zoom < 18) {
-											$scope.mapsettings.center.zoom++;
-										}
-										//console.log("########## "+GeoJsonUtils.inDK($scope.mapsettings.center))
-
-										if (!GeoJsonUtils.inDK($scope.mapsettings.markers.position)) {
-											$http({
-												method: 'GET',
-												url: '/api/geonames/findnearby',
-												params: {
-													lat: $scope.mapsettings.markers.position.lat,
-													lng: $scope.mapsettings.markers.position.lng
-												}
-											}).then(function(res) {
-												var direction = GeoJsonUtils.direction($scope.mapsettings.markers.position, res.data.geonames[0]);
-
-												$scope.foreignLocalityString = res.data.geonames[0].countryName + ", " + res.data.geonames[0].adminName1 + ", " + (Math.round(res.data.geonames[0].distance * 1000)) + " m " + direction + " " + res.data.geonames[0].name + " (" + res.data.geonames[0].fcodeName + ")";
-												$scope.foreignLocality = res.data.geonames[0];
-
-												$scope.selectedLocality = [];
-											});
-										} else {
-											if($scope.showLocalitiesOnMap){
-												$scope.setNearbyLocalities();
-											}
-											delete $scope.foreignLocalityString;
-											delete $scope.foreignLocality;
-										}
-									});
-
-
-									//map.invalidateSize(false)
-
-								})
 
 								$scope.cancel = function() {
 									$mdDialog.cancel();
@@ -668,7 +750,7 @@ angular.module('svampeatlasApp')
 										if ($scope.associatedOrganism.length > 0) {
 											obs.primaryassociatedorganism_id = $scope.associatedOrganism[0]._id;
 										}
-										return Observation.save(obs).$promise;
+										return ($scope.obs && $scope.obs._id) ? Observation.update({id: $scope.obs._id}, obs).$promise : Observation.save(obs).$promise;
 									})
 									
 										.then(function(obs) {

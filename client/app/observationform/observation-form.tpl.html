@@ -1,5 +1,14 @@
         <form name="observationForm">
 			
+  			  <div layout="column" ng-if="obs" class="inset" layout-fill>
+  	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+  				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
+  	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader">Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
+  	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
+  	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
+  		  </div>
+			
+			<div ng-if="!obs">
 	 		<div  layout-margin >
 	        <md-chips md-max-chips=1 ng-model="newTaxon" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
 
@@ -42,6 +51,7 @@
 			 <md-whiteframe class="md-whiteframe-2dp valideringsrapport" layout layout-align="center center" layout-padding layout-margin ng-if="taxonAttrs && taxonAttrs.valideringsrapport">
 			     <span>{{taxonAttrs.valideringsrapport}}</span>
 			   </md-whiteframe>
+			 </div>
 			  <div layout-margin layout-gt-xs="row" >
 				  <md-chips ng-model="selectedLocality" md-autocomplete-snap md-require-match="true" class="md-block" ng-if="!foreignLocality" flex-gt-xs>
 
@@ -150,7 +160,7 @@
 			   <div layout-margin layout="column">
 				   <md-input-container class="md-block">
 				             <label>Økologi-kommentar</label>
-				             <textarea ng-model="$parent.ecologynote" md-maxlength="800" rows="5" md-select-on-focus></textarea>
+				             <textarea ng-model="$parent.$parent.ecologynote" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
 			   </div>
  			   <div layout-margin layout="row">
@@ -179,7 +189,7 @@
 			   	
  			  </div>
 			  
- 			   <div layout-margin layout="row">
+ 			   <div layout-margin layout="row" ng-if="!obs">
   				  <md-chips ng-model="determiner" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
 
   				    <md-autocomplete
@@ -208,17 +218,17 @@
 			  <div layout-margin layout="row">
 				  <md-input-container class="md-block" flex-gt-sm>
 				              <label>Kollektionsnummer</label>
-				              <input ng-model="$parent.fieldnumber">
+				              <input ng-model="$parent.$parent.fieldnumber">
 				            </md-input-container>
 		  				  <md-input-container class="md-block" flex-gt-sm>
 		  				              <label>Herbarium</label>
-		  				              <input ng-model="$parent.herbarium">
+		  				              <input ng-model="$parent.$parent.herbarium">
 		  				            </md-input-container>
 			  </div>
 			   <div layout-margin layout="column">
 				   <md-input-container class="md-block">
 				             <label>Kommentarer til fundet</label>
-				             <textarea ng-model="$parent.note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
+				             <textarea ng-model="$parent.$parent.note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
 			   </div>
 			  

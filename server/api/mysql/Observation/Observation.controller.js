@@ -243,7 +243,7 @@ exports.show = function(req, res) {
 			    {
 			   				model: models.User,
 			   				as: 'User',
-			   				attributes: ['email', 'Initialer', 'name']
+			   				attributes: ['_id','email', 'Initialer', 'name']
 			   			}
 			]
 			}, {
@@ -253,7 +253,13 @@ exports.show = function(req, res) {
 			}, {
 				model: models.Locality,
 				as: 'Locality'
-			}, {
+			},
+			{
+							model: models.GeoNames,
+							as: 'GeoNames'
+						} ,
+			
+			{
 				model: models.ObservationImage,
 				as: 'Images'
 			}, {
@@ -268,7 +274,8 @@ exports.show = function(req, res) {
 			as: 'associatedTaxa'
 			},
 			{model: models.User,
-			as: 'users'	
+			as: 'users'	,
+			attributes: ['_id','email', 'Initialer', 'name']
 			},
 			{model: models.Substrate,
 			as: 'Substrate'
@@ -309,9 +316,7 @@ exports.create = function(req, res) {
 			})
 		}).then(function(obs) {
 
-			var geoname = (req.body.geoname) ? models.GeoNames.upsert(req.body.geoname, {
-				transaction: t
-			}) : true;
+			
 
 			return [models.Taxon.find({
 				where: {
@@ -330,7 +335,7 @@ exports.create = function(req, res) {
 				transaction: t
 			}), obs]
 		})
-			.spread(function(taxon, obs, geoname) {
+			.spread(function(taxon, obs) {
 
 				determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Afventer';
 				determination.observation_id = obs._id;
@@ -385,8 +390,90 @@ exports.create = function(req, res) {
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
 
+
+	var observation = req.body;
 	
+
+
+	return models.sequelize.transaction(function(t) {
+
+		var gnames = (req.body.geoname) ? models.GeoNames.upsert(req.body.geoname, {
+			transaction: t
+		}) : Promise.resolve(true);
+
+		return gnames.then(function(gname) {
+			return models.Observation.find({
+				where: {
+					_id: req.params.id
+				} 
+			}, {
+				transaction: t
+			})
+
+
+		}).then(function(obs) {
+
+
+			if (!obs) {
+				res.send(404);
+			};
+			
+			if(obs.decimalLatitude !== req.body.decimalLatitude || obs.decimalLongitude !== req.body.decimalLongitude){
+				obs.set('geom', models.sequelize.fn('GeomFromText', 'POINT (' + req.body.decimalLongitude + ' ' + req.body.decimalLatitude + ')'));
+			}
+			// update attributes
+			obs.set(req.body);
+			if(req.body.geoname && obs.locality_id !== null) {
+				obs.set('locality_id',  null)
+			}
+			if(req.body.locality_id && obs.geonameId !== null) {
+				obs.set('geonameId',  null);
+				obs.set('verbatimLocality',  null);
+			}
+			var changed = obs.changed();
+
+			return [obs.save({
+				transaction: t
+			}), obs.setAssociatedTaxa(_.map(req.body.associatedOrganisms, function(e) {
+				return e._id
+			}), {
+				transaction: t
+			}), obs.setUsers(_.map(req.body.users, function(e) {
+				return e._id
+			}), {
+				transaction: t
+			}), changed];
+
+		})
+
+		.spread(function(obs, associated, users, changed) {
+			var json = {};
+			_.each(changed, function(e){
+				json[e] = req.body[e];
+			})
+			if(associated.length > 0){
+				json.associatedOrganisms = _.map(req.body.associatedOrganisms, function(e){ return {_id : e._id, DKandLatinName: e.DKandLatinName}});
+			}
+			if(users.length > 0){
+				json.users = _.map(req.body.users, function(e){ return { _id : e._id, name: e.name, Initialer: e.Initialer}});
+			}
+
+			return [obs, models.ObservationLog.create({oldvalues: JSON.stringify(json), user_id: req.user._id, observation_id: req.params.id}, {transaction: t})];
+		})
+		.spread(function(obs, log){
+			return obs;
+		})
+
+
+	}).then(function(obs) {
+
+		return res.status(200).json(obs)
+	})
+		.
+	catch (handleError(res));
+
 };
+
 
 
 // Deletes a taxon from the DB.
