@@ -15,3 +15,7 @@
 .valideringsrapport {
 	margin-bottom: 18px !important;
 }
+
+#position-button {
+	z-index: 10000;
+}
