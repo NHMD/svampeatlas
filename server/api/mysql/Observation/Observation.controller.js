@@ -92,8 +92,7 @@ exports.index = function(req, res) {
 	if (req.query.where) {
 		_.merge(query.where, JSON.parse(req.query.where));
 	}
-	console.log("#######")
-	console.log(query.where)
+
 	if(req.query.group){
 		
 		query['group'] =	JSON.parse(req.query.group)
