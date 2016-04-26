@@ -67,6 +67,26 @@ angular.module('svampeatlasApp')
 			
 		}
 	});
+	
+	$scope.showLoginForm = function(ev){
+		var useFullScreen = $mdMedia('xs');
+		    $mdDialog.show({
+		      controller: LoginController,
+		      templateUrl: 'app/account/login/login-modal.tpl.html',
+		    //  parent: angular.element(document.body),
+		      targetEvent: ev,
+		      clickOutsideToClose:true,
+		      fullscreen: useFullScreen
+		    })
+		    .then(function(answer) {
+		      $scope.status = 'You said the information was "' + answer + '".';
+		    }, function() {
+		      $scope.status = 'You cancelled the dialog.';
+		    });
+			
+		   
+		
+	}
     
     
 	
@@ -75,7 +95,65 @@ angular.module('svampeatlasApp')
 	/******************************/
 	
   
+var LoginController = ['$scope', 'Auth', '$state', '$window', '$location', '$cookies', '$translate', 'PlutoF', 'ssSideNav', '$mdDialog', '$mdMedia', function($scope, Auth, $state, $window, $location, $cookies, $translate, PlutoF, ssSideNav, $mdDialog, $mdMedia) {
+    $scope.user = {};
+    $scope.errors = {};
+	$scope.$mdMedia = $mdMedia;
+	$scope.cancel = function() {
+		$mdDialog.cancel();
+	};
+	
+	$scope.fberror = $location.search().fberror;
+	
+    $scope.login = function(form) {
+      $scope.submitted = true;
 
+      if (form.$valid) {
+        Auth.login({
+          Initialer: $scope.user.Initialer,
+          password: $scope.user.password
+        })
+        .then(function() {
+			Auth.getCurrentUser(function(usr){
+				
+				if(usr){
+					ssSideNav.setVisible('Logout', true);
+				}
+				if(Auth.hasRole('taxonomyadmin')){
+					ssSideNav.setVisible('TaxonBase', true);
+				}
+				if(Auth.hasRole('useradmin')){
+					ssSideNav.setVisible('UserAdmin', true);
+				}
+				$cookies.put('preferred_language', usr.preferred_language);
+				$translate.use(usr.preferred_language);
+	    		  if(Auth.hasRole('taxonomyadmin') &&  !$cookies.get('plutoftoken')){
+					  
+					  PlutoF.GetToken().$promise.then(function(res){
+	  	      			var exp = new Date();
+	  	      			exp.setHours(exp.getHours() + (14* 24));
+	  	    			  $cookies.put('plutoftoken', res.access_token, {expires: exp}); 
+						
+					  })
+	      			
+	    		  };
+				
+			})
+  		 
+		 $mdDialog.cancel();
+		  
+         // $state.go('main');
+        })
+        .catch(function(err) {
+          $scope.errors.other = err.message;
+        });
+      }
+    };
+
+    $scope.loginOauth = function(provider) {
+      $window.location.href = '/auth/' + provider;
+    };
+  }]
   
 
   

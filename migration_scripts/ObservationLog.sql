@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `ObservationLog` (
-`_id` int(11) NOT NULL,
+`_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `createdAt` timestamp NOT NULL ,
   `updatedAt` timestamp NOT NULL,
   `oldvalues` text DEFAULT NULL,
