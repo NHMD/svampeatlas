@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout','$mdUtil','$mdSidenav','$mdMedia', '$state',
-		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon','TaxonDKnames', 'Locality', 'leafletData', '$timeout','$mdUtil','$mdSidenav','$mdMedia', '$state', 'Auth',
+		function($scope, ObservationSearchService, Taxon,TaxonDKnames, Locality, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth) {
+			$scope.Auth = Auth;
 			$scope.state = $state;
 			$scope.mdMedia = $mdMedia;
 			$scope.toggleSearchMapSideNav = buildToggler('searchmapsidenav');

@@ -86,12 +86,14 @@ exports.index = function(req, res) {
 	}
 
 	if(req.query.geometry){
-		query.where = models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))
+		query.where = { $and: models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))}
 	}
 
 	if (req.query.where) {
 		_.merge(query.where, JSON.parse(req.query.where));
 	}
+	console.log("#######")
+	console.log(query.where)
 	if(req.query.group){
 		
 		query['group'] =	JSON.parse(req.query.group)
