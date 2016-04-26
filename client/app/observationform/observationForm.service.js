@@ -646,7 +646,34 @@ angular.module('svampeatlasApp')
 									
 								});
 								
+								// geolocation
+								$scope.useLocation = function(){
+									
+									leafletData.getMap('observationformmap').then(function(map) {
+										map.spin(true);
+										navigator.geolocation.getCurrentPosition(function(position) {
+											map.spin(false);
+											
+											$scope.mapsettings.markers.position = {
+												lat: position.coords.latitude,
+												lng: position.coords.longitude,
+												layer: 'position'
 
+											}
+											
+											$scope.mapsettings.center = {
+												lat: position.coords.latitude,
+												lng: position.coords.longitude,
+												zoom: 14
+											}
+											
+											$scope.precision = position.coords.accuracy;
+											
+											console.log(position)
+										})
+									})
+									
+								}
 
 								$scope.cancel = function() {
 									$mdDialog.cancel();
