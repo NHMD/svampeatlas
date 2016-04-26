@@ -93,7 +93,7 @@
           <div>{{ getCurrentUser().email }}</div>
 	  </div>
 	  	<div ng-hide="isLoggedIn()" >
-	        <md-button  class="md-primary" ui-sref="login" id="login-button">
+	        <md-button  class="md-primary"  id="login-button" ng-click="showLoginForm()">
 	         <ng-md-icon icon="login"></ng-md-icon>{{'Login' | translate}}
 	        </md-button>
 			</div>
