@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchResultMapCtrl', ['$scope', '$compile', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state', 'ErrorHandlingService','ObservationModalService', '$mdMedia',
-		function($scope, $compile, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService, ObservationModalService, $mdMedia) {
+	.controller('SearchResultMapCtrl', ['$scope','Auth', '$compile', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state', 'ErrorHandlingService','ObservationModalService', 'ObservationFormService','$mdMedia',
+		function($scope, Auth, $compile, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService, ObservationModalService, ObservationFormService, $mdMedia) {
 			console.log("md media "+$mdMedia('sm'))
 			var zoom = ($mdMedia('sm')) ? 5 :7;
 			
@@ -158,6 +158,7 @@ angular.module('svampeatlasApp')
 				+"<span ng-if='!(observation.Locality && observation.Locality.name)'>{{moment(observation.observationDate).format('DD/MM/YYYY')}} </span>"
 				+"<span>{{observation.PrimaryUser.name}}</span>"
 				+'<md-button class="md-raised"  ng-click="ObservationModalService.show($event, observation)"> <span layout-fill>Vis mere</span> <ng-md-icon icon="arrow_forward" ></ng-md-icon></md-button>'
+				+'<md-button class="md-raised" ng-if="observation.primaryuser_id === currentUser._id" ng-click="ObservationFormService.show($event, observation)"> <span layout-fill>Ret fund</span> <ng-md-icon icon="edit" ></ng-md-icon></md-button>'
 			    +"</div>";
 				var iconOptions = {
 					prefix: 'fa',
@@ -182,6 +183,8 @@ angular.module('svampeatlasApp')
 				var popupScope = $scope.$new(true);
 				popupScope.observation = observation;
 				popupScope.ObservationModalService = ObservationModalService;
+				popupScope.ObservationFormService = ObservationFormService;
+				popupScope.currentUser = Auth.getCurrentUser();
 				popupScope.moment = moment;
 				popupScope.imageurl = $scope.appConstants.imageurl;
 				var compiled = $compile(message)(popupScope);
