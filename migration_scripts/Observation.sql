@@ -43,6 +43,11 @@ FOREIGN KEY (observation_id) REFERENCES Observation(_id)
 
 UPDATE Fungi SET AtlasUserPrec = 0 WHERE AtlasUserPrec = "";
 UPDATE Fungi SET AtlasUserPrec = SUBSTRING_INDEX(AtlasUserPrec, ",", 1) WHERE AtlasUserPrec LIKE "%,%";
+
+-- fix invalid lat longs
+UPDATE Fungi SET  AtlasUserLati = REPLACE(AtlasUserLatiNum, ',', '.')  WHERE AtlasUserLati = 0;
+UPDATE Fungi SET  AtlasUserLong = REPLACE(AtlasUserLongNum, ',', '.')  WHERE AtlasUserLong = 0;
+
 -- indsæt alle som kan mappes til fuld dato (observationDateAccuracy = day)
 
 INSERT INTO Observation (
