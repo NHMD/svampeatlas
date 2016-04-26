@@ -41,10 +41,10 @@
 	        </md-chips>
 	 	      </div>
 		 		  <div layout="row" layout-margin>
-				   	<md-switch ng-model="$parent.$parent.DkNames" aria-label="Søg danske navne" ng-show="newTaxon.length ===0">
+				   	<md-switch ng-model="$parent.$parent.$parent.DkNames" aria-label="Søg danske navne" ng-show="newTaxon.length ===0">
 				   	    Danske navne
 				   	  </md-switch>
-		 	   <md-switch ng-model="$parent.$parent.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
+		 	   <md-switch ng-model="$parent.$parent.$parent.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
 		 	       Søg i slægter, familier, ordener osv.
 		 	     </md-switch>
 		 	 </div>
@@ -131,10 +131,10 @@
 			   	
 			  </div>
 				  <div layout-margin layout="column">
- 			   	<md-switch ng-model="$parent.extendedAssociatedOrganismSearch" aria-label="Udvidet søgning" >
+ 			  <!-- 	<md-switch ng-model="$parent.$parent.$parent.extendedAssociatedOrganismSearch" aria-label="Udvidet søgning" >
  			   	    Udvidet værtssøgning
- 			   	  </md-switch>
- 				  <md-chips ng-model="associatedOrganismImport" md-autocomplete-snap md-require-match="true" class="md-block" ng-if="$parent.extendedAssociatedOrganismSearch" flex-gt-xs>
+ 			   	  </md-switch> -->
+ 				  <md-chips ng-model="associatedOrganismImport" md-autocomplete-snap md-require-match="true" class="md-block" ng-if="extendedAssociatedOrganismSearch" flex-gt-xs>
 
  				    <md-autocomplete
  					md-no-cache="true"

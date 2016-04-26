@@ -21,6 +21,31 @@
 						  ng-click="submitObservation()">
 		         <ng-md-icon icon="send" ></ng-md-icon>
 		       </md-button>
+			   
+			  <md-menu md-position-mode="target-right target" >
+			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+			               <ng-md-icon icon="more_vert" ></ng-md-icon>
+			            </md-button>
+			            <md-menu-content width="4" >
+			              <md-menu-item >
+			                <md-button ng-click="resetForm()">
+			                    <div layout="row" flex>
+			                      <p flex>Nulstil dato og lokalitet</p>
+			                      <ng-md-icon icon="refresh" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			              <md-menu-item >
+			                <md-button ng-click="toggelExtendedAssociatedOrganismSearch()">
+			                    <div layout="row" flex>
+			                      <p flex>Udvidet værtssøgning</p>
+			                      <ng-md-icon ng-if="extendedAssociatedOrganismSearch" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  <ng-md-icon ng-if="!extendedAssociatedOrganismSearch" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			            </md-menu-content>
+			          </md-menu>
       </div>
     </md-toolbar>
       

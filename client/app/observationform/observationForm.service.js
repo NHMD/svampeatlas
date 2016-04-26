@@ -7,8 +7,8 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', '$q','$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 
-							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload) {
+						controller: ['$scope', '$q','$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService',
+							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService) {
 								
 								
 								
@@ -24,20 +24,44 @@ angular.module('svampeatlasApp')
 								$scope.users = [];
 								$scope.currentUser = Auth.getCurrentUser();
 								
+								$scope.DkNames = ObservationFormStateService.getState().DkNames;
+								$scope.$watch('DkNames', function(newVal){
+									ObservationFormStateService.getState().DkNames = newVal;
+								})
+								$scope.extendedAssociatedOrganismSearch = ObservationFormStateService.getState().extendedAssociatedOrganismSearch || false;
+								$scope.toggelExtendedAssociatedOrganismSearch = function(){
+									$scope.extendedAssociatedOrganismSearch = !$scope.extendedAssociatedOrganismSearch;
+								}
+								$scope.$watch('extendedAssociatedOrganismSearch', function(newVal){
+									console.log("new val is "+newVal)
+								})
+								$scope.resetForm = function(){
+									$scope.selectedLocality = [];
+									$scope.observationDate = new Date();
+									ObservationFormStateService.reset();
+									$scope.mapsettings.center = {
+										lat: 56,
+										lng: 11,
+										zoom: 6
+									}
+								}
+								
 								$scope.$watchCollection('selectedLocality', function(newVal) {
 									if (newVal && newVal[0] && newVal[0]._id) {
+										
+											if (newVal[0]._id > 0) {
+												$scope.changeBaseLayer("topo_25")
+											} else {
+												$scope.changeBaseLayer("WorldTopoMap")
+											}
 
-										if (newVal[0]._id > 0) {
-											$scope.changeBaseLayer("topo_25")
-										} else {
-											$scope.changeBaseLayer("WorldTopoMap")
-										}
-
-										$scope.mapsettings.center = {
-											lat: newVal[0].decimalLatitude,
-											lng: newVal[0].decimalLongitude,
-											zoom: 14
-										}
+											$scope.mapsettings.center = {
+												lat: newVal[0].decimalLatitude || newVal[0].lat,
+												lng: newVal[0].decimalLongitude || newVal[0].lng,
+												zoom: 14
+											}
+										
+										
 
 
 
@@ -90,9 +114,20 @@ angular.module('svampeatlasApp')
 										} else {
 											$scope.users.push($scope.currentUser);
 											$scope.determiner.push($scope.currentUser);
-											$scope.observationDate = new Date();
+											$scope.observationDate = ObservationFormStateService.getState().observationDate || new Date();
+											
+											if(ObservationFormStateService.getState().Locality){
+												$scope.selectedLocality.push(ObservationFormStateService.getState().Locality);
+											} else if(ObservationFormStateService.getState().foreignLocality){
+												$scope.mapsettings.center = {
+													lat: parseFloat(ObservationFormStateService.getState().foreignLocality.lat),
+													lng: parseFloat(ObservationFormStateService.getState().foreignLocality.lng),
+													zoom: 14
+												}
+												
+											}
 										}
-									
+										
 										return obs;
 									
 									})
@@ -769,7 +804,18 @@ angular.module('svampeatlasApp')
 										
 										obs.geonameId = $scope.foreignLocality.geonameId;
 									}
+									// save state for next observation
 									
+									if($scope.selectedLocality.length === 1){
+										ObservationFormStateService.getState().Locality = $scope.selectedLocality[0];
+									} else if($scope.foreignLocality) {
+										ObservationFormStateService.getState().foreignLocality =$scope.foreignLocality
+									};
+									
+									ObservationFormStateService.getState().observationDate = $scope.observationDate;
+									
+									
+									// end state
 									
 									var importPromise = ($scope.associatedOrganismImport.length > 0) ? $scope.processassociatedOrganismImport() : $q.resolve();
 									
