@@ -325,15 +325,16 @@ angular.module('svampeatlasApp')
 				}
 				if ($scope.search.fromDate && $scope.search.toDate) {
 					$scope.observationSearch.where.observationDate = {
-						$between: [$scope.search.fromDate, $scope.search.toDate]
+						
+						$between: [moment($scope.search.fromDate).subtract(1, 'day'), moment($scope.search.toDate).add(1, 'day')]
 					}
 				} else if ($scope.search.fromDate) {
 					$scope.observationSearch.where.observationDate = {
-						gt: $scope.search.fromDate
+						$gte: $scope.search.fromDate
 					}
 				} else if ($scope.search.toDate) {
 					$scope.observationSearch.where.observationDate = {
-						lt: $scope.search.toDate
+						$lte: $scope.search.toDate
 					}
 				}
 				if ($scope.search.geometry) {
