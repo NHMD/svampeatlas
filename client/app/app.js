@@ -46,7 +46,19 @@ angular.module('svampeatlasApp', [
 	
 	            ssSideNavSectionsProvider.initWithTheme($mdThemingProvider);
 				
-			ssSideNavSectionsProvider.initWithSections([{
+			ssSideNavSectionsProvider.initWithSections([
+				{
+				id: 'observations',
+				name: 'Fund',
+				type: 'heading',
+				children: [{
+				id: 'AddObservation',
+				icon: 'add',
+				name: 'Nyt fund',
+				//state: 'admin',
+				type: 'action',
+				requireLogin: true,
+			}]},{
 				id: 'SearchAtlas',
 				name: 'Søg i Svampeatlas',
 				type: 'heading',

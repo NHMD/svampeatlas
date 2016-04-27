@@ -818,7 +818,8 @@ angular.module('svampeatlasApp')
 									// end state
 									
 									var importPromise = ($scope.associatedOrganismImport.length > 0) ? $scope.processassociatedOrganismImport() : $q.resolve();
-									
+									$scope.savingObservation = true;
+									$scope.statusMsg = 'Gemmer fund...';
 									importPromise.then(function(){
 										if ($scope.associatedOrganism.length > 0) {
 											obs.primaryassociatedorganism_id = $scope.associatedOrganism[0]._id;
@@ -827,9 +828,11 @@ angular.module('svampeatlasApp')
 									})
 									
 										.then(function(obs) {
-
+											$scope.savingObservation = false;
+											
 											if ($scope.files && $scope.files.length) {
-
+												$scope.fileUploadInProgress = true;
+												$scope.statusMsg = ($scope.files.length > 1) ? 'Sender fotos...' : 'Sender foto...';
 												// or send them all together for HTML5 browsers:
 												return Upload.upload({
 													url: 'api/observations/' + obs._id + '/images',
@@ -839,11 +842,13 @@ angular.module('svampeatlasApp')
 													}
 												})
 													.then(function(resp) {
+														$scope.fileUploadInProgress = false;
 														console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
 													}, function(resp) {
 														console.log('Error status: ' + resp.status);
 													}, function(evt) {
 														var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+														$scope.fileProgress = progressPercentage;
 														console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
 													});
 											} else {

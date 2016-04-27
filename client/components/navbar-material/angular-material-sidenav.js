@@ -296,6 +296,52 @@
             };
         }
     ])
+    .controller('menuActionCtrl', [
+        '$scope',
+        '$state',
+        '$mdSidenav',
+        'ssSideNav',
+        'ssSideNavSharedService',
+		'Auth',
+		'ObservationFormService',
+        function(
+            $scope,
+            $state,
+            $mdSidenav,
+            ssSideNav,
+            ssSideNavSharedService,
+			Auth,
+		ObservationFormService) {
+			
+				$scope.show = function(item){
+					
+					if(item.requireRole){
+						return Auth.hasRole(item.requireRole)
+					} else if(item.requireLogin){
+						return Auth.isLoggedIn()
+					} else {
+						return true;
+					}
+					
+				};
+				$scope.doAction = function($event){
+					ObservationFormService.show($event)
+				}
+				//$scope.ObservationFormService = ObservationFormService;
+        }
+    ])
+
+    .directive('menuAction', [
+        function() {
+            return {
+                scope: {
+                    section: '='
+                },
+                templateUrl: 'views/ss/menu-action.tmpl.html',
+                controller: 'menuActionCtrl'
+            };
+        }
+    ])
 
     .directive('menuToggle', [
         '$timeout',
@@ -441,6 +487,19 @@
             '   </span>\n' +
             '</md-button>\n'
         );
+		
+    $templateCache.put('views/ss/menu-action.tmpl.html',
+        '<md-button\n' +
+        '   ss-style-color="{\'background-color\': isSelected(section.state) ? \'primary.800\': \'primary.default\'}"' +
+        '   class="md-raised md-primary"' +
+        '  ng-click="doAction($event)">\n' +
+        '  <ng-md-icon ng-if="section.icon" icon="{{section.icon}}" ></ng-md-icon> {{section.name | translate}}\n' +
+        '   <span class="md-visually-hidden"\n' +
+        '       ng-if="isSelected(section.state)">\n' +
+        '       current page\n' +
+        '   </span>\n' +
+        '</md-button>\n'
+    );
 
         $templateCache.put('views/ss/menu-toggle.tmpl.html',
             '<md-button class="md-raised md-primary md-button-toggle"\n' +
@@ -476,6 +535,7 @@
             '        <menu-toggle section="section" ng-if="section.type === \'toggle\'"></menu-toggle>' +
             '        <ul ng-if="section.children">' +
             '            <li ng-repeat="child in section.children" ng-if="!child.hidden">' +
+			'                <menu-action section="child" ng-if="child.type === \'action\'"></menu-action>' +
             '                <menu-link section="child" ng-if="child.type === \'link\'"></menu-link>' +
             '                <menu-toggle section="child" ng-if="child.type === \'toggle\'"></menu-toggle>' +
             '            </li>' +
