@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, appConstants, $mdDialog ) {
+  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, $state ) {
 	 
 
 	  $scope.mdMedia = $mdMedia;
 	  $scope.mdSidenav = $mdSidenav;
-	 
+	  $scope.ObservationModalService = ObservationModalService;
 	  $scope.menu = ssSideNav;
 	  $scope.menu.userHasForceClosed = true;
 	
@@ -16,6 +16,69 @@ angular.module('svampeatlasApp')
 	
 		 $mdSidenav('left').open();
 	}
+	
+	
+	
+	
+	
+	$scope.mapsettings = {
+		center: {
+			lat: 56,
+			lng: 11,
+			zoom: 6
+		},
+		markers: {
+
+		},
+		
+		layers: {
+			baselayers: {
+				osm: {
+					name: 'OpenStreetMap',
+					url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+					type: 'xyz'
+				}
+			}
+		}
+	};
+	
+	$scope.$on('leafletDirectiveMarker.frontpagemap.click', function(e, args) {
+		console.log(args)
+		$state.go('search-list', {locality_id: args.model._id, date: new Date().toString()})
+	})
+	
+	
+	
+	Locality.toDay().$promise.then(function(localities){
+		
+		for (var i = 0; i < localities.length; i++) {
+			$scope.mapsettings.markers[localities[i].name] = {
+				lat: localities[i].decimalLatitude,
+				lng: localities[i].decimalLongitude,
+				_id: localities[i]._id,
+				
+				name: localities[i].name,
+				
+				icon: {
+					type: 'awesomeMarker',
+					prefix: 'fa',
+					icon: 'circle',
+					markerColor: 'blue'
+				}
+
+			};
+			
+		}
+		
+	}).then(function(){
+		leafletData.getMap('frontpagemap').then(function(map) {
+	
+			$timeout(function() {
+				map.invalidateSize();
+			}, 10);
+		});
+	})
+	
 	$scope.loaded = {};
 	$scope.failed = {};
 	$scope.imageHasLoaded = function(img){
@@ -27,9 +90,13 @@ angular.module('svampeatlasApp')
 		
 	};
 	$scope.getImageUrl = function(tile){
-		if(moment(tile.observationDate).year() !== 2015 ){
+		if(moment(tile.observationDate).year() === 2016 ){
+			return appConstants.imageurl(tile)+tile.Images[0].name +".jpg";
+		} 
+		else if(moment(tile.observationDate).year() !== 2015 ){
 			return appConstants.imageurl(tile)+tile.Images[0].name +".JPG";
-		} else {
+		}
+		else {
 			return "http://svampe.dk/atlas/uploads/"+tile.Images[0].name +".JPG";
 		}
 	}
@@ -98,9 +165,7 @@ $http.jsonp('http://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=json
         $scope.news = data.feed.entry;
     });
 	
-	$scope.showNews = function(item){
-		console.log(item)
-	}
+
 	
 	
     $scope.showNews = function(ev, item) {

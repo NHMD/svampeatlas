@@ -176,7 +176,19 @@ exports.show = function(req, res) {
 };
 
 
-
+exports.localititesWithFindingsToday = function(req, res){
+	
+	return models.sequelize.query(
+		'SELECT l._id, l.decimalLatitude, l.decimalLongitude, l.name FROM Locality l JOIN Observation o ON o.locality_id = l._id '
+		+'AND CURDATE() = DATE(o.observationDate) GROUP BY l._id',
+  { type: models.sequelize.QueryTypes.SELECT }
+).then(function(localities){
+	return res.status(200).json(localities)
+})
+	.
+catch (handleError(res));
+	
+}
 
 // Creates a new taxon in the DB.
 exports.create = function(req, res) {

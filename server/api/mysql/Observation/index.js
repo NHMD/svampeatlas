@@ -5,6 +5,7 @@ var controller = require('./Observation.controller');
 var forumController = require('../ObservationForum/ObservationForum.controller');
 var determinationController = require('../Determination/Determination.controller');
 var imageController = require('../ObservationImage/ObservationImage.controller');
+var localityController = require('../Locality/Locality.controller');
 var auth = require('../../../auth/auth.service');
 var multer  = require('multer');
 var upload = multer({ dest: config.uploaddir });
@@ -25,6 +26,8 @@ router.post('/:id/determinations', auth.hasRole('validator'), determinationContr
 
 router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), imageController.addImagesToObs]); 
 
+
+router.get('/today/localities', localityController.localititesWithFindingsToday);
 
 // using taxonomyadmin while testing
 router.post('/', auth.hasRole('taxonomyadmin'), controller.create);

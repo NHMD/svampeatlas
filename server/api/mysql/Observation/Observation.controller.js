@@ -477,6 +477,7 @@ exports.update = function(req, res) {
 
 
 
+
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
 	Observation.find({

@@ -76,10 +76,12 @@ exports.create = function(req, res, next) {
  // newUser.setDataValue('role', 'user');
   newUser.save()
     .then(function(user) {
+		/*
       var token = jwt.sign({ _id: user._id }, config.secrets.session, {
         expiresInMinutes: 60 * 5
       });
-      res.json({ token: token });
+		*/
+      res.json(user);
     })
     .catch(validationError(res));
 };
@@ -114,7 +116,7 @@ exports.show = function(req, res, next) {
  * restriction: 'admin'
  */
 exports.destroy = function(req, res) {
-  User.destroy({ _id: req.params.id })
+  User.destroy({ where: { _id: req.params.id} })
     .then(respondWith(res, 204))
     .catch(handleError(res));
 };

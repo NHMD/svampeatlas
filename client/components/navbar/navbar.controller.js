@@ -9,7 +9,8 @@ angular.module('svampeatlasApp')
 $scope.states = 
     { 'admin': { name: "Useradmin", icon: 'group'},
 	  'login': { name: "Login", icon: 'login'},
-	  'settings': { name: "Profil", icon: 'person'}
+	  'settings': { name: "Profil", icon: 'person'},
+	  'news': { name: "Nyheder", icon: 'rss_feed'}
 	};
 	
 	$scope.openSideNav = function(){

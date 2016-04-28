@@ -270,11 +270,11 @@ flex>
 			   <form layout-fill>
 			   <md-input-container class="md-block">
 			             <label>Skriv kommentar</label>
-			             <textarea ng-model="$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
+			             <textarea ng-model="$parent.$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
 			           </md-input-container>
 					   
 				   </form>
-				   <md-button class="comment-submit" ng-show="$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">Send</md-button>
+				   <md-button class="comment-submit" ng-show="$parent.$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">Send</md-button>
 	   	        </div>
 	  				
           

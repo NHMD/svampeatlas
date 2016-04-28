@@ -9,7 +9,9 @@ angular.module('svampeatlasApp')
 			$scope.ObservationModalService = ObservationModalService;
 
 			$scope.ObservationFormService = ObservationFormService;
-			if ($stateParams.searchterm) {
+			
+			
+			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date)) {
 				ObservationSearchService.reset();
 				var search = ObservationSearchService.getSearch();
 				search.where = {};
@@ -67,7 +69,12 @@ angular.module('svampeatlasApp')
 						gt: moment().subtract(7, 'days')
 					}
 
-				}
+				} else if($stateParams.locality_id && $stateParams.date){
+					search.where.observationDate = {
+						gt: moment($stateParams.date).subtract(1, 'days')
+					};
+					search.where.locality_id = $stateParams.locality_id;
+			};
 
 			}
 
