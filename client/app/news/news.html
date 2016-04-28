@@ -1,0 +1,31 @@
+ <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
+	
+</div>	
+<md-content flex md-scroll-y layout-padding>
+
+   <md-whiteframe class="md-whiteframe-2dp newsfeed" flex-gt-sm="33" layout >
+    <md-list layout-fill layout-padding>
+      <md-subheader class="md-no-sticky">Nyheder fra svampeatlas</md-subheader>
+      <md-list-item class="md-3-line md-long-text" ng-repeat="item in news | limitTo : 5">
+       
+        <div class="md-list-item-text" layout="column">
+          <h3>{{ item.title.$t }}</h3>
+          <h4>{{ item.published.$t | date : 'dd/MM/yyyy'}}, {{item.author[0].name.$t}}</h4>
+          <p ng-bind-html='item.content.$t | limitHtml: 100'></p><a ng-click='showNews($event, item)'>Læs mere</a>
+		 
+        </div>
+		 <img ng-if="item.media$thumbnail" ng-src="{{item.media$thumbnail.url}}"  alt="{{item.media$thumbnail.url}}" />
+		 
+      </md-list-item>
+     
+    </md-list>
+	 </md-whiteframe >
+
+
+	
+</md-content>
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+	        
+	      </div>
+
+

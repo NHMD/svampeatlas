@@ -35,7 +35,7 @@ angular.module('svampeatlasApp')
 				var params = {
 					where: {
 						FullName: {
-							like: "%"+value + "%"
+							like: value + "%"
 						},
 						RankID: {
 							$lt: selectedTaxon.RankID

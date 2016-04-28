@@ -1,7 +1,50 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('AdminCtrl', function($scope, $http, $filter, Auth, User, $modal, Role) {
+  .controller('AdminCtrl', function($scope, $http, $filter, Auth, User, $modal, Role, $mdDialog, $mdMedia, $mdToast) {
+	 
+	  
+  	$scope.showNewUserForm = function(ev){
+  		var useFullScreen = $mdMedia('xs');
+  		    $mdDialog.show({
+  		      controller: ['$scope', '$mdDialog', '$mdMedia', 'User', function($scope, $mdDialog,$mdMedia, User){
+			      $scope.user = {};
+			      $scope.errors = {};
+			  	$scope.$mdMedia = $mdMedia;
+			  	$scope.cancel = function() {
+			  		$mdDialog.cancel();
+			  	};
+				
+				$scope.saveNewUser = function(form){
+					User.save($scope.user).$promise.then(function(user){
+						
+						    $mdDialog.hide(user);
+						    
+						  
+					})
+				}
+  		      }],
+  		      templateUrl: 'app/admin/newuser-modal.tpl.html',
+  		    //  parent: angular.element(document.body),
+  		      targetEvent: ev,
+  		      clickOutsideToClose:true,
+  		      fullscreen: useFullScreen
+  		    }).then(function(user){
+			    $mdToast.show(
+			      $mdToast.simple()
+			        .textContent(user.name+' oprettet!')
+			        .position("top right" )
+			        .hideDelay(3000)
+			    );
+				
+				$scope.users = User.query();
+				
+  		    })
+  		   
+			
+		   
+		
+  	}
 
     // Use the User $resource to fetch all users
     $scope.users = User.query();

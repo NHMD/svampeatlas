@@ -51,6 +51,7 @@ angular.module('svampeatlasApp', [
 				id: 'observations',
 				name: 'Fund',
 				type: 'heading',
+					requireLogin: true,
 				children: [{
 				id: 'AddObservation',
 				icon: 'add',
@@ -94,7 +95,21 @@ angular.module('svampeatlasApp', [
 
 					}]
 				}]
-			}, {
+			}, 
+			{
+			id: 'about',
+			name: 'Om svampeatlas',
+			type: 'heading',
+			children: [{
+			id: 'news',
+			icon: 'rss_feed',
+			name: 'Nyheder',
+			state: 'news',
+			type: 'link',
+			requireLogin: false,
+		}]},
+			
+			{
 				id: 'Administration',
 				name: 'Administration',
 				type: 'heading',

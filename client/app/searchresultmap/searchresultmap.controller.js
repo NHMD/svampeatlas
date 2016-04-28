@@ -21,44 +21,7 @@ angular.module('svampeatlasApp')
 							url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 							type: 'xyz'
 						},
-						topo_25: {
-							name: "DK 4cm kort",
-							type: 'wms',
-							visible: true,
-							url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-							layerOptions: {
-								layers: "topo25_klassisk",
-								servicename: "topo25",
-								version: "1.1.1",
-								request: "GetMap",
-								format: "image/jpeg",
-								service: "WMS",
-								styles: "default",
-								exceptions: "application/vnd.ogc.se_inimage",
-								jpegquality: "80",
-								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-								ticket: KMS.getTicket()
-							}
-						},
-						luftfoto: {
-							name: "DK luftfoto",
-							type: 'wms',
-							visible: true,
-							url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-							layerOptions: {
-								layers: "orto_foraar",
-								servicename: "orto_foraar",
-								version: "1.1.1",
-								request: "GetMap",
-								format: "image/jpeg",
-								service: "WMS",
-								styles: "default",
-								exceptions: "application/vnd.ogc.se_inimage",
-								jpegquality: "80",
-								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-								ticket : KMS.getTicket()
-							}
-						},
+
 						WorldImagery: {
 							name: 'WorldImagery',
 							url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png',
@@ -85,6 +48,47 @@ angular.module('svampeatlasApp')
 					}
 				}
 			};
+			
+			KMS.getTicket().then(function(ticket){
+				$scope.mapsettings.layers.baselayers.topo_25 = {
+							name: "DK 4cm kort",
+							type: 'wms',
+							visible: true,
+							url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+							layerOptions: {
+								layers: "topo25_klassisk",
+								servicename: "topo25",
+								version: "1.1.1",
+								request: "GetMap",
+								format: "image/jpeg",
+								service: "WMS",
+								styles: "default",
+								exceptions: "application/vnd.ogc.se_inimage",
+								jpegquality: "80",
+								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+								ticket: ticket
+							}
+						};
+						$scope.mapsettings.layers.baselayers.luftfoto = {
+							name: "DK luftfoto",
+							type: 'wms',
+							visible: true,
+							url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+							layerOptions: {
+								layers: "orto_foraar",
+								servicename: "orto_foraar",
+								version: "1.1.1",
+								request: "GetMap",
+								format: "image/jpeg",
+								service: "WMS",
+								styles: "default",
+								exceptions: "application/vnd.ogc.se_inimage",
+								jpegquality: "80",
+								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+								ticket: ticket
+							}
+						};
+			});
 			
 			
 			$scope.appConstants = appConstants;
@@ -225,8 +229,8 @@ angular.module('svampeatlasApp')
 					            new L.LatLng(b.maxLat, b.minLng));
 					
 						map.fitBounds(bounds);
-				
-						var test;
+						
+						
 									
 				
 				}, function(err, headers) {
@@ -239,14 +243,7 @@ angular.module('svampeatlasApp')
 				
 			};
 			
-			$scope.$on('leafletDirectiveMap.layeradd', function(e, args) {
-				
-				console.log(args)
-			})
-			
-			$scope.$on('leafletDirectiveMap.layerremove', function(e, args) {
-				console.log(args)
-			})
+
 			
 			leafletData.getMap("searchresultmap").then(function(map) {
 				$timeout(function() {
