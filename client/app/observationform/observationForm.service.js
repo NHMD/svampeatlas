@@ -7,13 +7,13 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', '$q','$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService',
+						controller: ['$scope', '$q', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService',
 							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService) {
-								
-								
-								
-							
-								
+
+
+
+
+
 								$scope.maxDate = new Date();
 								$scope.$mdMedia = $mdMedia;
 								$scope.newTaxon = [];
@@ -23,19 +23,19 @@ angular.module('svampeatlasApp')
 								$scope.determiner = [];
 								$scope.users = [];
 								$scope.currentUser = Auth.getCurrentUser();
-								
+
 								$scope.DkNames = ObservationFormStateService.getState().DkNames;
-								$scope.$watch('DkNames', function(newVal){
+								$scope.$watch('DkNames', function(newVal) {
 									ObservationFormStateService.getState().DkNames = newVal;
 								})
 								$scope.extendedAssociatedOrganismSearch = ObservationFormStateService.getState().extendedAssociatedOrganismSearch || false;
-								$scope.toggelExtendedAssociatedOrganismSearch = function(){
+								$scope.toggelExtendedAssociatedOrganismSearch = function() {
 									$scope.extendedAssociatedOrganismSearch = !$scope.extendedAssociatedOrganismSearch;
 								}
-								$scope.$watch('extendedAssociatedOrganismSearch', function(newVal){
-									console.log("new val is "+newVal)
+								$scope.$watch('extendedAssociatedOrganismSearch', function(newVal) {
+									console.log("new val is " + newVal)
 								})
-								$scope.resetForm = function(){
+								$scope.resetForm = function() {
 									$scope.selectedLocality = [];
 									$scope.observationDate = new Date();
 									ObservationFormStateService.reset();
@@ -45,39 +45,41 @@ angular.module('svampeatlasApp')
 										zoom: 6
 									}
 								}
-								
+
 								$scope.$watchCollection('selectedLocality', function(newVal) {
 									if (newVal && newVal[0] && newVal[0]._id) {
-										
-											if (newVal[0]._id > 0) {
-												$scope.changeBaseLayer("topo_25")
-											} else {
-												$scope.changeBaseLayer("WorldTopoMap")
-											}
 
-											$scope.mapsettings.center = {
-												lat: newVal[0].decimalLatitude || newVal[0].lat,
-												lng: newVal[0].decimalLongitude || newVal[0].lng,
-												zoom: 14
-											}
-										
-										
+										if (newVal[0]._id > 0) {
+											$scope.changeBaseLayer("topo_25")
+										} else {
+											$scope.changeBaseLayer("WorldTopoMap")
+										}
+
+										$scope.mapsettings.center = {
+											lat: newVal[0].decimalLatitude || newVal[0].lat,
+											lng: newVal[0].decimalLongitude || newVal[0].lng,
+											zoom: 14
+										}
+
+
 
 
 
 									}
 								})
-								
+
 								// wrap initial load of obs in timeout to increase speed
-								$timeout(function(){
-									
-									$scope.obsPromise = (row) ? Observation.get({id:row._id}).$promise : $q.resolve(false);
-									$scope.obsPromise.then(function(obs){
+								$timeout(function() {
+
+									$scope.obsPromise = (row) ? Observation.get({
+										id: row._id
+									}).$promise : $q.resolve(false);
+									$scope.obsPromise.then(function(obs) {
 										// edit mode
-										if(obs){
+										if (obs) {
 											$scope.obs = obs;
-										
-											if(obs.Locality){
+
+											if (obs.Locality) {
 												$scope.selectedLocality.push(obs.Locality);
 											};
 											$scope.newTaxon.push(obs.PrimaryDetermination.Taxon);
@@ -86,70 +88,70 @@ angular.module('svampeatlasApp')
 											$scope.associatedOrganism = obs.associatedTaxa;
 											$scope.observationDate = new Date(obs.observationDate);
 											$scope.ecologynote = obs.ecologynote;
-										
+
 											$scope.precision = obs.accuracy;
-										
+
 											$scope.fieldnumber = obs.fieldnumber;
 											$scope.herbarium = obs.herbarium;
 											$scope.note = obs.note;
-										
+
 											$scope.mapsettings.markers.position = {
 												lat: obs.decimalLatitude,
 												lng: obs.decimalLongitude,
 												layer: 'position'
 
 											}
-											
+
 											$scope.mapsettings.center = {
 												lat: obs.decimalLatitude,
 												lng: obs.decimalLongitude,
 												zoom: 14
 											}
-											
-											if(obs.GeoNames){
+
+											if (obs.GeoNames) {
 												$scope.foreignLocalityString = obs.verbatimLocality;
 												$scope.foreignLocality = obs.GeoNames
 											}
-										
+
 										} else {
 											$scope.users.push($scope.currentUser);
 											$scope.determiner.push($scope.currentUser);
 											$scope.observationDate = ObservationFormStateService.getState().observationDate || new Date();
-											
-											if(ObservationFormStateService.getState().Locality){
+
+											if (ObservationFormStateService.getState().Locality) {
 												$scope.selectedLocality.push(ObservationFormStateService.getState().Locality);
-											} else if(ObservationFormStateService.getState().foreignLocality){
+											} else if (ObservationFormStateService.getState().foreignLocality) {
 												$scope.mapsettings.center = {
 													lat: parseFloat(ObservationFormStateService.getState().foreignLocality.lat),
 													lng: parseFloat(ObservationFormStateService.getState().foreignLocality.lng),
 													zoom: 14
 												}
-												
+
 											}
 										}
-										
+
 										return obs;
-									
+
 									})
-									.then(function(obs){
-											Substrate.query().$promise.then(function(substrates){
+										.then(function(obs) {
+											Substrate.query().$promise.then(function(substrates) {
 												$scope.substrates = substrates;
-											
-												if(obs){
+
+												if (obs) {
 													$scope.selectedSubstrate = obs.substrate_id;
 												}
-										
+
 											});
-										 VegetationType.query().$promise.then(function(vegetationtypes){
-												$scope.vegetationtypes =  vegetationtypes;
-											
-												if(obs){
+											VegetationType.query().$promise.then(function(vegetationtypes) {
+												$scope.vegetationtypes = vegetationtypes;
+
+												if (obs) {
 													$scope.selectedVegetationType = obs.vegetationtype_id;
 												}
-											
+
 											});
-									})
-									
+										})
+
 									leafletData.getMap('observationformmap').then(function(map) {
 
 										$timeout(function() {
@@ -157,7 +159,7 @@ angular.module('svampeatlasApp')
 										});
 
 										map.on('click', function(e) {
-										
+
 
 											$scope.precision = $scope.getMarkerPrecision(map.getZoom());
 
@@ -167,11 +169,11 @@ angular.module('svampeatlasApp')
 												layer: 'position'
 
 											}
-										
-										
+
+
 											$scope.mapsettings.center.lat = e.latlng.lat;
 											$scope.mapsettings.center.lng = e.latlng.lng;
-										
+
 
 											if ($scope.mapsettings.center.zoom < 10) {
 												$scope.mapsettings.center.zoom = 10
@@ -197,7 +199,7 @@ angular.module('svampeatlasApp')
 													$scope.selectedLocality = [];
 												});
 											} else {
-												if($scope.showLocalitiesOnMap){
+												if ($scope.showLocalitiesOnMap) {
 													$scope.setNearbyLocalities();
 												}
 												delete $scope.foreignLocalityString;
@@ -209,16 +211,16 @@ angular.module('svampeatlasApp')
 										//map.invalidateSize(false)
 
 									})
-									
-									
+
+
 								})
-								
+
 								// End timeout
-								
-								
-								
-								
-								
+
+
+
+
+
 								$scope.$watchCollection('newTaxon', function(newVal) {
 									if (newVal && newVal[0] && newVal[0]._id) {
 										TaxonAttributes.get({
@@ -232,24 +234,24 @@ angular.module('svampeatlasApp')
 										delete $scope.taxonAttrs;
 									}
 								})
-								
-								
-								$scope.observationIsValid = function(){
+
+
+								$scope.observationIsValid = function() {
 									var valid = true;
-									
-									if($scope.newTaxon.length === 0 || !$scope.newTaxon[0]._id) valid = false;
-									if($scope.determiner.length === 0 || !$scope.determiner[0]._id) valid = false;
-									if(!$scope.selectedSubstrate) valid = false;
-									if(!$scope.selectedVegetationType) valid = false;
-									if($scope.users.length === 0 || !$scope.users[0]._id) valid = false;
-									if(($scope.selectedLocality.length === 0 || !$scope.selectedLocality[0]._id) && (!$scope.foreignLocality)) valid = false;
-									
+
+									if ($scope.newTaxon.length === 0 || !$scope.newTaxon[0]._id) valid = false;
+									if ($scope.determiner.length === 0 || !$scope.determiner[0]._id) valid = false;
+									if (!$scope.selectedSubstrate) valid = false;
+									if (!$scope.selectedVegetationType) valid = false;
+									if ($scope.users.length === 0 || !$scope.users[0]._id) valid = false;
+									if (($scope.selectedLocality.length === 0 || !$scope.selectedLocality[0]._id) && (!$scope.foreignLocality)) valid = false;
+
 									return valid;
-									
+
 								}
 
 
-								
+
 
 								$scope.querySearchLocality = function(query) {
 
@@ -427,7 +429,7 @@ angular.module('svampeatlasApp')
 												visible: true
 											}
 
-											
+
 										},
 										baselayers: {
 											osm: {
@@ -435,7 +437,7 @@ angular.module('svampeatlasApp')
 												url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 												type: 'xyz'
 											},
-				
+
 											WorldImagery: {
 												name: 'WorldImagery',
 												url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png',
@@ -463,48 +465,48 @@ angular.module('svampeatlasApp')
 									}
 								};
 
-								KMS.getTicket().then(function(ticket){
+								KMS.getTicket().then(function(ticket) {
 									$scope.mapsettings.layers.baselayers.topo_25 = {
-												name: "DK 4cm kort",
-												type: 'wms',
-												visible: true,
-												url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-												layerOptions: {
-													layers: "topo25_klassisk",
-													servicename: "topo25",
-													version: "1.1.1",
-													request: "GetMap",
-													format: "image/jpeg",
-													service: "WMS",
-													styles: "default",
-													exceptions: "application/vnd.ogc.se_inimage",
-													jpegquality: "80",
-													attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-													ticket: ticket
-												}
-											};
-											$scope.mapsettings.layers.baselayers.luftfoto = {
-												name: "DK luftfoto",
-												type: 'wms',
-												visible: true,
-												url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-												layerOptions: {
-													layers: "orto_foraar",
-													servicename: "orto_foraar",
-													version: "1.1.1",
-													request: "GetMap",
-													format: "image/jpeg",
-													service: "WMS",
-													styles: "default",
-													exceptions: "application/vnd.ogc.se_inimage",
-													jpegquality: "80",
-													attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-													ticket: ticket
-												}
-											};
+										name: "DK 4cm kort",
+										type: 'wms',
+										visible: true,
+										url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+										layerOptions: {
+											layers: "topo25_klassisk",
+											servicename: "topo25",
+											version: "1.1.1",
+											request: "GetMap",
+											format: "image/jpeg",
+											service: "WMS",
+											styles: "default",
+											exceptions: "application/vnd.ogc.se_inimage",
+											jpegquality: "80",
+											attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+											ticket: ticket
+										}
+									};
+									$scope.mapsettings.layers.baselayers.luftfoto = {
+										name: "DK luftfoto",
+										type: 'wms',
+										visible: true,
+										url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+										layerOptions: {
+											layers: "orto_foraar",
+											servicename: "orto_foraar",
+											version: "1.1.1",
+											request: "GetMap",
+											format: "image/jpeg",
+											service: "WMS",
+											styles: "default",
+											exceptions: "application/vnd.ogc.se_inimage",
+											jpegquality: "80",
+											attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+											ticket: ticket
+										}
+									};
 								});
-								
-								 $scope.getMarkerPrecision = function(zoom) {
+
+								$scope.getMarkerPrecision = function(zoom) {
 
 									if (zoom <= 6) {
 										return 50000;
@@ -564,44 +566,44 @@ angular.module('svampeatlasApp')
 										});
 									});
 								};
-							
 
-									leafletData.getMap('observationformmap').then(function(map) {
-									$scope.localityOnMapButton =	L.easyButton('fa-globe fa-lg', function(btn, map) {
-											if(!$scope.showLocalitiesOnMap){
-												$scope.showLocalitiesOnMap = true;
-												if($scope.mapsettings.markers.position){
-													$scope.setNearbyLocalities();
-												}
-												
-											} else {
-												$scope.showLocalitiesOnMap = false;
-												$scope.removeLocalitiesFromMap();
+
+								leafletData.getMap('observationformmap').then(function(map) {
+									$scope.localityOnMapButton = L.easyButton('fa-globe fa-lg', function(btn, map) {
+										if (!$scope.showLocalitiesOnMap) {
+											$scope.showLocalitiesOnMap = true;
+											if ($scope.mapsettings.markers.position) {
+												$scope.setNearbyLocalities();
 											}
 
-										}).addTo(map);
-										if($scope.mapsettings.center.zoom < 11){
-											$scope.localityOnMapButton.disable();
+										} else {
+											$scope.showLocalitiesOnMap = false;
+											$scope.removeLocalitiesFromMap();
 										}
-										
-									});
 
-								
-								$scope.removeLocalitiesFromMap = function(){
-									
-									_.each($scope.mapsettings.markers, function(m){
-										if(m.layer === 'localities'){
+									}).addTo(map);
+									if ($scope.mapsettings.center.zoom < 11) {
+										$scope.localityOnMapButton.disable();
+									}
+
+								});
+
+
+								$scope.removeLocalitiesFromMap = function() {
+
+									_.each($scope.mapsettings.markers, function(m) {
+										if (m.layer === 'localities') {
 											delete $scope.mapsettings.markers[m.name]
 										}
 									})
-									
-									
+
+
 								};
-								
-								$scope.setNearbyLocalities = function(){
-									
+
+								$scope.setNearbyLocalities = function() {
+
 									$scope.removeLocalitiesFromMap();
-									
+
 									var bounds = L.circle(L.latLng($scope.mapsettings.markers.position.lng, $scope.mapsettings.markers.position.lat), 2000).getBounds();
 
 									var q = {
@@ -620,7 +622,7 @@ angular.module('svampeatlasApp')
 												lat: localities[i].decimalLatitude,
 												lng: localities[i].decimalLongitude,
 												_id: localities[i]._id,
-												
+
 												name: localities[i].name,
 												layer: 'localities',
 												icon: {
@@ -632,85 +634,102 @@ angular.module('svampeatlasApp')
 
 											};
 										}
-										
-										
+
+
 									})
 								}
-								
-								
-								$scope.$on('leafletDirectiveMarker.observationformmap.click', function(event, args){
-									if(args.model.layer === 'localities'){
+
+
+								$scope.$on('leafletDirectiveMarker.observationformmap.click', function(event, args) {
+									if (args.model.layer === 'localities') {
 										$scope.selectedLocality = [args.model];
-										
+
 										$scope.resetLocalityMarkerIcons();
-										
+
 										$scope.mapsettings.markers[args.model.name].icon = {
 											type: 'awesomeMarker',
 											prefix: 'fa',
 											icon: 'check-square',
 											markerColor: 'green'
 										}
-										
-										
-											$scope.localityOnMapButton.enable();
-										
+
+
+										$scope.localityOnMapButton.enable();
+
 									}
-								                   
-								                });
-								
-								$scope.resetLocalityMarkerIcons = function(){
-									_.each($scope.mapsettings.markers, function(m){
-										if(m.layer === 'localities'){
+
+								});
+
+								$scope.resetLocalityMarkerIcons = function() {
+									_.each($scope.mapsettings.markers, function(m) {
+										if (m.layer === 'localities') {
 											$scope.mapsettings.markers[m.name].icon = {
-										type: 'awesomeMarker',
-										prefix: 'fa',
-										icon: 'crosshairs',
-										markerColor: 'red'
-									}
+												type: 'awesomeMarker',
+												prefix: 'fa',
+												icon: 'crosshairs',
+												markerColor: 'red'
+											}
 
 										}
 									})
 								}
-								
-								$scope.$watch('mapsettings.center.zoom', function(newVal, oldVal){
-									
-									if(newVal && newVal !== oldVal){
-										if(newVal > 11 && GeoJsonUtils.inDK($scope.mapsettings.center)){
+
+								$scope.$watch('mapsettings.center.zoom', function(newVal, oldVal) {
+
+									if (newVal && newVal !== oldVal) {
+										if (newVal > 11 && GeoJsonUtils.inDK($scope.mapsettings.center)) {
 											$scope.localityOnMapButton.enable();
 										} else {
 											$scope.localityOnMapButton.disable();
 										}
 									}
-									
+
 								});
-								
+
 								// geolocation
-								$scope.useLocation = function(){
-									
+								$scope.useLocation = function() {
+
 									leafletData.getMap('observationformmap').then(function(map) {
 										map.spin(true);
+										$scope.geoLocationStatusMessage = "Bestemmer din position ..."
 										navigator.geolocation.getCurrentPosition(function(position) {
 											map.spin(false);
-											
+											$scope.geoLocationStatusMessage = undefined;
 											$scope.mapsettings.markers.position = {
 												lat: position.coords.latitude,
 												lng: position.coords.longitude,
 												layer: 'position'
 
 											}
-											
+
 											$scope.mapsettings.center = {
 												lat: position.coords.latitude,
 												lng: position.coords.longitude,
 												zoom: 14
 											}
-											
+
 											$scope.precision = position.coords.accuracy;
-											
+
 											console.log(position)
-										})
+										}, function(error) {
+											map.spin(false);
+											switch (error.code) {
+												case error.PERMISSION_DENIED:
+													$scope.geoLocationStatusMessage = "Du skal give enheden lov til at bruge din position."
+													break;
+												case error.POSITION_UNAVAILABLE:
+													$scope.geoLocationStatusMessage = "Positionsinformation er ikke tilgængelig."
+													break;
+												case error.TIMEOUT:
+													$scope.geoLocationStatusMessage = "Time out i bestemmelse af position."
+													break;
+												case error.UNKNOWN_ERROR:
+													$scope.geoLocationStatusMessage = "Der opstod en ukendt fejl med betemmelse af position."
+													break;
+											}
+										},{timeout: 30000, enableHighAccuracy: true})
 									})
-									
+
 								}
 
 								$scope.cancel = function() {
@@ -721,14 +740,14 @@ angular.module('svampeatlasApp')
 								$scope.files = [];
 
 
-								$scope.selectedTabIndex =0;
-								
-								$scope.$watch('files', function(newVal, oldVal){
-									if(newVal && newVal.length > 0){
-										$scope.selectedTabIndex =2;
+								$scope.selectedTabIndex = 0;
+
+								$scope.$watch('files', function(newVal, oldVal) {
+									if (newVal && newVal.length > 0) {
+										$scope.selectedTabIndex = 2;
 									}
 								})
-					
+
 
 								$scope.removeImageFromUpload = function(img) {
 
@@ -740,42 +759,42 @@ angular.module('svampeatlasApp')
 								// END IMAGES
 								$scope.processassociatedOrganismImport = function() {
 									var promises = [];
-									 _.each($scope.associatedOrganismImport, function(e) {
-										 promises.push(PlantTaxon.save({
+									_.each($scope.associatedOrganismImport, function(e) {
+										promises.push(PlantTaxon.save({
 
 											DKandLatinName: e.species,
 											LatinName: e.species,
 											gbiftaxon_id: e.nubKey
-										}).$promise.then(function(planttaxon){
+										}).$promise.then(function(planttaxon) {
 											$scope.associatedOrganism.push(planttaxon);
-											_.remove($scope.associatedOrganismImport, function(e){
+											_.remove($scope.associatedOrganismImport, function(e) {
 												return e.nubKey === planttaxon.gbiftaxon_id;
 											})
 										}))
-									
+
 									})
-									
+
 									return $q.all(promises)
 								}
-								
-								
+
+
 
 								$scope.submitObservation = function() {
 									var determination = {
 										taxon_id: $scope.newTaxon[0]._id,
 										user_id: $scope.determiner[0]._id
 									};
-									
-									
-									
+
+
+
 									var obs = {
 										observationDate: $scope.observationDate,
 										primaryuser_id: $scope.users[0]._id,
-										
+
 										substrate_id: $scope.selectedSubstrate,
 										vegetationtype_id: $scope.selectedVegetationType,
 										ecologynote: $scope.ecologynote,
-										
+
 										accuracy: $scope.precision,
 										fieldnumber: $scope.fieldnumber,
 										herbarium: $scope.herbarium,
@@ -784,81 +803,83 @@ angular.module('svampeatlasApp')
 										associatedOrganisms: $scope.associatedOrganism,
 										associatedOrganismImport: $scope.associatedOrganismImport,
 										users: $scope.users
-										
+
 									};
-									
-									if($scope.selectedLocality.length === 1 && $scope.selectedLocality[0]._id){
+
+									if ($scope.selectedLocality.length === 1 && $scope.selectedLocality[0]._id) {
 										obs.locality_id = $scope.selectedLocality[0]._id;
-										
+
 									}
-									
-									if(!$scope.mapsettings.markers.position && $scope.selectedLocality.length === 1){
-										obs.decimalLatitude =$scope.selectedLocality[0].decimalLatitude;
+
+									if (!$scope.mapsettings.markers.position && $scope.selectedLocality.length === 1) {
+										obs.decimalLatitude = $scope.selectedLocality[0].decimalLatitude;
 										obs.decimalLongitude = $scope.selectedLocality[0].decimalLongitude;
 										obs.accuracy = 2500;
 									} else {
-										obs.decimalLatitude= $scope.mapsettings.markers.position.lat;
+										obs.decimalLatitude = $scope.mapsettings.markers.position.lat;
 										obs.decimalLongitude = $scope.mapsettings.markers.position.lng;
 									}
-									
-									if($scope.foreignLocality){
+
+									if ($scope.foreignLocality) {
 										obs.geoname = $scope.foreignLocality;
 										obs.verbatimLocality = $scope.foreignLocalityString;
-										
+
 										obs.geonameId = $scope.foreignLocality.geonameId;
 									}
 									// save state for next observation
-									
-									if($scope.selectedLocality.length === 1){
+
+									if ($scope.selectedLocality.length === 1) {
 										ObservationFormStateService.getState().Locality = $scope.selectedLocality[0];
-									} else if($scope.foreignLocality) {
-										ObservationFormStateService.getState().foreignLocality =$scope.foreignLocality
+									} else if ($scope.foreignLocality) {
+										ObservationFormStateService.getState().foreignLocality = $scope.foreignLocality
 									};
-									
+
 									ObservationFormStateService.getState().observationDate = $scope.observationDate;
-									
-									
+
+
 									// end state
-									
+
 									var importPromise = ($scope.associatedOrganismImport.length > 0) ? $scope.processassociatedOrganismImport() : $q.resolve();
 									$scope.savingObservation = true;
 									$scope.statusMsg = 'Gemmer fund...';
-									importPromise.then(function(){
+									importPromise.then(function() {
 										if ($scope.associatedOrganism.length > 0) {
 											obs.primaryassociatedorganism_id = $scope.associatedOrganism[0]._id;
 										}
-										return ($scope.obs && $scope.obs._id) ? Observation.update({id: $scope.obs._id}, obs).$promise : Observation.save(obs).$promise;
+										return ($scope.obs && $scope.obs._id) ? Observation.update({
+											id: $scope.obs._id
+										}, obs).$promise : Observation.save(obs).$promise;
 									})
-									
-										.then(function(obs) {
-											$scope.savingObservation = false;
-											
-											if ($scope.files && $scope.files.length) {
-												$scope.fileUploadInProgress = true;
-												$scope.statusMsg = ($scope.files.length > 1) ? 'Sender fotos...' : 'Sender foto...';
-												// or send them all together for HTML5 browsers:
-												return Upload.upload({
-													url: 'api/observations/' + obs._id + '/images',
-													arrayKey: '',
-													data: {
-														file: $scope.files
-													}
-												})
-													.then(function(resp) {
-														$scope.fileUploadInProgress = false;
-														console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-													}, function(resp) {
-														console.log('Error status: ' + resp.status);
-													}, function(evt) {
-														var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-														$scope.fileProgress = progressPercentage;
-														console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-													});
-											} else {
-												return true
-											}
 
-										})
+									.then(function(obs) {
+										$scope.savingObservation = false;
+
+										if ($scope.files && $scope.files.length) {
+											$scope.fileUploadInProgress = true;
+											$scope.statusMsg = ($scope.files.length > 1) ? 'Sender fotos...' : 'Sender foto...';
+											// or send them all together for HTML5 browsers:
+											return Upload.upload({
+												url: 'api/observations/' + obs._id + '/images',
+												arrayKey: '',
+												data: {
+													file: $scope.files
+												}
+											})
+												.then(function(resp) {
+													$scope.fileUploadInProgress = false;
+													console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+												}, function(resp) {
+													console.log('Error status: ' + resp.status);
+												}, function(evt) {
+													var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+													$scope.fileProgress = progressPercentage;
+													console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+												});
+										} else {
+											return true
+										}
+
+									})
 										.then(function() {
 											$scope.cancel();
 										})
@@ -866,7 +887,7 @@ angular.module('svampeatlasApp')
 									catch (function(err) {
 										alert("error")
 									})
-									
+
 								};
 							}
 						],
@@ -888,4 +909,3 @@ angular.module('svampeatlasApp')
 		}
 
 )
-
