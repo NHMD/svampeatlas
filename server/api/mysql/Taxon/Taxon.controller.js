@@ -1170,7 +1170,21 @@ exports.setParent = function(req, res) {
 	});
 };
 
+exports.numberOfDanishSpecies = function(req, res){
+	
+	
+	return models.sequelize.query(
+		"SELECT tc._id, tc.FullName, COUNT(*) as count FROM Taxon tc, Taxon t, TaxonAttributes ta WHERE t._id=ta.taxon_id AND ta.PresentInDK =1 AND t.Path LIKE CONCAT((SELECT Path FROM Taxon where _id=:taxon_id), '%')" 
++"AND tc.parent_id= :taxon_id AND t.Path LIKE CONCAT(tc.Path, '%')"
++"AND t.RankID = 10000 GROUP BY tc.FullName",
+  { replacements: { taxon_id: req.params.id }, type: models.sequelize.QueryTypes.SELECT }
+).then(function(stats) {
+	
+	return res.status(200).json(stats);
+ 
+})
 
+}
 
 
 exports.showTree = function(req, res) {

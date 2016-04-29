@@ -19,7 +19,8 @@ angular.module('svampeatlasApp', [
 	'pascalprecht.translate',
 	'leaflet-directive',
 	'userAvatar',
-	'ngFileUpload'
+	'ngFileUpload',
+	'highcharts-ng'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider,$mdThemingProvider, ssSideNavSectionsProvider) {
     $urlRouterProvider
