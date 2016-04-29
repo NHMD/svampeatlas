@@ -64,9 +64,11 @@
 			</div>
 			</div>
 
-<div class="row" ng-show="!fetchingTaxon">
-			<div class="col-md-6" ng-show="taxon._id !== undefined">
+<div class="row" ng-show="!fetchingTaxon" ng-cloak>
 	
+	
+			<div class="col-md-6" ng-show="taxon._id !== undefined">
+	<highchart id="chart1" config="chartOptions" ng-if="taxon && taxon._id !== undefined && 5000 > taxon.RankID"></highchart>
 	
 					<label class="control-label" for="diagnose">Diagnose</label>
 			<a href="#" id="diagnose" editable-textarea="taxon.attributes.diagnose" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">

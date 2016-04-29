@@ -9,23 +9,23 @@ angular.module('svampeatlasApp')
 			$scope.taxonomyTags = TaxonomyTags.query();
 			$scope.changeRankAndSave = function(taxon) {
 				// If the taxon was a species or genus we are changing it to superspecies and therefore deattacing from fun, otherwise we are just canging rank level
-				if(taxon.RankID === 5000 || taxon.RankID === 10000){
+				if (taxon.RankID === 5000 || taxon.RankID === 10000) {
 					taxon.RankName = $scope.superrank;
-				taxon.FunIndexNumber = null;
-				taxon.FunIndexCurrUseNumber = null;
-				taxon.FunIndexTypificationNumber = 0;
-				taxon.GUID = "";
-				if ($scope.superrank === "superspecies") {
-					taxon.FullName = taxon.Parent.TaxonName + " " + taxon.TaxonName + " sensu lato";
-					taxon.Author = "";
-				};
-				if ($scope.superrank === "supergenus") {
-					taxon.FullName = taxon.TaxonName + " sensu lato";
-					taxon.Author = "";
-				};
-			}
-				
-				
+					taxon.FunIndexNumber = null;
+					taxon.FunIndexCurrUseNumber = null;
+					taxon.FunIndexTypificationNumber = 0;
+					taxon.GUID = "";
+					if ($scope.superrank === "superspecies") {
+						taxon.FullName = taxon.Parent.TaxonName + " " + taxon.TaxonName + " sensu lato";
+						taxon.Author = "";
+					};
+					if ($scope.superrank === "supergenus") {
+						taxon.FullName = taxon.TaxonName + " sensu lato";
+						taxon.Author = "";
+					};
+				}
+
+
 				taxon.RankID = $scope.selectedSuperRankID.superrankId;
 
 				//$scope.selectedSuperRankID = undefined;
@@ -40,53 +40,53 @@ angular.module('svampeatlasApp')
 				})
 
 			};
-			
-			$scope.possibleToChangeFunRecord = function(){
-				if(($scope.taxon.RankID < 10000 && $scope.taxon.RankID > 5000) || ($scope.taxon.RankID < 5000 && $scope.taxon.RankID > 4000)){
+
+			$scope.possibleToChangeFunRecord = function() {
+				if (($scope.taxon.RankID < 10000 && $scope.taxon.RankID > 5000) || ($scope.taxon.RankID < 5000 && $scope.taxon.RankID > 4000)) {
 					return $scope.taxon.Children !== undefined && $scope.taxon.Children.length === 0;
 				} else {
 					return $scope.taxon.Children !== undefined;
 				}
-				
+
 			}
-			$scope.detachFromFunRecord = function(){
-				
-			var confirm = $mdDialog.confirm()
-				.title('Detach Index Fungorum record ?')
-				.ariaLabel('Detach Index Fungorum record')
-				.ok('Yes')
-				.cancel('No');
-			$mdDialog.show(confirm).then(function() {
-				
-				$scope.taxon.FunIndexNumber = null;
-				$scope.taxon.FunIndexCurrUseNumber = null;
-				$scope.taxon.FunIndexTypificationNumber = 0;
-				
-				return Taxon.update({
-					id: $scope.taxon._id
-				}, $scope.taxon).$promise.then(function(){
-					delete $scope.taxon.FunIndexRecord;
-				})
-				
-				
-			}, function() {
-				return false;
-			});
-				
-				
-				
+			$scope.detachFromFunRecord = function() {
+
+				var confirm = $mdDialog.confirm()
+					.title('Detach Index Fungorum record ?')
+					.ariaLabel('Detach Index Fungorum record')
+					.ok('Yes')
+					.cancel('No');
+				$mdDialog.show(confirm).then(function() {
+
+					$scope.taxon.FunIndexNumber = null;
+					$scope.taxon.FunIndexCurrUseNumber = null;
+					$scope.taxon.FunIndexTypificationNumber = 0;
+
+					return Taxon.update({
+						id: $scope.taxon._id
+					}, $scope.taxon).$promise.then(function() {
+						delete $scope.taxon.FunIndexRecord;
+					})
+
+
+				}, function() {
+					return false;
+				});
+
+
+
 			}
-			
-			
-			
-			$scope.calculateParentRanksForSlider = function(children){
-				
+
+
+
+			$scope.calculateParentRanksForSlider = function(children) {
+
 				if ($scope.taxon.RankID < 10001 && $scope.taxon.RankID > 5000) {
 					$scope.superrank = "superspecies";
 				} else if ($scope.taxon.RankID < 5001 && $scope.taxon.RankID > 4000) {
 					$scope.superrank = "supergenus";
 				};
-				
+
 				if (children.length >= 1) {
 					$scope.childRank = children[0].RankID;
 					if ($scope.taxon.RankID === 5000 && $scope.childRank >= 10000) {
@@ -108,8 +108,8 @@ angular.module('svampeatlasApp')
 						$scope.childName = "Genus";
 					};
 				};
-				
-				$scope.selectedSuperRankID = ( $scope.taxon.Parent === null || ($scope.taxon.RankID < 10000 && $scope.taxon.RankID > 5000) || ($scope.taxon.RankID < 5000 && $scope.taxon.RankID > 4000)) ? {
+
+				$scope.selectedSuperRankID = ($scope.taxon.Parent === null || ($scope.taxon.RankID < 10000 && $scope.taxon.RankID > 5000) || ($scope.taxon.RankID < 5000 && $scope.taxon.RankID > 4000)) ? {
 					superrankId: $scope.taxon.RankID
 				} : {
 					superrankId: ($scope.taxon.Parent.RankID + $scope.childRank) / 2
@@ -139,9 +139,9 @@ angular.module('svampeatlasApp')
 				$scope.taxonAttributes = TaxonAttributes.get({
 					id: $stateParams.id
 				});
-				
 
-				
+
+
 				$scope.taxon.$promise.then(function() {
 					$scope.fetchingTaxon = false;
 					$scope.saveIsClicked = false;
@@ -156,12 +156,14 @@ angular.module('svampeatlasApp')
 						"checked": false
 					};
 
-				
-					PlutoF.SpeciesHypothesis({search_query: $scope.taxon.FullName}).$promise.then(function(res){
+
+					PlutoF.SpeciesHypothesis({
+						search_query: $scope.taxon.FullName
+					}).$promise.then(function(res) {
 						$scope.specieshypotheses = res.results;
 					})
 
-					 Taxon.query({
+					Taxon.query({
 						where: {
 							parent_id: $scope.taxon._id
 						},
@@ -169,23 +171,73 @@ angular.module('svampeatlasApp')
 						include: JSON.stringify([{
 							model: "TaxonAttributes",
 							as: "attributes",
-							fields: JSON.stringify(["PresentInDK"])}])
+							fields: JSON.stringify(["PresentInDK"])
+						}])
 					}).$promise.then(function(children) {
 						$scope.taxon.Children = children;
-						
+
 						var acceptedAndSyns = _.partition($scope.taxon.Children, function(n) {
-						  return n._id === n.accepted_id || n.accepted_id === null;
+							return n._id === n.accepted_id || n.accepted_id === null;
 						});
-						$scope.numAcceptedChildren  = acceptedAndSyns[0].length;
-						
-						$scope.numSynChildren  = acceptedAndSyns[1].length;
-						
+						$scope.numAcceptedChildren = acceptedAndSyns[0].length;
+
+						$scope.numSynChildren = acceptedAndSyns[1].length;
+
 						$scope.calculateParentRanksForSlider($scope.taxon.Children);
-						
-						
+
+
 						$scope.attachFunRecord();
-						
-						
+
+
+					}).then(function() {
+						Taxon.getNumberOfDanishSpecies({
+							id: $scope.taxon._id
+						}).$promise.then(function(stats) {
+							$scope.numberOfDansishSpecies = _.reduce(stats, function(sum, n) {
+								return sum + parseInt(n.count);
+							}, 0);
+							$scope.chartOptions = {
+								options: {
+									chart: {
+										plotBackgroundColor: null,
+										plotBorderWidth: null,
+										plotShadow: false,
+										type: 'pie'
+									},
+									title: {
+										text: 'Number of species recorded in Denmark: ' + $scope.numberOfDansishSpecies
+									},
+									tooltip: {
+										pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
+									},
+									plotOptions: {
+										pie: {
+											allowPointSelect: true,
+											cursor: 'pointer',
+											dataLabels: {
+												enabled: true,
+												format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f} %)',
+												style: {
+													color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+												}
+											}
+										}
+									}
+								},
+								series: [{
+									name: 'Species',
+									colorByPoint: true,
+									data: _.map(stats, function(e) {
+										return {
+											name: e.FullName,
+											y: parseInt(e.count),
+											_id: e._id
+										}
+									})
+								}]
+							}
+							//$scope.stats =stats;
+						})
 					})
 				});
 
@@ -197,7 +249,7 @@ angular.module('svampeatlasApp')
 							return nt._id === $scope.taxon.naturtyper[i]._id;
 						}).isChecked = true;
 					}
-					
+
 					for (var i = 0; i < $scope.taxon.tags.length; i++) {
 
 						_.find($scope.taxonomyTags, function(tag) {
@@ -205,24 +257,28 @@ angular.module('svampeatlasApp')
 						}).isChecked = true;
 					}
 
-				}).catch(function(err){
-					if(err.status === 404){
+				}).
+				catch (function(err) {
+					if (err.status === 404) {
 						ErrorHandlingService.handleTaxon404();
 					}
 				})
-				
-				
+
+
 
 
 			};
-			
-			$scope.attachFunRecord= function(){
+
+
+
+			$scope.attachFunRecord = function() {
 				IndexFungorum.NameByKey({
 					NameKey: $scope.taxon.FunIndexNumber
 				}).$promise.then(function(NameByKeyData) {
 					$scope.taxon.FunIndexRecord = NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum;
 					$scope.FunIndexError = false;
-				}).catch (function(){
+				}).
+				catch (function() {
 					$scope.FunIndexError = "An error occurred, Index Fungorum may currently not be accessible"
 				})
 			}
@@ -246,16 +302,17 @@ angular.module('svampeatlasApp')
 					$scope.attachFunRecord();
 					$scope.taxon.Children = [];
 					$scope.calculateParentRanksForSlider([]);
-					
+
 					$state.go('taxonlayout-taxon', {
 						id: taxon._id
 					}, {
 						inherit: false,
 						notify: false
 					});
-					
+
 				})
-				.catch(function(err){
+					.
+				catch (function(err) {
 					$scope.saveIsClicked = false;
 					ErrorHandlingService.handle500();
 				})
@@ -292,12 +349,14 @@ angular.module('svampeatlasApp')
 					});
 				})
 			};
-			$scope.setDkPresence = function(child){
-				
-				Taxon.updateAttributes({id: child._id}, child.attributes)
-				console.log(child._id +" : "+child.attributes.PresentInDK)
+			$scope.setDkPresence = function(child) {
+
+				Taxon.updateAttributes({
+					id: child._id
+				}, child.attributes)
+				console.log(child._id + " : " + child.attributes.PresentInDK)
 			};
-			
+
 			$scope.unlinkSynonym = function() {
 				$scope.taxon.accepted_id = $scope.taxon._id;
 				$scope.taxon.$update().then(function(t) {
@@ -361,7 +420,7 @@ angular.module('svampeatlasApp')
 				templateUrl: 'app/taxon/synonym-modal.tpl.html',
 				show: false
 			});
-			
+
 			$scope.funIndexModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/taxon/funindex-modal.tpl.html',
@@ -409,16 +468,16 @@ angular.module('svampeatlasApp')
 				}
 
 			}
-			
+
 			// handles tags
-			
+
 			$scope.taxonHasTag = function(tagId) {
 
 				return _.find($scope.taxon.tags, function(tag) {
 					return tag._id === tagId;
 				});
 			};
-			
+
 			$scope.addOrRemoveTag = function(tag) {
 
 				if (tag.isChecked && !$scope.taxonHasTag(tag._id)) {
@@ -449,195 +508,228 @@ angular.module('svampeatlasApp')
 
 			}
 			// handles links to UNITE species hypothesis
-			
-			$scope.addSpeciesHypothesis = function(newSpeciesHypothesis){
-				
-			return	Taxon.addSpeciesHypothesis({id: $scope.taxon._id, }, {specieshypothesis: newSpeciesHypothesis})
-				.$promise.then(function(sh){
-					$scope.taxon.specieshypothesis.push(sh);
-				})
-			}
-			
-			$scope.saveSpeciesHypothesisToSvampeatlas = function(sh){
-			return	Taxon.addSpeciesHypothesis({id: $scope.taxon._id, }, {specieshypothesis: sh.name})
-				.$promise.then(function(sh){
-					$scope.taxon.specieshypothesis.push(sh);
-				})
-			}
-			
-			$scope.deleteSpeciesHypothesis = function(sh){
 
-				Taxon.deleteSpeciesHypothesis({id: $scope.taxon._id, specieshypothesis: sh.specieshypothesis})
-				.$promise.then(function(){
-					_.remove($scope.taxon.specieshypothesis, function(t) {
-						return t.specieshypothesis == sh.specieshypothesis;
-					});
+			$scope.addSpeciesHypothesis = function(newSpeciesHypothesis) {
+
+				return Taxon.addSpeciesHypothesis({
+					id: $scope.taxon._id,
+				}, {
+					specieshypothesis: newSpeciesHypothesis
 				})
+					.$promise.then(function(sh) {
+						$scope.taxon.specieshypothesis.push(sh);
+					})
 			}
-			
+
+			$scope.saveSpeciesHypothesisToSvampeatlas = function(sh) {
+				return Taxon.addSpeciesHypothesis({
+					id: $scope.taxon._id,
+				}, {
+					specieshypothesis: sh.name
+				})
+					.$promise.then(function(sh) {
+						$scope.taxon.specieshypothesis.push(sh);
+					})
+			}
+
+			$scope.deleteSpeciesHypothesis = function(sh) {
+
+				Taxon.deleteSpeciesHypothesis({
+					id: $scope.taxon._id,
+					specieshypothesis: sh.specieshypothesis
+				})
+					.$promise.then(function() {
+						_.remove($scope.taxon.specieshypothesis, function(t) {
+							return t.specieshypothesis == sh.specieshypothesis;
+						});
+					})
+			}
+
 			// handles integration to DynTaxa
-			$scope.loginToDyntaxa = function(){
-      		  if(!$cookies.get('dyntaxa')){
-				  
-  				return  DynTaxa.GetToken().$promise.then(function(res){
-    	      			var exp = new Date();
-    	      			exp.setHours(exp.getHours() + 24);
-    	    			 $cookies.put('dyntaxatoken', res.access_token, {expires: exp}); 
-  					
-  				  })
-      			
-      		  } else {
-				  var deferred = $q.defer();
-				  deferred.resolve()
-				  return deferred.promise;
-      		  }
+			$scope.loginToDyntaxa = function() {
+				if (!$cookies.get('dyntaxa')) {
+
+					return DynTaxa.GetToken().$promise.then(function(res) {
+						var exp = new Date();
+						exp.setHours(exp.getHours() + 24);
+						$cookies.put('dyntaxatoken', res.access_token, {
+							expires: exp
+						});
+
+					})
+
+				} else {
+					var deferred = $q.defer();
+					deferred.resolve()
+					return deferred.promise;
+				}
 			}
-			
-			$scope.getInfoFromDyntaxa = function(){
-				
+
+			$scope.getInfoFromDyntaxa = function() {
+
 				$scope.dyntaxa = {
-					currentUse : function(dtn){
+					currentUse: function(dtn) {
 						return (dtn['b:Taxon'][0]['b:ScientificName'][0] !== dtn['b:Name'][0]) ? ' - ' : 'Current use';
 					},
-					getStatus: function(dtn){
+					getStatus: function(dtn) {
 						return $scope.dyntaxa.statuses[dtn['b:StatusId'][0]][0]['b:Description'][0];
 					},
 					loading: true
 				};
-				
-    		  $scope.loginToDyntaxa().then(function(){
-				$scope.dyntaxa.rawstatuses = DynTaxa.NameStatuses();
-				  $scope.dyntaxa.rawcategories = DynTaxa.NameCategories();
-				  $scope.dyntaxa.rawnames = DynTaxa.SynonymSearch({searchstring: $scope.taxon.FullName});
-				
-				$q.all([$scope.dyntaxa.rawstatuses.$promise ,$scope.dyntaxa.rawcategories.$promise, $scope.dyntaxa.rawnames.$promise])
-				.then(function(){
-					$scope.dyntaxa.statuses = _.groupBy($scope.dyntaxa.rawstatuses, function(e){
-						return e['b:Id'][0]
+
+				$scope.loginToDyntaxa().then(function() {
+					$scope.dyntaxa.rawstatuses = DynTaxa.NameStatuses();
+					$scope.dyntaxa.rawcategories = DynTaxa.NameCategories();
+					$scope.dyntaxa.rawnames = DynTaxa.SynonymSearch({
+						searchstring: $scope.taxon.FullName
 					});
-					_.each($scope.dyntaxa.rawnames, function(e){
-						if (typeof e['b:Description'][0] !== 'string'){
-							e['b:Description'][0] = "";
-						}
-					});
-					var sorted = _.groupBy($scope.dyntaxa.rawnames, function(e){
-						return e['b:CategoryId'][0]
-					});
-					$scope.dyntaxa.latinnames = sorted[0];
-					$scope.dyntaxa.swedishnames = sorted[1];
-					
-					var sweName = _.find($scope.dyntaxa.swedishnames, function(dtn){
-						return dtn['b:Taxon'][0]['b:CommonName'][0] === dtn['b:Name'][0]
-					});
-					
-					if(sweName){
-						$scope.dyntaxa.vernacularname_se = sweName['b:Taxon'][0]['b:CommonName'][0]
-					}
-						
-					
-					
-					return _.find($scope.dyntaxa.rawnames, function(dtn){
-						return dtn['b:Taxon'][0]['b:ScientificName'][0] !== dtn['b:Name'][0]
-					})['b:Taxon'][0]['b:Id'][0]
+
+					$q.all([$scope.dyntaxa.rawstatuses.$promise, $scope.dyntaxa.rawcategories.$promise, $scope.dyntaxa.rawnames.$promise])
+						.then(function() {
+							$scope.dyntaxa.statuses = _.groupBy($scope.dyntaxa.rawstatuses, function(e) {
+								return e['b:Id'][0]
+							});
+							_.each($scope.dyntaxa.rawnames, function(e) {
+								if (typeof e['b:Description'][0] !== 'string') {
+									e['b:Description'][0] = "";
+								}
+							});
+							var sorted = _.groupBy($scope.dyntaxa.rawnames, function(e) {
+								return e['b:CategoryId'][0]
+							});
+							$scope.dyntaxa.latinnames = sorted[0];
+							$scope.dyntaxa.swedishnames = sorted[1];
+
+							var sweName = _.find($scope.dyntaxa.swedishnames, function(dtn) {
+								return dtn['b:Taxon'][0]['b:CommonName'][0] === dtn['b:Name'][0]
+							});
+
+							if (sweName) {
+								$scope.dyntaxa.vernacularname_se = sweName['b:Taxon'][0]['b:CommonName'][0]
+							}
+
+
+
+							return _.find($scope.dyntaxa.rawnames, function(dtn) {
+								return dtn['b:Taxon'][0]['b:ScientificName'][0] !== dtn['b:Name'][0]
+							})['b:Taxon'][0]['b:Id'][0]
+						})
+						.then(function(dyntaxa_id) {
+
+							return DynTaxa.AllParentTaxa({
+								id: dyntaxa_id
+							}).$promise;
+
+						})
+						.then(function(classification) {
+							$scope.dyntaxa.classification = "";
+
+							var node = classification;
+							while (node["b:WebTaxonTreeNode"]) {
+								$scope.dyntaxa.classification += node["b:WebTaxonTreeNode"][0]["b:Taxon"][0]["b:ScientificName"][0];
+								if (node["b:WebTaxonTreeNode"][0]["b:Children"][0]["b:WebTaxonTreeNode"]) {
+									$scope.dyntaxa.classification += ", "
+								};
+								node = node["b:WebTaxonTreeNode"][0]["b:Children"][0];
+							}
+							$scope.dyntaxa.loading = false;
+						})
+						.
+					catch (function(err) {
+						$scope.dyntaxa.loading = false;
+						$scope.dyntaxa.noMatch = true;
+					})
+
 				})
-				.then(function(dyntaxa_id){
-					
-					return DynTaxa.AllParentTaxa({id: dyntaxa_id}).$promise;
-					
-				})
-				.then(function(classification){
-					$scope.dyntaxa.classification = "";
-					
-					var node = classification;
-					while(node["b:WebTaxonTreeNode"]){
-						$scope.dyntaxa.classification += node["b:WebTaxonTreeNode"][0]["b:Taxon"][0]["b:ScientificName"][0];
-						if(node["b:WebTaxonTreeNode"][0]["b:Children"][0]["b:WebTaxonTreeNode"]){
-							$scope.dyntaxa.classification += ", "
-						};
-						node = node["b:WebTaxonTreeNode"][0]["b:Children"][0];
-					}
-					$scope.dyntaxa.loading = false;
-				})
-				.catch(function(err){
-					$scope.dyntaxa.loading = false;
-					$scope.dyntaxa.noMatch = true;
-				})
-				  
-    		  })
-				
-				
+
+
 			}
-			
+
 			// handles an array of danish names , one of these being the current name
-			
-			$scope.setCurrentDkName = function(name){
+
+			$scope.setCurrentDkName = function(name) {
 				$scope.newDkNameIsInProgress = true;
 				console.log(name)
-				Taxon.setCurrentDKname({id: $scope.taxon._id, }, name)
-				.$promise.then(function(){
-					$scope.taxon.Vernacularname_DK = name;
-					$scope.newDkNameIsInProgress = false;
-				})
-				
-	
+				Taxon.setCurrentDKname({
+					id: $scope.taxon._id,
+				}, name)
+					.$promise.then(function() {
+						$scope.taxon.Vernacularname_DK = name;
+						$scope.newDkNameIsInProgress = false;
+					})
+
+
 			};
-			
-			
-			$scope.updateDkName = function(name){
-				
+
+
+			$scope.updateDkName = function(name) {
+
 				$scope.newDkName = name;
 				$scope.dkNameModal.show()
 			}
-			$scope.createNewDkName = function(){
-				$scope.newDkName = {taxon_id: $scope.taxon._id, appliedLatinName: $scope.taxon.FullName};
+			$scope.createNewDkName = function() {
+				$scope.newDkName = {
+					taxon_id: $scope.taxon._id,
+					appliedLatinName: $scope.taxon.FullName
+				};
 				$scope.dkNameModal.show()
 			}
-			
-			$scope.cancelNewName = function(){
+
+			$scope.cancelNewName = function() {
 				delete $scope.newDkName;
 			}
-			
-			$scope.saveOrUpdateDkName = function(){
-				if($scope.newDkName.hasOwnProperty('_id')){
-				Taxon.updateDKname({id: $scope.taxon._id, nameid: $scope.newDkName._id }, $scope.newDkName).$promise.then(function(newname){
-					if($scope.taxon.vernacularname_dk_id === $scope.newDkName._id){
-						$scope.taxon.Vernacularname_DK = $scope.newDkName;
+
+			$scope.saveOrUpdateDkName = function() {
+				if ($scope.newDkName.hasOwnProperty('_id')) {
+					Taxon.updateDKname({
+						id: $scope.taxon._id,
+						nameid: $scope.newDkName._id
+					}, $scope.newDkName).$promise.then(function(newname) {
+						if ($scope.taxon.vernacularname_dk_id === $scope.newDkName._id) {
+							$scope.taxon.Vernacularname_DK = $scope.newDkName;
+							delete $scope.newDkName;
+						}
+					})
+				} else {
+					Taxon.addDKname({
+						id: $scope.taxon._id
+					}, $scope.newDkName).$promise.then(function(newname) {
+						$scope.taxon.DanishNames.push(newname);
 						delete $scope.newDkName;
-					}
-				})
-			} else {
-				Taxon.addDKname({id: $scope.taxon._id}, $scope.newDkName).$promise.then(function(newname){
-					$scope.taxon.DanishNames.push(newname);
-					delete $scope.newDkName;
-				})
+					})
+				}
 			}
+
+			$scope.deleteDkName = function(name) {
+
+				var confirm = $mdDialog.confirm()
+					.title('Delete ' + name.vernacularname_dk + ' ?')
+					.ariaLabel('Delete ' + name.vernacularname_dk)
+					.ok('Yes')
+					.cancel('No');
+				$mdDialog.show(confirm).then(function() {
+
+					Taxon.deleteDKname({
+						id: $scope.taxon._id,
+						nameid: name._id
+					}).$promise.then(function() {
+						_.remove($scope.taxon.DanishNames, function(n) {
+							return n._id === name._id;
+						});
+
+					})
+
+
+				}, function() {
+					return false;
+				});
+
+
 			}
-			
-			$scope.deleteDkName = function(name){
-				
-			var confirm = $mdDialog.confirm()
-				.title('Delete '+name.vernacularname_dk+' ?')
-				.ariaLabel('Delete '+name.vernacularname_dk)
-				.ok('Yes')
-				.cancel('No');
-			$mdDialog.show(confirm).then(function() {
-				
-				Taxon.deleteDKname({id: $scope.taxon._id, nameid: name._id}).$promise.then(function(){
-					_.remove($scope.taxon.DanishNames, function(n) {
-					  return n._id === name._id;
-					});
-					
-				})
-				
-				
-			}, function() {
-				return false;
-			});
-				
-				
-			}
-			
-			$scope.activePanel =1;
+
+			$scope.activePanel = 1;
+
+
 
 		}
 	]);

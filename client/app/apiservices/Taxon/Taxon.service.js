@@ -19,6 +19,14 @@ angular.module('svampeatlasApp')
 				url: '/api/taxa/:id/parents',
 				isArray: false
 			},
+			'getNumberOfDanishSpecies': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxa/:id/danishspecies/count',
+				isArray: true
+			},
 			'addImage': {
 				method: 'POST',
 				params: {

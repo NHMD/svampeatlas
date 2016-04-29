@@ -102,3 +102,7 @@ table.fullname-examples {
     height: auto; /* this can vary */
 	
 }
+
+text.ct-label {
+	font-size: 14px;
+}
