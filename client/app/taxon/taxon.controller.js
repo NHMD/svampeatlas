@@ -147,7 +147,7 @@ angular.module('svampeatlasApp')
 					$scope.saveIsClicked = false;
 
 					$scope.mergetooltip = {
-						"title": "Merge all unset attributes from this taxon.<br />All attributes currently present on " + $scope.taxon.FullName + " will be preserved.",
+						"title": "Merge all unset attributes from this taxon.<br/>All attributes currently present on " + $scope.taxon.FullName + " will be preserved.",
 						"checked": false
 					};
 
@@ -193,9 +193,13 @@ angular.module('svampeatlasApp')
 						Taxon.getNumberOfDanishSpecies({
 							id: $scope.taxon._id
 						}).$promise.then(function(stats) {
-							$scope.numberOfDansishSpecies = _.reduce(stats, function(sum, n) {
+							$scope.numberOfDanishSpecies = _.reduce(stats, function(sum, n) {
 								return sum + parseInt(n.count);
 							}, 0);
+							
+							
+							var titleText = ($translate.use() === 'en') ? 'Number of species recorded in Denmark: ' : 'Antal arter i Danmark: '
+							var seriesText = ($translate.use() === 'en') ? 'Species' : 'Arter';
 							$scope.chartOptions = {
 								options: {
 									chart: {
@@ -205,7 +209,7 @@ angular.module('svampeatlasApp')
 										type: 'pie'
 									},
 									title: {
-										text: 'Number of species recorded in Denmark: ' + $scope.numberOfDansishSpecies
+										text: titleText + $scope.numberOfDanishSpecies
 									},
 									tooltip: {
 										pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
@@ -221,11 +225,22 @@ angular.module('svampeatlasApp')
 													color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
 												}
 											}
-										}
+										},
+							            series: {
+							                cursor: 'pointer',
+							                point: {
+							                    events: {
+							                        click: function () {
+														$state.go('taxonlayout-taxon', {id: this.options._id})
+							                            
+							                        }
+							                    }
+							                }
+							            }
 									}
 								},
 								series: [{
-									name: 'Species',
+									name: seriesText,
 									colorByPoint: true,
 									data: _.map(stats, function(e) {
 										return {
