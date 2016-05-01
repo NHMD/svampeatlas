@@ -68,6 +68,7 @@
 	
 	
 			<div class="col-md-6" ng-show="taxon._id !== undefined">
+				<p ng-if="taxon && taxon._id !== undefined && 5000 === taxon.RankID"><span translate>Number of species recorded in Denmark: </span> {{numberOfDanishSpecies}}</p>
 	<highchart id="chart1" config="chartOptions" ng-if="taxon && taxon._id !== undefined && 5000 > taxon.RankID"></highchart>
 	
 					<label class="control-label" for="diagnose">Diagnose</label>

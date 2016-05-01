@@ -92,7 +92,8 @@ angular.module('svampeatlasApp')
 		  'Detach' : 'Afkobl',
 		  'Change' : 'Ændr',
 		  'Initials' : 'Initialer',
-		  'Mycokey characters': 'Mycokey karakterer'
+		  'Mycokey characters': 'Mycokey karakterer',
+		  'Number of species recorded in Denmark:' : 'Antal arter i Danmark:'
   	    });
 	 
 	
