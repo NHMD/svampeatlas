@@ -118,6 +118,40 @@ angular.module('svampeatlasApp')
 				url: '/api/taxa/:id/tags',
 				isArray: true
 			},
+			'addMycoKeyCharacter': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxa/:id/mycokeycharacters',
+				isArray: false
+			},
+			'deleteMycoKeyCharacter': {
+				method: 'DELETE',
+				params: {
+					id: '@_id',
+					characterid: 'characterid'
+				},
+				url: '/api/taxa/:id/mycokeycharacters/:characterid',
+				isArray: false
+			},
+			'getMycoKeyCharacters': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxa/:id/mycokeycharacters',
+				isArray: true
+			},
+			'importMycoKeyCharacters': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxa/:id/mycokeycharacters/import/',
+				isArray: true
+			},
+
 			'addNatureType': {
 				method: 'POST',
 				params: {

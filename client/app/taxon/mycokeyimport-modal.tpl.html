@@ -1,0 +1,49 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title"><span translate>Import mycokey characters from taxon</span>:</h4></div>
+				<div class="modal-body">
+					<form>
+						<input type="text" class="form-control" minLength="3" ng-model-options="{allowInvalid:true}" ng-model="$parent.$parent.selectedMycoKeyImportTaxon" bs-options="taxon as taxon.FullName for taxon in TaxonTypeaheadService.getTaxon($viewValue)" data-placement="bottom-left" placeholder="Enter taxon name" bs-typeahead>
+					</form>	
+					
+					<table ng-show="$parent.selectedMycoKeyImportTaxon !== undefined && $parent.selectedMycoKeyImportTaxon._id !== undefined" class="table parent-taxon-table table-bordered">
+
+					  <tr class="parent-taxon-table"><td class="parent-taxon-table" st-ratio="40">Selected taxon:</td><td class="parent-taxon-table" st-ratio="60">{{$parent.selectedMycoKeyImportTaxon.FullName}}</td><td st-ratio="50"></td></tr>
+					
+					</table>
+					
+					<div class="panel-group"  ng-show="$parent.selectedMycoKeyImportTaxon !== undefined && $parent.selectedMycoKeyImportTaxon._id !== undefined"  role="tablist" aria-multiselectable="true" bs-collapse>
+					  <div class="panel panel-default" ng-repeat="group in $parent.mycokeyGroups">
+					    <div class="panel-heading" role="tab">
+					      <h4 class="panel-title">
+					        <a bs-collapse-toggle>
+					          {{ ($translate.use() === 'en') ? group['Full text UK'] : group['Full text DK'] }}
+					        </a>
+					      </h4>
+					    </div>
+					    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+					      <div class="panel-body">
+							<table class="table table-bordered">
+						  	
+															<tbody>
+							 							  <tr ng-repeat="character in $parent.suggestedImportCharacters | filter:{ CharacterGroup : group.CharacterGroupID }"><td class="table-bordered" st-ratio="80">{{ ($translate.use() === 'en') ? character['Short text UK'] : character['Short text DK']}}
+														  </td><td st-ratio="20">
+							  
+															   </td></tr></tbody>
+							 							</table>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+		
+				<div class="modal-footer">
+					<div class="col-md-12">
+					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> <button type="button" class="btn btn-success pull-right" ng-show="$parent.selectedMycoKeyImportTaxon !== undefined && $parent.selectedMycoKeyImportTaxon._id !== undefined" ng-click="importMycoKeyCharacters($parent.selectedMycoKeyImportTaxon); $hide()"> <i class="fa fa-check"></i> Import characters!</button> 
+					</div>
+				</div>
+			
+		</div>
+	</div>

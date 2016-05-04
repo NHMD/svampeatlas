@@ -182,7 +182,11 @@ exports.show = function(req, res) {
 			}, {
 				model: models.TaxonomyTag,
 				as: 'tags'
-			}
+			},
+			{
+							model: models.MycokeyCharacterView,
+							as: 'character1'
+						}
 
 		]
 	})
