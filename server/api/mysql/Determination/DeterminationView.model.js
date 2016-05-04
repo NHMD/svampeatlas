@@ -68,7 +68,11 @@ module.exports = function(sequelize, DataTypes) {
      // tax
       Taxon_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+		  references: {
+		        model: "MycokeyCharacterView",
+		        key: "taxon_id"
+		      }
       },
       Taxon_createdAt: {
         type: DataTypes.DATE,
@@ -146,10 +150,30 @@ module.exports = function(sequelize, DataTypes) {
 	  Taxon_redlist_status :{
         type: DataTypes.STRING,
         allowNull: true,
-      }
+      },
+	  
+	  mycorrhizal: {
+	  	type: DataTypes.BOOLEAN
+	  },
+	  lichenized: {
+	  	type: DataTypes.BOOLEAN
+	  },
+
+ parasite: {
+	  	type: DataTypes.BOOLEAN
+	  },
+  saprobe: {
+	  	type: DataTypes.BOOLEAN
+	  },
+  on_lichens: {
+	  	type: DataTypes.BOOLEAN
+	  },
+  on_wood: {
+	  	type: DataTypes.BOOLEAN
+	  }
    
   }, {
-    	tableName: 'DeterminationView',
+    	tableName: 'DeterminationView2',
     	timestamps: false,
     	freezeTableName: true,
     	classMethods: {
@@ -162,7 +186,12 @@ module.exports = function(sequelize, DataTypes) {
 				.belongsTo(models.DeterminationView, {
 					foreignKey: "primarydetermination_id" ,
 					as: "DeterminationView"
-				});			
+				});	
+				
+
+			//	models.MycokeyCharacterView.belongsToMany(models.DeterminationView, { foreignKey: 'Taxon_id',  constraints: false});
+					
+    		
 				
 	/*
     			models.Taxon

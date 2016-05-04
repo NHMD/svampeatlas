@@ -7,7 +7,12 @@ angular.module('svampeatlasApp')
 	  return $resource('/api/mycokeycharacters/:id', { id: '@_id' }, {
 	      update: {
 	        method: 'PUT' // this method issues a PUT request
-	      }
+	      },
+		  getGroups:  {
+				method: 'GET',
+				url: '/api/mycokeycharacters/groups',
+				isArray: true
+			}
 	    });
    
   });

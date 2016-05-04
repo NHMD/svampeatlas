@@ -151,6 +151,17 @@
     Inkludér udenlandske fund
   </md-switch>
   </div>
+  <div layout-gt-xs="row" ng-if="Auth.hasRole('validator')">
+  	 <md-input-container >	
+  	<label>livsstrategi</label>  
+  <md-select aria-label="livsstrategi" id="livsstrategi" ng-model="search.livsstrategi">
+	<md-option value=""></md-option>
+    
+    <md-option value="{{str.key}}" ng-repeat="str in strategiesUI">{{str[$translate.use()]}}</md-option>
+    
+            </md-select>
+  	  </md-input-container>
+  </div>
    <div layout="row" class="validator-button-container" flex>
 	   <span layout-fill flex></span>
 	   <md-button class="md-fab md-warn" aria-label="Nulstil formular" ng-click="resetForm()">

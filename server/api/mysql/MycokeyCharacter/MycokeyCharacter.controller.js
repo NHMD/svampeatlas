@@ -84,7 +84,7 @@ exports.index = function(req, res) {
 	} else {
 		query['include'] = [{model: models.MycokeyCharacterGroup, as: "charactergroup" }]
 	}
-	console.log(query);
+	
 MycokeyCharacter.findAndCount(query)
 	.then(function(character) {
 		res.set('count', character.count);
@@ -114,6 +114,145 @@ exports.show = function(req, res) {
 };
 
 
+exports.showMycoKeyCharacters = function(req, res) {
+	
+	//TaxonTag
+	models.Taxon.find({
+		where: {
+			_id: req.params.id
+		},
+		include: [ {
+				model: models.MycokeyCharacterView,
+				as: 'character1'
+			}
+
+		]
+	})
+		.then(handleEntityNotFound(res))
+		.then(function(taxon){
+			return res.status(200).json(taxon.character1);
+		})
+		.
+	catch (handleError(res));
+};
+
+// Get list of things
+exports.indexGroups = function(req, res) {
+
+	
+models.MycokeyCharacterGroup.findAll()
+	.then(function(groups) {
+
+		return res.status(200).json(groups);
+	})
+	.
+catch (handleError(res));
+};
+
+exports.addMycoKeyCharacter= function(req, res) {
+
+//return res.status(200).json(req.body);
+ var sql = "INSERT INTO GenusCharacters (`Character`, `GenusID`, `xxxx`,`BoolValue`, Probability, mark, CodedForSpecies, `check`, `RealValueMax`, `RealValueMin`, `taxon_id`) "
++"	SELECT :CharacterID, 0, 1, 1, 100, 0, 0, 0, 0, 0,  t._id "
++" FROM Taxon t, Taxon tp WHERE tp._id = :id AND t.Path LIKE CONCAT(tp.Path, '%') ON DUPLICATE KEY UPDATE taxon_id=taxon_id";
+
+return models.sequelize.query(sql,
+  { replacements: { CharacterID: req.body.CharacterID, id: req.params.id }, type: models.sequelize.QueryTypes.INSERT }
+).then(function(inserted) {
+
+  return models.Taxon.find({where: {_id:req.params.id}})
+})
+.then(function(taxon) {
+
+ return  models.TaxonLog.create({
+			eventname: "MycoKey character added",
+			description: "Character '"+req.body['Short text UK']+"' (id: "+req.body['CharacterID']+") added to "+ taxon.FullName + " (id: "+taxon._id+") and its descendants.",
+			user_id: req.user._id,
+			taxon_id: taxon._id
+	
+		})
+})
+
+.then(function(inserted) {
+
+  return res.status(201).json(inserted);
+}).catch(handleError(res));
+
+
+};
+
+exports.deleteMycoKeyCharacter = function(req, res) {
+
+
+ var sql = "DELETE FROM GenusCharacters "
++"	WHERE `Character` = :CharacterID AND taxon_id IN "
++"(SELECT t._id FROM Taxon t, Taxon tp WHERE tp._id = :id AND t.Path LIKE CONCAT(tp.Path, '%'))";
+
+return models.sequelize.query(sql,
+  { replacements: { CharacterID: parseInt(req.params.characterid), id: parseInt(req.params.id) }, type: models.sequelize.QueryTypes.DELETE }
+)
+.then(function(inserted) {
+
+  return [models.Taxon.find({where: {_id:req.params.id}}), MycokeyCharacter.find({where: {CharacterID:req.params.characterid}})]
+})
+.spread(function(taxon, character) {
+
+ return  models.TaxonLog.create({
+			eventname: "MycoKey character removed",
+			description: "Character '"+character['Short text UK']+"' (id: "+character['CharacterID']+") removed from "+ taxon.FullName + " (id: "+taxon._id+") and its descendants.",
+			user_id: req.user._id,
+			taxon_id: taxon._id
+	
+		})
+})
+.then(function(deleted) {
+
+  return res.status(200).json(deleted);
+}).catch(handleError(res));
+
+};
+
+exports.importMycoKeyCharacters = function(req, res){
+	
+	var sql = "INSERT INTO GenusCharacters (`Character`, `GenusID`, `xxxx`,`BoolValue`, Probability, mark, CodedForSpecies, `check`, `RealValueMax`, `RealValueMin`, `taxon_id`) "
+	+ "SELECT c.`Character`, 0, 1, c.BoolValue, c.Probability, c.mark, c.CodedForSpecies, c.`check`, c.RealValueMax, c.RealValueMin,  t._id"
+	+"  FROM GenusCharacters c, Taxon t, Taxon tp WHERE c.taxon_id = :importfromid AND tp._id = :taxonId AND t._id <> c.taxon_id AND t.Path LIKE CONCAT(tp.Path, '%') ON DUPLICATE KEY UPDATE taxon_id=c.taxon_id"
+	
+	return models.sequelize.query(sql,
+	  { replacements: { taxonId: req.params.id, importfromid: req.body._id }, type: models.sequelize.QueryTypes.INSERT }
+	)
+	
+	
+	.then(function(inserted) {
+		
+	  return models.Taxon.find({
+		where: {
+			_id: req.params.id
+		},
+		include: [ {
+				model: models.MycokeyCharacterView,
+				as: 'character1'
+			}
+
+		]
+	})
+	})
+	.then(function(taxon) {
+
+	 return  [taxon, models.TaxonLog.create({
+				eventname: "MycoKey characters imported",
+				description: taxon.character1.length+ " MycoKey characters imported from "+req.body.FullName+" (id: "+req.body._id+")  to "+ taxon.FullName + " (id: "+taxon._id+") and its descendants.",
+				user_id: req.user._id,
+				taxon_id: taxon._id
+	
+			})]
+	})
+	.spread(function(taxon) {
+		
+	  return res.status(201).json(taxon.character1);
+	}).catch(handleError(res));
+	
+}
 
 
 

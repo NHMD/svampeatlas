@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters) {
+			$scope.$translate = $translate;
 			$scope._ = _;
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
@@ -198,7 +199,7 @@ angular.module('svampeatlasApp')
 							}, 0);
 							
 							
-							var titleText = ($translate.use() === 'en') ? 'Number of species recorded in Denmark: ' : 'Antal arter i Danmark: '
+							var titleText = ($translate.use() === 'en') ? 'species recorded in Denmark: ' : 'arter i Danmark: '
 							var seriesText = ($translate.use() === 'en') ? 'Species' : 'Arter';
 							$scope.chartOptions = {
 								options: {
@@ -209,7 +210,7 @@ angular.module('svampeatlasApp')
 										type: 'pie'
 									},
 									title: {
-										text: titleText + $scope.numberOfDanishSpecies
+										text: $scope.taxon.FullName +" - "  + $scope.numberOfDanishSpecies +" "+titleText
 									},
 									tooltip: {
 										pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
@@ -255,9 +256,12 @@ angular.module('svampeatlasApp')
 						})
 					})
 				});
-
-				$q.all([$scope.taxon.$promise, $scope.natureTypes.$promise, $scope.taxonomyTags.$promise]).then(function() {
-
+				
+			$scope.mycokeyCharacters = MycokeyCharacters.query()
+				$scope.mycokeyGroups = MycokeyCharacters.getGroups();	
+				$scope.mycokeyMap = {}; 
+				$q.all([$scope.taxon.$promise, $scope.natureTypes.$promise, $scope.taxonomyTags.$promise, $scope.mycokeyCharacters.$promise, $scope.mycokeyGroups.$promise]).then(function() {
+								
 					for (var i = 0; i < $scope.taxon.naturtyper.length; i++) {
 
 						_.find($scope.natureTypes, function(nt) {
@@ -272,6 +276,18 @@ angular.module('svampeatlasApp')
 						}).isChecked = true;
 					}
 
+				})
+				.then(function(){
+					
+					_.each($scope.mycokeyCharacters, function(c){
+						$scope.mycokeyMap[c.CharacterID] = c;
+					})
+					
+					_.each($scope.taxon.character1, function(c){
+						$scope.mycokeyMap[c.CharacterID].isChecked = true;
+					})
+					
+					
 				}).
 				catch (function(err) {
 					if (err.status === 404) {
@@ -284,8 +300,41 @@ angular.module('svampeatlasApp')
 
 			};
 
-
-
+			$scope.updateMycoKeyCharacter = function(characterId){
+				
+				if($scope.mycokeyMap[characterId].isChecked) {
+					Taxon.addMycoKeyCharacter({id: $scope.taxon._id}, $scope.mycokeyMap[characterId]);
+				} else {
+					Taxon.deleteMycoKeyCharacter({id: $scope.taxon._id, characterid: characterId})
+				}
+				
+				
+			}
+			
+			$scope.importMycoKeyCharacters = function(fromTaxon){
+				Taxon.importMycoKeyCharacters({id: $scope.taxon._id}, fromTaxon).$promise.then(function(characters){
+					
+					
+					_.each(characters, function(c){
+						$scope.mycokeyMap[c.CharacterID].isChecked = true;
+					})
+					$scope.taxon.character1 = characters;
+					alert(characters.length+" characters successfully imported.")
+				})
+					
+			}
+            
+			$scope.$watch('selectedMycoKeyImportTaxon', function(newVal, oldVal){
+				
+				if(newVal && newVal._id && (newVal !== oldVal)){
+					Taxon.getMycoKeyCharacters({id: newVal._id}).$promise.then(function(characters){
+						$scope.suggestedImportCharacters = characters;
+					})
+				} else {
+					delete $scope.suggestedImportCharacters;
+				}
+			})
+			
 			$scope.attachFunRecord = function() {
 				IndexFungorum.NameByKey({
 					NameKey: $scope.taxon.FunIndexNumber
@@ -422,6 +471,11 @@ angular.module('svampeatlasApp')
 			$scope.parentModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/taxon/parent-modal.tpl.html',
+				show: false
+			});
+			$scope.mycokeyImportModal = $modal({
+				scope: $scope,
+				templateUrl: 'app/taxon/mycokeyimport-modal.tpl.html',
 				show: false
 			});
 			$scope.rankModal = $modal({

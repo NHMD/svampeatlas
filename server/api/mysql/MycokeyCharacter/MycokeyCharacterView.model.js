@@ -5,7 +5,11 @@ module.exports = function(sequelize, DataTypes) {
 	var MycokeyCharacterView = sequelize.define('MycokeyCharacterView', {
 		taxon_id: {
 			type: DataTypes.INTEGER,
-			allowNull: false
+			allowNull: false,
+  		  references: {
+  		        model: "DeterminationView",
+  		        key: "Taxon_id"
+  		      }
 		},
 		CharacterID: {
 			type: DataTypes.INTEGER,

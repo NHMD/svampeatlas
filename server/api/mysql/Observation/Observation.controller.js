@@ -112,6 +112,20 @@ exports.index = function(req, res) {
 			
 		} 
 		
+		// special case for mycokeyattributes included on determinationView
+	/*	
+		if(n.model === 'DeterminationView' && n.include){
+		//	n.include = JSON.parse(n.include);
+			for (var i = 0; i < n.include.length; i++){
+				n.include[i].model = models[n.include[i].model]
+				n.include[i].where = JSON.parse(n.include[i].where)
+				
+			}
+			console.log("###########")
+			console.log(n.include)
+			console.log("###########")
+		}
+		*/
 		n.model = models[n.model];
 		return n;
 		})

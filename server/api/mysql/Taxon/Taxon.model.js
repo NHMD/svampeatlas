@@ -321,8 +321,20 @@ module.exports = function(sequelize, DataTypes) {
 						});
 						*/
 					}
+					
+					/*
+					models.Taxon.belongsToMany(models.MycoKeyCharacter, {
+					  through: models.MycokeyGenusCharacter,
+					  foreignKey: 'taxon_id',
+					as: 'MycoKeyCharacters'
+					});
+					models.MycoKeyCharacter.belongsToMany(models.Taxon, {
+					  through: models.MycokeyGenusCharacter,
+					  foreignKey: 'Character',
+						as: 'MycoKeyCharacters'
+					});
 				
-				
+				*/
 					
 				
     		}
