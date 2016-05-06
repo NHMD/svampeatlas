@@ -710,7 +710,29 @@ angular.module('svampeatlasApp')
 
 											$scope.precision = position.coords.accuracy;
 
-											console.log(position)
+											if (!GeoJsonUtils.inDK($scope.mapsettings.markers.position)) {
+												$http({
+													method: 'GET',
+													url: '/api/geonames/findnearby',
+													params: {
+														lat: $scope.mapsettings.markers.position.lat,
+														lng: $scope.mapsettings.markers.position.lng
+													}
+												}).then(function(res) {
+													var direction = GeoJsonUtils.direction($scope.mapsettings.markers.position, res.data.geonames[0]);
+
+													$scope.foreignLocalityString = res.data.geonames[0].countryName + ", " + res.data.geonames[0].adminName1 + ", " + (Math.round(res.data.geonames[0].distance * 1000)) + " m " + direction + " " + res.data.geonames[0].name + " (" + res.data.geonames[0].fcodeName + ")";
+													$scope.foreignLocality = res.data.geonames[0];
+
+													$scope.selectedLocality = [];
+												});
+											} else {
+												if ($scope.showLocalitiesOnMap) {
+													$scope.setNearbyLocalities();
+												}
+												delete $scope.foreignLocalityString;
+												delete $scope.foreignLocality;
+											}
 										}, function(error) {
 											map.spin(false);
 											switch (error.code) {
@@ -743,10 +765,17 @@ angular.module('svampeatlasApp')
 								$scope.selectedTabIndex = 0;
 
 								$scope.$watch('files', function(newVal, oldVal) {
+									$scope.processingImage = false;
+									$scope.statusMsg = "";
 									if (newVal && newVal.length > 0) {
 										$scope.selectedTabIndex = 2;
 									}
 								})
+								
+								$scope.showProcessingImageStatus = function(){
+									$scope.processingImage = true;
+									$scope.statusMsg = "Klargør foto, et øjeblik ...";
+								}
 
 
 								$scope.removeImageFromUpload = function(img) {

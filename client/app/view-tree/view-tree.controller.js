@@ -36,7 +36,7 @@ angular.module('svampeatlasApp')
 				$timeout(function(){showTree(JSON.parse($scope.treeData))}, 0);
 			} else {
 				
-				$http.get("/api/taxons/tree").then(function(result) {
+				$http.get("/api/taxa/tree").then(function(result) {
 					$scope.cache.put("tree", JSON.stringify(result.data));
 					$scope.treeData = result.data;
 					showTree($scope.treeData);
@@ -48,7 +48,7 @@ angular.module('svampeatlasApp')
 				$scope.cache.remove("tree");
 				 angular.element("#tree-container").empty();
 				$scope.loading = true;
-				$http.get("/api/taxons/tree").then(function(result) {
+				$http.get("/api/taxa/tree").then(function(result) {
 					$scope.cache.put("tree", result.data);
 					$scope.treeData = result.data;
 					showTree($scope.treeData);
