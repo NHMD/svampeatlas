@@ -114,6 +114,21 @@ exports.show = function(req, res) {
 };
 
 
+
+
+// Get list of things
+exports.indexGroups = function(req, res) {
+
+	
+models.MycokeyCharacterGroup.findAll()
+	.then(function(groups) {
+
+		return res.status(200).json(groups);
+	})
+	.
+catch (handleError(res));
+};
+/*
 exports.showMycoKeyCharacters = function(req, res) {
 	
 	//TaxonTag
@@ -134,19 +149,6 @@ exports.showMycoKeyCharacters = function(req, res) {
 		})
 		.
 	catch (handleError(res));
-};
-
-// Get list of things
-exports.indexGroups = function(req, res) {
-
-	
-models.MycokeyCharacterGroup.findAll()
-	.then(function(groups) {
-
-		return res.status(200).json(groups);
-	})
-	.
-catch (handleError(res));
 };
 
 exports.addMycoKeyCharacter= function(req, res) {
@@ -255,6 +257,6 @@ exports.importMycoKeyCharacters = function(req, res){
 }
 
 
-
+*/
 
 
