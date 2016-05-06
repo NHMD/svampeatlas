@@ -9,7 +9,7 @@ var nutritionStrategyController = require('../ErnaeringsStrategi/ErnaeringStrate
 var taxonomytagController = require('../TaxonomyTag/TaxonomyTag.controller');
 var speciesHypothesisController = require('../TaxonSpeciesHypothesis/TaxonSpeciesHypothesis.controller');
 var dkNamesController = require('../TaxonDKnames/TaxonDKnames.controller');
-var mycoKeyCharacterController = require('../MycoKeyCharacter/MycoKeyCharacter.controller');
+//var mycoKeyCharacterController = require('../MycoKeyCharacter/MycoKeyCharacter.controller');
 var auth = require('../../../auth/auth.service');
 //var intparser = require('../../../components/hooks/parseLimitOffset');
 
@@ -53,10 +53,10 @@ router.post('/:id/tags',auth.hasRole('taxonomyadmin'),  taxonomytagController.ad
 router.delete('/:id/tags/:tagid',auth.hasRole('taxonomyadmin'),  taxonomytagController.deleteTaxonomyTag);
 
 
-router.get('/:id/mycokeycharacters', mycoKeyCharacterController.showMycoKeyCharacters);
-router.post('/:id/mycokeycharacters',auth.hasRole('taxonomyadmin'),  mycoKeyCharacterController.addMycoKeyCharacter);
-router.post('/:id/mycokeycharacters/import/',auth.hasRole('taxonomyadmin'),  mycoKeyCharacterController.importMycoKeyCharacters);
-router.delete('/:id/mycokeycharacters/:characterid',auth.hasRole('taxonomyadmin'),  mycoKeyCharacterController.deleteMycoKeyCharacter);
+router.get('/:id/mycokeycharacters', controller.showMycoKeyCharacters);
+router.post('/:id/mycokeycharacters',auth.hasRole('taxonomyadmin'),  controller.addMycoKeyCharacter);
+router.post('/:id/mycokeycharacters/import/',auth.hasRole('taxonomyadmin'),  controller.importMycoKeyCharacters);
+router.delete('/:id/mycokeycharacters/:characterid',auth.hasRole('taxonomyadmin'),  controller.deleteMycoKeyCharacter);
 
 
 router.get('/:id/nutritionstrategies', nutritionStrategyController.showTaxonNutritionStrategies);
