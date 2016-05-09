@@ -217,7 +217,7 @@ angular.module('svampeatlasApp')
 				return results;
 			}
 
-			$scope.taxonPlaceholder = "Latinsk navn"
+			$scope.taxonPlaceholder = $translate.instant("Latinsk navn");
 
 
 			$scope.observationSearch = ObservationSearchService.getSearch();
@@ -317,9 +317,9 @@ angular.module('svampeatlasApp')
 
 
 				if (newVal.DkNames === true) {
-					$scope.taxonPlaceholder = "Dansk navn"
+					$scope.taxonPlaceholder = $translate.instant("Dansk navn");
 				} else {
-					$scope.taxonPlaceholder = "Latinsk navn"
+					$scope.taxonPlaceholder = $translate.instant("Latinsk navn");
 				}
 				$scope.search.include[2].required = ($scope.search.geometry) ? false : !$scope.search.includeForeign;
 

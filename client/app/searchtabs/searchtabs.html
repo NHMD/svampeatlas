@@ -14,7 +14,7 @@
 		  <ng-md-icon icon="search" ></ng-md-icon>
 		  
           <h3 class="inset">
-            Søg <span ng-if="mdMedia('gt-sm')">/ {{states[state.current.name] | translate}} </span>
+            {{'Søg' | translate}} <span ng-if="mdMedia('gt-sm')">/ {{states[state.current.name] | translate}} </span>
           </h3>
           <span flex></span>
 		   <span layout-margin ng-if="mdMedia('gt-xs')"> <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>

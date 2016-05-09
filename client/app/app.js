@@ -157,18 +157,6 @@ angular.module('svampeatlasApp', [
 				type: 'link',
 				requireRole: 'useradmin',
 			}, {
-				id: 'link_2',
-				name: 'Link 2',
-				state: 'common.link2',
-				type: 'link',
-				hidden: true
-			}, {
-				id: 'link_3',
-				name: 'Link 3',
-				state: 'common.link3',
-				type: 'link',
-				hidden: true
-			}, {
 				id: 'Settings',
 				name: 'Indstillinger',
 				type: 'heading',
@@ -233,7 +221,7 @@ angular.module('svampeatlasApp', [
       // Intercept 401s and redirect you to login
       responseError: function(response) {
         if (response.status === 401) {
-          (state || (state = $injector.get('$state'))).go('login');
+          (state || (state = $injector.get('$state'))).go('main');
           // remove any stale tokens
           $cookies.remove('token');
           return $q.reject(response);
@@ -281,7 +269,7 @@ angular.module('svampeatlasApp', [
 
       Auth.isLoggedIn(function(loggedIn) {
         if (next.authenticate && !next.authenticate(Auth)) {
-          $state.go('login');
+          $state.go('main');
         }
       });
 		

@@ -21,9 +21,9 @@
 	<tr>
 		<th ></th>
 		<th ></th>
-		<th st-sort="observationDate" >Dato</th>
+		<th st-sort="observationDate" translate>Dato</th>
 		
-		<th st-sort="DeterminationView.Taxon_FullName"  translate>Navn</th>
+		<th st-sort="DeterminationView.Taxon_FullName"  translate>Art</th>
 		<th st-sort="DeterminationView.Taxon_vernacularname_dk"  translate>Dansk navn</th>
 		<th st-sort="Locality.name"  translate>Lokalitet</th>
 		<th st-sort="PrimaryUser.Initialer"  translate>Finder</th>
@@ -45,12 +45,12 @@
 			<ng-md-icon style="fill:wheat" ng-if="row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
 			<ng-md-icon style="fill:green" ng-if=" !mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
 		</td>
-		<td data-title="Dato">{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>
+		<td data-title="{{'Dato' | translate}}">{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>
 		
-		<td data-title="Art"><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></td>
-		<td data-title="Dansk navn">{{row.DeterminationView.Taxon_vernacularname_dk}}</td>	
-		<td data-title="Lokalitet"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
-			<td data-title="Finder"><span ng-if="mdMedia('min-width: 768px')"><md-tooltip md-direction="left">
+		<td data-title="{{'Art' | translate}}"><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></td>
+		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk}}</td>	
+		<td data-title="{{'Lokalitet' | translate}}"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
+			<td data-title="{{'Finder' | translate}}"><span ng-if="mdMedia('min-width: 768px')"><md-tooltip md-direction="left">
           {{row.PrimaryUser.name}}
         </md-tooltip>{{row.PrimaryUser.Initialer}}</span><span ng-if="mdMedia('max-width: 768px')"> {{row.PrimaryUser.name}}</span></td>	
 			
