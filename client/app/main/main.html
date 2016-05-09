@@ -50,7 +50,7 @@
       <md-list-item class="md-3-line md-long-text" ng-repeat="item in news | limitTo : 5">
        
         <div class="md-list-item-text" layout="column">
-          <h3>{{ item.title.$t }}</h3>
+          <h3 ng-bind-html='item.title.$t | limitHtml: 40'></h3>
           <h4>{{ item.published.$t | date : 'dd/MM/yyyy'}}, {{item.author[0].name.$t}}</h4>
           <p ng-bind-html='item.content.$t | limitHtml: 100'></p><a ng-click='showNews($event, item)'>Læs mere</a>
 		 

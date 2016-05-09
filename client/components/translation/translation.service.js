@@ -15,7 +15,8 @@ angular.module('svampeatlasApp')
 		  'symbiotisk med insekter': 'symbiotic with insects',
 		  'endofyt i alger': 'endofyte in algae',
 		  'endofyt i planter': 'endofyte in plants',
-		  'nedbryder (inkl. nekrotrof)' : 'decomposer (incl. necrotroph)'
+		  'nedbryder (inkl. nekrotrof)' : 'decomposer (incl. necrotroph)',
+		  'Forkert password og/eller initialer.' : 'Wrong password or initials.'
 	    });
 	  
   	  $translateProvider.translations('dk', {

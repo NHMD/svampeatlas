@@ -141,7 +141,7 @@ var LoginController = ['$scope', 'Auth', '$state', '$window', '$location', '$coo
          // $state.go('main');
         })
         .catch(function(err) {
-          $scope.errors.other = err.message;
+          $scope.errors.other = 'Forkert password og/eller initialer.';
         });
       }
     };
