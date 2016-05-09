@@ -40,6 +40,13 @@ angular.module('svampeatlasApp')
         id:'me',
 		controller:'language'
       }
+    },
+    setEmail: {
+      method: 'PUT',
+      params: {
+        id:'me',
+		controller:'email'
+      }
     }
 	  });
   });

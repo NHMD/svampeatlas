@@ -1,6 +1,6 @@
 .btn-facebook {
-  color: #fff;
-  background-color: #3B5998;
+  color: #fff !important;
+  background-color: #3B5998 !important;
   border-color: #133783;
 }
 
@@ -13,5 +13,15 @@
 	
     
 }
+
+.profile-page-avatar {
+	width: 60px;
+	
+}
+
+.profile-page-card-content {
+	margin-left: 72px;
+}
+
 
 

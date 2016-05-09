@@ -573,3 +573,6 @@ ALTER TABLE `Taxon`
   -- Move danish names to Taxon table again:
   ALTER TABLE `Taxon` ADD `vernacularname_dk` VARCHAR(255) NULL AFTER `Author`, ADD INDEX (` vernacularname_dk`) ;
   UPDATE Taxon t, TaxonAttributes ta SET t.vernacularname_dk= ta.DKnavn where t._id=ta.taxon_id;
+  
+  UPDATE Taxon t set t.accepted_id = t._id where t.accepted_id IS NULL;
+  SELECT count(*) FROM Taxon where t.accepted_id IS NULL;

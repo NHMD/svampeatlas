@@ -58,6 +58,11 @@ angular.module('svampeatlasApp')
 						return $q.reject(err.data);
 					}.bind(this));
 			},
+			
+			refreshUser: function(){
+				currentUser = User.get();
+				return currentUser.$promise;
+			},
 
 			loginOauth: function(provider, callback) {
 				return $http.get('/auth/' + provider)
