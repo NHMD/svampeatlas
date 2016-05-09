@@ -1,0 +1,51 @@
+<md-dialog aria-label="Login"  ng-cloak  id="login-modal" ng-class="$mdMedia('gt-xs') ? 'login-modal' : ''">
+  
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+          <md-button class="md-icon-button" ng-click="cancel()">
+            <ng-md-icon icon="arrow_back" aria-label="Close dialog"></ng-md-icon>
+          </md-button>
+        <h2 translate>Change password</h2>
+		
+        
+	
+      </div>
+    </md-toolbar>
+      
+    <md-dialog-content layout-padding layout-align="center center" layout='row'>
+	<form class="form" name="form" ng-submit="changePassword(form)" novalidate="" id="form">
+		<div class="form-group">
+			<label translate>Current Password</label> <input type="password" name="password" class="form-control" ng-model="user.oldPassword">
+			<p class="help-block" ng-show="form.password.$error.mongoose">
+				{{ errors.other }}
+			</p>
+		</div>
+		<div class="form-group">
+			<label translate>New Password</label> <input type="password" name="newPassword" class="form-control" ng-model="user.newPassword" ng-minlength="3">
+			<p class="help-block" ng-show="(form.newPassword.$error.minlength || form.newPassword.$error.required) &amp;&amp; (form.newPassword.$dirty || submitted)" translate>
+				Password must be at least 3 characters.
+			</p>
+			<p class="help-block">
+				{{ message }}
+			</p><md-button  type="submit" class="md-raised md-primary"><span translate>Save changes</span></md-button>
+		</div>
+	</form>
+		  
+	
+     
+    </md-dialog-content>
+   
+   <!-- <md-dialog-actions layout="row">
+      <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+        More on Wikipedia
+      </md-button>
+      <span flex></span>
+      <md-button ng-click="answer('not useful')">
+       Not Useful
+      </md-button>
+      <md-button ng-click="answer('useful')" style="margin-right:20px;">
+        Useful
+      </md-button>
+    </md-dialog-actions> -->
+  
+</md-dialog>

@@ -1,43 +1,60 @@
 		<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
 		<md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
-		<md-content layout="row"  flex md-scroll-y layout-padding>
+		<md-content layout-gt-xs="row"  flex md-scroll-y layout-padding>
+		
+	    <md-card layout-fill>
+	    <md-card-header>
+	             <md-card-avatar class="profile-page-avatar">
+	               <user-avatar class="useravatar md-avatar" size="'large'" user="getCurrentUser()" ng-if="isLoggedIn()"></user-avatar>
+	             </md-card-avatar>
+	             <md-card-header-text>
+	               <span class="md-headline" translate>User profile</span>
+	               <span class="md-subhead">{{getCurrentUser().name}} ({{getCurrentUser().Initialer}})</span>
+	             </md-card-header-text>
+	           </md-card-header>
+	          
+			  <md-card-content class="profile-page-card-content">
+			  
+			  <md-input-container class="md-block md-icon-float" >
+			  <md-icon><ng-md-icon icon="email"></ng-md-icon></md-icon>
+			 
+			          
+			          <input ng-model="getCurrentUser().email" type="email" placeholder="Email" >
+					  
+					 
+					  
+			        </md-input-container>
+			  <md-button  ng-click="saveEmail()" ng-show="oldEmail !== getCurrentUser().email"><ng-md-icon icon="save"></ng-md-icon> <span translate>Gem email</span></md-button>
+			  <md-button  ng-click="restoreEmail()" ng-show="oldEmail !== getCurrentUser().email"><ng-md-icon icon="refresh"></ng-md-icon> <span translate>Fortryd</span></md-button>
+			 
 			
-				<div>
-					<h1>
+		  </md-card-content>
+	          
+	         </md-card>
+			
+				<!--<div>
+					<h1 translate>
 						User profile
 					</h1>
 					<p>
-						Name: {{getCurrentUser().name}}
+						<span translate>Name:</span> {{getCurrentUser().name}}
 					</p>
 					<p>
-						Initials: {{getCurrentUser().Initialer}}
+						<span translate>Initials:</span> {{getCurrentUser().Initialer}}
 					</p>
 					<p>
-						Email: {{getCurrentUser().email}}
+						<span translate>Email:</span> {{getCurrentUser().email}}
 					</p>
-					<h1>
-						Change Password
-					</h1>
-					<form class="form" name="form" ng-submit="changePassword(form)" novalidate="" id="form">
-						<div class="form-group">
-							<label>Current Password</label> <input type="password" name="password" class="form-control" ng-model="user.oldPassword">
-							<p class="help-block" ng-show="form.password.$error.mongoose">
-								{{ errors.other }}
-							</p>
-						</div>
-						<div class="form-group">
-							<label>New Password</label> <input type="password" name="newPassword" class="form-control" ng-model="user.newPassword" ng-minlength="3">
-							<p class="help-block" ng-show="(form.newPassword.$error.minlength || form.newPassword.$error.required) &amp;&amp; (form.newPassword.$dirty || submitted)">
-								Password must be at least 3 characters.
-							</p>
-							<p class="help-block">
-								{{ message }}
-							</p><button class="btn btn-lg btn-primary" type="submit">Save changes</button>
-						</div>
-					</form>
-				</div>
-				<div >
-					<a class="btn btn-facebook" href="" ng-show="!getCurrentUser().facebook" ng-click="loginOauth('facebook')"><i class="fa fa-facebook"></i> Connect with Facebook</a> <a class="btn btn-facebook" href="" ng-show="getCurrentUser().facebook" ng-click="disconnectOauth('facebook')"><i class="fa fa-facebook"></i> Disconnect Facebook account</a>
+					
+					
+					
+				</div> -->
+				<div layout='column'>
+					<md-button class="md-raised btn-facebook"  ng-show="!getCurrentUser().facebook" ng-click="loginOauth('facebook')"><ng-md-icon icon="facebook"></ng-md-icon> Connect with Facebook</md-button> 
+					
+					<md-button class="md-raised btn-facebook"  ng-show="getCurrentUser().facebook" ng-click="disconnectOauth('facebook')"><ng-md-icon icon="facebook"></ng-md-icon>  Disconnect Facebook account</md-button>
+					
+					<md-button ng-click="showPwForm()" class="md-raised md-primary"><ng-md-icon icon="edit"></ng-md-icon> <span translate>Change password</span></md-button>
 				</div>
 			
 			

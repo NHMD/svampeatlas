@@ -180,6 +180,23 @@ exports.changeLanguage = function(req, res, next) {
 };
 
 /**
+ * Change a users language
+ */
+exports.changeEmail = function(req, res, next) {
+  var userId = req.user._id;
+
+ return User.update(
+	 {email : req.body.email},
+	 {
+    where: {
+      _id: userId
+    }
+  })
+  .then(respondWith(res, 204))
+  .catch(validationError(res));
+};
+
+/**
  * Get my info
  */
 exports.me = function(req, res, next) {

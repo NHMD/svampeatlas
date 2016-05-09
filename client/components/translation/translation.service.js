@@ -94,7 +94,16 @@ angular.module('svampeatlasApp')
 		  'Initials' : 'Initialer',
 		  'Mycokey characters': 'Mycokey karakterer',
 		  'Number of species recorded in Denmark:' : 'Antal arter i Danmark:',
-		  'Import mycokey characters from taxon' : 'Importér mycokey karakterer fra taxon'
+		  'Import mycokey characters from taxon' : 'Importér mycokey karakterer fra taxon',
+		  'Password successfully changed.' : 'Dit password blev opdateret.',
+		  'User profile' : 'Brugerprofil',
+		  'Name:' : 'Navn:',
+		  'Initials:' : 'Initialer:',
+		  'Save changes' : 'Gem ændringer',
+		  'Password must be at least 3 characters.' : 'Dit password skal være mindst 3 karakterer.',
+		  'Current Password' : 'Nuværende password',
+		  'New Password' : 'Nyt password',
+		  'Change password' : 'Skift password'
   	    });
 	 
 	
