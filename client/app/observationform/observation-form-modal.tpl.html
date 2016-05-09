@@ -67,7 +67,7 @@
 			 		                  <ng-md-icon icon="gps_fixed"></ng-md-icon>
 			 		              </md-button>
 		   	 <leaflet id="observationformmap" width="100%" height="400" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers"  controls="mapsettings.controls" layers="mapsettings.layers"> </leaflet>
-	 		 <md-subheader class="md-no-sticky" ng-if="geoLocationStatusMessage">{{geoLocationStatusMessage}}</md-subheader>
+	 		 <md-subheader class="md-no-sticky" ng-if="geoLocationStatusMessage" ng-bind-html="geoLocationStatusMessage"></md-subheader>
 			 <md-subheader class="md-no-sticky" ng-if="selectedLocality.length === 1">{{selectedLocality[0].name}}</md-subheader>
 		   	 <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}}</md-subheader>
 		   	  <md-subheader class="md-no-sticky" ng-if="precision">Præcision: {{precision}} m</md-subheader>

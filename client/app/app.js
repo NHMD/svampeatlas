@@ -72,7 +72,7 @@ angular.module('svampeatlasApp', [
 					icon: 'search',
 					pages: [{
 						id: 'search_my_obs',
-						name: 'Mine observationer',
+						name: 'Mine fund',
 						state: 'search-list',
 						params: {searchterm: 'mine'},
 						requireLogin: true
