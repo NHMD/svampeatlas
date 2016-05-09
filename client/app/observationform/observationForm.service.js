@@ -737,7 +737,13 @@ angular.module('svampeatlasApp')
 											map.spin(false);
 											switch (error.code) {
 												case error.PERMISSION_DENIED:
-													$scope.geoLocationStatusMessage = "Du skal give enheden lov til at bruge din position."
+													if(error.message.indexOf("Only secure origins are allowed") === 0) {
+													      // Secure Origin issue.
+														$scope.geoLocationStatusMessage = "Chrome browseren tillader ikke brug af position fra ikke-kryperede sider. Anvend i stedet <a href='https://play.google.com/store/apps/details?id=org.mozilla.firefox'>Firefox</a> eller <a href='https://play.google.com/store/apps/details?id=com.opera.browser'>Opera</a>";
+													    } else {
+													    	$scope.geoLocationStatusMessage = "Du skal give enheden lov til at bruge din position."
+													    }
+													
 													break;
 												case error.POSITION_UNAVAILABLE:
 													$scope.geoLocationStatusMessage = "Positionsinformation er ikke tilgængelig."

@@ -321,7 +321,7 @@ angular.module('svampeatlasApp')
 				} else {
 					$scope.taxonPlaceholder = "Latinsk navn"
 				}
-				$scope.search.include[2].required = !$scope.search.includeForeign;
+				$scope.search.include[2].required = ($scope.search.geometry) ? false : !$scope.search.includeForeign;
 
 				if ($scope.search.selectedHigherTaxa.length > 0) {
 					$scope.search.include[0].where.$or = _.map($scope.search.selectedHigherTaxa, function(tx) {
