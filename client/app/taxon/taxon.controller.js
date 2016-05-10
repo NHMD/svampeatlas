@@ -341,7 +341,20 @@ angular.module('svampeatlasApp')
 				}).$promise.then(function(NameByKeyData) {
 					$scope.taxon.FunIndexRecord = NameByKeyData.NameByKeyResult.NewDataSet.IndexFungorum;
 					$scope.FunIndexError = false;
-				}).
+					return $scope.taxon.FunIndexRecord;
+				}).then(function(FunIndexRecord){
+					if(FunIndexRecord.BASIONYM_x0020_RECORD_x0020_NUMBER) {
+						return IndexFungorum.NameByKey({
+					NameKey: FunIndexRecord.BASIONYM_x0020_RECORD_x0020_NUMBER
+				}).$promise.then(function(basionym){
+					$scope.taxon.FunIndexBasionymRecord = basionym.NameByKeyResult.NewDataSet.IndexFungorum;
+				})
+					}
+				
+					
+				})
+				
+				.
 				catch (function() {
 					$scope.FunIndexError = "An error occurred, Index Fungorum may currently not be accessible"
 				})
