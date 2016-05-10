@@ -5,11 +5,11 @@
 
 <md-whiteframe class="md-whiteframe-2dp" layout="column" layout-align="center center">
 <div layout-align="end center" layout-fill layout="row">
-	<p ng-show="offset === 0 || (offset < count)">Henter <span ng-if="offset ===0">data...</span>
-		<span ng-if="offset > 0">{{offset + 1}}-{{((offset+limit) > count  ) ? count : (offset+limit)}} af {{count}}</span></p>
-	<div ng-show="(offset > count)">
-	 <p>Din søgning gav {{count}} resultater</p>
-	 <p ng-show="count > 50000" class="md-subhead">Kun de første 50000 vises på kortet, prøv evt. at afgrænse din søgning yderligere.</p>
+	<p ng-show="offset === 0 || (offset < count && !doneFetchingData)">{{'Henter' | translate}} <span ng-if="offset ===0">data...</span>
+		<span ng-if="offset > 0">{{offset + 1}}-{{((offset+limit) > count  ) ? count : (offset+limit)}} {{'af' | translate}} {{count}}</span></p>
+	<div ng-show="doneFetchingData === true">
+	 <p>{{'Din søgning gav' | translate}} {{count}} {{'resultater' | translate}}</p>
+	 <p ng-show="count > 50000" >{{'Kun de første 50000 vises på kortet, prøv evt. at afgrænse din søgning yderligere.' | translate}}</p>
  </div>
 </div>
  <leaflet id="searchresultmap" height="600px" width="100%" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>

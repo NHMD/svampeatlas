@@ -68,7 +68,13 @@ angular.module('svampeatlasApp')
 		  'Afventer' : 'Validation in progress',
 		  'Afviste' : 'Rejected',
 		  'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' : 'This sighting is under review and should not be referenced before it has been accepted',
-		  'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' : 'This sighting has been rejected based on the information given since the determintaion is too uncertain'
+		  'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' : 'This sighting has been rejected based on the information given since the determintaion is too uncertain',
+		  'Henter' : 'Fetching',
+		  'Kun de første 50000 vises på kortet, prøv evt. at afgrænse din søgning yderligere.' : 'Only the first 50000 records is shown on the map, try narrowing your search further.',
+		  'Din søgning gav': 'Your search returned',
+		  'resultater' : 'records',
+		  'Ret fund' :'Edit sighting',
+		  'Vis mere' : 'Show sighting'
 		           
 		  
 		  
