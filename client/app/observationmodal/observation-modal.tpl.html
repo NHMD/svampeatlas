@@ -7,7 +7,11 @@
           </md-button>
         <h2>ID: {{obs.PrimaryUser.Initialer}}{{(obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : ''}}-{{obs._id}}</h2>
         <span flex></span>
-        
+	 <md-button ng-click="editRecord()" ng-if="obs.primaryuser_id === Auth.getCurrentUser()._id || Auth.hasRole('validator')"
+	                  aria-label="Ret fund"
+	                  class="md-icon-button" >
+	         <ng-md-icon icon="edit" ></ng-md-icon>
+	       </md-button>
       </div>
     </md-toolbar>
       
@@ -22,8 +26,8 @@
 	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
-	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
-	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
+	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
+	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
 		  </div>
 		
 	  		<div class="validator-button-container" ng-if="Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'">
@@ -111,6 +115,13 @@
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
+	   	       <md-list-item class="md-2-line md-long-text" ng-if="Auth.hasRole('validator')">
+	   	         <div class="md-list-item-text">	  				
+	   	           <h3>Intern note</span></h3>
+	  			   <p>{{obs.noteInternal}}</p>
+	   	         </div>
+	  			   <md-divider  ng-if="!$last"></md-divider>                        
+	   	       </md-list-item>
         </md-list>
 		   	     <md-list>
 		  		 <md-subheader class="md-no-sticky">Kommentarer</md-subheader>
@@ -188,8 +199,8 @@ flex>
           <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 		  <span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
-		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
-		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
+		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
+		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
         </md-card-title-text>
 		<div class="validator-button-container" ng-if="Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'">
 
@@ -238,6 +249,11 @@ flex>
 	  		
 			
 		</tr >	
+	  	<tr ng-if="Auth.hasRole('validator')">
+			<td class="rightalign"><strong>Intern note:</strong></td><td colspan="3">{{obs.noteInternal}}</td>
+	  		
+			
+		</tr >
 	  	</tbody>
 	  </table>
         

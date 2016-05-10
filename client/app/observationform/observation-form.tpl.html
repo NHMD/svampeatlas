@@ -1,5 +1,5 @@
         <form name="observationForm">
-			
+			<div layout="row">
   			  <div layout="column" ng-if="obs" class="inset" layout-fill>
   	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
   				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
@@ -7,6 +7,8 @@
   	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
   	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
   		  </div>
+		  <div class="validator-button-container" ng-if="obs && Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"></div>
+		  </div>
 			
 			<div ng-if="!obs">
 	 		<div  layout-margin >
@@ -230,6 +232,12 @@
 				             <label>Kommentarer til fundet</label>
 				             <textarea ng-model="$parent.$parent.note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
+						   <div ng-show="Auth.hasRole('validator')">
+ 				   <md-input-container class="md-block">
+ 				             <label>Intern note</label>
+ 				             <textarea ng-model="$parent.$parent.noteInternal" md-maxlength="800" rows="5" md-select-on-focus></textarea>
+ 				           </md-input-container>
+					   </div>
 			   </div>
 			  
 			  <!--############################################################-->

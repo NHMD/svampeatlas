@@ -26,7 +26,7 @@ angular.module('svampeatlasApp')
 		  'Søgeformular' : 'Search form',
 		  'Seneste 3 dage' : 'Past 3 days',
 		  'Seneste 7 dage' : 'Past 7 days',
-		  'Om svampeatlas' : 'About the Fungal Atlas',
+		  'Om svampeatlas' : 'About the Atlas of Fungi',
 		  'Nyheder' : 'News',
 		  'Indstillinger' : 'Settings',
 		  'Inkludér udenlandske fund' : 'Include foreign findings',
@@ -66,7 +66,9 @@ angular.module('svampeatlasApp')
 		  'Godkendte':'Accepted',
 		  'Valideres': 'To be validated',
 		  'Afventer' : 'Validation in progress',
-		  'Afviste' : 'Rejected'
+		  'Afviste' : 'Rejected',
+		  'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' : 'This sighting is under review and should not be referenced before it has been accepted',
+		  'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' : 'This sighting has been rejected based on the information given since the determintaion is too uncertain'
 		           
 		  
 		  
