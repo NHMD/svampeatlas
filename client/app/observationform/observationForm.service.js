@@ -7,10 +7,8 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', '$q', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService',
-							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService) {
-
-
+						controller: ['$scope', '$q', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService','DeterminationModalService',
+							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService) {
 
 
 
@@ -23,7 +21,7 @@ angular.module('svampeatlasApp')
 								$scope.determiner = [];
 								$scope.users = [];
 								$scope.currentUser = Auth.getCurrentUser();
-
+								$scope.Auth = Auth;
 								$scope.DkNames = ObservationFormStateService.getState().DkNames;
 								$scope.$watch('DkNames', function(newVal) {
 									ObservationFormStateService.getState().DkNames = newVal;
@@ -67,7 +65,36 @@ angular.module('svampeatlasApp')
 
 									}
 								})
-
+								
+								$scope.showSimpleToast = function(text) {
+								    
+								    $mdToast.show(
+								      $mdToast.simple()
+								        .textContent(text)
+								        .position("top right" )
+										.parent(document.querySelectorAll('.speeddial-parent'))
+								        .hideDelay(3000)
+								    );
+								  };
+								$scope.updateValidation = function(validation){
+									
+									Determination.updateValidation({id: $scope.obs.PrimaryDetermination._id}, {validation: validation}).$promise
+									.then(function(determination){
+										$scope.obs.PrimaryDetermination.validation = determination.validation;
+										var txt = (determination.validation === "Afventer") ? "Bestemmelse afventer" : ("Fundet er "+determination.validation);
+										$scope.showSimpleToast(txt)
+									})
+									.catch(function(err){
+										
+										ErrorHandlingService.handle500();
+									})
+								}
+								
+							    $scope.showDeterminationDialog = function($event, obs){
+							    	DeterminationModalService.show($event, obs, 'ObservationFormService');
+							    }
+								
+								
 								// wrap initial load of obs in timeout to increase speed
 								$timeout(function() {
 
@@ -94,6 +121,9 @@ angular.module('svampeatlasApp')
 											$scope.fieldnumber = obs.fieldnumber;
 											$scope.herbarium = obs.herbarium;
 											$scope.note = obs.note;
+											if(Auth.hasRole('validator')){
+												$scope.noteInternal = obs.noteInternal;
+											}
 
 											$scope.mapsettings.markers.position = {
 												lat: obs.decimalLatitude,
@@ -812,8 +842,7 @@ angular.module('svampeatlasApp')
 									return $q.all(promises)
 								}
 
-
-
+								
 								$scope.submitObservation = function() {
 									var determination = {
 										taxon_id: $scope.newTaxon[0]._id,
@@ -834,6 +863,7 @@ angular.module('svampeatlasApp')
 										fieldnumber: $scope.fieldnumber,
 										herbarium: $scope.herbarium,
 										note: $scope.note,
+										noteInternal: $scope.noteInternal,
 										determination: determination,
 										associatedOrganisms: $scope.associatedOrganism,
 										associatedOrganismImport: $scope.associatedOrganismImport,

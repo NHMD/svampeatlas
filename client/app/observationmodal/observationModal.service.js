@@ -7,8 +7,16 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout','DeterminationModalService',
-							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService) {
+						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout','DeterminationModalService','ObservationFormService', '$translate',
+							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService,ObservationFormService, $translate) {
+								
+								
+								$scope.editRecord = function(){
+									$mdDialog.hide($scope.obs).then(function(obs){
+										ObservationFormService.show(null, obs)
+									})
+								}
+								
 								
 								$scope.referencedDataRow = referencedDataRow;
 								$scope.User = Auth.getCurrentUser();
@@ -38,7 +46,9 @@ angular.module('svampeatlasApp')
 									})
 								}
 								
-							    $scope.showDeterminationDialog = DeterminationModalService.show;
+							    $scope.showDeterminationDialog = function($event, obs){
+							    	DeterminationModalService.show($event, obs, 'ObservationModalService');
+							    }
 								
 								
 								$scope.postComment = function(newComment){

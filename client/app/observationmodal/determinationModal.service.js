@@ -3,11 +3,11 @@ angular.module('svampeatlasApp')
 	.factory('DeterminationModalService', function($mdDialog, appConstants) {
 
 			return {
-				show: function(ev, obs) {
+				show: function(ev, obs, sender) {
 			      $mdDialog.show({
 					locals: {obs: obs},  
-			        controller: ['$scope','$mdDialog','Taxon','Observation', 'obs','ObservationModalService',
-					  				function($scope, $mdDialog,Taxon, Observation, obs, ObservationModalService) {
+			        controller: ['$scope','$mdDialog','Taxon','Observation', 'obs','ObservationModalService', 'ObservationFormService',
+					  				function($scope, $mdDialog,Taxon, Observation, obs, ObservationModalService, ObservationFormService) {
 										$scope.obs = obs;
 										$scope.newTaxon = [];
 										$scope.determination = {confidence : 'sikker'};
@@ -57,7 +57,13 @@ angular.module('svampeatlasApp')
 	  										   return  $mdDialog.hide()
 											  }) 
 											  .then(function(){
-											  	ObservationModalService.show(null, $scope.obs)
+												  if(sender === 'ObservationModalService'){
+												  	ObservationModalService.show(null, $scope.obs)
+												  }
+												  if(sender === 'ObservationFormService'){
+												  	ObservationFormService.show(null, $scope.obs)
+												  }
+											  	
 											   }); 
 										   
 										  };

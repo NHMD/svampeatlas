@@ -79,7 +79,8 @@ exports.index = function(req, res) {
 	var query = {
 		offset: parseInt(req.query.offset) ,
 		limit: parseInt(req.query.limit),
-		where: {}
+		where: {},
+		attributes : { exclude: ['noteInternal'] }
 	};
 	if(req.query.order) {
 		query.order = req.query.order;
@@ -236,7 +237,9 @@ function activeThreads(user){
 
 // Get a single observation
 exports.show = function(req, res) {
-	Observation.find({
+	var userIsValidator = (req.user) ? userTool.hasRole(req.user, 'validator') : false;
+	
+	var query = {
 		where: {
 			_id: req.params.id
 		},
@@ -300,7 +303,13 @@ exports.show = function(req, res) {
 			}
 
 		]
-	})
+	};
+	
+	if(!userIsValidator){
+		query.attributes = { exclude: ['noteInternal'] };
+	};
+	
+	Observation.find(query)
 		.then(handleEntityNotFound(res))
 		.then(responseWithResult(res))
 		.
@@ -314,9 +323,13 @@ exports.show = function(req, res) {
 
 // Creates a new Observation in the DB.
 exports.create = function(req, res) {
-
+	var userIsValidator = (req.user) ? userTool.hasRole(req.user, 'validator') : false;
 	var determination = req.body.determination;
 	var observation = req.body;
+	if(!userIsValidator){
+		delete observation.noteInternal;
+	};
+	
 	observation.geom = models.sequelize.fn('GeomFromText', 'POINT (' + req.body.decimalLongitude + ' ' + req.body.decimalLatitude + ')');
 
 	return models.sequelize.transaction(function(t) {
@@ -404,11 +417,14 @@ exports.create = function(req, res) {
 
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
-
-
+	
+	
+	var userIsValidator = userTool.hasRole(req.user, 'validator');
 	var observation = req.body;
 	
-
+	if(!userIsValidator){
+		delete observation.noteInternal;
+	};
 
 	return models.sequelize.transaction(function(t) {
 
@@ -432,6 +448,11 @@ exports.update = function(req, res) {
 			if (!obs) {
 				res.send(404);
 			};
+			
+			if(req.user._id !== obs.primaryuser_id &&  !userIsValidator){
+				
+				throw "Forbidden"
+			}
 			
 			if(obs.decimalLatitude !== req.body.decimalLatitude || obs.decimalLongitude !== req.body.decimalLongitude){
 				obs.set('geom', models.sequelize.fn('GeomFromText', 'POINT (' + req.body.decimalLongitude + ' ' + req.body.decimalLatitude + ')'));
@@ -485,7 +506,12 @@ exports.update = function(req, res) {
 		return res.status(200).json(obs)
 	})
 		.
-	catch (handleError(res));
+	catch(function(err) {
+		var statusCode = (err === 'Forbidden') ? 403 : 500;
+		console.log(err);
+		
+		res.status(statusCode).send(err);
+	});
 
 };
 

@@ -34,7 +34,7 @@
 	<tbody ng-show="displayed.length > 0">
 	<tr ng-repeat="row in displayed">
 		<td data-title=""><ng-md-icon icon="more_horiz" ng-click="ObservationModalService.show($event, row)"></ng-md-icon> 
-			<ng-md-icon icon="edit" ng-if="Auth.isLoggedIn() && Auth.getCurrentUser()._id === row.primaryuser_id" ng-click="ObservationFormService.show($event, row)"></ng-md-icon> </td>
+			<ng-md-icon icon="edit" ng-if="Auth.isLoggedIn() && Auth.getCurrentUser()._id === row.primaryuser_id " ng-click="ObservationFormService.show($event, row)"></ng-md-icon> </td>
 		<td data-title="Status"><md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">
           {{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}
         </md-tooltip>
