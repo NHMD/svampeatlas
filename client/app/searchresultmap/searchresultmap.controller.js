@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchResultMapCtrl', ['$scope','Auth', '$compile', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state', 'ErrorHandlingService','ObservationModalService', 'ObservationFormService','$mdMedia',
-		function($scope, Auth, $compile, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService, ObservationModalService, ObservationFormService, $mdMedia) {
+	.controller('SearchResultMapCtrl', ['$scope','Auth', '$compile', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state', 'ErrorHandlingService','ObservationModalService', 'ObservationFormService','$mdMedia','$translate',
+		function($scope, Auth, $compile, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService, ObservationModalService, ObservationFormService, $mdMedia, $translate) {
 			console.log("md media "+$mdMedia('sm'))
 			var zoom = ($mdMedia('sm')) ? 5 :7;
 			
@@ -161,8 +161,8 @@ angular.module('svampeatlasApp')
 				+"<span ng-if='observation.Locality && observation.Locality.name'>{{observation.Locality.name}} , {{moment(observation.observationDate).format('DD/MM/YYYY')}} </span>"
 				+"<span ng-if='!(observation.Locality && observation.Locality.name)'>{{moment(observation.observationDate).format('DD/MM/YYYY')}} </span>"
 				+"<span>{{observation.PrimaryUser.name}}</span>"
-				+'<md-button class="md-raised"  ng-click="ObservationModalService.show($event, observation)"> <span layout-fill>Vis mere</span> <ng-md-icon icon="arrow_forward" ></ng-md-icon></md-button>'
-				+'<md-button class="md-raised" ng-if="observation.primaryuser_id === currentUser._id" ng-click="ObservationFormService.show($event, observation)"> <span layout-fill>Ret fund</span> <ng-md-icon icon="edit" ></ng-md-icon></md-button>'
+				+'<md-button class="md-raised"  ng-click="ObservationModalService.show($event, observation)"> <span layout-fill>{{"Vis mere" | translate}}</span> <ng-md-icon icon="arrow_forward" ></ng-md-icon></md-button>'
+				+'<md-button class="md-raised" ng-if="observation.primaryuser_id === currentUser._id" ng-click="ObservationFormService.show($event, observation)"> <span layout-fill>{{"Ret fund" | translate}}</span> <ng-md-icon icon="edit" ></ng-md-icon></md-button>'
 			    +"</div>";
 				var iconOptions = {
 					prefix: 'fa',
@@ -190,6 +190,7 @@ angular.module('svampeatlasApp')
 				popupScope.ObservationFormService = ObservationFormService;
 				popupScope.currentUser = Auth.getCurrentUser();
 				popupScope.moment = moment;
+				popupScope.$translate = $translate ;
 				popupScope.imageurl = $scope.appConstants.imageurl;
 				var compiled = $compile(message)(popupScope);
 				
@@ -207,11 +208,11 @@ angular.module('svampeatlasApp')
 				
 				map.spin(true);
 				query.offset = $scope.offset ;
-				query.limit = 10000 ;
+				query.limit = 1000 ;
 				return Observation.query(query, function(data, headers) {
 					$scope.count = parseInt(headers('count'));
 					$scope.limit = parseInt(headers('limit'));
-					$scope.offset = parseInt(headers('offset')) + 10000;
+					$scope.offset = parseInt(headers('offset')) + 1000;
 					//$scope.data.concat(data);
 
 					
@@ -260,6 +261,7 @@ angular.module('svampeatlasApp')
 					if(newVal !== undefined && newVal < max){
 						$scope.fetchPage(map);
 					} else {
+						$scope.doneFetchingData = true;
 					//	map.spin(false);
 						//map.addLayer($scope.leafletView);
 					}
