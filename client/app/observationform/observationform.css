@@ -19,3 +19,7 @@
 #position-button {
 	z-index: 10000;
 }
+
+md-autocomplete.taxon-autocomplete {
+	min-width: 300px !important;
+}
