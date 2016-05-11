@@ -24,7 +24,7 @@
              md-item-text="item.FullName"
              placeholder="{{(newTaxon.length ===0) ? 'Skriv taxon' : ''}}"
 			 ng-disabled="newTaxon.length >0"
-			 >
+			 class="taxon-autocomplete">
            <span md-highlight-text="searchText">{{item.FullName}}</span>
          </md-autocomplete>
          <md-chip-template>

@@ -221,7 +221,7 @@ angular.module('svampeatlasApp', [
       // Intercept 401s and redirect you to login
       responseError: function(response) {
         if (response.status === 401) {
-          (state || (state = $injector.get('$state'))).go('main');
+          (state || (state = $injector.get('$state'))).go('main', {openLogin: true});
           // remove any stale tokens
           $cookies.remove('token');
           return $q.reject(response);
@@ -269,7 +269,7 @@ angular.module('svampeatlasApp', [
 
       Auth.isLoggedIn(function(loggedIn) {
         if (next.authenticate && !next.authenticate(Auth)) {
-          $state.go('main');
+          $state.go('main', {openLogin: true});
         }
       });
 		

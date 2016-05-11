@@ -25,7 +25,7 @@
 			  <div layout="column" class="inset" layout-fill>
 	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
-	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
+	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>{{'Indlagt som' | translate}} <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
 		  </div>
@@ -38,14 +38,14 @@
 	  		 
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Finder(e)</span></h3>
+	   	           <h3>{{'Finder(e)' | translate}}</span></h3>
 	  			   <p><span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span></p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
    	       <md-list-item class="md-2-line md-long-text">
    	         <div class="md-list-item-text">	  				
-   	           <h3>Bestemmer</span></h3>
+   	           <h3>{{'Bestemmer' | translate}}</span></h3>
   			   <p ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</p>
 			   <p ng-if="obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator">{{obs.PrimaryDetermination.verbatimdeterminator}}</p>
    	         </div>
@@ -53,7 +53,7 @@
    	       </md-list-item>
    	       <md-list-item class="md-2-line md-long-text">
    	         <div class="md-list-item-text">	  				
-   	           <h3>Lokalitet</span></h3>
+   	           <h3>{{'Lokalitet' | translate}}</span></h3>
   			   <p ng-if="obs.Locality">{{obs.Locality.name}}</p>
 			   <p ng-if="!obs.Locality && obs.verbatimLocality">{{obs.verbatimLocality}}</p>
    	         </div>
@@ -61,70 +61,70 @@
    	       </md-list-item>
     	       <md-list-item class="md-2-line md-long-text">
     	         <div class="md-list-item-text">	  				
-    	           <h3>Dato</span></h3>
+    	           <h3>{{'Dato' | translate}}</span></h3>
    			   <p>{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}</p>
     	         </div>
    			   <md-divider  ng-if="!$last"></md-divider>                        
     	       </md-list-item>
     	       <md-list-item class="md-2-line md-long-text">
     	         <div class="md-list-item-text">	  				
-    	           <h3>Vært/mykorrhizapartner</span></h3>
+    	           <h3>{{'Vært/mykorrhizapartner' | translate}}</span></h3>
    			   <p><span ng-repeat="tx in obs.associatedTaxa"> {{tx.DKandLatinName}}<span ng-if="!$last">, </span> </span></p>
     	         </div>
    			   <md-divider  ng-if="!$last"></md-divider>                        
     	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Substrat</span></h3>
+	   	           <h3>{{'Substrat' | translate}}</span></h3>
 	  			   <p>{{obs.Substrate.name}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Vegetationstype</span></h3>
+	   	           <h3>{{'Vegetationstype' | translate}}</span></h3>
 	  			   <p>{{obs.VegetationType.name}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Kollektionsnummer</span></h3>
+	   	           <h3>{{'Kollektionsnummer' | translate}}</span></h3>
 	  			   <p>{{obs.fieldnumber}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Herbarium</span></h3>
+	   	           <h3>{{'Herbarium' | translate}}</span></h3>
 	  			   <p>{{obs.herbarium}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Økologi-kommentarer</span></h3>
+	   	           <h3>{{'Økologi-kommentarer' | translate}}</span></h3>
 	  			   <p>{{obs.ecologynote}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Bemærkninger</span></h3>
+	   	           <h3>{{'Bemærkninger' | translate}}</span></h3>
 	  			   <p>{{obs.note}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text" ng-if="Auth.hasRole('validator')">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>Intern note</span></h3>
+	   	           <h3>{{'Intern note' | translate}}</span></h3>
 	  			   <p>{{obs.noteInternal}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
         </md-list>
 		   	     <md-list>
-		  		 <md-subheader class="md-no-sticky">Kommentarer</md-subheader>
+		  		 <md-subheader class="md-no-sticky">{{'Kommentarer' | translate}}</md-subheader>
 		   	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in forum">
 		   
 		  		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
@@ -154,12 +154,12 @@
 flex>
 					   <form layout-fill>
 					   <md-input-container class="md-block">
-					             <label>Skriv kommentar</label>
+					             <label>{{'Skriv kommentar' | translate}}</label>
 					             <textarea ng-model="$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
 					           </md-input-container>
 					   
 						   </form>
-						   <md-button class="comment-submit" ng-show="$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">Send</md-button>
+						   <md-button class="comment-submit" ng-show="$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">{{'Send' | translate}}</md-button>
 			   	        </div>
 	  				
           
@@ -172,7 +172,7 @@ flex>
 	        <md-tab label="Kort">
 	          <md-content class="md-padding">
 	             <leaflet id="observationdetailmap" width="100%" height="350px" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
-				 <md-subheader class="md-no-sticky">Præcision: {{obs.accuracy}} m</md-subheader>
+				 <md-subheader class="md-no-sticky">{{'Præcision:' translate}} {{obs.accuracy}} m</md-subheader>
 	          </md-content>
 	        </md-tab>
 	        <md-tab label="Billeder ({{obs.Images.length}})">
@@ -198,7 +198,7 @@ flex>
 		 
           <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 		  <span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
-		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
+		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>{{'Indlagt som' | translate}} <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
 		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
 		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
         </md-card-title-text>
@@ -211,46 +211,46 @@ flex>
 	
 	  	<tbody >
 	  	<tr >
-	  		<td class="rightalign"><strong>Finder(e):</strong></td><td >
+	  		<td class="rightalign"><strong>{{'Finder(e)' | translate}}:</strong></td><td >
 			
 			<span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>
 			</td>
-			<td class="rightalign"><strong>Bestemmer:</strong></td><td ><span ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</span>
+			<td class="rightalign"><strong>{{'Bestemmer' | translate}}:</strong></td><td ><span ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</span>
 		  
 		   <span ng-if="obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator">{{obs.PrimaryDetermination.verbatimdeterminator}}</span>
 			</td>
 		</tr >
 	  	<tr >
-	  		<td class="rightalign"><strong>Lokalitet:</strong></td><td><span ng-if="obs.Locality">{{obs.Locality.name}}</span>
+	  		<td class="rightalign"><strong>{{'Lokalitet'| translate}}:</strong></td><td><span ng-if="obs.Locality">{{obs.Locality.name}}</span>
 			   <span ng-if="!obs.Locality && obs.verbatimLocality">{{obs.verbatimLocality}}</span></td> 
-			<td class="rightalign"><strong>Dato:</strong></td><td >{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}</td>
+			<td class="rightalign"><strong>{{'Dato' | translate}}:</strong></td><td >{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}</td>
 		</tr >
 	  	<tr >
-	  		<td class="rightalign"><strong>Vært/mykorrhizapartner:</strong></td><td colspan="3"><span ng-repeat="tx in obs.associatedTaxa"> {{tx.DKandLatinName}}<span ng-if="!$last">, </span> </span></td> 
+	  		<td class="rightalign"><strong>{{'Vært/mykorrhizapartner' | translate}}:</strong></td><td colspan="3"><span ng-repeat="tx in obs.associatedTaxa"> {{tx.DKandLatinName}}<span ng-if="!$last">, </span> </span></td> 
 			
 		</tr >
 	  	<tr >
-			<td class="rightalign"><strong>Substrat:</strong></td><td >{{obs.Substrate.name}}</td>
-	  		<td class="rightalign"><strong>Vegetationstype:</strong></td><td>{{obs.VegetationType.name}}</td> 
+			<td class="rightalign"><strong>{{'Substrat' | translate}}:</strong></td><td ng-if="$translate.use() === 'dk'">{{obs.Substrate.name}}</td><td ng-if="$translate.use() === 'en'">{{obs.Substrate.name_uk}}</td>
+	  		<td class="rightalign"><strong>{{'Vegetationstype' | translate}}:</strong></td><td>{{obs.VegetationType.name}}</td> 
 			
 		</tr >
 	  	<tr >
-			<td class="rightalign"><strong>Kollektionsnummer:</strong></td><td >{{obs.fieldnumber}}</td>
-	  		<td class="rightalign"><strong>Herbarium:</strong></td><td>{{obs.herbarium}}</td> 
+			<td class="rightalign"><strong>{{'Kollektionsnummer' | translate}}:</strong></td><td >{{obs.fieldnumber}}</td>
+	  		<td class="rightalign"><strong>{{'Herbarium' | translate}}:</strong></td><td>{{obs.herbarium}}</td> 
 			
 		</tr >
 	  	<tr >
-			<td class="rightalign"><strong>Økologi-kommentarer:</strong></td><td colspan="3">{{obs.ecologynote}}</td>
+			<td class="rightalign"><strong>{{'Økologi-kommentarer' | translate}}:</strong></td><td colspan="3">{{obs.ecologynote}}</td>
 	  		
 			
 		</tr >	
 	  	<tr >
-			<td class="rightalign"><strong>Bemærkninger:</strong></td><td colspan="3">{{obs.note}}</td>
+			<td class="rightalign"><strong>{{'Bemærkninger' | translate}}:</strong></td><td colspan="3">{{obs.note}}</td>
 	  		
 			
 		</tr >	
 	  	<tr ng-if="Auth.hasRole('validator')">
-			<td class="rightalign"><strong>Intern note:</strong></td><td colspan="3">{{obs.noteInternal}}</td>
+			<td class="rightalign"><strong>{{'Intern note' | translate}}:</strong></td><td colspan="3">{{obs.noteInternal}}</td>
 	  		
 			
 		</tr >
@@ -258,7 +258,7 @@ flex>
 	  </table>
         
  	     <md-list>
-		 <md-subheader class="md-no-sticky">Kommentarer</md-subheader>
+		 <md-subheader class="md-no-sticky">{{'Kommentarer' | translate}}</md-subheader>
  	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in forum">
 		   
 		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
@@ -285,12 +285,12 @@ flex>
 					 <div layout="row" layout-align="center end" flex>
 			   <form layout-fill>
 			   <md-input-container class="md-block">
-			             <label>Skriv kommentar</label>
+			             <label>{{'Skriv kommentar' | translate}}</label>
 			             <textarea ng-model="$parent.$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
 			           </md-input-container>
 					   
 				   </form>
-				   <md-button class="comment-submit" ng-show="$parent.$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">Send</md-button>
+				   <md-button class="comment-submit" ng-show="$parent.$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">{{'Send' | translate}}</md-button>
 	   	        </div>
 	  				
           
@@ -305,7 +305,7 @@ flex>
 	
 	 <md-card flex="40" layout-padding>
 	 <leaflet id="observationdetailmap" width="100%" height="250px" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
-	  <md-subheader class="md-no-sticky">Præcision: {{obs.accuracy}} m</md-subheader>
+	  <md-subheader class="md-no-sticky">{{'Præcision' | translate}}: {{obs.accuracy}} m</md-subheader>
 	 
 	 
      <md-grid-list

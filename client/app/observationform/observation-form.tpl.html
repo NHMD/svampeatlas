@@ -4,8 +4,8 @@
   	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
   				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
   	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader">Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
-  	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">Dette fund er under godkendelse og bør ikke refereres før det er godkendt</span>
-  	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker</span>
+  	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
+  	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
   		  </div>
 		  <div class="validator-button-container" ng-if="obs && Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"></div>
 		  </div>
@@ -21,9 +21,9 @@
 	              md-search-text="searchText"
 	              md-items="item in querySearch(searchText)"
 	              md-item-text="item.FullName"
-	              placeholder="{{(newTaxon.length ===0) ? 'Skriv taxon' : ''}}"
+	              placeholder="{{(newTaxon.length ===0) ? $translate.instant('Skriv art')  : ''}}"
 	 			 ng-disabled="newTaxon.length >0"
-	 			flex >
+	 			flex class="taxon-autocomplete">
 	            <span md-highlight-text="searchText" ng-if="!$parent.DkNames">{{($parent.onlyHigherTaxa) ? item.FullName +' sp.' : item.FullName}}</span>
 				<span md-highlight-text="searchText" ng-if="$parent.DkNames">{{($parent.onlyHigherTaxa) ? 'Art af ' +item.Vernacularname_DK.vernacularname_dk : item.Vernacularname_DK.vernacularname_dk}}</span>
 	          </md-autocomplete>
@@ -44,10 +44,10 @@
 	 	      </div>
 		 		  <div layout="row" layout-margin>
 				   	<md-switch ng-model="$parent.$parent.$parent.DkNames" aria-label="Søg danske navne" ng-show="newTaxon.length ===0">
-				   	    Danske navne
+				   	    {{'Danske navne' | translate}}
 				   	  </md-switch>
 		 	   <md-switch ng-model="$parent.$parent.$parent.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
-		 	       Søg i slægter, familier, ordener osv.
+		 	       {{'Søg i slægter, familier, ordener osv.' | translate}}
 		 	     </md-switch>
 		 	 </div>
 			 <md-whiteframe class="md-whiteframe-2dp valideringsrapport" layout layout-align="center center" layout-padding layout-margin ng-if="taxonAttrs && taxonAttrs.valideringsrapport">
@@ -76,34 +76,34 @@
 	
 				  </md-chips>
 				<md-input-container ng-if="foreignLocality" class="md-block" flex-gt-xs>
-				            <label>Lokalitet</label>
+				            <label>{{'Lokalitet' | translate}}</label>
 				            <input ng-model="foreignLocalityString" disabled>
 				          </md-input-container>
 						  
-			              <md-datepicker ng-model="$parent.$parent.observationDate" md-placeholder="Dato" md-max-date="$parent.$parent.maxDate">
+			              <md-datepicker ng-model="$parent.$parent.observationDate" md-placeholder="{{'Dato' | translate}}" md-max-date="$parent.$parent.maxDate">
 			              </md-datepicker>
 			  </div> 
 			   <div layout-margin layout="row">
 				   <md-input-container>
-				           <label>Substrat</label>
+				           <label>{{'Substrat' | translate}}</label>
 				           <md-select name="substrate" ng-model="$parent.$parent.selectedSubstrate" required>
 				             <md-option ng-repeat="sub in substrates" value="{{sub._id}}" >
-				               {{sub.name}}
+				               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
 				             </md-option>
 				           </md-select>
 						   <div class="errors" ng-messages="observationForm.substrate.$error" ng-if="observationForm.$dirty && observationForm.substrate.$touched && !$parent.selectedSubstrate">
-						           <div ng-message="required">Obligatorisk</div>
+						           <div ng-message="required">{{'Obligatorisk' | translate}}</div>
 						         </div>
 				         </md-input-container>
 	 				   <md-input-container>
-	 				           <label>Vegetationstype</label>
+	 				           <label>{{'Vegetationstype' | translate}}</label>
 	 				           <md-select ng-model="$parent.$parent.selectedVegetationType" name="vegetationType">
 	 				             <md-option ng-repeat="veg in vegetationtypes" value="{{veg._id}}" >
 	 				               {{veg.name}}
 	 				             </md-option>
 	 				           </md-select>
 							   <div class="errors" ng-messages="observationForm.vegetationType.$error" ng-if="observationForm.$dirty && observationForm.vegetationType.$touched && !$parent.selectedVegetationType">
-							           <div ng-message="required">Obligatorisk</div>
+							           <div ng-message="required">{{'Obligatorisk' | translate}}</div>
 							         </div>
 	 				         </md-input-container>
 			   </div>
@@ -117,7 +117,7 @@
  				        md-search-text="searchText"
  				        md-items="item in querySearchPlantTaxon(searchText)"
  				        md-item-text="item.DKandLatinName"
- 				        placeholder="{{'Skriv vært' }}"
+ 				        placeholder="{{'Skriv vært' | translate }}"
  						>
  				      <span md-highlight-text="searchText">{{item.DKandLatinName}}</span>
  				    </md-autocomplete>
@@ -145,7 +145,7 @@
  				        md-search-text="searchText"
  				        md-items="item in querySearchGBIFPlantTaxon(searchText)"
  				        md-item-text="item.canonicalName"
- 				        placeholder="{{'Udvidet værtssøgning' }}"
+ 				        placeholder="{{'Udvidet værtssøgning' | translate }}"
  						>
  				      <span md-highlight-text="searchText">{{item.canonicalName}} ({{item.rank}})</span>
  				    </md-autocomplete>
@@ -161,7 +161,7 @@
 			   </div>
 			   <div layout-margin layout="column">
 				   <md-input-container class="md-block">
-				             <label>Økologi-kommentar</label>
+				             <label>{{'Økologi-kommentarer' | translate}}</label>
 				             <textarea ng-model="$parent.$parent.ecologynote" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
 			   </div>
@@ -175,7 +175,7 @@
   				        md-search-text="searchText"
   				        md-items="item in querySearchUser(searchText)"
   				        md-item-text="item.name"
-  				        placeholder="{{'Tilføj finder(e)' }}"
+  				        placeholder="{{'Tilføj finder(e)' | translate}}"
   						>
   				      <span md-highlight-text="searchText">{{item.name}} ({{item.Initialer}})</span>
   				    </md-autocomplete>
@@ -201,7 +201,7 @@
   				        md-search-text="searchText"
   				        md-items="item in querySearchUser(searchText)"
   				        md-item-text="item.name"
-  				        placeholder="{{'Bestemmer' }}"
+  				        placeholder="{{'Bestemmer' | translate }}"
 						ng-disabled="determiner.length >0"
   						>
   				      <span md-highlight-text="searchText">{{item.name}} ({{item.Initialer}})</span>
@@ -219,22 +219,22 @@
  			  </div>
 			  <div layout-margin layout="row">
 				  <md-input-container class="md-block" flex-gt-sm>
-				              <label>Kollektionsnummer</label>
+				              <label>{{'Kollektionsnummer' | translate}}</label>
 				              <input ng-model="$parent.$parent.fieldnumber">
 				            </md-input-container>
 		  				  <md-input-container class="md-block" flex-gt-sm>
-		  				              <label>Herbarium</label>
+		  				              <label>{{'Herbarium' | translate}}</label>
 		  				              <input ng-model="$parent.$parent.herbarium">
 		  				            </md-input-container>
 			  </div>
 			   <div layout-margin layout="column">
 				   <md-input-container class="md-block">
-				             <label>Kommentarer til fundet</label>
+				             <label>{{'Kommentarer til fundet' | translate}}</label>
 				             <textarea ng-model="$parent.$parent.note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
 						   <div ng-show="Auth.hasRole('validator')">
  				   <md-input-container class="md-block">
- 				             <label>Intern note</label>
+ 				             <label>{{'Intern note' | translate}}</label>
  				             <textarea ng-model="$parent.$parent.noteInternal" md-maxlength="800" rows="5" md-select-on-focus></textarea>
  				           </md-input-container>
 					   </div>

@@ -10,6 +10,7 @@ angular.module('svampeatlasApp')
 						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout','DeterminationModalService','ObservationFormService', '$translate',
 							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService,ObservationFormService, $translate) {
 								
+								$scope.$translate = $translate;
 								
 								$scope.editRecord = function(){
 									$mdDialog.hide($scope.obs).then(function(obs){

@@ -1,8 +1,21 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, $state ) {
+  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, $state, $stateParams ) {
 	 
+	  if($stateParams.openLogin){
+	  
+	  		var useFullScreen = $mdMedia('xs');
+	  		    $mdDialog.show({
+	  		    //  controller: LoginController,
+	  		      templateUrl: 'app/account/login/login-modal.tpl.html',
+	  		    //  parent: angular.element(document.body),
+	  		     // targetEvent: ev,
+	  		      clickOutsideToClose:true,
+	  		      fullscreen: useFullScreen
+	  		    })
+	
+	  }
 
 	  $scope.mdMedia = $mdMedia;
 	  $scope.mdSidenav = $mdSidenav;

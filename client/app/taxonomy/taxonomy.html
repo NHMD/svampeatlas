@@ -138,7 +138,8 @@
 	 							            md-search-text="searchMycokeyCharacterText"
 	 							            md-items="item in mycokeySearch(searchMycokeyCharacterText)"
 	 							            md-item-text="item['description DK']"
-	 							            placeholder="{{'Enter characters' | translate}}">
+	 							            placeholder="{{'Enter characters' | translate}}"
+											class="taxon-autocomplete">
 	 							          <span md-highlight-text="searchMycokeyCharacterText">{{(translate.use() === 'en') ? item.charactergroup['Start description UK'] : item.charactergroup['Start description DK']}} {{(translate.use() === 'en') ?  item['description UK'] : item['description DK']}}</span>  
 	 							        </md-autocomplete>
 	 							        <md-chip-template>

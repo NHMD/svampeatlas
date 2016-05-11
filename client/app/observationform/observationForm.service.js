@@ -7,11 +7,12 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', '$q', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService','DeterminationModalService',
-							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService) {
+						controller: ['$scope', '$q', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService','DeterminationModalService', '$translate',
+							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate) {
 
 
-
+								$scope.$translate = $translate;
+								
 								$scope.maxDate = new Date();
 								$scope.$mdMedia = $mdMedia;
 								$scope.newTaxon = [];
@@ -463,7 +464,7 @@ angular.module('svampeatlasApp')
 										},
 										baselayers: {
 											osm: {
-												name: 'Kort',
+												name: $translate.instant('Kort'),
 												url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 												type: 'xyz'
 											},
@@ -497,7 +498,7 @@ angular.module('svampeatlasApp')
 
 								KMS.getTicket().then(function(ticket) {
 									$scope.mapsettings.layers.baselayers.topo_25 = {
-										name: "DK 4cm kort",
+										name: $translate.instant("DK 4cm kort"),
 										type: 'wms',
 										visible: true,
 										url: "http://kortforsyningen.kms.dk/topo_skaermkort",
@@ -516,7 +517,7 @@ angular.module('svampeatlasApp')
 										}
 									};
 									$scope.mapsettings.layers.baselayers.luftfoto = {
-										name: "DK luftfoto",
+										name: $translate.instant("DK luftfoto"),
 										type: 'wms',
 										visible: true,
 										url: "http://kortforsyningen.kms.dk/topo_skaermkort",
@@ -721,7 +722,7 @@ angular.module('svampeatlasApp')
 
 									leafletData.getMap('observationformmap').then(function(map) {
 										map.spin(true);
-										$scope.geoLocationStatusMessage = "Bestemmer din position ..."
+										$scope.geoLocationStatusMessage = $translate.instant("Bestemmer din position ...")
 										navigator.geolocation.getCurrentPosition(function(position) {
 											map.spin(false);
 											$scope.geoLocationStatusMessage = undefined;
@@ -769,20 +770,20 @@ angular.module('svampeatlasApp')
 												case error.PERMISSION_DENIED:
 													if(error.message.indexOf("Only secure origins are allowed") === 0) {
 													      // Secure Origin issue.
-														$scope.geoLocationStatusMessage = "Chrome browseren tillader ikke brug af position fra ikke-kryperede sider. Anvend i stedet <a href='https://play.google.com/store/apps/details?id=org.mozilla.firefox'>Firefox</a> eller <a href='https://play.google.com/store/apps/details?id=com.opera.browser'>Opera</a>";
+														$scope.geoLocationStatusMessage = $translate.instant("Chrome browseren tillader ikke brug af position fra ikke-kryperede sider. Anvend i stedet")+" <a href='https://play.google.com/store/apps/details?id=org.mozilla.firefox'>Firefox</a> "+$translate.instant("eller")+" <a href='https://play.google.com/store/apps/details?id=com.opera.browser'>Opera</a>";
 													    } else {
-													    	$scope.geoLocationStatusMessage = "Du skal give enheden lov til at bruge din position."
+													    	$scope.geoLocationStatusMessage = $translate.instant("Du skal give enheden lov til at bruge din position.")
 													    }
 													
 													break;
 												case error.POSITION_UNAVAILABLE:
-													$scope.geoLocationStatusMessage = "Positionsinformation er ikke tilgængelig."
+													$scope.geoLocationStatusMessage = $translate.instant("Positionsinformation er ikke tilgængelig.")
 													break;
 												case error.TIMEOUT:
-													$scope.geoLocationStatusMessage = "Time out i bestemmelse af position."
+													$scope.geoLocationStatusMessage = $translate.instant("Time out i bestemmelse af position.")
 													break;
 												case error.UNKNOWN_ERROR:
-													$scope.geoLocationStatusMessage = "Der opstod en ukendt fejl med betemmelse af position."
+													$scope.geoLocationStatusMessage = $translate.instant("Der opstod en ukendt fejl med betemmelse af position.")
 													break;
 											}
 										},{timeout: 30000, enableHighAccuracy: true})
@@ -810,7 +811,7 @@ angular.module('svampeatlasApp')
 								
 								$scope.showProcessingImageStatus = function(){
 									$scope.processingImage = true;
-									$scope.statusMsg = "Klargør foto, et øjeblik ...";
+									$scope.statusMsg = $translate.instant("Klargør foto, et øjeblik ...");
 								}
 
 

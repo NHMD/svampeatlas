@@ -245,7 +245,7 @@ angular.module('svampeatlasApp')
 					model: "DeterminationView",
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
-					where: {}
+					where: { Determination_validation: ['Godkendt','Valideres', 'Afventer', 'Gammelvali']}
 				}, {
 					model: "User",
 					as: 'PrimaryUser',

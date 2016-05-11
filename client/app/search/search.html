@@ -18,11 +18,11 @@
 	<md-input-container class="md-block" flex-gt-xs>	
 	<label>Status</label> 
 		 <md-select aria-label="status" ng-model="search.include[0].where.Determination_validation">
-		           <md-option value="">{{'Alle' | translate}}</md-option>        
+		           <md-option ng-value="{{['Godkendt','Valideres', 'Afventer', 'Gammelvali']}}">{{'Alle' | translate}}</md-option>        
 		   <md-option value="Godkendt">{{'Godkendte' | translate}}</md-option>
 		   <md-option value="Valideres">{{'Valideres' | translate}}</md-option>
 		   <md-option value="Afventer">{{'Afventer' | translate}}</md-option>
-		   <md-option value="Afvist">{{'Afviste' | translate}}</md-option>
+		   <md-option value="Afvist" ng-if="Auth.hasRole('validator')">{{'Afviste' | translate}}</md-option>
 		   <md-option value="Gammelvali">{{'Ældre fund afventer' | translate}}</md-option>
 		                 </md-select>
 						 </md-input-container>
