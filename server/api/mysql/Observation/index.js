@@ -16,6 +16,8 @@ var router = express.Router();
 
 router.get('/', auth.appendUser(), controller.index);
 
+router.get('/specieslist', auth.appendUser(), controller.indexSpeciesList)
+
 router.get('/:id', auth.appendUser(), controller.show);
 
 router.get('/:id/forum', forumController.showForumForObs);

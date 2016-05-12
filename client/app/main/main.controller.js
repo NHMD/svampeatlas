@@ -1,22 +1,35 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, $state, $stateParams ) {
+  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams ) {
 	 
+	  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
+	 
+	  $scope.$state = $state;
+	  $scope.ObservationFormService = ObservationFormService;
+	  
+	  
+	  $scope.showLogin = function(){
+  		var useFullScreen = $mdMedia('xs');
+  		    $mdDialog.show({
+  		    //  controller: LoginController,
+  		      templateUrl: 'app/account/login/login-modal.tpl.html',
+  		    //  parent: angular.element(document.body),
+  		     // targetEvent: ev,
+  		      clickOutsideToClose:true,
+  		      fullscreen: useFullScreen
+  		    })
+	  }
+	  
 	  if($stateParams.openLogin){
 	  
-	  		var useFullScreen = $mdMedia('xs');
-	  		    $mdDialog.show({
-	  		    //  controller: LoginController,
-	  		      templateUrl: 'app/account/login/login-modal.tpl.html',
-	  		    //  parent: angular.element(document.body),
-	  		     // targetEvent: ev,
-	  		      clickOutsideToClose:true,
-	  		      fullscreen: useFullScreen
-	  		    })
+		  $scope.showLogin();
 	
 	  }
-
+	  $scope.openMenu = function($mdOpenMenu, ev) {
+     
+      $mdOpenMenu(ev);
+    };
 	  $scope.mdMedia = $mdMedia;
 	  $scope.mdSidenav = $mdSidenav;
 	  $scope.ObservationModalService = ObservationModalService;
@@ -30,7 +43,68 @@ angular.module('svampeatlasApp')
 		 $mdSidenav('left').open();
 	}
 	
-	
+	$scope.positionRadius = 500;
+	$scope.redListOnly = false;
+	$scope.timePeriod = 'all';
+	$scope.locateAndGoToSpeciesList = function() {
+		//determinationViewWhere
+		
+		$scope.geoLocationStatusMessage = $translate.instant("Bestemmer din position ...");
+		
+			navigator.geolocation.getCurrentPosition(function(position) {
+				
+				
+				var bounds = L.circle(L.latLng(position.coords.latitude, position.coords.longitude), $scope.positionRadius).getBounds();
+
+				var  where = {};
+				var geometry = L.polygon([bounds.getSouthWest(), bounds.getNorthWest(), bounds.getNorthEast(), bounds.getSouthEast(), bounds.getSouthWest()]).toGeoJSON();
+				//var geometry = {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[bounds.getSouth(),bounds.getWest()],[bounds.getSouth(),bounds.getEast()],[bounds.getNorth(),bounds.getEast()],[bounds.getNorth(),bounds.getWest()],[bounds.getSouth(),bounds.getWest()]]]}}
+				/*
+				where.$and.decimalLongitude = {
+					$between: [bounds.getSouth(), bounds.getNorth()]
+				}
+				where.$and.decimalLatitude = {
+					$between: [bounds.getWest(), bounds.getEast()]
+				}
+				*/
+				if($scope.timePeriod !== 'all'){
+					where.observationDate = {};
+					where.observationDate.$gt = ($scope.timePeriod === "year") ? moment().startOf('year') : moment().subtract(2, 'weeks');
+				}
+				
+				var params = {where: where, geometry: geometry};
+				if($scope.redListOnly === true){
+					params.determinationViewWhere = {Taxon_redlist_status : ['RE','CR', 'EN', 'VU', 'NT']}
+				}
+				$scope.geoLocationStatusMessage = "";
+				$state.go('search-specieslist', params)
+		
+			}, function(error) {
+				
+				switch (error.code) {
+					case error.PERMISSION_DENIED:
+						if(error.message.indexOf("Only secure origins are allowed") === 0) {
+						      // Secure Origin issue.
+							$scope.geoLocationStatusMessage = $translate.instant("Chrome browseren tillader ikke brug af position fra ikke-kryperede sider. Anvend i stedet")+" <a href='https://play.google.com/store/apps/details?id=org.mozilla.firefox'>Firefox</a> "+$translate.instant("eller")+" <a href='https://play.google.com/store/apps/details?id=com.opera.browser'>Opera</a>";
+						    } else {
+						    	$scope.geoLocationStatusMessage = $translate.instant("Du skal give enheden lov til at bruge din position.")
+						    }
+						
+						break;
+					case error.POSITION_UNAVAILABLE:
+						$scope.geoLocationStatusMessage = $translate.instant("Positionsinformation er ikke tilgængelig.")
+						break;
+					case error.TIMEOUT:
+						$scope.geoLocationStatusMessage = $translate.instant("Time out i bestemmelse af position.")
+						break;
+					case error.UNKNOWN_ERROR:
+						$scope.geoLocationStatusMessage = $translate.instant("Der opstod en ukendt fejl med betemmelse af position.")
+						break;
+				}
+			},{timeout: 30000, enableHighAccuracy: true})
+		
+
+	}
 	
 	
 	

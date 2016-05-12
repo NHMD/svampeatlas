@@ -243,7 +243,9 @@ angular.module('svampeatlasApp', [
    +'<path d="m18,15c1.66,0 2.99,-1.34 2.99,-3s-1.33,-3 -2.99,-3c-1.66,0 -3,1.34 -3,3s1.34,3 3,3z"/>'
 +'<rect id="svg_4" height="1.5" width="7" y="11" x="9" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" />')
             .addShape('standby', '<path d="M13 3.5h-2v10h2v-10z"/><path d="M16.56 5.94l-1.45 1.45C16.84 8.44 18 10.33 18 12.5c0 3.31-2.69 6-6 6s-6-2.69-6-6c0-2.17 1.16-4.06 2.88-5.12L7.44 5.94C5.36 7.38 4 9.78 4 12.5c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.72-1.36-5.12-3.44-6.56z"/>')
-	  
+	//  .addShape('mushroom', '<path d="m 315.56 828.85 c 19.01 -1.958 41.1 -2.543 54.718 -17.932 16.372 -19.439 15.16 -48.09 5.906 -70.44 -14.717 -37.35 -46.17 -65.24 -80.56 -84.58 -30.619 -16.636 -65.32 -25.519 -100.26 -25.03 l -0.005 -0.013 c -61.09 1.682 -121.05 32.842 -156.79 82.34 -16.28 23 -26.908 52.878 -18.586 80.82 4.489 14.02 15.507 25.343 29.954 28.765 85.28 10.849 180.46 14.597 265.62 6.07 z m -178.09 40.787 c -12.23 40.35 -22.05 68.24 -20.405 110.65 1.344 17.195 6.122 37.681 23.07 45.857 20.05 9.973 43.47 7.04 65.22 7.744 20.405 -0.223 41.597 0.595 61.01 -6.223 16.247 -8.05 24.924 -26.51 24.726 -44.11 3.961 -42.491 -8.113 -72.16 -19.942 -112.46 z" />')
+	 
+	 
 	  editableThemes['bs3'].submitTpl =    '<md-button type="submit" class="md-icon-button  md-primary" aria-label="Save"><span class="glyphicon glyphicon-ok"></span></md-button>';
 	  editableThemes['bs3'].cancelTpl =  '<md-button type="button" class="md-icon-button  md-warn" ng-click="$form.$cancel()" aria-label="Cancel"><span class="glyphicon glyphicon-remove"></span></md-button>';
 	  

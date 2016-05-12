@@ -54,7 +54,7 @@
           {{row.PrimaryUser.name}}
         </md-tooltip>{{row.PrimaryUser.Initialer}}</span><span ng-if="mdMedia('max-width: 768px')"> {{row.PrimaryUser.name}}</span></td>	
 			
-		<td data-title=""><ng-md-icon icon="camera_alt" ng-if="row.Images.length > 0" ng-click="ObservationModalService.show($event, row)"></ng-md-icon> <ng-md-icon icon="forum" ng-if="row.Forum.length > 0" ng-click="ObservationModalService.show($event, row)"></td>
+		<td data-title=""><ng-md-icon icon="camera_alt" ng-if="row.Images.length > 0" ng-click="ObservationModalService.show($event, row)"></ng-md-icon> <ng-md-icon icon="forum" ng-if="row.Forum.length > 0" ng-click="ObservationModalService.show($event, row)"></ng-md-icon></td>
 		
 		
 	</tr>
@@ -65,7 +65,7 @@
 		  
 	</tbody>	
 	<tbody ng-show="displayed && displayed.length===0 &&  !isLoading">
-		<tr><td colspan="6" ><div layout="row" layout-align="center center">Ingen data fundet</div></td></tr>
+		<tr><td colspan="6" ><div layout="row" layout-align="center center" translate>Ingen data fundet</div></td></tr>
 		  
 	</tbody>
 

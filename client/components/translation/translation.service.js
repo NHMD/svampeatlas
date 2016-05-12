@@ -104,8 +104,15 @@ angular.module('svampeatlasApp')
 		  'Bestemmer din position ...' : 'Determining position ...',
 		  'Kort' : 'Map',
 		  'DK 4cm kort'	: 'DK Topo Map',
-		  'DK luftfoto' : 'DK imagery'  
-		           
+		  'DK luftfoto' : 'DK imagery'  ,
+		  'Antal fund' : 'Number of sightings',
+		  'Artsliste' : 'Species list',
+		  'Ingen data fundet' : 'No results',
+		  'Hvad findes her?' : 'Species found here',
+		  'Kun rødlistede': 'Only redlisted',
+		  'Altid' : 'Any time',
+		  'I år': 'This year',
+		  'Seneste to uger': 'Past two weeks'		           
 		  
 		  
 	    });
