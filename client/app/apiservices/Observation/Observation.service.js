@@ -10,6 +10,11 @@ angular.module('svampeatlasApp')
 			update: {
 				method: 'PUT' // this method issues a PUT request
 			},
+			'getSpeciesList': {
+				method: 'GET',
+				url: '/api/observations/specieslist',
+				isArray: true
+			},
 			'getForum': {
 				method: 'GET',
 				params: {

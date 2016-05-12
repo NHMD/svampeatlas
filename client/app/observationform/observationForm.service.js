@@ -298,14 +298,14 @@ angular.module('svampeatlasApp')
 
 									if ($scope.mapsettings.markers.position) {
 
-										var bounds = L.circle(L.latLng($scope.mapsettings.markers.position.lng, $scope.mapsettings.markers.position.lat), 5000).getBounds();
+										var bounds = L.circle(L.latLng($scope.mapsettings.markers.position.lat, $scope.mapsettings.markers.position.lng), 5000).getBounds();
 
 
 										q.where.decimalLongitude = {
-											$between: [bounds.getSouth(), bounds.getNorth()]
+											$between: [bounds.getWest(), bounds.getEast()]
 										}
 										q.where.decimalLatitude = {
-											$between: [bounds.getWest(), bounds.getEast()]
+											$between: [bounds.getSouth(), bounds.getNorth()]
 										}
 
 									}
@@ -635,16 +635,16 @@ angular.module('svampeatlasApp')
 
 									$scope.removeLocalitiesFromMap();
 
-									var bounds = L.circle(L.latLng($scope.mapsettings.markers.position.lng, $scope.mapsettings.markers.position.lat), 2000).getBounds();
+									var bounds = L.circle(L.latLng($scope.mapsettings.markers.position.lat, $scope.mapsettings.markers.position.lng), 2000).getBounds();
 
 									var q = {
 										where: {}
 									};
 									q.where.decimalLongitude = {
-										$between: [bounds.getSouth(), bounds.getNorth()]
+										$between: [bounds.getWest(), bounds.getEast()]
 									}
 									q.where.decimalLatitude = {
-										$between: [bounds.getWest(), bounds.getEast()]
+										$between: [bounds.getSouth(), bounds.getNorth()]
 									}
 									Locality.query(q).$promise.then(function(localities) {
 

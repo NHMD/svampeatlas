@@ -71,7 +71,7 @@ function removeEntity(res) {
 exports.index = function(req, res) {
 	
 	if(!req.query.limit){
-		req.query.limit = 20000;
+		req.query.limit = 10000;
 	}
 	if(!req.query.offset){
 		req.query.offset = 0;
@@ -213,6 +213,139 @@ exports.index = function(req, res) {
 
 
 };
+
+
+exports.indexSpeciesList = function(req, res) {
+	
+	if(!req.query.limit){
+		req.query.limit = 10000;
+	}
+	if(!req.query.offset){
+		req.query.offset = 0;
+	}
+
+	var query = {
+		offset: parseInt(req.query.offset) ,
+		limit: parseInt(req.query.limit),
+		where: {},
+		attributes : [[models.sequelize.fn('count', models.sequelize.col('Observation._id')), 'observationCount']],
+		group: "DeterminationView.Taxon_id"
+	};
+	if(req.query.order) {
+		query.order = req.query.order;
+	}
+
+	if(req.query.geometry){
+		query.where = { $and: models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))}
+	}
+
+	if (req.query.where) {
+		_.merge(query.where, JSON.parse(req.query.where));
+	}
+
+	if(req.query.group){
+		
+		query['group'] =	JSON.parse(req.query.group)
+		
+	};
+	
+	if (req.query.include) {
+	
+		
+		var parsed = JSON.parse(req.query.include)
+		query['include'] =	_.map(parsed, function(n){
+		var n =  JSON.parse(n);
+		
+		if(n.model === "User"){
+			
+			n = userTool.secureUser(n);
+			
+		} 
+		
+		// special case for mycokeyattributes included on determinationView
+	/*	
+		if(n.model === 'DeterminationView' && n.include){
+		//	n.include = JSON.parse(n.include);
+			for (var i = 0; i < n.include.length; i++){
+				n.include[i].model = models[n.include[i].model]
+				n.include[i].where = JSON.parse(n.include[i].where)
+				
+			}
+			console.log("###########")
+			console.log(n.include)
+			console.log("###########")
+		}
+		*/
+		n.model = models[n.model];
+		return n;
+		})
+
+
+	} else {
+		query['include'] = [{
+				model: models.DeterminationView,
+				as: "DeterminationView",
+				attributes: ['Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID']
+			}, {
+				model: models.User,
+				as: 'PrimaryUser',
+				attributes: ['email', 'Initialer', 'name']
+			}, {
+				model: models.Locality,
+				as: 'Locality'
+			}, {
+				model: models.ObservationImage,
+				as: 'Images',
+				separate : true,
+				offset:0,
+				limit: 10
+			}, {
+				model: models.ObservationForum,
+				as: 'Forum',
+				separate : true,
+				offset:0,
+				limit: 10
+				
+			}
+
+		] 
+	}
+	var activeThreadsPromise;
+	if(req.user && Boolean(req.query.activeThreadsOnly) ){
+		
+		activeThreadsPromise = activeThreads(req.user)
+	} else {
+		activeThreadsPromise = Promise.resolve(false)
+	}
+	console.log(query);
+
+	activeThreadsPromise.then(function(observationids){
+		if(observationids !== false){
+			query.where._id = { $in: observationids}
+		};
+		
+		return Observation.findAndCount(query)
+	})
+	
+		.then(function(taxon) {
+			res.set('count', taxon.count.length);
+			if (req.query.offset !== undefined) {
+				res.set('offset', req.query.offset);
+			};
+			if (req.query.limit !== undefined) {
+				res.set('limit', req.query.limit);
+			};
+			return res.status(200).json(taxon.rows)
+		})
+		.catch (handleError(res));
+
+
+
+
+};
+
+
+
 
 function activeThreads(user){
 	
