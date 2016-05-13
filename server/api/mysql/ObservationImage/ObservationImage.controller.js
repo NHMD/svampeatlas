@@ -18,7 +18,9 @@ var Observation = models.Observation;
 var Promise = require("bluebird");
 Promise.promisifyAll(fs);
 
-var nestedQueryParser = require("../nestedQueryParser")
+var nestedQueryParser = require("../nestedQueryParser");
+var userTool = require("../userTool")
+
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -88,7 +90,14 @@ exports.index = function(req, res) {
 		var include = JSON.parse(req.query.include)
 
 		query['include'] = _.map(include, function(n) {
+			
+			if(n.model === "User"){
+			
+				n = userTool.secureUser(n);
+			
+			} ;
 			n.model = models[n.model];
+			
 			if (n.where) {
 				n.where = JSON.parse(n.where);
 
@@ -109,7 +118,7 @@ exports.index = function(req, res) {
 				//	n.where = nestedQueryParser.parseQueryString(n.where)
 
 			}
-			console.log(n.where)
+			
 			return n;
 		});
 		
@@ -180,7 +189,7 @@ exports.show = function(req, res) {
 
 
 exports.addImagesToObs = function(req, res) {
-
+	
 	return Observation.find({
 		where: {
 			_id: req.params.id
@@ -203,7 +212,8 @@ exports.addImagesToObs = function(req, res) {
 					return ObservationImage.create({
 						observation_id: obs._id,
 						hide: false,
-						name: fname
+						name: fname,
+						user_id: req.user._id
 					})
 				})
 			)

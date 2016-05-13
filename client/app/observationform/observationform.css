@@ -2,7 +2,7 @@
 .drop-box {
     background: #F8F8F8;
     border: 5px dashed #DDD;
-   	height: 300px;
+   	height: 80px;
     text-align: center;
     padding: 50px 10px;
 
@@ -22,4 +22,9 @@
 
 md-autocomplete.taxon-autocomplete {
 	min-width: 300px !important;
+}
+
+i.hide-icon {
+	top: 3px;
+	position: relative;
 }

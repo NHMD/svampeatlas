@@ -26,7 +26,7 @@ router.post('/:id/forum', auth.isAuthenticated(), forumController.addCommentToOb
 router.post('/:id/determinations', auth.hasRole('validator'), determinationController.addDeterminationToObs); 
 
 
-router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), imageController.addImagesToObs]); 
+router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), auth.appendUser(), imageController.addImagesToObs]); 
 
 
 router.get('/today/localities', localityController.localititesWithFindingsToday);

@@ -12,7 +12,7 @@ angular.module('svampeatlasApp')
 
 
 								$scope.$translate = $translate;
-								
+								$scope.imageurl = appConstants.imageurl;
 								$scope.maxDate = new Date();
 								$scope.$mdMedia = $mdMedia;
 								$scope.newTaxon = [];
@@ -23,6 +23,7 @@ angular.module('svampeatlasApp')
 								$scope.users = [];
 								$scope.currentUser = Auth.getCurrentUser();
 								$scope.Auth = Auth;
+								$scope.moment = moment;
 								$scope.DkNames = ObservationFormStateService.getState().DkNames;
 								$scope.$watch('DkNames', function(newVal) {
 									ObservationFormStateService.getState().DkNames = newVal;
@@ -842,7 +843,13 @@ angular.module('svampeatlasApp')
 
 									return $q.all(promises)
 								}
-
+								$scope.deleteImg = function(img){
+									alert(JSON.stringify(img))
+								}
+								
+								$scope.hideImg = function(img){
+									alert(JSON.stringify(img))
+								}
 								
 								$scope.submitObservation = function() {
 									var determination = {

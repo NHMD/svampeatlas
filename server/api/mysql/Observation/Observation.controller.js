@@ -400,7 +400,7 @@ exports.show = function(req, res) {
 			}, {
 				model: models.User,
 				as: 'PrimaryUser',
-				attributes: ['email', 'Initialer', 'name']
+				attributes: ['Initialer', 'name']
 			}, {
 				model: models.Locality,
 				as: 'Locality'
@@ -412,14 +412,18 @@ exports.show = function(req, res) {
 			
 			{
 				model: models.ObservationImage,
-				as: 'Images'
+				as: 'Images',
+				include: [{
+					model: models.User,
+					as: "Photographer",
+				attributes: ['name', 'Initialer']}]
 			}, {
 				model: models.ObservationForum,
 				as: 'Forum',
 				include: [{
 						model: models.User,
 					as: "User", 
-					 fields: ['name']}]
+					 attributes: ['name', 'Initialer']}]
 			},
 			{model: models.PlantTaxon,
 			as: 'associatedTaxa'

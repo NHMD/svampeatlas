@@ -22,6 +22,10 @@ module.exports = function(sequelize, DataTypes) {
    	type: DataTypes.INTEGER,
    	allowNull: false,
    },
+   user_id: {
+   	type: DataTypes.INTEGER,
+   	allowNull: false,
+   },
    hide: {
    	type: DataTypes.BOOLEAN,
    	allowNull: false,
@@ -50,6 +54,15 @@ module.exports = function(sequelize, DataTypes) {
 					foreignKey: "observation_id",
 					as: "Images"
 				});	
+				
+				models.ObservationImage.belongsTo(models.User, {
+				  
+				  foreignKey: 'user_id',
+					as: 'Photographer',
+					constraints: false
+				});
+				
+		
 					
 				
     		}

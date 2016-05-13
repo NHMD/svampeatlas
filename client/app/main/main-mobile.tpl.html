@@ -31,6 +31,6 @@
     </md-menu>
 	
 </div>
-<md-subheader>{{geoLocationStatusMessage}}</md-subheader>
+<md-subheader  ng-if="geoLocationStatusMessage" ng-bind-html="geoLocationStatusMessage"></md-subheader>	
 </div>
 

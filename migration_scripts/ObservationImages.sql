@@ -42,4 +42,7 @@ INSERT INTO `PicBase` (`AtlasRecID`, `CreationDate`, `CreationDateExact`, `D`, `
 
 INSERT INTO ObservationImages (createdAt, observation_id, hide, name) SELECT  CONCAT(SUBSTRING_INDEX(CreationDate, "/", -1), "-",SUBSTRING_INDEX(SUBSTRING_INDEX(CreationDate, "/", 2), "/", -1),"-", SUBSTRING_INDEX(CreationDate, "/", 1)," ", SUBSTRING_INDEX(CreationDateExact, " ", -1) ) , SUBSTRING_INDEX(AtlasRecID, "-", -1), Foto_vises_ikke, PicID FROM PicBase p, Fungi f WHERE f.AtlasIDnummer = p.AtlasRecID;
 
+
+alter table ObservationImages add column user_id INT(11);
+update ObservationImages o, Observation ob set o.user_id=ob.primaryuser_id where o.observation_id = ob._id;
 SELECT COUNT(*) FROM PicBase where AtlasRecID NOT IN 
