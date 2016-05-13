@@ -73,7 +73,7 @@
 		   	  <md-subheader class="md-no-sticky" ng-if="precision">{{'Præcision' | translate}}: {{precision}} m</md-subheader>
 	          </md-content>
 	        </md-tab>
-	        <md-tab label="Billeder ({{$parent.files.length}})" ng-if="$parent.files.length > 0">
+	        <md-tab label="Billeder ({{(obs) ? obs.Images.length + $parent.files.length : $parent.files.length}})" ng-if="$parent.files.length > 0 || obs.Images.length > 0">
 	          <md-content class="md-padding">
 			  
 		 	<md-card ng-repeat="file in $parent.files" >
@@ -90,7 +90,29 @@
 		 	 </md-card-content>
 	 
 		 	</md-card>
+			
+	      <md-grid-list
+	            md-cols="1" 
+	            md-row-height-gt-md="1:1" md-row-height="4:3"
+	            md-gutter="8px" md-gutter-gt-sm="4px" >
+	        <md-grid-tile ng-repeat="img in obs.Images" >
+	          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl(obs)+img.name}}.jpg" >
+	       <md-grid-tile-footer >
+		   <md-button class="md-fab md-mini md-warn" aria-label="Hide" ng-if="Auth.hasRole('validator')" ng-click='hideImg(img)'>
+          <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
+        </md-button>
+		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || moment(img.createdAt) > moment().subtract(1, 'weeks')" ng-click='deleteImg(img)'>
+          <ng-md-icon icon="close"></ng-md-icon> 
+        </md-button>
+		
+	   </md-grid-tile-footer>
+	        </md-grid-tile>
+	      </md-grid-list>
+			
 	          </md-content>
+			 
+		    
+		  
 	        </md-tab>
 	      </md-tabs>
  <div md-dynamic-height md-border-bottom  ng-if="$mdMedia('gt-sm')" layout="row" layout-align="center start" flex>
@@ -137,18 +159,42 @@
 	 
 	</md-card>
 	
+   
+	
 	
 	
 	 
  </md-card-content>
      
-	 
+	<md-card-content> 
+   <md-grid-list
+         md-cols="1" 
+         md-row-height="4:3"
+         md-gutter="8px" md-gutter-gt-sm="4px" >
+     <md-grid-tile ng-repeat="img in obs.Images" >
+       <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl(obs)+img.name}}.jpg" >
+   	       <md-grid-tile-footer >
+   		   <md-button class="md-fab md-mini md-warn" aria-label="Hide" ng-if="Auth.hasRole('validator')" ng-click='hideImg(img)'>
+             <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
+           </md-button>
+   		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || moment(img.createdAt) > moment().subtract(1, 'weeks')" ng-click='deleteImg(img)'>
+             <ng-md-icon icon="close"></ng-md-icon> 
+           </md-button>
+		
+   	   </md-grid-tile-footer>
+     </md-grid-tile>
+   </md-grid-list>
+	 </md-card-content>
 	  <!-- <div layout layout-margin ng-repeat="img in obs.Images">
 		  
 		   <md-progress-circular md-mode="indeterminate" ng-show="loaded[img.name] !== true && failed[img.name] !== true"></md-progress-circular>
 	     <img   style="margin: auto; max-width: 100%; height:inherit;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
 	 </div> -->
  </md-card>
+ 
+ 
+
+ 
  </div>
      
     </md-dialog-content>

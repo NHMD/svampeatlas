@@ -185,14 +185,17 @@ angular.module('svampeatlasApp')
 									}
 
 								}
-								$scope.forum = Observation.getForum({
+							/*	$scope.forum = Observation.getForum({
 									id: referencedDataRow._id
-								});
+								}); */
 								$scope.obs = Observation.get({
 									id: referencedDataRow._id
 								});
 
 								$scope.obs.$promise.then(function(obs) {
+									
+									$scope.forum = obs.Forum
+									
 									$scope.mapsettings.paths.circle = {
 										type: "circle",
 										radius: obs.accuracy,

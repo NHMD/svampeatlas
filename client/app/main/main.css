@@ -47,7 +47,7 @@ md-grid-tile-footer.img-footer > figcaption   {
 
 md-grid-tile-footer.map-footer    {
 	background-color: rgb(96,125,139);
-	z-index: 1000;
+	
 }
 
 md-grid-tile-footer > figcaption {

@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams ) {
+  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth) {
 	 
-	  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
-	 
+	//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
+	  $scope.Auth = Auth;
 	  $scope.$state = $state;
 	  $scope.ObservationFormService = ObservationFormService;
 	  
@@ -58,15 +58,7 @@ angular.module('svampeatlasApp')
 
 				var  where = {};
 				var geometry = L.polygon([bounds.getSouthWest(), bounds.getNorthWest(), bounds.getNorthEast(), bounds.getSouthEast(), bounds.getSouthWest()]).toGeoJSON();
-				//var geometry = {"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[bounds.getSouth(),bounds.getWest()],[bounds.getSouth(),bounds.getEast()],[bounds.getNorth(),bounds.getEast()],[bounds.getNorth(),bounds.getWest()],[bounds.getSouth(),bounds.getWest()]]]}}
-				/*
-				where.$and.decimalLongitude = {
-					$between: [bounds.getSouth(), bounds.getNorth()]
-				}
-				where.$and.decimalLatitude = {
-					$between: [bounds.getWest(), bounds.getEast()]
-				}
-				*/
+				
 				if($scope.timePeriod !== 'all'){
 					where.observationDate = {};
 					where.observationDate.$gt = ($scope.timePeriod === "year") ? moment().startOf('year') : moment().subtract(2, 'weeks');
@@ -109,6 +101,9 @@ angular.module('svampeatlasApp')
 	
 	
 	$scope.mapsettings = {
+		defaults: {
+			attributionControl: false
+		},
 		center: {
 			lat: 56,
 			lng: 11,
@@ -159,7 +154,7 @@ angular.module('svampeatlasApp')
 		
 	}).then(function(){
 		leafletData.getMap('frontpagemap').then(function(map) {
-	
+			map.zoomControl.setPosition('topright');
 			$timeout(function() {
 				map.invalidateSize();
 			}, 10);
