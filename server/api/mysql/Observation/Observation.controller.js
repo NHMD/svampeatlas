@@ -629,9 +629,11 @@ exports.update = function(req, res) {
 			}
 			if(users.length > 0){
 				json.users = _.map(req.body.users, function(e){ return { _id : e._id, name: e.name, Initialer: e.Initialer}});
-			}
+			};
+			
+			var log = (_.isEmpty(json)) ? null :  models.ObservationLog.create({eventname: 'Updated fields', oldvalues: JSON.stringify(json), user_id: req.user._id, observation_id: req.params.id}, {transaction: t});
 
-			return [obs, models.ObservationLog.create({oldvalues: JSON.stringify(json), user_id: req.user._id, observation_id: req.params.id}, {transaction: t})];
+			return [obs, log];
 		})
 		.spread(function(obs, log){
 			return obs;

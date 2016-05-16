@@ -28,3 +28,7 @@ i.hide-icon {
 	top: 3px;
 	position: relative;
 }
+
+md-grid-tile-footer.obs-form-image {
+	background-color: rgba(0, 0, 0, 0) !important;
+}

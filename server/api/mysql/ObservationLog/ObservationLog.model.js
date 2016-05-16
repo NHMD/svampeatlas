@@ -27,7 +27,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+	eventname: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
     user_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,

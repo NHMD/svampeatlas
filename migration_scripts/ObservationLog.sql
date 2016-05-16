@@ -26,3 +26,6 @@ ALTER TABLE `ObservationLog`
  ALTER TABLE `ObservationLog`
  ADD CONSTRAINT `observationlog_ibfk_1` FOREIGN KEY (`observation_id`) REFERENCES `Observation` (`_id`),
  ADD CONSTRAINT `observationlog_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `Users` (`_id`);
+ 
+ ALTER TABLE ObservationLog ADD COLUMN eventname varchar(255) NOT NULL DEFAULT 'Updated fields', ADD COLUMN
+description varchar(1020);
