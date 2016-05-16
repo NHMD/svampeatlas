@@ -20,7 +20,7 @@ Promise.promisifyAll(fs);
 
 var nestedQueryParser = require("../nestedQueryParser");
 var userTool = require("../userTool")
-
+var moment = require('moment');
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -241,8 +241,46 @@ exports.create = function(req, res) {
 
 
 
-// Updates an existing taxon in the DB.
+// Updates an existing ObservationImage in the DB.
 exports.update = function(req, res) {
+
+	return models.sequelize.transaction(function(t) {
+		
+		return ObservationImage.find({
+			where: {
+			_id: req.params.id
+		}
+		
+		},{
+				transaction: t
+			}).then(function(obserVationImage){
+			if (!obserVationImage) {
+				res.send(404);
+			} 
+			obserVationImage.set(req.body);
+			var imageName = obserVationImage.name;
+			return [imageName, obserVationImage.save({
+				transaction: t
+			})]
+		}).spread(function(imageName){
+			
+			var eventname = (req.body.hide) ? 'Image hidden' : 'Image shown';
+			var description = (req.body.hide) ? ' was hidden from the taxon page.' : ' is shown on the taxon page.';
+			return  models.ObservationLog.create({eventname: eventname, description: imageName+description, user_id: req.user._id, observation_id: req.params.id}, {transaction: t})
+		})
+	})
+	.then(function(){
+			return res.send(200);
+			})
+	
+		.
+	catch(function(err) {
+		var statusCode = (err === 'Forbidden') ? 403 : 500;
+		console.log(err);
+		
+		res.status(statusCode).send(err);
+	});
+
 
 	
 };
@@ -250,15 +288,45 @@ exports.update = function(req, res) {
 
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
-	ObservationImage.find({
-		where: {
+	var userIsValidator = userTool.hasRole(req.user, 'validator');
+
+	return models.sequelize.transaction(function(t) {
+		
+		return ObservationImage.find({
+			where: {
 			_id: req.params.id
 		}
+		
+		},{
+				transaction: t
+			}).then(function(obserVationImage){
+			if (!obserVationImage) {
+				res.send(404);
+			} else if(!userIsValidator && !(req.user._id === obserVationImage.user_id && obserVationImage.createdAt > moment().subtract(1, 'weeks'))){
+				throw "Forbidden"
+			}
+			var imageName = obserVationImage.name;
+			return [imageName, obserVationImage.destroy({
+				transaction: t
+			})]
+		}).spread(function(imageName){
+			return  models.ObservationLog.create({eventname: 'Deleted image', description: imageName+' was deleted from this record.', user_id: req.user._id, observation_id: req.params.id}, {transaction: t})
+		})
 	})
-		.then(handleEntityNotFound(res))
-		.then(removeEntity(res))
+	.then(function(){
+			return res.send(204);
+			})
+	
 		.
-	catch (handleError(res));
+	catch(function(err) {
+		var statusCode = (err === 'Forbidden') ? 403 : 500;
+		console.log(err);
+		
+		res.status(statusCode).send(err);
+	});
+
+
+
 };
 
 

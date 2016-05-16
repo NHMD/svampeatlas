@@ -77,7 +77,7 @@ angular.module('svampeatlasApp')
 					case error.PERMISSION_DENIED:
 						if(error.message.indexOf("Only secure origins are allowed") === 0) {
 						      // Secure Origin issue.
-							$scope.geoLocationStatusMessage = $translate.instant("Chrome browseren tillader ikke brug af position fra ikke-kryperede sider. Anvend i stedet")+" <a href='https://play.google.com/store/apps/details?id=org.mozilla.firefox'>Firefox</a> "+$translate.instant("eller")+" <a href='https://play.google.com/store/apps/details?id=com.opera.browser'>Opera</a>";
+							$scope.geoLocationStatusMessage = $translate.instant("Chrome browseren tillader ikke brug af position fra ikke-krypterede sider. Anvend i stedet")+" <a href='https://play.google.com/store/apps/details?id=org.mozilla.firefox'>Firefox</a> "+$translate.instant("eller")+" <a href='https://play.google.com/store/apps/details?id=com.opera.browser'>Opera</a>";
 						    } else {
 						    	$scope.geoLocationStatusMessage = $translate.instant("Du skal give enheden lov til at bruge din position.")
 						    }

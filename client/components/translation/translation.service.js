@@ -99,7 +99,7 @@ angular.module('svampeatlasApp')
 		  'Time out i bestemmelse af position.' : 'Time out in determination of position.',
 		  'Der opstod en ukendt fejl med betemmelse af position.'	: 'Unknown error in determination of position.',
 		  'Du skal give enheden lov til at bruge din position.' : 'You must allow the device to access your position.',
-		  'Chrome browseren tillader ikke brug af position fra ikke-kryperede sider. Anvend i stedet' : 'The chrome browser blocks use of position from unencrypted pages. Try',
+		  'Chrome browseren tillader ikke brug af position fra ikke-krypterede sider. Anvend i stedet' : 'The chrome browser blocks use of position from unencrypted pages. Try',
 		  'eller' : 'or',
 		  'Bestemmer din position ...' : 'Determining position ...',
 		  'Kort' : 'Map',
@@ -112,7 +112,10 @@ angular.module('svampeatlasApp')
 		  'Kun rødlistede': 'Only redlisted',
 		  'Altid' : 'Any time',
 		  'I år': 'This year',
-		  'Seneste to uger': 'Past two weeks'		           
+		  'Seneste to uger': 'Past two weeks',
+		  'Foto slettet' : 'Image deleted',
+		  'Foto usynligt på taxonside' : 'Image hidden on taxon page',
+		  'Foto synligt på taxonside' : 'Image shown on taxon page'		           
 		  
 		  
 	    });

@@ -5,6 +5,7 @@ angular.module('svampeatlasApp')
 		function($scope, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService) {
 			
 			$scope.Auth = Auth;
+			$scope.currentUser = Auth.getCurrentUser();
 			$scope.stItemsPrPage = 100;
 			$scope.ObservationModalService = ObservationModalService;
 

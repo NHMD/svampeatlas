@@ -7,8 +7,8 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', '$q', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService','DeterminationModalService', '$translate',
-							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate) {
+						controller: ['$scope', '$q', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService','DeterminationModalService', '$translate',
+							function($scope, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation,ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate) {
 
 
 								$scope.$translate = $translate;
@@ -78,6 +78,7 @@ angular.module('svampeatlasApp')
 								        .hideDelay(3000)
 								    );
 								  };
+								  
 								$scope.updateValidation = function(validation){
 									
 									Determination.updateValidation({id: $scope.obs.PrimaryDetermination._id}, {validation: validation}).$promise
@@ -771,7 +772,7 @@ angular.module('svampeatlasApp')
 												case error.PERMISSION_DENIED:
 													if(error.message.indexOf("Only secure origins are allowed") === 0) {
 													      // Secure Origin issue.
-														$scope.geoLocationStatusMessage = $translate.instant("Chrome browseren tillader ikke brug af position fra ikke-kryperede sider. Anvend i stedet")+" <a href='https://play.google.com/store/apps/details?id=org.mozilla.firefox'>Firefox</a> "+$translate.instant("eller")+" <a href='https://play.google.com/store/apps/details?id=com.opera.browser'>Opera</a>";
+														$scope.geoLocationStatusMessage = $translate.instant("Chrome browseren tillader ikke brug af position fra ikke-krypterede sider. Anvend i stedet")+" <a href='https://play.google.com/store/apps/details?id=org.mozilla.firefox'>Firefox</a> "+$translate.instant("eller")+" <a href='https://play.google.com/store/apps/details?id=com.opera.browser'>Opera</a>";
 													    } else {
 													    	$scope.geoLocationStatusMessage = $translate.instant("Du skal give enheden lov til at bruge din position.")
 													    }
@@ -844,11 +845,26 @@ angular.module('svampeatlasApp')
 									return $q.all(promises)
 								}
 								$scope.deleteImg = function(img){
-									alert(JSON.stringify(img))
+									ObservationImage.delete({id: img._id}).$promise.then(function(){
+										
+										_.remove($scope.obs.Images , function(e){
+											return e._id = img._id;
+										})
+										
+										$scope.showSimpleToast($translate.instant('Foto slettet'))
+										
+									})
 								}
 								
-								$scope.hideImg = function(img){
-									alert(JSON.stringify(img))
+								$scope.toggleHide = function(img, hide){
+									
+									img.hide = hide;
+									ObservationImage.update({id: img._id}, img).$promise.then(function(){
+										
+										var txt = (img.hide) ? $translate.instant('Foto usynligt på taxonside') : $translate.instant('Foto synligt på taxonside')
+										$scope.showSimpleToast(txt)
+										
+									})
 								}
 								
 								$scope.submitObservation = function() {

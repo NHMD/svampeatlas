@@ -97,13 +97,17 @@
 	            md-gutter="8px" md-gutter-gt-sm="4px" >
 	        <md-grid-tile ng-repeat="img in obs.Images" >
 	          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl(obs)+img.name}}.jpg" >
-	       <md-grid-tile-footer >
-		   <md-button class="md-fab md-mini md-warn" aria-label="Hide" ng-if="Auth.hasRole('validator')" ng-click='hideImg(img)'>
-          <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
-        </md-button>
-		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || moment(img.createdAt) > moment().subtract(1, 'weeks')" ng-click='deleteImg(img)'>
-          <ng-md-icon icon="close"></ng-md-icon> 
-        </md-button>
+	       <md-grid-tile-footer class="obs-form-image">
+   		   <md-button ng-if="Auth.hasRole('validator') && !img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, true)'>
+             <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
+           </md-button>
+   		   <md-button ng-if="Auth.hasRole('validator') && img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, false)'>
+             <i class="fa fa-eye fa-2x hide-icon"></i> 
+           </md-button>
+		   
+   		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || ( Auth.getCurrentUser()._id === img.user_id && moment(img.createdAt) > moment().subtract(1, 'weeks') )" ng-click='deleteImg(img)'>
+             <ng-md-icon icon="close"></ng-md-icon> 
+           </md-button>
 		
 	   </md-grid-tile-footer>
 	        </md-grid-tile>
@@ -173,11 +177,15 @@
          md-gutter="8px" md-gutter-gt-sm="4px" >
      <md-grid-tile ng-repeat="img in obs.Images" >
        <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl(obs)+img.name}}.jpg" >
-   	       <md-grid-tile-footer >
-   		   <md-button class="md-fab md-mini md-warn" aria-label="Hide" ng-if="Auth.hasRole('validator')" ng-click='hideImg(img)'>
+   	       <md-grid-tile-footer class="obs-form-image">
+   		   <md-button ng-if="Auth.hasRole('validator') && !img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, true)'>
              <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
            </md-button>
-   		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || moment(img.createdAt) > moment().subtract(1, 'weeks')" ng-click='deleteImg(img)'>
+   		   <md-button ng-if="Auth.hasRole('validator') && img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, false)'>
+             <i class="fa fa-eye fa-2x hide-icon"></i> 
+           </md-button>
+		   
+   		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || ( Auth.getCurrentUser()._id === img.user_id && moment(img.createdAt) > moment().subtract(1, 'weeks') )" ng-click='deleteImg(img)'>
              <ng-md-icon icon="close"></ng-md-icon> 
            </md-button>
 		
