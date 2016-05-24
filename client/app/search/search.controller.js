@@ -8,6 +8,12 @@ angular.module('svampeatlasApp')
 			$scope.mdMedia = $mdMedia;
 			$scope.$translate = $translate;
 			$scope.toggleSearchMapSideNav = buildToggler('searchmapsidenav');
+			
+	  	  $scope.openMenu = function($mdOpenMenu, ev) {
+     		 console.log("hjgkc")
+	        $mdOpenMenu(ev);
+	      };
+			
 			$scope.resetForm = function() {
 
 				ObservationSearchService.reset();

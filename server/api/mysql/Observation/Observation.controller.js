@@ -10,7 +10,7 @@
 'use strict';
 
 var _ = require('lodash');
-
+var config = require('../../../config/environment');
 var models = require('../')
 var Observation = models.Observation;
 var Promise = require("bluebird");
@@ -67,6 +67,19 @@ function removeEntity(res) {
 	};
 }
 
+function cacheResult(req, value){
+	var redisClient  = req.redis;
+	
+	return redisClient.setAsync(req.query.cachekey, value)
+	.then(function(){
+		return redisClient.expireAsync(req.query.cachekey, config.redisTTL[req.query.cachekey])
+	})
+	.catch(function(err){
+		console.log("error: "+err)
+	})
+		
+}
+
 // Get list of Observations
 exports.index = function(req, res) {
 	
@@ -96,7 +109,7 @@ exports.index = function(req, res) {
 
 	if(req.query.group){
 		
-		query['group'] =	JSON.parse(req.query.group)
+		query['group'] =	req.query.group
 		
 	};
 	
@@ -169,7 +182,7 @@ exports.index = function(req, res) {
 		activeThreadsPromise = Promise.resolve(false)
 	}
 	console.log(query);
-	if(query.group === undefined){
+	if(query.group === undefined && req.query.nocount === undefined){
 	activeThreadsPromise.then(function(observationids){
 		if(observationids !== false){
 			query.where._id = { $in: observationids}
@@ -205,7 +218,14 @@ exports.index = function(req, res) {
 			if (req.query.limit !== undefined) {
 				res.set('limit', req.query.limit);
 			};
-			return res.status(200).json(taxon)
+			if(req.query.cachekey) {
+				return cacheResult(req, JSON.stringify(taxon)).then(function(){
+					return res.status(200).json(taxon)
+				})
+			} else {
+				return res.status(200).json(taxon)
+			}
+			
 		})
 		.catch (handleError(res));
 	}

@@ -54,6 +54,45 @@ Thing.sync()
     }]);
   });
 
+
+'ALTER TABLE Users AUTO_INCREMENT = 1'
+  models.sequelize.query('SET FOREIGN_KEY_CHECKS = 0')
+  .then(function(rows){
+  	
+	
+	  return   models.sequelize.query('ALTER TABLE Users AUTO_INCREMENT = 1');
+	  
+	
+	
+  })
+  .then(function() {
+	  //connection.connect();
+	  
+	  return  models.sequelize.query('SELECT Password as password, Initialer, Validation, FuldNavn as name, email, "local" as provider FROM masterpersoner WHERE Password <> ""', { type: models.sequelize.QueryTypes.SELECT});
+	  
+   
+  })
+  .then(function(rows){
+  	
+	
+  return    User.bulkCreate(rows)
+	  
+	
+	
+  })
+  .then(function(){
+      return models.sequelize.query('SET FOREIGN_KEY_CHECKS = 1')
+  })
+  .then(function() {
+    console.log('finished populating users');
+  }).
+  catch(function(err){
+  	console.log(JSON.stringify(err))
+  });
+
+
+
+/*
 User.sync()
   .then(function() {
     User.destroy({truncate: true});
@@ -76,3 +115,4 @@ User.sync()
 	  
    
   });
+*/

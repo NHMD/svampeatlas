@@ -32,9 +32,7 @@ angular.module('svampeatlasApp')
 								$scope.toggelExtendedAssociatedOrganismSearch = function() {
 									$scope.extendedAssociatedOrganismSearch = !$scope.extendedAssociatedOrganismSearch;
 								}
-								$scope.$watch('extendedAssociatedOrganismSearch', function(newVal) {
-									console.log("new val is " + newVal)
-								})
+							
 								$scope.resetForm = function() {
 									$scope.selectedLocality = [];
 									$scope.observationDate = new Date();

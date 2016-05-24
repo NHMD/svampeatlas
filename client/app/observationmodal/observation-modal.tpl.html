@@ -182,7 +182,7 @@ flex>
 		            md-row-height-gt-md="1:1" md-row-height="4:3"
 		            md-gutter="8px" md-gutter-gt-sm="4px" >
 		        <md-grid-tile ng-repeat="img in obs.Images" >
-		          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl(obs)+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+		          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
          
 		        </md-grid-tile>
 		      </md-grid-list>
@@ -313,7 +313,7 @@ flex>
            md-row-height-gt-md="1:1" md-row-height="4:3"
            md-gutter="8px" md-gutter-gt-sm="4px" >
        <md-grid-tile ng-repeat="img in obs.Images" >
-         <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl(obs)+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+         <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
          
        </md-grid-tile>
      </md-grid-list>

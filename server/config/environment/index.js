@@ -63,6 +63,11 @@ var all = {
   arcgis: {
 	      'client_id': 'QS6ITvXQsdX4F0uE',
 	      'client_secret': 'b28294483b294d778f12d6749e620387',
+  },
+  
+  redisTTL: {
+	  latestredlisted: 60 * 60 * 24,
+	  todayslocalities:  60 * 15
   }
 };
 

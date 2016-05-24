@@ -25,6 +25,11 @@ LOAD DATA INFILE '/Users/thomasjeppesen/svampeatlas/exports/Mikroforum.csv' INTO
   FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
   LINES TERMINATED BY '\r' ;
   
+  
+  LOAD DATA INFILE '/Users/thomasjeppesen/svampeatlas/MIGRATION_FINAL/Mikroforum.csv' INTO TABLE Mikroforum CHARACTER SET utf8mb4
+    FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+    LINES TERMINATED BY '\r' ;
+  
  
 
 CREATE TABLE ObservationForum (
@@ -44,6 +49,9 @@ UPDATE Mikroforum SET Bruger = REPLACE(Bruger, '&#248;', 'ø') WHERE INSTR(Bruge
 UPDATE Mikroforum SET Bruger = REPLACE(Bruger, '&#233;', 'é') WHERE INSTR(Bruger, '&#233;') > 0;
 UPDATE Mikroforum SET Bruger = REPLACE(Bruger, '&#229;', 'å') WHERE INSTR(Bruger, '&#229;') > 0;
 
+UPDATE Mikroforum SET Bruger = REPLACE(Bruger, '&#243;', 'ó') WHERE INSTR(Bruger, '&#243;') > 0;
+UPDATE Mikroforum SET Bruger = REPLACE(Bruger, '&#237;', 'í') WHERE INSTR(Bruger, '&#237;') > 0;
+
 
 
 
@@ -58,7 +66,7 @@ CONCAT(
 	SUBSTRING_INDEX(m.Dato, " ", -1)
  ), Textfelt FROM Mikroforum m, Fungi f WHERE m.IDfelt <> "" AND m.IDfelt=f.AtlasIDnummer;
 	
-UPDATE 	ObservationForum o, Users u, Mikroforum m SET o.user_id = u._id where m._id = o._id AND m.Bruger = u.name;
+UPDATE 	ObservationForum o, Users u, Mikroforum m SET o.user_id = u._id where m._id = o._id AND m.Bruger = u.name AND o.user_id IS NULL;
 
 UPDATE 	ObservationForum o, Users u, Mikroforum m SET o.user_id = u._id where m._id = o._id AND m.Bruger = "Torbjorn" AND u.name ="Torbjørn Borgen";
 UPDATE 	ObservationForum o, Users u, Mikroforum m SET o.user_id = u._id where m._id = o._id AND m.Bruger = "Jacob Heilmann Clausen" AND u.name ="Jacob Heilmann-Clausen";
@@ -68,6 +76,6 @@ UPDATE 	ObservationForum o, Users u, Mikroforum m SET o.user_id = u._id where m.
 
 -- Create User Leif W. Laursen ?? (7 records in Mikroforum)
 	
-SELECT 	m.Bruger, count(m.*) FROM Mikroforum m, ObservationForum o WHERE m._id=o._id and o.user_id IS NULL GROUP BY m.Bruger;
+SELECT 	Bruger, count(*) FROM Mikroforum m, ObservationForum o WHERE m._id=o._id and o.user_id IS NULL GROUP BY m.Bruger;
 	
 	

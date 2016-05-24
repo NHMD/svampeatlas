@@ -16,3 +16,7 @@
     max-width: 400px !important;
   }
 }
+
+.search-form-fab {
+	padding: 0px !important;
+}

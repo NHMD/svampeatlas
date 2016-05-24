@@ -131,7 +131,7 @@ angular.module('svampeatlasApp')
 	
 	
 	
-	Locality.toDay().$promise.then(function(localities){
+	Locality.toDay({cachekey: "todayslocalities"}).$promise.then(function(localities){
 		
 		for (var i = 0; i < localities.length; i++) {
 			$scope.mapsettings.markers[localities[i].name] = {
@@ -172,15 +172,8 @@ angular.module('svampeatlasApp')
 		
 	};
 	$scope.getImageUrl = function(tile){
-		if(moment(tile.observationDate).year() === 2016 ){
-			return appConstants.imageurl(tile)+tile.Images[0].name +".jpg";
-		} 
-		else if(moment(tile.observationDate).year() !== 2015 ){
-			return appConstants.imageurl(tile)+tile.Images[0].name +".JPG";
-		}
-		else {
-			return "http://svampe.dk/atlas/uploads/"+tile.Images[0].name +".JPG";
-		}
+		
+		return appConstants.imageurl+tile.Images[0].name +".JPG";		
 	}
 	
 	
@@ -201,8 +194,10 @@ angular.module('svampeatlasApp')
 	}
 					
 	Observation.query({
+		nocount: true,
 		order: 'observationDate DESC',
 		limit: 50,
+		cachekey: 'latestredlisted',
 		include: JSON.stringify(
 			[
 				JSON.stringify({
