@@ -81,17 +81,23 @@ INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o
 -- insert fourth taxon if exists
 INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -3), ", ", 1) = p.DKname AND p.Genus=1 ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
 INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -3), ", ", 1) = p.DKandLatinName ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
-INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -3), ", ", 1) = p.LatinName ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
+INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -3), ", ", 1) = p.LatinName ON DUPLICATE KEY UPDATE planttaxon_id=p._id;
+
+INSERT IGNORE INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -3), ", ", 1) = p.LatinName ;
+
 -- insert fifth taxon if exists
 INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -4), ", ", 1) = p.DKname AND p.Genus=1 ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
 INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -4), ", ", 1) = p.DKandLatinName ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
 INSERT INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -4), ", ", 1) = p.LatinName ON DUPLICATE KEY UPDATE planttaxon_id=p._id, observation_id =o._id;
 
+INSERT IGNORE INTO ObservationPlantTaxon SELECT p.accepted_id, o._id FROM Observation o, PlantTaxon p, Fungi f  where f.associatedOrganism LIKE "%,%" AND o._id=f.AtlasLNR AND SUBSTRING_INDEX(SUBSTRING_INDEX(f.associatedOrganism, ", ", -4), ", ", 1) = p.LatinName;
+
+
 CREATE TABLE temp_ass_org_is_mapped (
 	obs_id INT(11) PRIMARY KEY NOT NULL
 ) ENGINE=InnoDB;
 
-INSERT INTO temp_ass_org_is_mapped SELECT AtlasLNR FROM PlantTaxon p, Fungi f WHERE  f.associatedOrganism= p.DKandLatinName;
+INSERT IGNORE INTO temp_ass_org_is_mapped SELECT AtlasLNR FROM PlantTaxon p, Fungi f WHERE  f.associatedOrganism= p.DKandLatinName;
 INSERT INTO temp_ass_org_is_mapped SELECT AtlasLNR FROM PlantTaxon p, Fungi f WHERE  f.associatedOrganism= p.DKname ON DUPLICATE KEY UPDATE obs_id= AtlasLNR;
 INSERT INTO temp_ass_org_is_mapped SELECT AtlasLNR FROM PlantTaxon p, Fungi f WHERE  f.associatedOrganism= p.LatinName ON DUPLICATE KEY UPDATE obs_id= AtlasLNR;
 UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT(o.ecologynote, " [Associated organism: ",f.associatedOrganism, "]") WHERE f.associatedOrganism <> "" AND f.AtlasLNR NOT IN (select obs_id from temp_ass_org_is_mapped) AND o._id = f.AtlasLNR AND o.ecologynote <> "";

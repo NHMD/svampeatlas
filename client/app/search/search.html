@@ -162,20 +162,45 @@
             </md-select>
   	  </md-input-container>
   </div>
-   <div layout="row" class="validator-button-container" flex>
-	   <span layout-fill flex></span>
+   <div layout="row" class="validator-button-container" >
+	   <span layout-fill flex="80"></span>
 	   <md-button class="md-fab md-warn" aria-label="Nulstil formular" ng-click="resetForm()">
 	               <ng-md-icon icon="autorenew"></ng-md-icon>
 	           </md-button>
 			   
 	   
 
+    <md-menu md-position-mode="target-right target" class="search-form-fab">
+      <md-button aria-label="Show results" class="md-fab md-warn" ng-click="openMenu($mdOpenMenu, $event)">
+        <ng-md-icon icon="search"></ng-md-icon>
+      </md-button>
+      <md-menu-content width="6">
+        <md-menu-item>
+            <md-button aria-label="liste"  ng-click="state.go('search-list')">
+  		  
+              <ng-md-icon icon="list"></ng-md-icon> <span translate>Resultat i liste</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item>
+            <md-button aria-label="kort"  ng-click="state.go('search-map')">
+  		  
+              <ng-md-icon icon="map"></ng-md-icon> <span translate>Resultat på kort</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item>
+            <md-button aria-label="artsliste"  ng-click="state.go('search-specieslist')">
+  		  
+              <ng-md-icon icon="list"></ng-md-icon> <span translate>Artsliste</span>
+            </md-button>
+        </md-menu-item>
+       
+       
+      </md-menu-content>
+    </md-menu>
 
 
-
-	<md-fab-speed-dial  md-direction="up"
-	                         class='md-scale'>
-	        <md-fab-trigger>
+<!--	<md-fab-speed-dial  md-direction="up" class='md-scale' class="validator-button-container">
+	        <md-fab-trigger >
 	          <md-button aria-label="menu" class="md-fab md-warn">
 		  
 	            <ng-md-icon icon="search"></ng-md-icon>
@@ -192,7 +217,7 @@
 	          </md-button>
 	          
 	        </md-fab-actions>
-	      </md-fab-speed-dial>
+	      </md-fab-speed-dial> -->
 
   </div>
 		 

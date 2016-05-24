@@ -9,12 +9,12 @@ var localityController = require('../Locality/Locality.controller');
 var auth = require('../../../auth/auth.service');
 var multer  = require('multer');
 var upload = multer({ dest: config.uploaddir });
-
+var redisClient = require('../../../components/hooks/redisClient');
 
 
 var router = express.Router();
 
-router.get('/', auth.appendUser(), controller.index);
+router.get('/', auth.appendUser(), redisClient.use(), controller.index);
 
 router.get('/specieslist', auth.appendUser(), controller.indexSpeciesList)
 
@@ -29,7 +29,7 @@ router.post('/:id/determinations', auth.hasRole('validator'), determinationContr
 router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), auth.appendUser(), imageController.addImagesToObs]); 
 
 
-router.get('/today/localities', localityController.localititesWithFindingsToday);
+router.get('/today/localities', redisClient.use(), localityController.localititesWithFindingsToday);
 
 // using taxonomyadmin while testing
 router.post('/', auth.hasRole('taxonomyadmin'), controller.create);

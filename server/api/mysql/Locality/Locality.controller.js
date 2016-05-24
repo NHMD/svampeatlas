@@ -175,6 +175,18 @@ exports.show = function(req, res) {
 	catch (handleError(res));
 };
 
+function cacheResult(req, value){
+	var redisClient  = req.redis;
+	
+	return redisClient.setAsync(req.query.cachekey, value)
+	.then(function(){
+		return redisClient.expireAsync(req.query.cachekey, config.redisTTL[req.query.cachekey])
+	})
+	.catch(function(err){
+		console.log("error: "+err)
+	})
+		
+}
 
 exports.localititesWithFindingsToday = function(req, res){
 	
@@ -183,7 +195,15 @@ exports.localititesWithFindingsToday = function(req, res){
 		+'AND CURDATE() = DATE(o.observationDate) GROUP BY l._id',
   { type: models.sequelize.QueryTypes.SELECT }
 ).then(function(localities){
-	return res.status(200).json(localities)
+	
+	if(req.query.cachekey) {
+		return cacheResult(req, JSON.stringify(localities)).then(function(){
+			return res.status(200).json(localities)
+		})
+	} else {
+		return res.status(200).json(localities)
+	}
+	
 })
 	.
 catch (handleError(res));

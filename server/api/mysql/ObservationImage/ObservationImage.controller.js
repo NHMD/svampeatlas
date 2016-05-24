@@ -207,7 +207,7 @@ exports.addImagesToObs = function(req, res) {
 		_.each(req.files, function(f) {
 			var fname = prefix + "_" + shortid.generate();
 			promises.push(
-				fs.renameAsync(f.path, f.destination + fname + ".jpg")
+				fs.renameAsync(f.path, f.destination + fname + ".JPG")
 				.then(function() {
 					return ObservationImage.create({
 						observation_id: obs._id,

@@ -62,3 +62,7 @@ md-list-item > img {
 	margin: 8px;
 }
 
+.leaflet-top {
+	z-index: 1 !important;
+}
+

@@ -44,9 +44,39 @@ FOREIGN KEY (observation_id) REFERENCES Observation(_id)
 UPDATE Fungi SET AtlasUserPrec = 0 WHERE AtlasUserPrec = "";
 UPDATE Fungi SET AtlasUserPrec = SUBSTRING_INDEX(AtlasUserPrec, ",", 1) WHERE AtlasUserPrec LIKE "%,%";
 
+UPDATE Fungi SET  AtlasUserLati = 0  WHERE AtlasUserLati = "";
+UPDATE Fungi SET  AtlasUserLong = 0  WHERE AtlasUserLong = "";
 -- fix invalid lat longs
-UPDATE Fungi SET  AtlasUserLati = REPLACE(AtlasUserLatiNum, ',', '.')  WHERE AtlasUserLati = 0;
-UPDATE Fungi SET  AtlasUserLong = REPLACE(AtlasUserLongNum, ',', '.')  WHERE AtlasUserLong = 0;
+UPDATE Fungi SET  AtlasUserLati = REPLACE(AtlasUserLatiNum, ',', '.')  WHERE AtlasUserLati = 0 AND AtlasUserLatiNum LIKE "%,%";
+UPDATE Fungi SET  AtlasUserLong = REPLACE(AtlasUserLongNum, ',', '.')  WHERE AtlasUserLong = 0 AND AtlasUserLongNum LIKE "%,%";;
+
+select * from Fungi where CAST(AtlasUserLati as DECIMAL(10, 8)) IS NULL
+lat DECIMAL(10, 8) NOT NULL, lng DECIMAL(11, 8) NOT NULL
+
+
+select AtlasLNR, AtlasUserLati from Fungi where AtlasUserLati REGEXP '[:alpha:]'
+select AtlasLNR, AtlasUserLati from Fungi where AtlasUserLati REGEXP '[:space:]';
+select AtlasLNR, AtlasUserLati from Fungi where AtlasUserLati REGEXP '[^[:digit:].]';
+
+select AtlasLNR, AtlasUserLong from Fungi where AtlasUserLong REGEXP '[^[:digit:].]';
+
+UPDATE Fungi SET  AtlasUserLati = REPLACE(AtlasUserLatiNum, ',', '.')  WHERE AtlasUserLati REGEXP '[^[:digit:].]' AND AtlasUserLatiNum LIKE "%,%";
+UPDATE Fungi SET  AtlasUserLati = 0  WHERE AtlasUserLati REGEXP '[^[:digit:].]';
+
+select AtlasLNR, AtlasUserLong from Fungi where AtlasUserLong REGEXP '[^[:digit:].]';
+UPDATE Fungi SET  AtlasUserLong = REPLACE(AtlasUserLongNum, ',', '.')  WHERE AtlasUserLong REGEXP '[^[:digit:].]' AND AtlasUserLongNum LIKE "%,%";
+UPDATE Fungi SET  AtlasUserLong = 0  WHERE AtlasUserLong REGEXP '[^[:digit:].]';
+
+
+UPDATE Fungi SET AtlasUserLati = SUBSTRING_INDEX(AtlasUserLati, "&", 1) WHERE AtlasUserLati LIKE "%&%";
+UPDATE Fungi SET AtlasUserLati = SUBSTRING_INDEX(AtlasUserLati, "p", 1) WHERE AtlasUserLati LIKE "%p%";
+
+select AtlasLNR, AtlasUserLati, SUBSTRING_INDEX(AtlasUserLati, "&", 1) from Fungi where AtlasLNR = 737908;
+
+UPDATE Fungi set AtlasLocID =1 WHERE AtlasLocID ="";
+-- UPDATE Fungi f, Fungi_RAW r set f.AtlasUserLati = r.AtlasUserLati WHERE f.AtlasLNR = r.AtlasLNR;
+
+
 
 -- indsæt alle som kan mappes til fuld dato (observationDateAccuracy = day)
 
@@ -96,7 +126,13 @@ SELECT input_of_data, count(*) FROM Fungi f WHERE (f.date_calculated  LIKE "%?%"
 
 -- Fix 4 TL records with wrong year in creation date
 UPDATE Fungi SET creation_date = CONCAT(SUBSTRING_INDEX(creation_date, "/", 2), "/2001")  WHERE SUBSTRING_INDEX(creation_date, "/", -1) LIKE "0%";
+-- UPDATE Fungi f, Fungi_RAW r set f.creation_date = r.creation_date WHERE f.AtlasLNR = r.AtlasLNR;
 
+UPDATE Fungi set date_day = 0 WHERE date_day ="";
+UPDATE Fungi set date_month = 0 WHERE date_month ="";
+UPDATE Fungi set date_year = 0 WHERE date_year ="";
+
+ALTER TABLE Fungi MODIFY date_day INT(11), MODIFY date_month INT(11), MODIFY date_year INT(11);
 -- indsæt alle som kan mappes til fuld måned (observationDateAccuracy = month)
 
 INSERT INTO Observation (
@@ -320,6 +356,8 @@ insert into ObservationPoint SELECT _id, GeomFromText(CONCAT('POINT(',decimalLon
 	ALTER TABLE Observation ADD COLUMN p POINT ;
 	UPDATE Observation o, ObservationPoint p SET o.p=p.p WHERE p.observation_id = o._id;
 
+UPDATE Observation SET geom = GeomFromText(CONCAT('POINT(',decimalLongitude,' ',decimalLatitude, ')'));
+
 ---------------
 --- Substrate and VegType
 ---------------
@@ -350,7 +388,7 @@ UPDATE Observation o, Fungi f SET o.substrate_id=4 WHERE o._id=f.AtlasLNR AND  o
 -- alt der kan mappes til brandplet
 
 UPDATE Observation o, Fungi f SET o.substrate_id=16 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%brandplet%";
-UPDATE Observation o, Fungi f SET o.substrate_id=16 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%burned ground%"
+UPDATE Observation o, Fungi f SET o.substrate_id=16 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%burned ground%";
 -- alt der kan mappes til nåle /blade
 UPDATE Observation o, Fungi f SET o.substrate_id=2 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%needles%";
 UPDATE Observation o, Fungi f SET o.substrate_id=2 WHERE o._id=f.AtlasLNR AND  o.substrate_id IS NULL AND f.Substrate LIKE "%leaves%";
@@ -407,7 +445,7 @@ UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p
 UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT(o.ecologynote, " [Substrat: ",f.Substrate, "]") WHERE f.Substrate <> "" AND f.Substrate NOT IN (select distinct name from Substrate) AND o._id = f.AtlasLNR AND o.ecologynote <> "";
 UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT("[Substrat: ",f.Substrate, "]") WHERE f.Substrate <> "" AND f.Substrate NOT IN (select distinct name from Substrate) AND o._id = f.AtlasLNR AND o.ecologynote = "";
 
-
+##################################################################### 18.5.2016
 -- VegType
 SELECT VegType, count(*) from Fungi f, Observation o WHERE f.VegType <> "" AND o._id = f.AtlasLNR AND o.vegetationtype_id IS NULL GROUP BY VegType ORDER BY count(*) DESC
 
@@ -419,6 +457,11 @@ UPDATE Observation o, Fungi f, VegetationType v SET o.vegetationtype_id = v._id 
 
 UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT(o.ecologynote, " [Vegetation type: ",f.VegType, "]") WHERE f.VegType <> "" AND f.VegType NOT IN (select distinct name from VegetationType) AND o._id = f.AtlasLNR AND o.ecologynote <> "";
 UPDATE Fungi f, Observation o SET o.ecologynote = CONCAT("[Vegetation type: ",f.VegType, "]") WHERE f.VegType <> "" AND f.VegType NOT IN (select distinct name from VegetationType) AND o._id = f.AtlasLNR AND o.ecologynote = "";
+
+
+
+ALTER TABLE `Fungi` CHANGE `VegType` `VegType` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
 
 UPDATE Fungi f, Observation o SET o.ecologynote = f.AtlasEcoNote where f.AtlasLNR = o._id;
 

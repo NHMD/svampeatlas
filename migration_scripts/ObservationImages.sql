@@ -14,6 +14,13 @@ LOAD DATA INFILE "/Users/thomasjeppesen/svampeatlas/exports/PicBase.csv" INTO TA
 FIELDS TERMINATED BY ',' 
             ENCLOSED BY '"'
     LINES  TERMINATED BY '\r'; -- or \r\n;
+
+	LOAD DATA INFILE "/Users/thomasjeppesen/svampeatlas/MIGRATION_FINAL/PicBase.csv" INTO TABLE PicBase
+	FIELDS TERMINATED BY ',' 
+	            ENCLOSED BY '"'
+	    LINES  TERMINATED BY '\r'; -- or \r\n;
+
+
 -- import data then:
 UPDATE PicBase set Foto_vises_ikke = 0 where Foto_vises_ikke ="";
 
