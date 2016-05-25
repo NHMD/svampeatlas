@@ -5,7 +5,8 @@ angular.module('svampeatlasApp')
     $stateProvider
       .state('main', {
 		  params: {
-		      openLogin: null
+		      openLogin: null,
+			  fberror: null
 		    },
         url: '/',
         templateUrl: 'app/main/main.html',

@@ -106,6 +106,8 @@ exports.index = function(req, res) {
 						n.where.$and[i] = JSON.parse(n.where.$and[i]);
 					}
 				}
+				
+				
 				/*
 				if(n.model === "TaxonomyTag"){
 							n.where._id = JSON.parse(n.where._id);
@@ -116,7 +118,20 @@ exports.index = function(req, res) {
 				//	n.where = nestedQueryParser.parseQueryString(n.where)
 
 			}
-			console.log(n.where)
+			
+			// Allow only one 2nd level include and NOT user (which has sensitive information)
+			if(n.include){
+				var nestedinclude = JSON.parse(n.include);
+					
+				if(nestedinclude.model !== 'User'){
+					nestedinclude.model = models[nestedinclude.model];
+					nestedinclude.where = JSON.parse(nestedinclude.where);
+					n.include = nestedinclude;
+					
+					
+				}
+			}
+			
 			return n;
 		});
 		

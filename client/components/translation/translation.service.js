@@ -115,9 +115,10 @@ angular.module('svampeatlasApp')
 		  'Seneste to uger': 'Past two weeks',
 		  'Foto slettet' : 'Image deleted',
 		  'Foto usynligt på taxonside' : 'Image hidden on taxon page',
-		  'Foto synligt på taxonside' : 'Image shown on taxon page'		           
-		  
-		  
+		  'Foto synligt på taxonside' : 'Image shown on taxon page',
+		  'Kun mine fund' : 'Only my sightings',
+		  'Søg kun i danske arter' : 'Search only danish species'		           
+
 	    });
 	  
   	  $translateProvider.translations('dk', {
@@ -205,7 +206,9 @@ angular.module('svampeatlasApp')
 		  'Password must be at least 3 characters.' : 'Dit password skal være mindst 3 karakterer.',
 		  'Current Password' : 'Nuværende password',
 		  'New Password' : 'Nyt password',
-		  'Change password' : 'Skift password'
+		  'Change password' : 'Skift password',
+		  'No Facebook account detected.': 'Ingen Facebook konto fundet.',
+		  'Login with credentials, then goto user profile and connect your Facebook account.' : 'Log ind med initialer og password, gå derefter til "profil" og forbin din Facebook konto'
   	    });
 	 
 	
