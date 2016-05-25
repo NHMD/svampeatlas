@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth) {
+  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth, $location) {
 	 
 	//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 	  $scope.Auth = Auth;
@@ -21,11 +21,13 @@ angular.module('svampeatlasApp')
   		    })
 	  }
 	  
-	  if($stateParams.openLogin){
+	  if($stateParams.openLogin || $location.search().fberror){
 	  
 		  $scope.showLogin();
 	
 	  }
+	  
+	  
 	  $scope.openMenu = function($mdOpenMenu, ev) {
      
       $mdOpenMenu(ev);

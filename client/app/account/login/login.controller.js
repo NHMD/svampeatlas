@@ -21,7 +21,7 @@ angular.module('svampeatlasApp')
         })
         .then(function() {
 			Auth.getCurrentUser(function(usr){
-				
+				$location.search('fberror', null)
 				if(usr){
 					ssSideNav.setVisible('Logout', true);
 				}

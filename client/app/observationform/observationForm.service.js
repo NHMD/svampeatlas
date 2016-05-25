@@ -32,6 +32,9 @@ angular.module('svampeatlasApp')
 								$scope.toggelExtendedAssociatedOrganismSearch = function() {
 									$scope.extendedAssociatedOrganismSearch = !$scope.extendedAssociatedOrganismSearch;
 								}
+								$scope.toggleOnlyDkTaxa = function() {
+									$scope.onlyPresentInDK = !$scope.onlyPresentInDK;
+								}
 							
 								$scope.resetForm = function() {
 									$scope.selectedLocality = [];
@@ -314,8 +317,9 @@ angular.module('svampeatlasApp')
 
 									return results;
 								}
-
-								$scope.querySearch = function(query) {
+								$scope.onlyPresentInDK = true;
+								
+								$scope.querySearch = function(query, dkOnly) {
 
 									var RankID = ($scope.onlyHigherTaxa) ? {
 										lt: 10000
@@ -328,22 +332,34 @@ angular.module('svampeatlasApp')
 											RankID: RankID
 										},
 										limit: 30,
+										
 										include: [{
 											model: "Taxon",
 											as: 'acceptedTaxon'
+											
 										}, {
 											model: "TaxonDKnames",
 											as: "Vernacularname_DK"
 										}]
 									};
 
-
+									if($scope.onlyPresentInDK === true){
+										
+										q.include[0].include = JSON.stringify({
+										model: "TaxonAttributes",
+										as: "attributes",
+										attributes: ["PresentInDK"],
+											where: 	JSON.stringify({PresentInDK : 1})
+									});
+									};
 									if ($scope.DkNames) {
 										q.include[1].where = JSON.stringify({
 											vernacularname_dk: {
 												like: "%" + query + "%"
 											}
 										})
+										
+										q.order = "Vernacularname_DK.vernacularname_dk ASC"
 									} else {
 
 										q.where = {
@@ -352,14 +368,15 @@ angular.module('svampeatlasApp')
 											},
 											RankID: RankID
 										};
-
-
+										q.order = "FullName ASC"
+										
 									}
 
 
 									var results = query ? Taxon.query({
 										where: JSON.stringify(q.where),
 										include: JSON.stringify(q.include),
+										order: q.order,
 										limit: 30
 
 									}).$promise : [];

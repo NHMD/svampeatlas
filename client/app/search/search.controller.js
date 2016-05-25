@@ -10,7 +10,7 @@ angular.module('svampeatlasApp')
 			$scope.toggleSearchMapSideNav = buildToggler('searchmapsidenav');
 			
 	  	  $scope.openMenu = function($mdOpenMenu, ev) {
-     		 console.log("hjgkc")
+     		 
 	        $mdOpenMenu(ev);
 	      };
 			
@@ -320,7 +320,7 @@ angular.module('svampeatlasApp')
 					}
 
 				}
-
+				
 
 				if (newVal.DkNames === true) {
 					$scope.taxonPlaceholder = $translate.instant("Dansk navn");
@@ -384,7 +384,14 @@ angular.module('svampeatlasApp')
 
 
 				$scope.observationSearch.include = $scope.search.include;
-
+				
+				
+				if ($scope.search.onlyMyObservations) {
+					$scope.observationSearch.where.primaryuser_id = Auth.getCurrentUser()._id
+				} else {
+					delete $scope.observationSearch.where.primaryuser_id;
+				}
+				
 				if ($scope.search.databasenumber) {
 					$scope.observationSearch.where._id = $scope.search.databasenumber.split("-")[1] || $scope.search.databasenumber;
 				} else {

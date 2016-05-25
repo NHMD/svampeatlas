@@ -44,6 +44,15 @@
 			                    </div>
 			                </md-button>
 			              </md-menu-item>
+			              <md-menu-item >
+			                <md-button ng-click="toggleOnlyDkTaxa()">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Søg kun i danske arter'  | translate}}</p>
+			                      <ng-md-icon ng-if="onlyPresentInDK" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  <ng-md-icon ng-if="!onlyPresentInDK" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
 			            </md-menu-content>
 			          </md-menu>
       </div>

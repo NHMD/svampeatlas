@@ -7,6 +7,9 @@
 
       <form layout-fill>
 		<div layout="row">
+		 	<md-switch ng-model="search.onlyMyObservations" aria-label="Søg mine fund" ng-if="Auth.isLoggedIn()">
+		 	   <span translate>Kun mine fund</span>
+		 	  </md-switch>
 		 	<md-switch ng-model="search.activeThreadsOnly" aria-label="Søg aktive tråde" ng-if="Auth.isLoggedIn()">
 		 	   <span translate>Mine aktive tråde </span>
 		 	  </md-switch>

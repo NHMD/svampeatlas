@@ -10,14 +10,14 @@ router
 .get('/authorize', auth.appendUser(), passport.authorize('facebook', {
   scope: ['email', 'user_about_me'],
 //  failureRedirect: '/signup',
-	failureRedirect: '/login?fberror=true',
+	failureRedirect: '/?fberror=true',
   session: false
 }))
 
   .get('/', auth.appendUser(), passport.authorize('facebook', {
     scope: ['email', 'user_about_me'],
   //  failureRedirect: '/signup',
-	  failureRedirect: '/login?fberror=true',
+	  failureRedirect: '/?fberror=true',
     session: false
   },
  auth.setTokenCookie
@@ -25,7 +25,7 @@ router
 
   .get('/callback', auth.addAuthHeaderFromCookie(), auth.appendUser(), passport.authorize('facebook', {
  //   failureRedirect: '/signup',
-	  failureRedirect: '/login?fberror=true',
+	  failureRedirect: '/?fberror=true',
     session: false
   }), 
 	  auth.setTokenCookie
