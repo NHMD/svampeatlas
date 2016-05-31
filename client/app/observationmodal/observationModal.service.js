@@ -33,6 +33,28 @@ angular.module('svampeatlasApp')
 								        .hideDelay(3000)
 								    );
 								  };
+								  $scope.openImage = function(img){
+									  window.open($scope.imageurl+img.name+'.JPG',img.name,'width=1200,height=800,resizable=1');
+									  
+								  }
+  								$scope.deleteObs = function(ev, obs) {
+								   
+  									var displayedId = obs.PrimaryUser.Initialer+ ((obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : '')+'-'+obs._id;
+								   
+  								    var confirm = $mdDialog.confirm()
+  								          .title($translate.instant('Vil du slette')+' '+displayedId+'?')
+  								          .textContent($translate.instant('Fundet og alle tilhørende data vil blive permanent slettet fra databasen.'))
+  								          .ariaLabel($translate.instant('Slet fund'))
+  								          .targetEvent(ev)
+  								          .ok($translate.instant('Slet'))
+  								          .cancel($translate.instant('Fortryd'));
+  								    $mdDialog.show(confirm).then(function() {
+  								     	Observation.delete({id: obs._id}).$promise.then(function(){
+  								     		$scope.showSimpleToast($translate.instant('Record')+' '+displayedId+' '+$translate.instant('slettet.'))
+  								     	})
+  								    });
+  								  };
+								  
 								$scope.updateValidation = function(validation){
 									
 									Determination.updateValidation({id: $scope.obs.PrimaryDetermination._id}, {validation: validation}).$promise

@@ -185,7 +185,7 @@
          md-row-height="4:3"
          md-gutter="8px" md-gutter-gt-sm="4px" >
      <md-grid-tile ng-repeat="img in obs.Images" >
-       <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" >
+       <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" ng-click="openImage(img)">
    	       <md-grid-tile-footer class="obs-form-image">
    		   <md-button ng-if="Auth.hasRole('validator') && !img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, true)'>
              <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
