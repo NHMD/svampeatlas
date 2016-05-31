@@ -117,7 +117,17 @@ angular.module('svampeatlasApp')
 		  'Foto usynligt på taxonside' : 'Image hidden on taxon page',
 		  'Foto synligt på taxonside' : 'Image shown on taxon page',
 		  'Kun mine fund' : 'Only my sightings',
-		  'Søg kun i danske arter' : 'Search only danish species'		           
+		  'Søg kun i danske arter' : 'Search only danish species',
+		  'Vejledninger' : 'Tutorials',
+		  'Projektbeskrivelse' : 'Project description',
+		  'Kun udenlandske fund': 'Only foreign findings',
+		  'Vil du slette' : 'Do you want to delete',
+		  'Fundet og alle tilhørende data vil blive permanent slettet fra databasen.': 'The record and all related data will be permanently deleted from the database.',
+		  'Slet fund': 'Delete record',
+		  'Slet': 'Delete',
+		  'Fortryd' : 'Cancel',
+		  'Record': 'Record',
+		  'slettet.': 'deleted.'		           
 
 	    });
 	  
@@ -209,6 +219,7 @@ angular.module('svampeatlasApp')
 		  'Change password' : 'Skift password',
 		  'No Facebook account detected.': 'Ingen Facebook konto fundet.',
 		  'Login with credentials, then goto user profile and connect your Facebook account.' : 'Log ind med initialer og password, gå derefter til "profil" og forbin din Facebook konto'
+
   	    });
 	 
 	

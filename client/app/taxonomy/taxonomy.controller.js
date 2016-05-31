@@ -308,11 +308,12 @@ angular.module('svampeatlasApp')
 				}) : undefined;
 
 				var higerTaxaPredicate = localStorage.getItem('taxonomy_higher_taxa_predicate');
+				
 				if (higerTaxaPredicate && where) {
 					_.merge(where, JSON.parse(higerTaxaPredicate))
-				} else {
+				} else if(!where){
 					where = JSON.parse(higerTaxaPredicate);
-				}
+				} 
 
 				if ($scope.checkboxes.OrphantTaxa) {
 					_.merge(where, {

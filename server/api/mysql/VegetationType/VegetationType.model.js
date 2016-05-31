@@ -11,6 +11,10 @@ module.exports = function(sequelize, DataTypes) {
 		name: {
 			type: DataTypes.STRING,
 			allowNull: false
+		},
+		name_uk: {
+			type: DataTypes.STRING,
+			allowNull: false
 		}
 	}, {
 		tableName: 'VegetationType',

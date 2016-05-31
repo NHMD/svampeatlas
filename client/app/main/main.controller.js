@@ -133,7 +133,7 @@ angular.module('svampeatlasApp')
 	
 	
 	
-	Locality.toDay({cachekey: "todayslocalities"}).$promise.then(function(localities){
+	Locality.toDay().$promise.then(function(localities){
 		
 		for (var i = 0; i < localities.length; i++) {
 			$scope.mapsettings.markers[localities[i].name] = {
@@ -157,9 +157,10 @@ angular.module('svampeatlasApp')
 	}).then(function(){
 		leafletData.getMap('frontpagemap').then(function(map) {
 			map.zoomControl.setPosition('topright');
+			
 			$timeout(function() {
 				map.invalidateSize();
-			}, 10);
+			}, 11);
 		});
 	})
 	
@@ -232,7 +233,7 @@ angular.module('svampeatlasApp')
 		)
 		
 	}).$promise.then(function(observations) {
-		console.log("succes")
+		
 		$scope.tiles = _.filter(observations, function(u) {
 			return u.Images.length > 0;
 		});

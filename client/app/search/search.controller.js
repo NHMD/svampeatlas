@@ -327,7 +327,18 @@ angular.module('svampeatlasApp')
 				} else {
 					$scope.taxonPlaceholder = $translate.instant("Latinsk navn");
 				}
-				$scope.search.include[2].required = ($scope.search.geometry) ? false : !$scope.search.includeForeign;
+				
+				
+				
+				
+				
+				if($scope.search.onlyForeign){
+					$scope.search.include[2].required = false;
+					$scope.observationSearch.where.locality_id = null;
+				} else {
+					delete $scope.observationSearch.where.locality_id;
+					$scope.search.include[2].required = ($scope.search.geometry) ? false : !$scope.search.includeForeign;
+				}
 
 				if ($scope.search.selectedHigherTaxa.length > 0) {
 					$scope.search.include[0].where.$or = _.map($scope.search.selectedHigherTaxa, function(tx) {
@@ -388,7 +399,12 @@ angular.module('svampeatlasApp')
 				
 				if ($scope.search.onlyMyObservations) {
 					$scope.observationSearch.where.primaryuser_id = Auth.getCurrentUser()._id
-				} else {
+				} 
+				
+				if ($scope.search.notMyObservations) {
+					$scope.observationSearch.where.primaryuser_id = {$ne: Auth.getCurrentUser()._id}
+				} 
+				if(!$scope.search.onlyMyObservations && !$scope.search.notMyObservations){
 					delete $scope.observationSearch.where.primaryuser_id;
 				}
 				
@@ -396,6 +412,11 @@ angular.module('svampeatlasApp')
 					$scope.observationSearch.where._id = $scope.search.databasenumber.split("-")[1] || $scope.search.databasenumber;
 				} else {
 					delete $scope.observationSearch.where._id;
+				}
+				if ($scope.search.fieldnumber) {
+					$scope.observationSearch.where.fieldnumber = {$like: $scope.search.fieldnumber+"%"} ;
+				} else {
+					delete $scope.observationSearch.where.fieldnumber;
 				}
 				if ($scope.search.fromDate && $scope.search.toDate) {
 					$scope.observationSearch.where.observationDate = {
