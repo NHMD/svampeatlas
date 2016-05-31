@@ -813,6 +813,10 @@ angular.module('svampeatlasApp')
 										$scope.newTaxon.push(taxon)
 									})
 								}
+							  $scope.openImage = function(img){
+								  window.open($scope.imageurl+img.name+'.JPG',img.name,'width=1200,height=800,resizable=1');
+								  
+							  }
 								$scope.deleteObs = function(ev, obs) {
 								   
 									var displayedId = obs.PrimaryUser.Initialer+ ((obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : '')+'-'+obs._id;

@@ -314,11 +314,17 @@ angular.module('svampeatlasApp')
 				} else if(!where){
 					where = JSON.parse(higerTaxaPredicate);
 				} 
+				
+				if(!where){}
 
-				if ($scope.checkboxes.OrphantTaxa) {
+				if (where && $scope.checkboxes.OrphantTaxa) {
 					_.merge(where, {
 						parent_id: null
 					});
+				} else if($scope.checkboxes.OrphantTaxa){
+					where = {
+						parent_id: null
+					}
 				};
 
 				var order = tableState.sort.predicate;
