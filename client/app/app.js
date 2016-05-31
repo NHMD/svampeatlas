@@ -22,7 +22,7 @@ angular.module('svampeatlasApp', [
 	'ngFileUpload',
 	'highcharts-ng'
 ])
-  .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider,$mdThemingProvider, ssSideNavSectionsProvider) {
+  .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider,$mdThemingProvider, ssSideNavSectionsProvider, $logProvider) {
     $urlRouterProvider
       .otherwise('/');
 	  $sceDelegateProvider.resourceUrlWhitelist([
@@ -31,8 +31,10 @@ angular.module('svampeatlasApp', [
 	      // Allow loading from our assets domain.  Notice the difference between * and **.
 	      'http://svampe.dk/**',
 		  'https://www.facebook.com/',
-		  'http://api.gbif.org/'
+		  'http://api.gbif.org/',
+		  'http://quick.as/**'
 	    ]);
+	$logProvider.debugEnabled(false);
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
 	$httpProvider.interceptors.push('xmlHttpInterceptor');
@@ -101,11 +103,26 @@ angular.module('svampeatlasApp', [
 			id: 'about',
 			name: 'Om svampeatlas',
 			type: 'heading',
+				
 			children: [{
 			id: 'news',
 			icon: 'rss_feed',
 			name: 'Nyheder',
 			state: 'news',
+			type: 'link',
+			requireLogin: false,
+		},{
+			id: 'demos',
+			icon: 'school',
+			name: 'Vejledninger',
+			state: 'demos',
+			type: 'link',
+			requireLogin: false,
+		}, {
+			id: 'about',
+			icon: 'info_outline',
+			name: 'Projektbeskrivelse',
+			state: 'about',
 			type: 'link',
 			requireLogin: false,
 		}]},
@@ -182,7 +199,8 @@ angular.module('svampeatlasApp', [
 	
   })
   .constant("appConstants", {
-         "imageurl": "/uploads/"
+         "imageurl": "/uploads/",
+	  "Fungi_id" : 60212
         
      })
 .filter('synonymsWithoutSelf', function() {

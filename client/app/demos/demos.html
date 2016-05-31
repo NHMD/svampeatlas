@@ -1,0 +1,26 @@
+ <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
+	
+</div>	
+<md-content flex md-scroll-y layout-padding>
+
+   <md-whiteframe class="md-whiteframe-2dp newsfeed" flex-gt-sm="33" layout >
+    <md-list layout-fill layout-padding>
+      <md-subheader class="md-no-sticky"><ng-md-icon icon="info"></ng-md-icon> Vejledningerne åbner i et nyt browservindue. Du skal klikke på den grønne startside for at starte videoen.</md-subheader>
+      <md-list-item  ng-repeat="item in demos" ng-click="gotoVideo(item)">
+       <p>{{item.title}} </p>
+        
+	
+		 
+      </md-list-item>
+     
+    </md-list>
+	 </md-whiteframe >
+
+
+	
+</md-content>
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+	        
+	      </div>
+
+

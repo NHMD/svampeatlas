@@ -32,10 +32,10 @@ router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), auth.a
 router.get('/today/localities', redisClient.use(), localityController.localititesWithFindingsToday);
 
 // using taxonomyadmin while testing
-router.post('/', auth.hasRole('taxonomyadmin'), controller.create);
-router.put('/:id',auth.hasRole('taxonomyadmin'),  controller.update);
-router.patch('/:id',auth.hasRole('taxonomyadmin'),  controller.update);
-router.delete('/:id',auth.hasRole('taxonomyadmin'),  controller.destroy);
+router.post('/', auth.isAuthenticated(), controller.create);
+router.put('/:id', auth.isAuthenticated(),  controller.update);
+//router.patch('/:id', auth.hasRole('taxonomyadmin'),  controller.update);
+router.delete('/:id',auth.hasRole('validator'),  controller.destroy);
 
 
 

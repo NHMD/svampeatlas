@@ -76,14 +76,14 @@
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
 	   	           <h3>{{'Substrat' | translate}}</span></h3>
-	  			   <p>{{obs.Substrate.name}}</p>
+				   <p> {{($translate.use() === 'en') ? obs.Substrate.name_uk : obs.Substrate.name}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
 	   	           <h3>{{'Vegetationstype' | translate}}</span></h3>
-	  			   <p>{{obs.VegetationType.name}}</p>
+				   <p> {{($translate.use() === 'en') ? obs.VegetationType.name_uk : obs.VegetationType.name}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
@@ -231,7 +231,7 @@ flex>
 		</tr >
 	  	<tr >
 			<td class="rightalign"><strong>{{'Substrat' | translate}}:</strong></td><td ng-if="$translate.use() === 'dk'">{{obs.Substrate.name}}</td><td ng-if="$translate.use() === 'en'">{{obs.Substrate.name_uk}}</td>
-	  		<td class="rightalign"><strong>{{'Vegetationstype' | translate}}:</strong></td><td>{{obs.VegetationType.name}}</td> 
+	  		<td class="rightalign"><strong>{{'Vegetationstype' | translate}}:</strong></td><td>{{($translate.use() === 'en') ? obs.VegetationType.name_uk : obs.VegetationType.name}}</td> 
 			
 		</tr >
 	  	<tr >

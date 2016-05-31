@@ -6,17 +6,25 @@
 					
 
       <form layout-fill>
-		<div layout="row">
+		<div layout-gt-xs="row">
+		 <span flex layout-fill></span> <md-button ng-click="toggleSearchMapSideNav()"
+	  				            class="md-primary"  ng-show="mdMedia('xs')">
+	  				            {{'Søgning på kort' | translate}}
+	  				          </md-button>
+			<div layout="row">
+			 	<md-switch ng-model="search.notMyObservations" aria-label="Søg ikke i mine fund" ng-if="Auth.isLoggedIn()">
+			 	   <span translate>Ikke mine fund</span>
+			 	  </md-switch>
 		 	<md-switch ng-model="search.onlyMyObservations" aria-label="Søg mine fund" ng-if="Auth.isLoggedIn()">
 		 	   <span translate>Kun mine fund</span>
 		 	  </md-switch>
-		 	<md-switch ng-model="search.activeThreadsOnly" aria-label="Søg aktive tråde" ng-if="Auth.isLoggedIn()">
-		 	   <span translate>Mine aktive tråde </span>
-		 	  </md-switch>
-			 <span flex layout-fill></span> <md-button ng-click="toggleSearchMapSideNav()"
-		  				            class="md-primary"  ng-show="mdMedia('xs')">
-		  				            {{'Søgning på kort' | translate}}
-		  				          </md-button></div>
+		 	
+		  </div>
+	 	<md-switch ng-model="search.activeThreadsOnly" aria-label="Søg aktive tråde" ng-if="Auth.isLoggedIn()">
+	 	   <span translate>Mine aktive tråde </span>
+	 	  </md-switch>
+			 
+							  </div>
          <div layout-gt-xs="row">
 	<md-input-container class="md-block" flex-gt-xs>	
 	<label>Status</label> 
@@ -57,6 +65,10 @@
    	           <label translate>Databasenummer</label>
    	           <input  ng-model="search.databasenumber" >
    	         </md-input-container>
+	     	   <md-input-container class="md-block" flex-gt-xs>
+	     	           <label translate>Kollektionsnummer</label>
+	     	           <input  ng-model="search.fieldnumber" >
+	     	         </md-input-container>
 		   	 <md-input-container >	
 		   	<label translate>Rødlistestatus</label>  
 		   <md-select aria-label="rødlistestatus" id="redlist" ng-model="search.include[0].where.Taxon_redlist_status">
@@ -153,6 +165,9 @@
 <md-switch ng-model="search.includeForeign" aria-label="Inkludér udenlandske fund" >
     <span translate>Inkludér udenlandske fund</span>
   </md-switch>
+  <md-switch ng-model="search.onlyForeign" aria-label="Vis kun udenlandske fund" >
+      <span translate>Kun udenlandske fund</span>
+    </md-switch>
   </div>
   <div layout-gt-xs="row" ng-if="Auth.hasRole('validator')">
   	 <md-input-container >	

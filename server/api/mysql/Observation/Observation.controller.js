@@ -679,15 +679,55 @@ exports.update = function(req, res) {
 
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
-	Observation.find({
-		where: {
-			_id: req.params.id
-		}
+	
+	
+	return models.sequelize.transaction(function(t) {
+		return Observation.find({
+			where: {
+				_id: req.params.id
+			}
+			
+		},{transaction: t})
+		.then(function(obs){
+			if (!obs) {
+				res.send(404);
+			}
+			obs.primarydetermination_id = null;
+			return obs.save()
+		})
+		.then(function(obs){
+			
+			
+			var q = { where: { observation_id: req.params.id}, transaction: t};
+			return [
+				models.Determination.destroy(q),
+				models.ObservationForum.destroy(q),
+				models.ObservationImage.destroy(q),
+				models.ObservationLog.destroy(q),
+				models.ObservationPlantTaxon.destroy(q),
+				models.ObservationUser.destroy(q)
+			]
+			
+		}).then(function(){
+			
+			return Observation.destroy({
+			where: {
+				_id: req.params.id
+			},
+			transaction: t
+			
+		})
+		})
+		
 	})
-		.then(handleEntityNotFound(res))
-		.then(removeEntity(res))
+	.then(function(){
+		res.send(204);
+	})
 		.
 	catch (handleError(res));
+	
+	
+		
 };
 
 

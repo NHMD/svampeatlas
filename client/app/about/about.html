@@ -1,0 +1,52 @@
+ <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
+	
+</div>	
+<md-content flex md-scroll-y layout-padding>
+
+
+
+
+   <md-whiteframe class="md-whiteframe-2dp " layout="row" >
+   
+   
+	   <div layout='column' flex-gt-sm="80">
+		   <h3>Svampeatlas 2.0</h3>
+<p>Svampeatlas 2.0 bygger videre på atlasprojektet Danmarks Svampeatlas, som kortlagde danske storsvampe, med hovedfokus på basidiesvampene i en femårig periode fra 2009-13. Projektet var støttet af Aage V. Jensen Naturfond og havde som hovedformål at øge vores viden om svampenes udbredelse og økologi i Danmark, og at gøre denne viden tilgængelig for offentligheden. </p>
+<p>Mere end 400 frivillige var involveret i Danmarks Svampeatlas, hvor de bidrog med ca. 250.000 kvalitetstjekkede svampefund. Siden er yderligere ca. 50.000 nye svampefund kommet til, mens godt 230.000 gamle svampefund er importeret i projektdatabasen som nu indeholder mere end 600.000 kvalitetstjekkede svampefund. Projektet har medført et langt bedre kendskab til Danmarks funga. Mere end 180 basidiesvampe er blevet føjet til listen over kendte danske arter, og flere arter der var regnet som uddøde er genfundet. Samtidigt er der udviklet en række søge- og hjælpefunktioner der præsenterer vores viden om de enkelte svampearter i overskuelig form, og som gør det meget nemmere at inddrage viden om truede svampearter i naturforvaltningen.</p>
+<p>I Svampeatlas 2.0 er det målet at fastholde, fremtidssikre og videreudvikle de ressourcer der er opbygget gennem Danmarks Svampeatlas, til glæde for alle naturinteresserede og til gavn for alle der arbejder med naturforvaltning professionelt.  Dette vil bl.a. ske gennem udvikling af en ny databasestruktur, og et interaktivt brugerinterface, der i høj grad inddrager de frivillige svampekyndige som aktive medspillere i processen med at sikre høj datakvalitet. Samtidigt vil vi indbygge smarte filtre, baseret på eksisterende viden om svampenes fænologi og udbredelse i Danmark, der automatisk kan registrere om et nyt svampefund kan regnes som sandsynligt. </p>
+<p>Udover udviklingen af nye database og web-funktioner vil projektet udvikle en mobil-app til bestemmelse og registrering af svampefund i felten. Derudover er det målet at fastholde projektets overordnede koncept og resultater i en sammenfattende bog om Danmarks Svampeatlas, samt at skrive et nyt bestemmelsesværk for Danmarks basidiesvampe, baseret på de bestemmelsesnøgler der blev lavet i Danmarks Svampeatlas. </p>
+<p>Svampeatlas 2.0 udføres i et samarbejde mellem Center for Makroøkologi, Evolution og Klima (CMEC) ved Statens Naturhistoriske Museum (SNM), Københavns Universitet, Foreningen til Svampekundskabens Fremme og MycoKey. Projektgruppen består af Tobias Guldberg Frøslev, Thomas Stjernegaard Jeppesen, Thomas Læssøe (SNM) og Jens H. Petersen med Jacob Heilmann-Clausen som projektleder. Projektet er støttet af Aage V. Jensens Naturfond.</p>
+</div>
+<md-grid-list
+        md-cols="1" 
+        md-row-height="200px"
+        md-gutter="12px" md-gutter-gt-sm="8px" flex-gt-sm="20">
+
+<md-grid-tile ng-repeat="tile in tiles | limitTo : 4"
+                 
+                  md-colspan-sm="1"
+                  ng-class="tile.background" >
+		<div class="progress-container" flex layout-fill layout="center center">
+			<div flex="33"></div>
+			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ng-show="loaded[tile.Images[0].name] !== true"></md-progress-circular> 
+			<div flex="33"></div>
+		</div>
+      <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> 
+      <md-grid-tile-footer class="img-footer"><em>{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
+  <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{tile.Locality.name}}<br>
+  {{tile.PrimaryUser.name}}</span>
+  </md-grid-tile-footer>
+  </md-grid-tile>
+  </md-grid-list>
+
+
+
+
+	 </md-whiteframe >
+
+
+	
+</md-content>
+	
+
+

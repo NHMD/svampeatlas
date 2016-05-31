@@ -343,7 +343,7 @@ angular.module('svampeatlasApp')
 										}]
 									};
 
-									if($scope.onlyPresentInDK === true){
+									if($scope.onlyPresentInDK === true && !$scope.onlyHigherTaxa){
 										
 										q.include[0].include = JSON.stringify({
 										model: "TaxonAttributes",
@@ -807,7 +807,46 @@ angular.module('svampeatlasApp')
 									})
 
 								}
-
+								
+								$scope.handleUndetermined = function(){
+									Taxon.get({id: appConstants.Fungi_id}).$promise.then(function(taxon){
+										$scope.newTaxon.push(taxon)
+									})
+								}
+								$scope.deleteObs = function(ev, obs) {
+								   
+									var displayedId = obs.PrimaryUser.Initialer+ ((obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : '')+'-'+obs._id;
+								   
+								    var confirm = $mdDialog.confirm()
+								          .title($translate.instant('Vil du slette')+' '+displayedId+'?')
+								          .textContent($translate.instant('Fundet og alle tilhørende data vil blive permanent slettet fra databasen.'))
+								          .ariaLabel($translate.instant('Slet fund'))
+								          .targetEvent(ev)
+								          .ok($translate.instant('Slet'))
+								          .cancel($translate.instant('Fortryd'));
+								    $mdDialog.show(confirm).then(function() {
+								     	Observation.delete({id: obs._id}).$promise.then(function(){
+								     		$scope.showSimpleToast($translate.instant('Record')+' '+displayedId+' '+$translate.instant('slettet.'))
+								     	})
+								    });
+								  };
+								  
+								
+								$scope.postComment = function(newComment){
+									$scope.sendingComment = true;
+									Observation.postComment({id: $scope.obs._id}, {content: newComment})
+									.$promise.then(function(comment){
+										$scope.obs.Forum.push(comment);
+										delete $scope.newComment;
+										$scope.sendingComment = false;
+									})
+									.catch(function(err){
+										$scope.sendingComment = false;
+										ErrorHandlingService.handle500();
+									})
+									
+								};
+								
 								$scope.cancel = function() {
 									$mdDialog.cancel();
 								};
