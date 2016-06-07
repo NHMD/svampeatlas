@@ -139,6 +139,65 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
 		
     },
+    basionym_described: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true,
+    },
+    fn_temperate: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    fn_hemiboreal: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    fn_boreal: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    fn_subarctic_alpine: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    fn_arctic_alpine: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    fn_comment: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    North_of_DK: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    South_of_DK: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    West_of_DK: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+    East_of_DK: {
+      type: DataTypes.STRING,
+      allowNull: true
+		
+    },
+	atlasart: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+		defaultValue: false
+	},
 
   }, {
     	tableName: 'TaxonAttributes',

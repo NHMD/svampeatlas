@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.factory('ErrorHandlingService',['$mdDialog', '$state', function($mdDialog, $state) {
+	.factory('ErrorHandlingService',['$mdDialog', '$state', '$translate', function($mdDialog, $state, $translate) {
 
 		return {
 			handleTaxon404: function() {
@@ -28,13 +28,31 @@ angular.module('svampeatlasApp')
 			        $mdDialog.alert()
 			          
 			          .clickOutsideToClose(false)
-			          .title('A server error has occurred')
-			          .content('Please try again later. If the problem persists, contact the system administrator.')
+			          .title($translate.instant('A server error has occurred'))
+			          .content($translate.instant('Please try again later. If the problem persists, contact the system administrator.'))
 			          .ariaLabel('Server error')
 			          .ok('Ok')
 			          
 			      )
 				  
+
+			},
+			
+			handle504: function() {
+			   
+			    $mdDialog.show(
+			        $mdDialog.alert()
+			          
+			          .clickOutsideToClose(false)
+			          .title('Timeout')
+			          .content($translate.instant('Din forespørgsel fik timeout fra serveren.'))
+			          .ariaLabel('Time out')
+			          .ok('Ok')
+			          
+			      )
+				  .then(function() {
+					  $state.go('search');
+				      })
 
 			}
 

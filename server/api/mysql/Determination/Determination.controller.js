@@ -191,7 +191,8 @@ exports.addDeterminationToObs = (req, res)=> {
 
 	var determination = req.body;
 	determination.observation_id = req.params.id;
-	determination.user_id = req.user._id;
+	determination.user_id = (determination.user_id) ? determination.user_id : req.user._id;
+	
 	determination.validation = "Godkendt";
 	 console.log(determination)
 	 models.sequelize.transaction(function(t) {

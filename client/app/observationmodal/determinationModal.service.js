@@ -6,11 +6,12 @@ angular.module('svampeatlasApp')
 				show: function(ev, obs, sender) {
 			      $mdDialog.show({
 					locals: {obs: obs},  
-			        controller: ['$scope','$mdDialog','Taxon','Observation', 'obs','ObservationModalService', 'ObservationFormService',
-					  				function($scope, $mdDialog,Taxon, Observation, obs, ObservationModalService, ObservationFormService) {
+			        controller: ['$scope','$mdDialog','Taxon','Observation', 'obs','ObservationModalService', 'ObservationFormService', 'User', '$translate',
+					  				function($scope, $mdDialog,Taxon, Observation, obs, ObservationModalService, ObservationFormService, User, $translate) {
 										$scope.obs = obs;
 										$scope.newTaxon = [];
 										$scope.determination = {confidence : 'sikker'};
+										$scope.determiner = [];
 										$scope.querySearch = function(query) {
 											
 											var RankID = ($scope.onlyHigherTaxa) ? {
@@ -43,6 +44,28 @@ angular.module('svampeatlasApp')
 										
 										};
 										
+										$scope.querySearchUser = function(query) {
+
+											var results = query ? User.query({
+												where: {
+													$or: [{
+														name: {
+															like: query + "%"
+														}
+													}, {
+														Initialer: {
+															like: query + "%"
+														}
+													}]
+
+												},
+												limit: 30
+											}).$promise : [];
+
+											return results;
+
+										};
+										
 										  $scope.cancel = function() {
 										    $mdDialog.hide()
 											  .then(function(){
@@ -51,6 +74,9 @@ angular.module('svampeatlasApp')
 										  };
 										  $scope.reopenObs = function() {
 											  $scope.determination.taxon_id = $scope.newTaxon[0]._id;
+											  if($scope.determiner.length > 0){
+											  	$scope.determination.user_id = $scope.determiner[0]._id;
+											  }
 											Observation.addDetermination({id: $scope.obs._id}, $scope.determination).$promise
 											  .then(function(DeterminationView){
 												  $scope.obs.DeterminationView = DeterminationView; 
@@ -72,7 +98,7 @@ angular.module('svampeatlasApp')
 			        parent: angular.element(document.body),
 			        targetEvent: ev,
 			        clickOutsideToClose:true,
-			        fullscreen: false
+			        fullscreen: true
 			      })
 				}
 				}

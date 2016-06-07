@@ -10,6 +10,14 @@ angular.module('svampeatlasApp')
 		  while ((m = r.exec(description)) != null) {
 			  formatted =formatted.replace(m[0], "<a href=http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID="+m[0]+" target='_BLANK'>"+m[0]+"</a>")
 		  }
+		  if(formatted.indexOf('Field(s): ') > -1){
+			  
+			 var matches = formatted.match(/Field\(s\)\:\s([A-Za-z0-9,_]*)/, '');
+			 var fields =  matches[1];
+			 var fieldsFormatted = fields.replace(/,/g, ', ');
+			 var re = new RegExp(fields,"g");
+			 formatted = formatted.replace(re, fieldsFormatted)
+		  }
 		  return formatted;
 	  }
 

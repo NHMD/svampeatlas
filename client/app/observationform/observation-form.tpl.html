@@ -41,7 +41,7 @@
 	          </md-chip-template>
 		
 	        </md-chips>
-			<md-button class="md-raised md-warn" ng-click="handleUndetermined()">Ubestemt svamp</md-button>
+			<md-button class="md-raised md-warn" ng-click="handleUndetermined()" ng-if="newTaxon.length === 0">Ubestemt svamp</md-button>
 	 	      </div>
 		 		  <div layout="row" layout-margin>
 				   	<md-switch ng-model="$parent.$parent.$parent.DkNames" aria-label="Søg danske navne" ng-show="newTaxon.length ===0">

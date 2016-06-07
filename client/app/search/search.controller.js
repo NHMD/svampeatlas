@@ -158,7 +158,11 @@ angular.module('svampeatlasApp')
 					},
 					limit: 30
 
-				}).$promise : [];
+				}).$promise.then(function(data){
+					return _.map(data, function(d){
+						return d.name
+					})
+				}) : [];
 
 				return results;
 			}
@@ -278,6 +282,10 @@ angular.module('svampeatlasApp')
 				dk: 'lavdanner',
 				key: 'lichenized'
 			}, {
+				en: 'Not lichenized',
+				dk: 'Ikke lavdanner',
+				key: 'not_lichenized'
+			}, {
 				en: 'parasite on lichens',
 				dk: 'parasit på laver',
 				key: 'parasite_on_lichens'
@@ -307,6 +315,9 @@ angular.module('svampeatlasApp')
 						case "lichenized":
 							$scope.search.include[0].where.lichenized = 1;
 							break;
+						case "not_lichenized":
+							$scope.search.include[0].where.lichenized = 0;
+							break;
 						case "parasite_on_lichens":
 							$scope.search.include[0].where.parasite = 1;
 							$scope.search.include[0].where.on_lichens = 1;
@@ -330,7 +341,9 @@ angular.module('svampeatlasApp')
 				
 				
 				
-				
+				$scope.$watch('selectedItem', function(newval, oldval){
+					console.log("selectedItem " +newval)
+				})
 				
 				if($scope.search.onlyForeign){
 					$scope.search.include[2].required = false;
@@ -338,6 +351,12 @@ angular.module('svampeatlasApp')
 				} else {
 					delete $scope.observationSearch.where.locality_id;
 					$scope.search.include[2].required = ($scope.search.geometry) ? false : !$scope.search.includeForeign;
+				}
+				
+				if($scope.search.finder) {
+					$scope.search.include[1].where.name = { like : "%"+$scope.search.finder+"%"}
+				} else {
+					delete $scope.search.include[1].where.name;
 				}
 
 				if ($scope.search.selectedHigherTaxa.length > 0) {
@@ -370,7 +389,7 @@ angular.module('svampeatlasApp')
 					$scope.search.include[2].where.$or = _.map($scope.search.selectedLocalities, function(loc) {
 						return {
 							name: {
-								like: loc.name + "%"
+								like: loc + "%"
 							}
 						}
 					})
@@ -446,4 +465,10 @@ angular.module('svampeatlasApp')
 
 			}, true)
 		}
-	]);
+	])
+	.filter('extractLocName', function() {
+	    return function(input) {
+	      return (!!input && input.name) ? input.name : '';
+	    }
+	});
+	;
