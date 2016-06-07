@@ -1,15 +1,17 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters', 'Observation', 'ObservationModalService',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters, Observation, ObservationModalService) {
 			$scope.$translate = $translate;
 			$scope._ = _;
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
 			$scope.taxonomyTags = TaxonomyTags.query();
+			$scope.moment = moment;
+			$scope.ObservationModalService = ObservationModalService;
 			$scope.changeRankAndSave = function(taxon) {
-				// If the taxon was a species or genus we are changing it to superspecies and therefore deattacing from fun, otherwise we are just canging rank level
+				// If the taxon was a species or genus we are changing it to superspecies and therefore deattacing from fun, otherwise we are just changing rank level
 				if (taxon.RankID === 5000 || taxon.RankID === 10000) {
 					taxon.RankName = $scope.superrank;
 					taxon.FunIndexNumber = null;
@@ -78,7 +80,20 @@ angular.module('svampeatlasApp')
 
 			}
 
+			$scope.getDate = function(observationDate, observationDateAccuracy) {
 
+				var splitted = observationDate.split(" ")[0].split("-");
+
+				if (observationDateAccuracy === 'month') {
+					//console.log("spl "+parseInt(splitted[1]))
+					return moment.months()[parseInt(splitted[1]) - 1] + " " + splitted[0];
+				} else if (observationDateAccuracy === 'year') {
+					return splitted[0];
+				} else if (observationDateAccuracy === 'invalid') {
+					return "ingen dato"
+				}
+
+			}
 
 			$scope.calculateParentRanksForSlider = function(children) {
 
@@ -157,7 +172,35 @@ angular.module('svampeatlasApp')
 						"checked": false
 					};
 
-
+					
+					Observation.query({
+						order: 'observationDate ASC', 
+						limit: 1,
+						include: JSON.stringify([ JSON.stringify({
+					model: "DeterminationView",
+					as: "DeterminationView",
+					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
+							where: { Determination_validation: ['Godkendt','Valideres', 'Afventer', 'Gammelvali'], Taxon_id: $scope.taxon.accepted_id}
+				})])
+					}).$promise.then(function(firstfinding){
+						$scope.firstfinding = firstfinding[0];
+						
+						
+					})
+					
+					Observation.query({
+						order: 'observationDate DESC', 
+						limit: 1,
+						include: JSON.stringify([ JSON.stringify({
+					model: "DeterminationView",
+					as: "DeterminationView",
+					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
+							where: { Determination_validation: ['Godkendt','Valideres', 'Afventer', 'Gammelvali'], Taxon_id: $scope.taxon.accepted_id}
+				})])
+					}).$promise.then(function(latestfinding){
+						$scope.latestfinding = latestfinding[0];
+					})
+					
 					PlutoF.SpeciesHypothesis({
 						search_query: $scope.taxon.FullName
 					}).$promise.then(function(res) {

@@ -93,7 +93,12 @@
 			          </a>
 		  
 		  
-					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p><p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
+					<p><strong>År for første fund i DK: </strong> <a href="#" editable-text="taxon.attributes.foersteFundIDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteFundIDK || 'n/a' }}</a> </p>
+					
+					<p ng-if="firstfinding">Første fund i basen: <a ng-click="ObservationModalService.show(null, firstfinding)">{{(firstfinding && firstfinding.observationDateAccuracy === 'day') ? (firstfinding.observationDate | date : 'dd/MM/yyyy') : getDate(firstfinding.observationDate, firstfinding.observationDateAccuracy)}}</a></p>
+					<p ng-if="latestfinding">Seneste fund i basen: <a ng-click="ObservationModalService.show(null, latestfinding)">{{(latestfinding && latestfinding.observationDateAccuracy === 'day') ? (latestfinding.observationDate | date : 'dd/MM/yyyy') : getDate(latestfinding.observationDate, latestfinding.observationDateAccuracy)}}</a></p>
+					
+					<p><strong>År for første DK-reference: </strong><a href="#" editable-text="taxon.attributes.foersteReferenceForDK" onbeforesave="isValidYear($data)" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">{{ taxon.attributes.foersteReferenceForDK || 'n/a' }}</a></p>
 		
 					 <label class="control-label" for="DK_reference">DK referencer</label>
 			        <a href="#" id="DK_reference" editable-textarea="taxon.attributes.DK_reference" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
@@ -274,7 +279,14 @@
 							  <tr class="table-bordered" ng-if="taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER !== taxon.FunIndexRecord.RECORD_x0020_NUMBER"><td class="table-bordered" st-ratio="20">Current name:</td><td class="table-bordered" st-ratio="50"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexRecord.CURRENT_x0020_NAME_x0020_RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexRecord.CURRENT_x0020_NAME}} </a></td><td st-ratio="30"> <em class="text-danger">This is the current valid name according to Index Fungorum!</em></td></tr>
 						
 						
-						<tr class="table-bordered" ng-if="taxon.FunIndexBasionymRecord"><td class="table-bordered" st-ratio="20">Basionym:</td><td class="table-bordered" colspan="2" st-ratio="80"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexBasionymRecord.RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexBasionymRecord.NAME_x0020_OF_x0020_FUNGUS}} {{taxon.FunIndexBasionymRecord.AUTHORS}}</a> {{ taxon.FunIndexBasionymRecord.YEAR_x0020_OF_x0020_PUBLICATION}} <span ng-if="taxon.FunIndexBasionymRecord.pubAcceptedTitle"><br><em ng-if="taxon.FunIndexBasionymRecord.pubAcceptedTitle">{{ taxon.FunIndexBasionymRecord.pubAcceptedTitle}}</em> <span ng-if="taxon.FunIndexBasionymRecord.VOLUME">{{taxon.FunIndexBasionymRecord.VOLUME}}: {{taxon.FunIndexBasionymRecord.PAGE}}</span></span></td></tr>	  
+						<tr class="table-bordered" ng-if="taxon.FunIndexBasionymRecord"><td class="table-bordered" st-ratio="20">Basionym:</td><td class="table-bordered" st-ratio="50"><a href="http://www.indexfungorum.org/Names/NamesRecord.asp?RecordID={{taxon.FunIndexBasionymRecord.RECORD_x0020_NUMBER}}" target="_BLANK">{{ taxon.FunIndexBasionymRecord.NAME_x0020_OF_x0020_FUNGUS}} {{taxon.FunIndexBasionymRecord.AUTHORS}}</a> {{ taxon.FunIndexBasionymRecord.YEAR_x0020_OF_x0020_PUBLICATION}} <span ng-if="taxon.FunIndexBasionymRecord.pubAcceptedTitle"><br><em ng-if="taxon.FunIndexBasionymRecord.pubAcceptedTitle">{{ taxon.FunIndexBasionymRecord.pubAcceptedTitle}}</em> <span ng-if="taxon.FunIndexBasionymRecord.VOLUME">{{taxon.FunIndexBasionymRecord.VOLUME}}: {{taxon.FunIndexBasionymRecord.PAGE}}</span></span></td><td st-ratio="30" class="table-bordered">
+							
+							 <label class="control-label" for="basionym_described">Saved basionym year: </label>
+					        <a href="#" id="fn_temperate" editable-text="taxon.attributes.basionym_described" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+					            {{ taxon.attributes.basionym_described || 'n/a' }}
+					          </a>
+							
+						</td></tr>	  
 							  
 							  
 							  <tr class="table-bordered"><td class="table-bordered" st-ratio="20">Classification:</td><td class="table-bordered" st-ratio="80" colspan="2"><small><em ng-class="{'text-danger' : taxon.SystematicPath.indexOf(taxon.FunIndexRecord.SystematicPath) == '-1'}">{{ taxon.FunIndexRecord.SystematicPath}}</em></small></td></tr>
@@ -492,6 +504,83 @@
 						<!--<ul>
 							<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxonbase/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
 						</ul> -->
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
+			  	          Distribution
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+						  <table class="table table-bordered">
+							   <tr ><td st-ratio="100">
+						 <label class="control-label" for="fn_temperate">fn_temperate: </label>
+				        <a href="#" id="fn_temperate" editable-text="taxon.attributes.fn_temperate" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+				            {{ taxon.attributes.fn_temperate || 'n/a' }}
+				          </a>
+						  </td></tr>
+						  <tr><td  st-ratio="100">
+  						 <label class="control-label" for="fn_hemiboreal">fn_hemiboreal: </label>
+  				        <a href="#" id="fn_hemiboreal" editable-text="taxon.attributes.fn_hemiboreal" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+  				            {{ taxon.attributes.fn_hemiboreal || 'n/a' }}
+  				          </a>
+						   </td></tr>
+   						  <tr><td  st-ratio="100">
+     						 <label class="control-label" for="fn_boreal">fn_boreal: </label>
+     				        <a href="#" id="fn_boreal" editable-text="taxon.attributes.fn_boreal" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+     				            {{ taxon.attributes.fn_boreal || 'n/a' }}
+     				          </a>
+   						   </td></tr>
+    						  <tr><td  st-ratio="100">
+      						 <label class="control-label" for="fn_subarctic_alpine">fn_subarctic_alpine: </label>
+      				        <a href="#" id="fn_subarctic_alpine" editable-text="taxon.attributes.fn_subarctic_alpine" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+      				            {{ taxon.attributes.fn_subarctic_alpine || 'n/a' }}
+      				          </a>
+    						   </td></tr>
+       						  <tr><td  st-ratio="100">
+         						 <label class="control-label" for="fn_arctic_alpine">fn_arctic_alpine: </label>
+         				        <a href="#" id="fn_arctic_alpine" editable-text="taxon.attributes.fn_arctic_alpine" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+         				            {{ taxon.attributes.fn_arctic_alpine || 'n/a' }}
+         				          </a>
+       						   </td></tr>
+        						  <tr><td  st-ratio="100">
+          						 <label class="control-label" for="fn_comment">fn_comment: </label>
+          				        <a href="#" id="fn_comment" editable-text="taxon.attributes.fn_comment" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+          				            {{ taxon.attributes.fn_comment || 'n/a' }}
+          				          </a>
+        						   </td></tr>
+           						  <tr><td  st-ratio="100">
+             						 <label class="control-label" for="North_of_DK">North_of_DK: </label>
+             				        <a href="#" id="North_of_DK" editable-text="taxon.attributes.North_of_DK" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+             				            {{ taxon.attributes.North_of_DK || 'n/a' }}
+             				          </a>
+           						   </td></tr>
+            						  <tr><td  st-ratio="100">
+              						 <label class="control-label" for="South_of_DK">South_of_DK: </label>
+              				        <a href="#" id="South_of_DK" editable-text="taxon.attributes.South_of_DK" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+              				            {{ taxon.attributes.South_of_DK || 'n/a' }}
+              				          </a>
+            						   </td></tr>
+	            						  <tr><td  st-ratio="100">
+	              						 <label class="control-label" for="West_of_DK">West_of_DK: </label>
+	              				        <a href="#" id="North_of_DK" editable-text="taxon.attributes.West_of_DK" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+	              				            {{ taxon.attributes.West_of_DK || 'n/a' }}
+	              				          </a>
+	            						   </td></tr>
+		            						  <tr><td  st-ratio="100">
+		              						 <label class="control-label" for="East_of_DK">East_of_DK: </label>
+		              				        <a href="#" id="East_of_DK" editable-text="taxon.attributes.East_of_DK" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+		              				            {{ taxon.attributes.East_of_DK || 'n/a' }}
+		              				          </a>
+		            						   </td></tr>
+						  </table>
 			  	      </div>
 			  	    </div>
 			  	  </div>

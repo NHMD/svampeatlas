@@ -241,6 +241,7 @@ module.exports = function(grunt) {
 						'<%= yeoman.dist %>/client/{,*/}*.js',
 						'<%= yeoman.dist %>/client/{,*/}*.css',
 						'<%= yeoman.dist %>/client/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+						'!<%= yeoman.dist %>/client/assets/images/public/*.{png,jpg,jpeg,gif,webp,svg}',
 						//   '<%= yeoman.dist %>/client/assets/fonts/*',
 						'!<%= yeoman.dist %>/client/bower_components/*.{css,js}'
 					]
@@ -309,7 +310,7 @@ module.exports = function(grunt) {
 		uglify: {
 			options: {
 				mangle: {
-					except: ['app/taxon/mycokeyimport-modal.tpl.html', 'app/searchresultlist/image.tpl.html', 'app/searchresultlist/forum.tpl.html', 'app/admin/modal.tpl.html', 'app/taxon/parent-modal.tpl.html', 'app/taxon/rank-modal.tpl.html', 'app/taxon/synonym-modal.tpl.html', 'app/taxon/funindex-modal.tpl.html', 'Resource', 'object', 'disabled', 'assets/images/flags/flags/shiny/16/Denmark.png', 'assets/images/flags/flags/shiny/16/United-Kingdom.png', 'taxonlayout-taxon', 'taxonlayout-taxonredlistdata', 'taxonlayout-taxonbooklayout']
+					except: ['assets/images/public/mycena_crop.jpg','app/taxon/mycokeyimport-modal.tpl.html', 'app/searchresultlist/image.tpl.html', 'app/searchresultlist/forum.tpl.html', 'app/admin/modal.tpl.html', 'app/taxon/parent-modal.tpl.html', 'app/taxon/rank-modal.tpl.html', 'app/taxon/synonym-modal.tpl.html', 'app/taxon/funindex-modal.tpl.html', 'Resource', 'object', 'disabled', 'assets/images/flags/flags/shiny/16/Denmark.png', 'assets/images/flags/flags/shiny/16/United-Kingdom.png', 'taxonlayout-taxon', 'taxonlayout-taxonredlistdata', 'taxonlayout-taxonbooklayout']
 				}
 			}
 		},
@@ -440,7 +441,7 @@ module.exports = function(grunt) {
 					cwd: '<%= yeoman.client %>',
 					dest: '<%= yeoman.dist %>/client',
 					src: [
-
+						'assets/images/public/mycena_crop.jpg',
 						'assets/images/flags/flags/shiny/16/Denmark.png',
 						'assets/images/flags/flags/shiny/16/United-Kingdom.png'
 					]
