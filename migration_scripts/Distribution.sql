@@ -15,7 +15,7 @@ insert into temp_dist (_id, atlasart) select DkIndexNumber, AtlasArtMedtagesISta
 UPDATE temp_dist t, Taxon x set t.FuldeNavnFraFUN = x.FullName, " ", x.Author) where t.FuldeNavnFraFUN IS NULL AND t._id=x._id;
 
 
-ALTER TABLE TaxonAttributes ADD COLUMN basionym_described INT(5), 
+ALTER TABLE TaxonAttributes ADD COLUMN basionym_described INT(5) DEFAULT 0, 
 ADD COLUMN fn_temperate VARCHAR(255), 
 ADD COLUMN fn_hemiboreal VARCHAR(255), 
 ADD COLUMN fn_boreal VARCHAR(255), 
@@ -34,3 +34,7 @@ UPDATE temp_dist set basionym_described = 0 where basionym_described LIKE "%?%";
 UPDATE TaxonAttributes a, temp_dist t SET a.basionym_described = t.basionym_described, a.fn_temperate=t.fn_temperate, a.fn_hemiboreal = t.fn_hemiboreal, a.fn_boreal =t.fn_boreal , a.fn_subarctic_alpine = t.fn_subarctic_alpine, a.fn_arctic_alpine=t.fn_arctic_alpine, a.fn_comment = t.fn_comment, a.North_of_DK = t.North_of_DK , a.South_of_DK = t.South_of_DK, a.West_of_DK = t.West_of_DK, a.East_of_DK = t.East_of_DK, a.atlasart = t.atlasart where a.taxon_id = t._id;
 
 UPDATE TaxonAttributes a, TaxonAttributes t, Taxon ta SET a.basionym_described = t.basionym_described, a.fn_temperate=t.fn_temperate, a.fn_hemiboreal = t.fn_hemiboreal, a.fn_boreal =t.fn_boreal , a.fn_subarctic_alpine = t.fn_subarctic_alpine, a.fn_arctic_alpine=t.fn_arctic_alpine, a.fn_comment = t.fn_comment, a.North_of_DK = t.North_of_DK , a.South_of_DK = t.South_of_DK, a.West_of_DK = t.West_of_DK, a.East_of_DK = t.East_of_DK, a.atlasart = t.atlasart where a.taxon_id = ta.accepted_id AND ta._id <> ta.accepted_id AND ta._id = t.taxon_id;
+
+UPDATE TaxonAttributes a set basionym_described =0 where basionym_described IS NULL;
+
+ALTER TABLE TaxonAttributes MODIFY atlasart TINYINT(1) DEFAULT 0;

@@ -18,7 +18,7 @@ var Promise = require("bluebird");
 var nestedQueryParser = require("../nestedQueryParser")
 var userTool = require("../userTool")
 var wktparse = require('wellknown');
-
+var moment = require('moment');
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -623,8 +623,15 @@ exports.update = function(req, res) {
 				obs.set('geonameId',  null);
 				obs.set('verbatimLocality',  null);
 			}
+			
+			
+			if(obs.changed().indexOf('observationDate') > -1 && moment(req.body.observationDate).isValid()){
+				obs.set('observationDateAccuracy','day');
+			};
+			
 			var changed = obs.changed();
-
+			
+			
 			return [obs.save({
 				transaction: t
 			}), obs.setAssociatedTaxa(_.map(req.body.associatedOrganisms, function(e) {
