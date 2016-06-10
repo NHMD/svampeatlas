@@ -47,10 +47,17 @@
 				   	<md-switch ng-model="$parent.$parent.$parent.DkNames" aria-label="Søg danske navne" ng-show="newTaxon.length ===0">
 				   	    {{'Danske navne' | translate}}
 				   	  </md-switch>
-		 	   <md-switch ng-model="$parent.$parent.$parent.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
-		 	       {{'Søg i slægter, familier, ordener osv.' | translate}}
-		 	     </md-switch>
+  		 	   <md-switch ng-model="$parent.$parent.$parent.threePlusThree" aria-label="threePlusThree" ng-show="!$parent.$parent.$parent.onlyHigherTaxa && !$parent.$parent.$parent.DkNames && newTaxon.length ===0">
+  		 	       {{'3+3' | translate}}
+  		 	     </md-switch>
 		 	 </div>
+			 <div layout="row" layout-margin>
+  		 	   
+  		 	   <md-switch ng-model="$parent.$parent.$parent.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
+  		 	       {{'Søg i slægter, familier, ordener osv.' | translate}}
+  		 	     </md-switch>
+				 
+			 </div>
 			 <md-whiteframe class="md-whiteframe-2dp valideringsrapport" layout layout-align="center center" layout-padding layout-margin ng-if="taxonAttrs && taxonAttrs.valideringsrapport">
 			     <span>{{taxonAttrs.valideringsrapport}}</span>
 			   </md-whiteframe>

@@ -274,7 +274,7 @@ angular.module('svampeatlasApp')
 									var valid = true;
 
 									if ($scope.newTaxon.length === 0 || !$scope.newTaxon[0]._id) valid = false;
-									if ($scope.determiner.length === 0 || !$scope.determiner[0]._id) valid = false;
+									if ((!Auth.hasRole('validator')) && ($scope.determiner.length === 0 || !$scope.determiner[0]._id)) valid = false;
 									if (!$scope.selectedSubstrate) valid = false;
 									if (!$scope.selectedVegetationType) valid = false;
 									if ($scope.users.length === 0 || !$scope.users[0]._id) valid = false;
@@ -319,7 +319,7 @@ angular.module('svampeatlasApp')
 								}
 								$scope.onlyPresentInDK = true;
 								
-								$scope.querySearch = function(query, dkOnly) {
+								$scope.querySearch = function(query) {
 
 									var RankID = ($scope.onlyHigherTaxa) ? {
 										lt: 10000
@@ -352,6 +352,8 @@ angular.module('svampeatlasApp')
 											where: 	JSON.stringify({PresentInDK : 1})
 									});
 									};
+									
+									var parts = query.split(' ');
 									if ($scope.DkNames) {
 										q.include[1].where = JSON.stringify({
 											vernacularname_dk: {
@@ -360,6 +362,20 @@ angular.module('svampeatlasApp')
 										})
 										
 										q.order = "Vernacularname_DK.vernacularname_dk ASC"
+									} else if($scope.threePlusThree && parts.length > 1){
+										
+										q.where = {
+											FullName: {
+												like:  parts[0] + "%"
+											},
+											TaxonName: {
+												like:  parts[1] + "%"
+											},
+											
+											RankID: RankID
+										};
+										q.order = "FullName ASC"
+										
 									} else {
 
 										q.where = {
@@ -926,12 +942,7 @@ angular.module('svampeatlasApp')
 								}
 								
 								$scope.submitObservation = function() {
-									var determination = {
-										taxon_id: $scope.newTaxon[0]._id,
-										user_id: $scope.determiner[0]._id
-									};
-
-
+									
 
 									var obs = {
 										observationDate: $scope.observationDate,
@@ -946,13 +957,22 @@ angular.module('svampeatlasApp')
 										herbarium: $scope.herbarium,
 										note: $scope.note,
 										noteInternal: $scope.noteInternal,
-										determination: determination,
+										
 										associatedOrganisms: $scope.associatedOrganism,
 										associatedOrganismImport: $scope.associatedOrganismImport,
 										users: $scope.users
 
 									};
-
+									
+									// only post determination if new observation
+									if(!row){
+										obs.determination = {
+											taxon_id: $scope.newTaxon[0]._id,
+											user_id: $scope.determiner[0]._id
+										};
+										
+									}
+									
 									if ($scope.selectedLocality.length === 1 && $scope.selectedLocality[0]._id) {
 										obs.locality_id = $scope.selectedLocality[0]._id;
 

@@ -12,9 +12,11 @@ angular.module('svampeatlasApp')
 				localStorage.removeItem('taxonomy_redlist_categories');
 				localStorage.removeItem('taxonomy_search_checkboxes');
 				localStorage.removeItem("taxon_search_table");
+				localStorage.removeItem('taxonomy_selected_mycokeycharacters');
 				$( "input[st-search]" ).val("");
 				$scope.InitialzeSavedSettings();
-				$scope.callServerSafe();
+				$timeout( function(){$("#reset-table-state").trigger('click');})
+				//$scope.callServerSafe();
 				
 			};
 

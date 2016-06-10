@@ -11,7 +11,7 @@
 	  				            class="md-primary"  ng-show="mdMedia('xs')">
 	  				            {{'Søgning på kort' | translate}}
 	  				          </md-button>
-			<div layout="row">
+			<div layout="row" layout-margin>
 			 	<md-switch ng-model="search.notMyObservations" aria-label="Søg ikke i mine fund" ng-if="Auth.isLoggedIn()">
 			 	   <span translate>Ikke mine fund</span>
 			 	  </md-switch>
@@ -130,10 +130,17 @@
         </md-chip-template>
 		
       </md-chips>
-	
- 	<md-switch ng-model="search.DkNames" aria-label="Søg danske navne">
- 	   <span translate> Danske navne</span>
- 	  </md-switch>
+    <md-switch ng-model="search.threePlusThree" aria-label="threePlusThree" ng-show="!search.onlyHigherTaxa && !search.DkNames">
+        {{'3+3' | translate}}
+      </md-switch>
+ 	
+  </div>
+  
+ 
+  <div layout-gt-xs="row">
+   	<md-switch ng-model="search.DkNames" aria-label="Søg danske navne">
+   	   <span translate> Danske navne</span>
+   	  </md-switch>
   </div>
    <div layout-gt-xs="row">
 <md-switch ng-model="search.onlyHigherTaxa" aria-label="Højere taxa">
@@ -162,13 +169,16 @@
     </md-chip-template>
 	
   </md-chips>
-<md-switch ng-model="search.includeForeign" aria-label="Inkludér udenlandske fund" >
-    <span translate>Inkludér udenlandske fund</span>
-  </md-switch>
-  <md-switch ng-model="search.onlyForeign" aria-label="Vis kun udenlandske fund" >
-      <span translate>Kun udenlandske fund</span>
-    </md-switch>
+
   </div>
+  <div layout-gt-xs="row">
+	  <md-switch ng-model="search.includeForeign" aria-label="Inkludér udenlandske fund" >
+	      <span translate>Inkludér udenlandske fund</span>
+	    </md-switch>
+	    <md-switch ng-model="search.onlyForeign" aria-label="Vis kun udenlandske fund" >
+	        <span translate>Kun udenlandske fund</span>
+	      </md-switch>
+	</div>  
   <div layout-gt-xs="row" ng-if="Auth.hasRole('validator')">
   	 <md-input-container >	
   	<label translate>Livsstrategi</label>  

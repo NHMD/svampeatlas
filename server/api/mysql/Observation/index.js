@@ -10,6 +10,7 @@ var auth = require('../../../auth/auth.service');
 var multer  = require('multer');
 var upload = multer({ dest: config.uploaddir });
 var redisClient = require('../../../components/hooks/redisClient');
+var nocache = require('../../../components/hooks/nocache');
 
 
 var router = express.Router();
@@ -18,7 +19,7 @@ router.get('/', auth.appendUser(), redisClient.use(), controller.index);
 
 router.get('/specieslist', auth.appendUser(), controller.indexSpeciesList)
 
-router.get('/:id', auth.appendUser(), controller.show);
+router.get('/:id', auth.appendUser(), nocache.noCache(), controller.show);
 
 router.get('/:id/forum', forumController.showForumForObs);
 router.post('/:id/forum', auth.isAuthenticated(), forumController.addCommentToObs);
