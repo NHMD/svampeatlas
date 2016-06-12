@@ -441,8 +441,11 @@ angular.module('svampeatlasApp')
 				
 				if ($scope.search.databasenumber) {
 					$scope.observationSearch.where._id = $scope.search.databasenumber.split("-")[1] || $scope.search.databasenumber;
+					delete $scope.observationSearch.include[0].where.Determination_validation ;
+					
 				} else {
 					delete $scope.observationSearch.where._id;
+					$scope.observationSearch.include[0].where.Determination_validation = $scope.search.include[0].where.Determination_validation;
 				}
 				if ($scope.search.fieldnumber) {
 					$scope.observationSearch.where.fieldnumber = {$like: $scope.search.fieldnumber+"%"} ;
@@ -477,10 +480,4 @@ angular.module('svampeatlasApp')
 
 			}, true)
 		}
-	])
-	.filter('extractLocName', function() {
-	    return function(input) {
-	      return (!!input && input.name) ? input.name : '';
-	    }
-	});
-	;
+	]);
