@@ -272,6 +272,7 @@ angular.module('svampeatlasApp')
 					model: "User",
 					as: 'PrimaryUser',
 					//	attributes: ['email', 'Initialer', 'name'],
+					required: false,
 					where: {}
 				}, {
 					model: "Locality",
@@ -422,9 +423,15 @@ angular.module('svampeatlasApp')
 						}
 					})
 				}
-
-
-
+				
+				
+				if($scope.search.include[1].where.Initialer  || $scope.search.finder){
+					$scope.search.include[1].required = true;
+				} else {
+					$scope.search.include[1].required = false;
+				}
+				
+				
 				$scope.observationSearch.include = $scope.search.include;
 				
 				
