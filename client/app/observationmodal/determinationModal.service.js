@@ -19,7 +19,20 @@ angular.module('svampeatlasApp')
 											} : {
 												gt: 5000
 											};
-											var where = {
+											
+											
+											var parts = query.split(' ');
+									
+											var where = ($scope.threePlusThree && parts.length > 1) ? {
+													FullName: {
+														like:  parts[0] + "%"
+													},
+													TaxonName: {
+														like:  parts[1] + "%"
+													},
+											
+													RankID: RankID
+												} : {
 												FullName: {
 													like: "%" + query + "%"
 												},

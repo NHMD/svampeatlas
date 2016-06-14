@@ -38,6 +38,9 @@
        </md-chips>
 	      </div>
 		  <div layout="row" layout-margin>
+ 		 	   <md-switch ng-model="threePlusThree" aria-label="threePlusThree" ng-show="!onlyHigherTaxa  newTaxon.length ===0">
+ 		 	       {{'3+3' | translate}}
+ 		 	     </md-switch>
 	   <md-switch ng-model="onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
 	       Søg i slægter, familier, ordener osv.
 	     </md-switch>
