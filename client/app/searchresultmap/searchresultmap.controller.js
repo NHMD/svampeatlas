@@ -92,7 +92,45 @@ angular.module('svampeatlasApp')
 			
 			
 			$scope.appConstants = appConstants;
+			
+			
+			
+			if ( $stateParams.taxon_id) {
+				ObservationSearchService.reset();
+				var search = ObservationSearchService.getSearch();
+				search.where = {};
+				search.include = [{
+						model: "DeterminationView",
+						as: "DeterminationView",
+						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
+						where: { Determination_validation: ['Godkendt','Valideres', 'Afventer', 'Gammelvali']}
+					}, {
+						model: "User",
+						as: 'PrimaryUser',
+						attributes: ['email', 'Initialer', 'name'],
+						where: {}
+					}, {
+						model: "Locality",
+						as: 'Locality',
+						where: {},
+						required: false
+					}, {
+						model: "GeoNames",
+						as: 'GeoNames',
+						where: {},
+						required: false
+					}
+
+				];
+				
+				if($stateParams.taxon_id ){
+								search.include[0].where.Taxon_id = $stateParams.taxon_id;
+					
+							};
+			}
+			
 			$scope.search = ObservationSearchService.getSearch();
+			
 			$scope.ObservationModalService = ObservationModalService;
 			if (_.isEmpty($scope.search)) {
 				$state.go('search')
@@ -225,11 +263,15 @@ angular.module('svampeatlasApp')
 						map.spin(false);
 					//	map.addLayer($scope.leafletView);
 					var b = $scope.leafletView.Cluster.ComputeBounds($scope.leafletView.Cluster._markers);
-					var bounds = new L.LatLngBounds(
-					            new L.LatLng(b.minLat, b.maxLng),
-					            new L.LatLng(b.maxLat, b.minLng));
 					
-						map.fitBounds(bounds);
+					if(b){
+						var bounds = new L.LatLngBounds(
+						            new L.LatLng(b.minLat, b.maxLng),
+						            new L.LatLng(b.maxLat, b.minLng));
+					
+							map.fitBounds(bounds);
+					}
+					
 						
 						
 									

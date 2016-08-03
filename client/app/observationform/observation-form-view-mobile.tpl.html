@@ -1,0 +1,65 @@
+	  
+	 <md-tabs md-dynamic-height md-border-bottom  md-selected="$parent.selectedTabIndex">
+	        <md-tab label="Fundoplysninger">
+	          <md-content class="md-padding" ng-include="'app/observationform/observation-form.tpl.html'">
+
+	          </md-content>
+	        </md-tab>
+	        <md-tab label="Kort">
+	          <md-content class="md-padding">
+			 <md-button id="position-button" class="md-fab md-warn md-fab-bottom-right" aria-label="Brug position" ng-click="useLocation()" >
+			 		                  <ng-md-icon icon="gps_fixed"></ng-md-icon>
+			 		              </md-button>
+		   	 <leaflet id="observationformmap" width="100%" height="400" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers"  controls="mapsettings.controls" layers="mapsettings.layers"> </leaflet>
+	 		 <md-subheader class="md-no-sticky" ng-if="geoLocationStatusMessage" ng-bind-html="geoLocationStatusMessage"></md-subheader>
+			 <md-subheader class="md-no-sticky" ng-if="selectedLocality.length === 1">{{selectedLocality[0].name}}</md-subheader>
+		   	 <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}}</md-subheader>
+		   	  <md-subheader class="md-no-sticky" ng-if="precision">{{'Præcision' | translate}}: {{precision}} m</md-subheader>
+	          </md-content>
+	        </md-tab>
+	        <md-tab label="Billeder ({{(obs) ? obs.Images.length + $parent.files.length : $parent.files.length}})" ng-if="$parent.files.length > 0 || obs.Images.length > 0">
+	          <md-content class="md-padding">
+			  
+		 	<md-card ng-repeat="file in $parent.files" >
+		 	<md-card-header layout="row" layout-align="end start" class="img-preview" flex="nogrow">
+		
+		  
+		         <md-button class="md-icon-button" aria-label="Remove" >
+		           <ng-md-icon icon="close" ng-click="$parent.removeImageFromUpload(file)"></ng-md-icon>
+		         </md-button> 
+		 	</md-card-header>
+	
+		 	<md-card-content layout-align="center center">
+		 	 <img ngf-src="file"  ngf-resize="{width: 300, height: 300}" >
+		 	 </md-card-content>
+	 
+		 	</md-card>
+			
+	      <md-grid-list
+	            md-cols="1" 
+	            md-row-height-gt-md="1:1" md-row-height="4:3"
+	            md-gutter="8px" md-gutter-gt-sm="4px" >
+	        <md-grid-tile ng-repeat="img in obs.Images" >
+	          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" >
+	       <md-grid-tile-footer class="obs-form-image">
+   		   <md-button ng-if="Auth.hasRole('validator') && !img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, true)'>
+             <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
+           </md-button>
+   		   <md-button ng-if="Auth.hasRole('validator') && img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, false)'>
+             <i class="fa fa-eye fa-2x hide-icon"></i> 
+           </md-button>
+		   
+   		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || ( Auth.getCurrentUser()._id === img.user_id && moment(img.createdAt) > moment().subtract(1, 'weeks') )" ng-click='deleteImg(img)'>
+             <ng-md-icon icon="close"></ng-md-icon> 
+           </md-button>
+		
+	   </md-grid-tile-footer>
+	        </md-grid-tile>
+	      </md-grid-list>
+			
+	          </md-content>
+			 
+		    
+		  
+	        </md-tab>
+	      </md-tabs>

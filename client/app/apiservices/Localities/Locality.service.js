@@ -8,9 +8,9 @@ angular.module('svampeatlasApp')
 	      update: {
 	        method: 'PUT' // this method issues a PUT request
 	      },
-		'toDay': {
+		'recent': {
 			method: 'GET',
-			url: '/api/observations/today/localities',
+			url: '/api/observations/recent/localities',
 			isArray: true
 		}
 	    });

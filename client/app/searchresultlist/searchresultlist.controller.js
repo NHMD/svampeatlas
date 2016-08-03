@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService',
-		function($scope, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService) {
+	.controller('SearchListCtrl', ['$scope', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination',
+		function($scope, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination) {
 			
 			$scope.Auth = Auth;
 			$scope.currentUser = Auth.getCurrentUser();
@@ -12,7 +12,7 @@ angular.module('svampeatlasApp')
 			$scope.ObservationFormService = ObservationFormService;
 			
 			
-			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date)) {
+			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date) || $stateParams.taxon_id) {
 				ObservationSearchService.reset();
 				var search = ObservationSearchService.getSearch();
 				search.where = {};
@@ -75,6 +75,12 @@ angular.module('svampeatlasApp')
 						gt: moment($stateParams.date).subtract(1, 'days')
 					};
 					search.where.locality_id = $stateParams.locality_id;
+			} else if($stateParams.taxon_id ){
+				search.include[0].where.Taxon_id = $stateParams.taxon_id;
+				
+				
+				search.include[0].where.Determination_validation = ['Godkendt','Valideres', 'Afventer', 'Gammelvali'];
+					
 			};
 
 			}
@@ -214,6 +220,40 @@ angular.module('svampeatlasApp')
 					*/
 
 
+				function showTooltip(elem, msg) {
+				    elem.setAttribute('class', 'clipboard-copy tooltipped tooltipped-s');
+				    elem.setAttribute('aria-label', msg);
+				}
+				function fallbackMessage(action) {
+				    var actionMsg = '';
+				    var actionKey = (action === 'cut' ? 'X' : 'C');
+				    if (/iPhone|iPad/i.test(navigator.userAgent)) {
+				        actionMsg = 'No support for copying:(';
+				    } else if (/Mac/i.test(navigator.userAgent)) {
+				        actionMsg = 'Press ⌘-' + actionKey + ' to ' + action;
+				    } else {
+				        actionMsg = 'Press Ctrl-' + actionKey + ' to ' + action;
+				    }
+				    return actionMsg;
+				}
+				
+				$scope.updateValidation = function(row, validation){
+					
+					
+					
+					Determination.updateValidation({id: row.primarydetermination_id}, {validation: 'Godkendt'}).$promise
+					.then(function(determination){
+						row.DeterminationView.Determination_validation = 'Godkendt'
+						
+						//var txt = (determination.validation === "Afventer") ? "Bestemmelse afventer" : ("Fundet er "+determination.validation);
+						//$scope.showSimpleToast(txt)
+					})
+					.catch(function(err){
+						
+						ErrorHandlingService.handle500();
+					})
+					
+				}
 
 
 				Observation.query(query, function(result, headers) {
@@ -232,6 +272,19 @@ angular.module('svampeatlasApp')
 
 					$scope.displayed = result;
 					$scope.isLoading = false;
+					var clipboard = new Clipboard('.clipboard-copy');
+					clipboard.on('success', function(e) {
+					    e.clearSelection();
+					    console.info('Action:', e.action);
+					    console.info('Text:', e.text);
+					    console.info('Trigger:', e.trigger);
+					    showTooltip(e.trigger, 'Copied!');
+					});
+					clipboard.on('error', function(e) {
+					    console.error('Action:', e.action);
+					    console.error('Trigger:', e.trigger);
+					    showTooltip(e.trigger, fallbackMessage(e.action));
+					});
 				}, function(err){
 					console.log(err, status)
 					

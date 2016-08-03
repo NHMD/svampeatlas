@@ -30,7 +30,7 @@ router.post('/:id/determinations', auth.hasRole('validator'), determinationContr
 router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), auth.appendUser(), imageController.addImagesToObs]); 
 
 
-router.get('/today/localities', redisClient.use(), localityController.localititesWithFindingsToday);
+router.get('/recent/localities', /*redisClient.use(), */ localityController.localititesWithRecentFindings);
 
 // using taxonomyadmin while testing
 router.post('/', auth.isAuthenticated(), controller.create);

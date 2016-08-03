@@ -216,6 +216,9 @@ exports.addImagesToObs = function(req, res) {
 						user_id: req.user._id
 					})
 				})
+				.then(function(){
+							return  models.ObservationLog.create({eventname: 'Added image', description: fname+' was added to this record.', user_id: req.user._id, observation_id: obs._id})
+						})
 			)
 		})
 
@@ -306,11 +309,12 @@ exports.destroy = function(req, res) {
 				throw "Forbidden"
 			}
 			var imageName = obserVationImage.name;
-			return [imageName, obserVationImage.destroy({
+			var observation_id = obserVationImage.observation_id;
+			return [imageName,observation_id, obserVationImage.destroy({
 				transaction: t
 			})]
-		}).spread(function(imageName){
-			return  models.ObservationLog.create({eventname: 'Deleted image', description: imageName+' was deleted from this record.', user_id: req.user._id, observation_id: req.params.id}, {transaction: t})
+		}).spread(function(imageName, observation_id){
+			return  models.ObservationLog.create({eventname: 'Deleted image', description: imageName+' was deleted from this record.', user_id: req.user._id, observation_id: observation_id}, {transaction: t})
 		})
 	})
 	.then(function(){

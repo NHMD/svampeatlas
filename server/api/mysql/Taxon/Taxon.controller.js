@@ -880,7 +880,8 @@ exports.addSynonym = function(req, res) {
 
 	models.sequelize.transaction(function(t) {
 		return Taxon.update({
-			accepted_id: req.params.id
+			accepted_id: req.params.id,
+			vernacularname_dk_id: null
 		} /* set attributes' value */ , {
 			where: {
 				$or: [{accepted_id: synonymTaxon._id}, {_id: synonymTaxon._id}]

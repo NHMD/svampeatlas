@@ -1,5 +1,6 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
- <md-toolbar  ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
+<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>
+<!-- <md-toolbar  ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>-->
 	
    <md-button class="md-fab md-warn md-fab-bottom-right" aria-label="Tilføj observation" ng-click="ObservationFormService.show($event)" ng-show="Auth.hasRole('validator')">
                <ng-md-icon icon="add"></ng-md-icon>
@@ -26,7 +27,7 @@
 		<th st-sort="DeterminationView.Taxon_FullName"  translate>Art</th>
 		<th st-sort="DeterminationView.Taxon_vernacularname_dk"  translate>Dansk navn</th>
 		<th st-sort="Locality.name"  translate>Lokalitet</th>
-		<th st-sort="PrimaryUser.Initialer"  translate>Finder</th>
+		<th st-sort="PrimaryUser.Initialer" ><span ng-if="!Auth.isLoggedIn()" translate>Finder</span><span ng-if="Auth.isLoggedIn()" translate>Databasenummer</span></th>
 		<th ></th>
 		
 	</tr>
@@ -42,15 +43,22 @@
 		          {{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}
 		        </md-tooltip>
 		<ng-md-icon style="fill:red" ng-if="row.DeterminationView.Determination_validation === 'Afvist'" icon="block" ></ng-md-icon>
-			<ng-md-icon style="fill:wheat" ng-if="row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
-			<ng-md-icon style="fill:green" ng-if=" !mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
+			<ng-md-icon style="fill:wheat" ng-if="!Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
+			<ng-md-icon  ng-click="updateValidation(row)" style="fill:wheat" ng-if="Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
+			
+			<ng-md-icon style="fill:green" ng-if="(mdMedia('xs') || Auth.hasRole('validator') ) && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
 		</td>
 		<td data-title="{{'Dato' | translate}}">{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>
 		
 		<td data-title="{{'Art' | translate}}"><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></td>
 		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk}}</td>	
 		<td data-title="{{'Lokalitet' | translate}}"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
-			<td data-title="{{'Finder' | translate}}"><span ng-if="mdMedia('min-width: 768px')"><md-tooltip md-direction="left">
+		
+		
+			<td data-title="{{'Databasenummer' | translate}}" ng-if="Auth.isLoggedIn()"><span class="clipboard-copy" data-clipboard-text="{{row.PrimaryUser.Initialer}}{{(row.observationDateAccuracy !== 'invalid') ? (row.observationDate.split('-')[0]) : ''}}-{{row._id}}"> {{row.PrimaryUser.Initialer}}{{(row.observationDateAccuracy !== 'invalid') ? (row.observationDate.split('-')[0]) : ''}}-{{row._id}}</span></td>
+		
+		
+			<td data-title="{{'Finder' | translate}}" ng-if="!Auth.isLoggedIn()"><span ng-if="mdMedia('min-width: 768px')"><md-tooltip md-direction="left">
           {{row.PrimaryUser.name}}
         </md-tooltip>{{row.PrimaryUser.Initialer}}</span><span ng-if="mdMedia('max-width: 768px')"> {{row.PrimaryUser.name}}</span></td>	
 			
@@ -61,11 +69,11 @@
 
 	</tbody>
 	<tbody ng-show="!displayed &&  isLoading">
-		<tr><td colspan="6" ><div layout="row" layout-align="center center"><md-progress-circular  md-diameter="96"></md-progress-circular></div></td></tr>
+		<tr><td colspan="7" ><div layout="row" layout-align="center center"><md-progress-circular  md-diameter="48"></md-progress-circular></div></td></tr>
 		  
 	</tbody>	
 	<tbody ng-show="displayed && displayed.length===0 &&  !isLoading">
-		<tr><td colspan="6" ><div layout="row" layout-align="center center" translate>Ingen data fundet</div></td></tr>
+		<tr><td colspan="7" ><div layout="row" layout-align="center center" translate>Ingen data fundet</div></td></tr>
 		  
 	</tbody>
 

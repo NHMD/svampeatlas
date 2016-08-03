@@ -127,7 +127,9 @@ angular.module('svampeatlasApp')
 		  'Slet': 'Delete',
 		  'Fortryd' : 'Cancel',
 		  'Record': 'Record',
-		  'slettet.': 'deleted.'		           
+		  'slettet.': 'deleted.',
+		  'Danske arter' : 'Danish checklist',
+		  'Checkliste for danske arter' : 'Checklist of Danish fungi'		           
 
 	    });
 	  

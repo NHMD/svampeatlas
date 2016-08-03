@@ -17,7 +17,7 @@ angular.module('svampeatlasApp')
 								$scope.$mdMedia = $mdMedia;
 								$scope.newTaxon = [];
 								$scope.selectedLocality = [];
-								$scope.associatedOrganism = [];
+								$scope.associatedOrganism = (ObservationFormStateService.getState().ecology) ? ObservationFormStateService.getState().ecology.associatedOrganism : [];
 								$scope.associatedOrganismImport = [];
 								$scope.determiner = [];
 								$scope.users = [];
@@ -46,16 +46,24 @@ angular.module('svampeatlasApp')
 										zoom: 6
 									}
 								}
-
+								
+								$scope.ecologyLocked = (ObservationFormStateService.getState().ecology) ? true : false;
+								
+								$scope.toggleEcologyLock = function(state){
+									$scope.ecologyLocked = state;
+								}
+								
+								
+								
 								$scope.$watchCollection('selectedLocality', function(newVal) {
-									if (newVal && newVal[0] && newVal[0]._id) {
-
+									if (newVal && newVal[0] && newVal[0]._id && newVal[0] !== ObservationFormStateService.getState().Locality) {
+										/*
 										if (newVal[0]._id > 0) {
 											$scope.changeBaseLayer("topo_25")
 										} else {
 											$scope.changeBaseLayer("WorldTopoMap")
 										}
-
+										*/
 										$scope.mapsettings.center = {
 											lat: newVal[0].decimalLatitude || newVal[0].lat,
 											lng: newVal[0].decimalLongitude || newVal[0].lng,
@@ -173,7 +181,10 @@ angular.module('svampeatlasApp')
 
 												if (obs) {
 													$scope.selectedSubstrate = obs.substrate_id;
-												}
+												} else if(ObservationFormStateService.getState().ecology){
+							
+									$scope.selectedSubstrate = ObservationFormStateService.getState().ecology.selectedSubstrate;
+								}
 
 											});
 											VegetationType.query().$promise.then(function(vegetationtypes) {
@@ -181,7 +192,10 @@ angular.module('svampeatlasApp')
 
 												if (obs) {
 													$scope.selectedVegetationType = obs.vegetationtype_id;
-												}
+												} else if(ObservationFormStateService.getState().ecology){
+							
+									$scope.selectedVegetationType = ObservationFormStateService.getState().ecology.selectedVegetationType;
+								}
 
 											});
 										})
@@ -207,13 +221,16 @@ angular.module('svampeatlasApp')
 
 											$scope.mapsettings.center.lat = e.latlng.lat;
 											$scope.mapsettings.center.lng = e.latlng.lng;
-
-
+											
+											
+										
+											
 											if ($scope.mapsettings.center.zoom < 10) {
 												$scope.mapsettings.center.zoom = 10
-											} else if ($scope.mapsettings.center.zoom >= 10 && $scope.mapsettings.center.zoom < 18) {
+											} else if ($scope.mapsettings.center.zoom >= 10 && $scope.mapsettings.center.zoom < 14) {
 												$scope.mapsettings.center.zoom++;
 											}
+											
 											//console.log("########## "+GeoJsonUtils.inDK($scope.mapsettings.center))
 
 											if (!GeoJsonUtils.inDK($scope.mapsettings.markers.position)) {
@@ -466,15 +483,17 @@ angular.module('svampeatlasApp')
 								};
 
 
-
-
-								$scope.mapsettings = {
-
-									center: {
+								var mapCenter = (ObservationFormStateService.getState().mapCenter) ? ObservationFormStateService.getState().mapCenter :{
 										lat: 56,
 										lng: 11,
 										zoom: 6
-									},
+									} ;
+									if(ObservationFormStateService.getState().mapsettings){
+										ObservationFormStateService.getState().mapsettings.markers = {};
+									}
+								$scope.mapsettings = (ObservationFormStateService.getState().mapsettings) ? ObservationFormStateService.getState().mapsettings : {
+
+									center: mapCenter,
 									paths: {},
 									drawControl: true,
 									markers: {
@@ -529,47 +548,62 @@ angular.module('svampeatlasApp')
 									}
 								};
 
-								KMS.getTicket().then(function(ticket) {
-									$scope.mapsettings.layers.baselayers.topo_25 = {
-										name: $translate.instant("DK 4cm kort"),
-										type: 'wms',
-										visible: true,
-										url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-										layerOptions: {
-											layers: "topo25_klassisk",
-											servicename: "topo25",
-											version: "1.1.1",
-											request: "GetMap",
-											format: "image/jpeg",
-											service: "WMS",
-											styles: "default",
-											exceptions: "application/vnd.ogc.se_inimage",
-											jpegquality: "80",
-											attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-											ticket: ticket
-										}
-									};
-									$scope.mapsettings.layers.baselayers.luftfoto = {
-										name: $translate.instant("DK luftfoto"),
-										type: 'wms',
-										visible: true,
-										url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-										layerOptions: {
-											layers: "orto_foraar",
-											servicename: "orto_foraar",
-											version: "1.1.1",
-											request: "GetMap",
-											format: "image/jpeg",
-											service: "WMS",
-											styles: "default",
-											exceptions: "application/vnd.ogc.se_inimage",
-											jpegquality: "80",
-											attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-											ticket: ticket
-										}
-									};
+							
+							
+							leafletData.getMap('observationformmap').then(function(map) {
+								leafletData.getLayers().then(function(layers) {
+									KMS.getTicket().then(function(ticket) {
+										$scope.mapsettings.layers.baselayers.topo_25 = {
+											name: $translate.instant("DK 4cm kort"),
+											type: 'wms',
+											visible: true,
+											url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+											layerOptions: {
+												layers: "topo25_klassisk",
+												servicename: "topo25",
+												version: "1.1.1",
+												request: "GetMap",
+												format: "image/jpeg",
+												service: "WMS",
+												styles: "default",
+												exceptions: "application/vnd.ogc.se_inimage",
+												jpegquality: "80",
+												attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+												ticket: ticket
+											}
+										};
+										$scope.mapsettings.layers.baselayers.luftfoto = {
+											name: $translate.instant("DK luftfoto"),
+											type: 'wms',
+											visible: true,
+											url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+											layerOptions: {
+												layers: "orto_foraar",
+												servicename: "orto_foraar",
+												version: "1.1.1",
+												request: "GetMap",
+												format: "image/jpeg",
+												service: "WMS",
+												styles: "default",
+												exceptions: "application/vnd.ogc.se_inimage",
+												jpegquality: "80",
+												attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+												ticket: ticket
+											}
+										};
+										
+									});
+									
+								
+									
 								});
-
+								if(ObservationFormStateService.getState().currentMapLayer){
+									$scope.changeBaseLayer(ObservationFormStateService.getState().currentMapLayer)
+								}
+							});
+							
+							
+							
 								$scope.getMarkerPrecision = function(zoom) {
 
 									if (zoom <= 6) {
@@ -702,6 +736,19 @@ angular.module('svampeatlasApp')
 
 									})
 								}
+
+								$scope.$on('leafletDirectiveMap.observationformmap.baselayerchange', function(event, args) {
+									console.log(args.leafletEvent.name)
+									var bl = args.model.layers.baselayers;
+									for(var key in bl){
+										if(args.leafletEvent.name === bl[key].name){
+											$scope.currentMapLayer = key;
+											break;
+										}
+									}
+									
+
+								});
 
 
 								$scope.$on('leafletDirectiveMarker.observationformmap.click', function(event, args) {
@@ -1002,7 +1049,22 @@ angular.module('svampeatlasApp')
 									};
 
 									ObservationFormStateService.getState().observationDate = $scope.observationDate;
-
+									ObservationFormStateService.getState().mapsettings = $scope.mapsettings;
+									
+									ObservationFormStateService.getState().currentMapLayer = $scope.currentMapLayer;
+									
+									
+									if($scope.ecologyLocked){
+										ObservationFormStateService.getState().ecology = {
+											associatedOrganism : $scope.associatedOrganism,
+											selectedVegetationType: $scope.selectedVegetationType,
+											selectedSubstrate : $scope.selectedSubstrate
+										}
+	
+									} else {
+										delete ObservationFormStateService.getState().ecology;
+										
+									}
 
 									// end state
 
@@ -1036,6 +1098,7 @@ angular.module('svampeatlasApp')
 													$scope.fileUploadInProgress = false;
 													console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
 												}, function(resp) {
+													alert("Billedet blev ikke gemt - luk venligst fundet og prøv igen.")
 													console.log('Error status: ' + resp.status);
 												}, function(evt) {
 													var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
@@ -1052,7 +1115,7 @@ angular.module('svampeatlasApp')
 										})
 										.
 									catch (function(err) {
-										alert("error")
+										alert("Der er sket en fejl - luk venligst fundet og prøv igen.")
 									})
 
 								};

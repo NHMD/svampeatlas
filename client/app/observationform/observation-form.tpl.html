@@ -17,10 +17,13 @@
 	          <md-autocomplete
 	    	  	md-min-length="3"
 	    		md-no-cache="true"
+				md-input-id="taxon-autocomplete"
+				md-select-on-match="true"
+				md-match-case-insensitive="true"
 	              md-selected-item="selectedItem"
 	              md-search-text="searchText"
 	              md-items="item in querySearch(searchText)"
-	              md-item-text="item.FullName"
+	              md-item-text="(!$parent.DkNames) ? item.FullName : item.Vernacularname_DK.vernacularname_dk"
 	              placeholder="{{(newTaxon.length ===0) ? $translate.instant('Skriv art')  : ''}}"
 	 			 ng-disabled="newTaxon.length >0"
 	 			flex class="taxon-autocomplete">
@@ -66,7 +69,9 @@
 				  <md-chips ng-model="selectedLocality" md-autocomplete-snap md-require-match="true" class="md-block" ng-if="!foreignLocality" flex-gt-xs>
 
 				    <md-autocomplete
-					
+					md-input-name="locality-autocomplete"
+					md-select-on-match="true"
+					md-match-case-insensitive="true"
 				        md-selected-item="selectedItem"
 				        md-search-text="searchText"
 				        md-items="item in querySearchLocality(searchText)"
@@ -115,6 +120,13 @@
 							           <div ng-message="required">{{'Obligatorisk' | translate}}</div>
 							         </div>
 	 				         </md-input-container>
+							 
+							 <md-button ng-show="!ecologyLocked" class="md-icon-button md-primary"  aria-label="Lock ecology" ng-click="toggleEcologyLock(true)">
+							         <i class="fa fa-unlock fa-2x"></i>
+							       </md-button>
+	  							 <md-button ng-show="ecologyLocked" class="md-icon-button md-accent"  aria-label="Lock ecology" ng-click="toggleEcologyLock(false)">
+	  							         <i class="fa fa-lock fa-2x"></i>
+	  							       </md-button>
 			   </div>
 			   <div layout-margin layout="row">
  				  <md-chips ng-model="associatedOrganism" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>

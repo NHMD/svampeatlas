@@ -42,7 +42,7 @@ angular.module('svampeatlasApp')
 				})
 					.then(function(res) {
 						var exp = new Date();
-						exp.setHours(exp.getHours() + 5);
+						exp.setHours(exp.getHours() + 24*7);
 						$cookies.put('token', res.data.token, {
 							expires: exp
 						});

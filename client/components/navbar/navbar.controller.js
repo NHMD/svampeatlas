@@ -12,7 +12,8 @@ $scope.states =
 	  'settings': { name: "Profil", icon: 'person'},
 	  'news': { name: "Nyheder", icon: 'rss_feed'},
 	  'demos': { name: "Vejledninger", icon: 'school'},
-	  'about': { name: "Projektbeskrivelse", icon: 'info_outline'}
+	  'about': { name: "Projektbeskrivelse", icon: 'info_outline'},
+	  'checklist': { name: "Checkliste for danske arter", icon: 'playlist_add_check'}
 	};
 	
 	$scope.openSideNav = function(){

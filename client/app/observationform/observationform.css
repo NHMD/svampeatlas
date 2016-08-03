@@ -32,3 +32,7 @@ i.hide-icon {
 md-grid-tile-footer.obs-form-image {
 	background-color: rgba(0, 0, 0, 0) !important;
 }
+
+.dragover {
+    border: 5px dashed rgb(255,64,129);
+}

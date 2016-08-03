@@ -132,7 +132,7 @@ function hasRole(roleRequired) {
  */
 function signToken(id) {
   return jwt.sign({ _id: id }, config.secrets.session, {
-    expiresIn: 60 * 5 * 60
+    expiresIn: 60 *  60 * 24 * 7
   });
 }
 

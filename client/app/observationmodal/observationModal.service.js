@@ -80,6 +80,7 @@ angular.module('svampeatlasApp')
 									.$promise.then(function(comment){
 										$scope.forum.push(comment);
 										delete $scope.newComment;
+										delete $scope.$parent.newComment;
 										$scope.sendingComment = false;
 									})
 									.catch(function(err){
@@ -300,4 +301,14 @@ angular.module('svampeatlasApp')
     return function(input) {
       return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
     }
-});
+})
+.filter('getUserNamesAsList', function() {
+    return function(users) {
+      return _.map(users, function(u){
+		  return u.name;
+      }).toString();
+    }
+})
+
+
+
