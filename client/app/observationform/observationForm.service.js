@@ -1026,8 +1026,16 @@ angular.module('svampeatlasApp')
 									}
 
 									if (!$scope.mapsettings.markers.position && $scope.selectedLocality.length === 1) {
-										obs.decimalLatitude = $scope.selectedLocality[0].decimalLatitude;
-										obs.decimalLongitude = $scope.selectedLocality[0].decimalLongitude;
+										
+										// if the locality was chosen from the map - it is a leaflet marker with lat and lng, other wise it is a resource with decimalLatitude and decimalLongitude
+										if($scope.selectedLocality[0].layer === 'localities'){
+											obs.decimalLatitude = $scope.selectedLocality[0].lat;
+											obs.decimalLongitude = $scope.selectedLocality[0].lng;
+										} else {
+											obs.decimalLatitude = $scope.selectedLocality[0].decimalLatitude;
+											obs.decimalLongitude = $scope.selectedLocality[0].decimalLongitude;
+										}
+										
 										obs.accuracy = 2500;
 									} else {
 										obs.decimalLatitude = $scope.mapsettings.markers.position.lat;
