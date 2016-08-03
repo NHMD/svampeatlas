@@ -443,7 +443,7 @@ exports.show = function(req, res) {
 				include: [{
 						model: models.User,
 					as: "User", 
-					 attributes: ['name', 'Initialer']}]
+					 attributes: ['name', 'Initialer', 'facebook']}]
 			},
 			{model: models.PlantTaxon,
 			as: 'associatedTaxa'
@@ -522,7 +522,7 @@ exports.create = function(req, res) {
 		})
 			.spread(function(taxon, obs) {
 
-				determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Afventer';
+				determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Valideres';
 				determination.observation_id = obs._id;
 				return [models.Determination.create(determination, {
 					transaction: t
@@ -625,7 +625,7 @@ exports.update = function(req, res) {
 			}
 			
 			
-			if(obs.changed().indexOf('observationDate') > -1 && moment(req.body.observationDate).isValid()){
+			if(obs.changed() && obs.changed().indexOf('observationDate') > -1 && moment(req.body.observationDate).isValid()){
 				obs.set('observationDateAccuracy','day');
 			};
 			

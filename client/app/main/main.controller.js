@@ -126,44 +126,54 @@ angular.module('svampeatlasApp')
 		}
 	};
 	
+	
+	
+	$scope.latestlocalitydays = 3;
+	
 	$scope.$on('leafletDirectiveMarker.frontpagemap.click', function(e, args) {
-		console.log(args)
-		$state.go('search-list', {locality_id: args.model._id, date: new Date().toString()})
+		
+		$state.go('search-list', {locality_id: args.model._id, date: moment().subtract($scope.latestlocalitydays, 'days').toString()})
 	})
 	
 	
-	
-	Locality.toDay().$promise.then(function(localities){
-		
-		for (var i = 0; i < localities.length; i++) {
-			$scope.mapsettings.markers[localities[i].name] = {
-				lat: localities[i].decimalLatitude,
-				lng: localities[i].decimalLongitude,
-				_id: localities[i]._id,
-				
-				name: localities[i].name,
-				
-				icon: {
-					type: 'awesomeMarker',
-					prefix: 'fa',
-					icon: 'circle',
-					markerColor: 'blue'
-				}
-
-			};
-			
+	$scope.getLatestLocalities = function(days){
+		if(!days){
+			days = $scope.latestlocalitydays;
+		} else {
+			$scope.latestlocalitydays = days;
 		}
-		
-	}).then(function(){
-		leafletData.getMap('frontpagemap').then(function(map) {
-			map.zoomControl.setPosition('topright');
+	 return	Locality.recent({days: days}).$promise.then(function(localities){
+		 $scope.mapsettings.markers = {};
+			for (var i = 0; i < localities.length; i++) {
+				$scope.mapsettings.markers[localities[i].name] = {
+					lat: localities[i].decimalLatitude,
+					lng: localities[i].decimalLongitude,
+					_id: localities[i]._id,
+				
+					name: localities[i].name,
+				
+					icon: {
+						type: 'awesomeMarker',
+						prefix: 'fa',
+						icon: 'circle',
+						markerColor: 'blue'
+					}
+
+				};
 			
-			$timeout(function() {
-				map.invalidateSize();
-			}, 11);
+			}
+		
+		}).then(function(){
+			leafletData.getMap('frontpagemap').then(function(map) {
+				map.zoomControl.setPosition('topright');
+			
+				$timeout(function() {
+					map.invalidateSize();
+				}, 11);
+			});
 		});
-	})
-	
+	}
+	$scope.getLatestLocalities();
 	$scope.loaded = {};
 	$scope.failed = {};
 	$scope.imageHasLoaded = function(img){

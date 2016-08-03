@@ -188,12 +188,12 @@ function cacheResult(req, value){
 		
 }
 
-exports.localititesWithFindingsToday = function(req, res){
+exports.localititesWithRecentFindings = function(req, res){
 	
 	return models.sequelize.query(
 		'SELECT l._id, l.decimalLatitude, l.decimalLongitude, l.name FROM Locality l JOIN Observation o ON o.locality_id = l._id '
-		+'AND CURDATE() = DATE(o.observationDate) GROUP BY l._id',
-  { type: models.sequelize.QueryTypes.SELECT }
+		+'AND DATE_ADD(CURDATE(), INTERVAL :days DAY) <= DATE(o.observationDate) GROUP BY l._id',
+  { replacements: { days: -Math.abs(req.query.days) }, type: models.sequelize.QueryTypes.SELECT }
 ).then(function(localities){
 	
 	if(req.query.cachekey) {

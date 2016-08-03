@@ -512,7 +512,7 @@
             '       <span flex></span>\n' +
             '       <span aria-hidden="true" class="md-toggle-icon"\n' +
             '           ng-class="{\'toggled\' : isOpen(section)}">\n' +
-            '           <md-icon md-svg-src="md-toggle-arrow"></md-icon>\n' +
+            '           <ng-md-icon icon="expand_more"></ng-md-icon>\n' +
             '       </span>\n' +
             '   </div>\n' +
             '   <span class="md-visually-hidden">\n' +

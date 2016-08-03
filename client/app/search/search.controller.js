@@ -448,6 +448,7 @@ angular.module('svampeatlasApp')
 				
 				if ($scope.search.databasenumber) {
 					$scope.observationSearch.where._id = $scope.search.databasenumber.split("-")[1] || $scope.search.databasenumber;
+					$scope.observationSearch.include[2].required = false;
 					delete $scope.observationSearch.include[0].where.Determination_validation ;
 					
 				} else {

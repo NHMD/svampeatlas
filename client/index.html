@@ -2,21 +2,25 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" ng-app="svampeatlasApp"> <!--<![endif]-->
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
-    <title>Danmarks svampeatlas</title>
+    <title ng-bind="title || 'Danmarks svampeatlas'">Danmarks svampeatlas</title>
     <meta name="description" content="Danmarks officielle database for svampefund. Du kan indlægge, søge og diskutere fund. Du kan også få eksperthjælp til bestemmelse af svampe.">
-    <meta name="viewport" content="width=device-width">
+   
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+	
 	<meta property="fb:app_id"              content="332165895643" />
 	<meta property="og:url"                content="http://svampe.databasen.org" />
 	<meta property="og:type"               content="website" />
-	<meta property="og:title"                content="Danmarks officielle database for svampefund" />
+	<meta property="og:title"               content="Danmarks officielle database for svampefund" />
 	<meta property="og:site_name"              content="Danmarks svampeatlas" />
 	<meta property="og:description"        content="Danmarks officielle database for svampefund. Du kan indlægge, søge og diskutere fund. Du kan også få eksperthjælp til bestemmelse af svampe." />
 	<meta property="og:image"              content="http://svampe.databasen.org/assets/images/public/mycena_crop.jpg" />
+	<meta property="og:locale" content="da_DK" />
+	<meta property="og:locale:alternate" content="en_GB" />
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
@@ -41,6 +45,7 @@
       <link rel="stylesheet" href="app/admin/admin.css">
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/demos/demos.css">
+      <link rel="stylesheet" href="app/dkchecklist/dkchecklist.css">
       <link rel="stylesheet" href="app/funindex/funindex.css">
       <link rel="stylesheet" href="app/main/main.css">
       <link rel="stylesheet" href="app/news/news.css">
@@ -63,7 +68,7 @@
       <!-- endinjector -->
     <!-- endbuild -->
   </head>
-  <body ng-app="svampeatlasApp" layout="row">
+  <body  layout="row">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -136,6 +141,7 @@
       <script src="bower_components/highcharts/modules/exporting.js"></script>
       <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
       <script src="bower_components/fastclick/lib/fastclick.js"></script>
+      <script src="bower_components/clipboard/dist/clipboard.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -179,6 +185,8 @@
           <script src="app/apiservices/plutof/plutof.service.js"></script>
           <script src="app/demos/demos.controller.js"></script>
           <script src="app/demos/demos.js"></script>
+          <script src="app/dkchecklist/dkchecklist.controller.js"></script>
+          <script src="app/dkchecklist/dkchecklist.js"></script>
           <script src="app/funindex/funindex.controller.js"></script>
           <script src="app/funindex/funindex.js"></script>
           <script src="app/funindex/taxonintegrationservice.service.js"></script>

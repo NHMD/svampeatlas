@@ -576,3 +576,15 @@ ALTER TABLE `Taxon`
   
   UPDATE Taxon t set t.accepted_id = t._id where t.accepted_id IS NULL;
   SELECT count(*) FROM Taxon where t.accepted_id IS NULL;
+  
+  
+  -- fix Patellariales
+  UPDATE Taxon t, Taxon tp set t.parent_id=tp._id, t.Path= CONCAT(tp.Path,", ",t._id) where t._id=60413 AND tp._id=66111;
+
+  UPDATE Taxon t, Taxon tp set t.parent_id=tp._id, t.Path= CONCAT(tp.Path,", ",t._id) where t._id=60412 AND tp._id=60413;
+
+
+  UPDATE Taxon t, Taxon tp set t.parent_id=tp._id, t.Path= CONCAT(tp.Path,", ",t._id) where t.SystematicPath LIKE "Fungi, Ascomycota, Pezizomycotina, Dothideomycetes, Incertae sedis, Patellariales, Patellariaceae,%" AND t.RankID=5000 AND tp._id=60412;
+
+  UPDATE Taxon t, Taxon tp set t.Path= CONCAT(tp.Path,", ",t._id) where t.SystematicPath LIKE "Fungi, Ascomycota, Pezizomycotina, Dothideomycetes, Incertae sedis, Patellariales, Patellariaceae,%" AND tp.RankID=5000 AND t.RankID=10000 AND t.parent_id= tp._id;
+  
