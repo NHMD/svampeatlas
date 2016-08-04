@@ -1,6 +1,6 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
-<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>
-<!-- <md-toolbar  ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>-->
+<!--<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>-->
+<md-toolbar class="searchtabs" ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
 	
    <md-button class="md-fab md-warn md-fab-bottom-right" aria-label="Tilføj observation" ng-click="ObservationFormService.show($event)" ng-show="Auth.hasRole('validator')">
                <ng-md-icon icon="add"></ng-md-icon>

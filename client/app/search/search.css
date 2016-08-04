@@ -20,3 +20,7 @@
 .search-form-fab {
 	padding: 0px !important;
 }
+
+md-toolbar.searchtabs {
+	min-height: 96px;
+}
