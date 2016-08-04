@@ -6,7 +6,7 @@
 -->
 
 
-      <md-toolbar > 
+    
         <div class="md-toolbar-tools">
           <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
             <ng-md-icon icon="menu"></ng-md-icon>
@@ -20,6 +20,7 @@
 		   <span layout-margin ng-if="mdMedia('gt-xs')"> <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>
         <a href="/"><img  class="logo-upper-right" src="assets/images/LogoSmallest.png"></a>
         </div>
+		<span flex></span>
   <md-tabs md-stretch-tabs class="md-primary" md-selected="tabs.activeTab">
    
     <md-tab ng-repeat="tab in tabs"  ng-class="{'md-active': tab.active}" ng-disabled="tab.disabled" >
@@ -31,7 +32,7 @@
     
     </md-tab>
   </md-tabs>
-   </md-toolbar>
+   
 
 <!-- Angular material tabs  
   <md-tabs md-stretch-tabs class="md-primary" md-selected="tabs.activeTab">

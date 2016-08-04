@@ -1,7 +1,7 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
-<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>
-<!--	 <md-toolbar md-scroll-shrink ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>-->
-<section layout="row" flex>					
+<!--<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div> -->
+ <md-toolbar class="searchtabs"  ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
+<div layout="row" flex>					
 <md-content layout="row" layout-fill  layout-padding flex>
 					
 
@@ -11,7 +11,7 @@
 	  				            class="md-primary"  ng-show="mdMedia('xs')">
 	  				            {{'Søgning på kort' | translate}}
 	  				          </md-button>
-			<div layout="row" layout-margin>
+			
 			 	<md-switch ng-model="search.notMyObservations" aria-label="Søg ikke i mine fund" ng-if="Auth.isLoggedIn()">
 			 	   <span translate>Ikke mine fund</span>
 			 	  </md-switch>
@@ -19,7 +19,7 @@
 		 	   <span translate>Kun mine fund</span>
 		 	  </md-switch>
 		 	
-		  </div>
+		 
 	 	<md-switch ng-model="search.activeThreadsOnly" aria-label="Søg aktive tråde" ng-if="Auth.isLoggedIn()">
 	 	   <span translate>Mine aktive tråde </span>
 	 	  </md-switch>
@@ -271,6 +271,6 @@
 		
 	      </md-content>
 	    </md-sidenav>
-</section>
+</div>
 	        
 	      
