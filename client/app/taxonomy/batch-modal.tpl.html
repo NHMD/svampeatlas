@@ -1,0 +1,104 @@
+<md-dialog aria-label="batch update taxa"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 translate>Batch add/remove</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <ng-md-icon icon="close"></ng-md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <h2></h2>
+   	 <div layout="row" layout-padding layout-margin>
+   		 <md-input-container layout-fill>
+   		        <label translate>Action</label>
+   		        <md-select ng-model="actionType">
+   		          <md-option value="Add" translate>
+   		            Add
+   		          </md-option>
+   		          <md-option value="Remove" translate>
+   		            Remove
+   		          </md-option>
+   		          
+   		        </md-select>
+   		      </md-input-container>
+	    		 <md-input-container layout-fill>
+	    		       
+	    		        <md-select ng-model="propertyType">
+	    		          <md-option value="Tag" translate>
+	    		            Tag
+	    		          </md-option>
+	    		          <md-option value="MycoKeyCharacter" translate>
+	    		            MycoKey Character
+	    		          </md-option>
+   		          
+	    		        </md-select>
+	    		      </md-input-container>
+   			 
+         </div>
+		<div layout="row" layout-margin>
+
+      <md-chips ng-model="selectedTags" md-max-chips=1 md-autocomplete-snap md-require-match="true" ng-if="propertyType === 'Tag'">
+
+        <md-autocomplete
+  	  	md-min-length="3"
+  		md-no-cache="true"
+            md-selected-item="selectedTag"
+            md-search-text="searchTagText"
+            md-items="item in tagSearch(searchTagText)"
+            md-item-text="item.tagname"
+             ng-attr-placeholder="{{selectedTags.length ===0 ? ('Enter tag' | translate) : ''}}"
+			ng-disabled="selectedTags.length >0">
+          <span md-highlight-text="searchTagText">{{item.tagname}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{$chip.tagname}}</strong>
+
+          </span>
+        </md-chip-template>
+      </md-chips>
+	  
+      <md-chips ng-model="selectedMycokeyCharacters" md-max-chips=1 md-autocomplete-snap md-require-match="true" ng-if="propertyType === 'MycoKeyCharacter'">
+
+        <md-autocomplete
+  	  	md-min-length="3"
+  		md-no-cache="true"
+            md-selected-item="selectedMycokeyCharacter"
+            md-search-text="searchMycokeyCharacterText"
+            md-items="item in mycokeySearch(searchMycokeyCharacterText)"
+            md-item-text="item['description DK']"
+            ng-attr-placeholder="{{selectedMycokeyCharacters.length ===0 ? ('Enter character' | translate) : ''}}"
+			class="taxon-autocomplete"
+			ng-disabled="selectedMycokeyCharacters.length >0">
+          <span md-highlight-text="searchMycokeyCharacterText">{{(translate.use() === 'en') ? item.charactergroup['Start description UK'] : item.charactergroup['Start description DK']}} {{(translate.use() === 'en') ?  item['description UK'] : item['description DK']}}</span>  
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{(translate.use() === 'en') ? $chip.charactergroup['Start description UK'] : $chip.charactergroup['Start description DK']}} {{(translate.use() === 'en') ? $chip['description UK'] : $chip['description DK']}}</strong>
+
+          </span>
+        </md-chip-template>
+      </md-chips>
+	  
+	      </div>
+
+
+
+	
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      
+      <span flex></span>
+      <md-button ng-click="cancel()">
+       {{'Fortryd' | translate}}
+      </md-button>
+      <md-button ng-click="doBatchOperation()" style="margin-right:20px;" ng-disabled="1 > newTaxon.length">
+        {{'Udfør' | translate}}
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

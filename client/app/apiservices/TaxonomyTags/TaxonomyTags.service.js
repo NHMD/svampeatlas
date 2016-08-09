@@ -7,7 +7,14 @@ angular.module('svampeatlasApp')
 	  return $resource('/api/taxonomytags/:id', { id: '@_id' }, {
 	      update: {
 	        method: 'PUT' // this method issues a PUT request
-	      }
+	      },
+		'addTaxa': {
+			method: 'POST',
+			params: {
+				id: '@_id'
+			},
+			url: '/api/taxonomytags/:id/taxa'
+		}
 	    });
    
   });

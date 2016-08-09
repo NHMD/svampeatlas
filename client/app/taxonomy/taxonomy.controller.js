@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData', 'MycokeyCharacters',
-		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters) {
+	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags','TaxonRedListData', 'MycokeyCharacters', 'TaxonBatchUpdateModalService',
+		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters, TaxonBatchUpdateModalService) {
 			$scope.translate = $translate;
 			$scope.resetSearch = function(){
 				localStorage.removeItem('taxonomy_attribute_conditions');
@@ -292,7 +292,59 @@ angular.module('svampeatlasApp')
 				$scope.callServer(state);
 				
 			}
-
+			//************************************************************
+			
+			
+			  $scope.markedForUpdate = [];
+			  $scope.toggleForUpdate = function (item, list) {
+			    var idx = list.indexOf(item);
+			    if (idx > -1) {
+			      list.splice(idx, 1);
+			    }
+			    else {
+			      list.push(item);
+			    }
+			  };
+			  $scope.existsInMarkedForUpdate = function (item, list) {
+			    return list.indexOf(item) > -1;
+			  };
+			  $scope.isIndeterminate = function() {
+			    return ($scope.markedForUpdate.length !== 0 &&
+			        $scope.markedForUpdate.length !== $scope.displayed.length);
+			  };
+			  $scope.allAreChecked = function() {
+			    return $scope.markedForUpdate.length === $scope.displayed.length;
+			  };
+			  $scope.toggleAllForUpdate = function() {
+			    if ($scope.markedForUpdate.length === $scope.displayed.length) {
+			      $scope.markedForUpdate = [];
+			    } else if ($scope.markedForUpdate.length === 0 || $scope.markedForUpdate.length > 0) {
+			      $scope.markedForUpdate = $scope.displayed.slice(0);
+			    }
+			  };
+			
+			$scope.doBatch = function(){
+				
+				
+				if($scope.markedForUpdate.length ===0){
+					alert('Du skal markere nogle taxa i tabellen.')
+				} else {
+					
+					
+				
+					TaxonBatchUpdateModalService.show($scope.markedForUpdate);
+					
+				}
+				
+			};
+			
+			
+			
+			
+			
+			
+			
+			//************************************
 
 			$scope.callServer = function(tableState) {
 

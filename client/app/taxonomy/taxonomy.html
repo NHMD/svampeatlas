@@ -186,25 +186,41 @@
 	<thead>
 	<tr>
 		<th st-sort="_id" st-ratio="10">DkIndexNr</th>
+		<th st-ratio="10">
+			<button class="btn btn-primary" ng-click="doBatch()" ><i class="fa fa-edit"></i></button>
+		</th>
 		<th st-sort="FullName" st-ratio="40" translate>Full name</th>
+		
 		<th st-sort="TaxonName" translate>Epithet</th>
-		<th st-sort="RankName" st-ratio="10" translate>Taxon rank</th>
+		<th st-sort="Author"  translate>Author</th>
+		<th st-sort="RankName" st-ratio="5" translate>Taxon rank</th>
 		<th st-sort="Vernacularname_DK.vernacularname_dk" translate>Dansk navn</th>
 	</tr>
 	<tr>
-		<th st-ratio="15"><div class="input-group"><span id="reset-table-state" class="input-group-addon" st-reset-search><i class="fa fa-refresh"></i></span><input class="form-control" st-search="_id" ></div></th>
+		<th st-ratio="10"><div class="input-group"><span id="reset-table-state" class="input-group-addon" st-reset-search><i class="fa fa-refresh"></i></span><input class="form-control" st-search="_id" ></div></th>
+		<th st-ratio="10"><md-checkbox aria-label="Select All"
+                         ng-checked="allAreChecked()"
+                         md-indeterminate="isIndeterminate()"
+                         ng-click="toggleAllForUpdate()"></md-checkbox></th>
 		<th st-ratio="40"><input class="form-control" st-search="FullName" ></th>
+		
 		<th><input class="form-control" st-search="TaxonName"></th>
-		<th st-ratio="10"><input class="form-control" st-search="RankName"></th>
+		<th ><input class="form-control" st-search="Author" ></th>
+		<th st-ratio="5"><input class="form-control" st-search="RankName"></th>
 		<th><input class="form-control" st-search="Vernacularname_DK.vernacularname_dk"></th>
 	</tr>
 	</thead>
 	<tbody ng-show="!isLoading">
 	<tr ng-repeat="row in displayed">
 		<td st-ratio="10">{{row._id}}</td>
+		<td st-ratio="10"><md-checkbox ng-checked="existsInMarkedForUpdate(row, markedForUpdate)" ng-click="toggleForUpdate(row, markedForUpdate)" aria-label="select for update">
+           
+          </md-checkbox></td>
 		<td st-ratio="40"><a href="/taxonbase/taxon/{{row._id}}">{{row.FullName}}</a> <a href="/taxonbase/taxonbooklayout/{{row._id}}"><i class="fa fa-book"></i></a>
 		</td>
+		
 		<td>{{row.TaxonName}}</td>
+		<td>{{row.Author}}</td>
 		<td st-ratio="10">{{row.RankName}}</td>
 		<td>{{row.Vernacularname_DK.vernacularname_dk}}</td>
 	</tr>
