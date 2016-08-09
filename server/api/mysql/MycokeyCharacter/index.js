@@ -12,5 +12,7 @@ router.get('/:id', controller.show);
 // router.post('/',auth.hasRole('taxonomyadmin'), controller.create);
 // router.delete('/:id',auth.hasRole('taxonomyadmin'), controller.destroy);
 
+router.post('/:id/taxa',auth.hasRole('taxonomyadmin'), controller.batchAddMycokeyCharacter);
+router.delete('/:id/taxa',auth.hasRole('taxonomyadmin'), controller.batchRemoveMycokeyCharacter);
 
 module.exports = router;

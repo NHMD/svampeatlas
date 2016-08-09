@@ -13,6 +13,42 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: false,
 			references:     'Taxon',
         referencesKey:  '_id'
+		},
+		'GenusID': {
+			type: DataTypes.INTEGER,
+			defaultValue: 0
+		},
+		'xxxx': {
+			type: DataTypes.INTEGER,
+			defaultValue: 1
+		},
+		'BoolValue': {
+			type: DataTypes.INTEGER,
+			defaultValue: 1
+		}, 
+		'Probability': {
+			type: DataTypes.INTEGER,
+			defaultValue: 100
+		}, 
+		'mark': {
+			type: DataTypes.INTEGER,
+			defaultValue: 0
+		},
+		'CodedForSpecies': {
+			type: DataTypes.INTEGER,
+			defaultValue: 0
+		}, 
+		'check': {
+			type: DataTypes.INTEGER,
+			defaultValue: 0
+		},
+		'RealValueMax': {
+			type: DataTypes.INTEGER,
+			defaultValue: 0
+		},
+		'RealValueMin': {
+			type: DataTypes.INTEGER,
+			defaultValue: 0
 		}
 	}, {
 		tableName: 'GenusCharacters',

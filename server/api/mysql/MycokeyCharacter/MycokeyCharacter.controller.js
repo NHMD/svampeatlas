@@ -259,4 +259,36 @@ exports.importMycoKeyCharacters = function(req, res){
 
 */
 
+exports.batchAddMycokeyCharacter = function(req, res) {
+		
+	var promises = [];
+	
+	_.each(req.body, function(e){
+		promises.push(models.MycokeyGenusCharacter.upsert({taxon_id: e._id, Character: req.params.id }));
+	})
+	
+	return Promise.all(promises)
+	.then(function(){
+	  return res.status(201).send()
+  })
+    .catch(handleError(res));
+}
+
+exports.batchRemoveMycokeyCharacter = function(req, res) {
+
+return models.MycokeyGenusCharacter.destroy(
+	{where :{ Character: req.params.id, taxon_id: _.map(req.body, function(e){
+	return e._id;
+})
+
+}
+}
+)
+.then(function(){
+  return res.status(204).send()
+})
+  .catch(handleError(res));
+}
+
+
 

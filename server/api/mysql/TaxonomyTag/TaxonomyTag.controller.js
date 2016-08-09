@@ -12,6 +12,7 @@
 var _ = require('lodash');
 var models = require('../')
 var TaxonomyTag = models.TaxonomyTag;
+var Promise = require("bluebird");
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -211,3 +212,35 @@ models.TaxonTag.find({
   })
   .catch(handleError(res));
 };
+
+
+exports.batchAddTaxonomyTag = function(req, res) {
+		
+	var promises = [];
+	
+	_.each(req.body, function(e){
+		promises.push(models.TaxonTag.upsert({ taxon_id: e._id, tag_id: req.params.id}));
+	})
+	
+	return Promise.all(promises)
+	.then(function(){
+	  return res.status(201).send()
+  })
+    .catch(handleError(res));
+}
+
+exports.batchRemoveTaxonomyTag = function(req, res) {
+
+return models.TaxonTag.destroy(
+	{where :{ tag_id: req.params.id, taxon_id: _.map(req.body, function(e){
+	return e._id;
+})
+
+}
+}
+)
+.then(function(){
+  return res.status(204).send()
+})
+  .catch(handleError(res));
+}

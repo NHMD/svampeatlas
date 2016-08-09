@@ -129,7 +129,8 @@ angular.module('svampeatlasApp')
 		  'Record': 'Record',
 		  'slettet.': 'deleted.',
 		  'Danske arter' : 'Danish checklist',
-		  'Checkliste for danske arter' : 'Checklist of Danish fungi'		           
+		  'Checkliste for danske arter' : 'Checklist of Danish fungi',
+		  'Udfør'	: 'Execute'	           
 
 	    });
 	  
@@ -198,7 +199,9 @@ angular.module('svampeatlasApp')
 		  'Search redlist categories': 'Søg rødlistekategorier',
 		  'Search tags': 'Søg tags',
 		  'Enter tags': 'Skriv tags',
+		  'Enter tag': 'Skriv tag',
 		  'Enter characters': 'Skriv karakterer',
+		  'Enter character': 'Skriv karakter',
 		  'Attribute name': 'Attribut navn',
 		  'Reset search': 'Nulstil',
 		  'Raise rank to' : 'Ophøj til',
@@ -222,7 +225,13 @@ angular.module('svampeatlasApp')
 		  'No Facebook account detected.': 'Ingen Facebook konto fundet.',
 		  'Login with credentials, then goto user profile and connect your Facebook account.' : 'Log ind med initialer og password, gå derefter til "profil" og forbin din Facebook konto',
 		  'Please try again later. If the problem persists, contact the system administrator.' : 'Prøv venligst igen senere. Kontakt venligst systemadministratoren hvis problemet vedbliver.',
-		  'A server error has occurred' : 'Der er sket en serverfejl'
+		  'A server error has occurred' : 'Der er sket en serverfejl',
+		  'Type here' : 'Skriv her',
+		  'Operation succeeded.' : 'Handlingen blev udført.',
+		  'Add' : 'Tilføj',
+		  'Remove' : 'Fjern',
+		  'Action' : 'Handling',
+		  'Batch add/remove' : 'Batch tilføj/fjern'
 
   	    });
 	 
