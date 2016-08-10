@@ -130,7 +130,8 @@ angular.module('svampeatlasApp')
 		  'slettet.': 'deleted.',
 		  'Danske arter' : 'Danish checklist',
 		  'Checkliste for danske arter' : 'Checklist of Danish fungi',
-		  'Udfør'	: 'Execute'	           
+		  'Udfør'	: 'Execute',
+		  'Syn. til': 'Syn. of'	           
 
 	    });
 	  
