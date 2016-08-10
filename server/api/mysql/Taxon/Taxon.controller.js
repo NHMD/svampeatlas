@@ -137,9 +137,22 @@ exports.index = function(req, res) {
 		
 	
 	}
-
-	
-	Taxon.findAndCount(query)
+	if(req.query.nocount !== undefined){
+	Taxon.findAll(query)
+		.then(function(taxon) {
+			//res.set('count', taxon.count);
+			if (req.query.offset) {
+				res.set('offset', req.query.offset);
+			};
+			if (req.query.limit) {
+				res.set('limit', req.query.limit);
+			};
+			return res.status(200).json(taxon)
+		})
+		.
+	catch (handleError(res));
+	} else {
+Taxon.findAndCount(query)
 		.then(function(taxon) {
 			res.set('count', taxon.count);
 			if (req.query.offset) {
@@ -152,6 +165,22 @@ exports.index = function(req, res) {
 		})
 		.
 	catch (handleError(res));
+	}
+
+	
+/*	Taxon.findAndCount(query)
+		.then(function(taxon) {
+			res.set('count', taxon.count);
+			if (req.query.offset) {
+				res.set('offset', req.query.offset);
+			};
+			if (req.query.limit) {
+				res.set('limit', req.query.limit);
+			};
+			return res.status(200).json(taxon.rows)
+		})
+		.
+	catch (handleError(res)); */
 	
 };
 

@@ -23,12 +23,42 @@
 	              md-selected-item="selectedItem"
 	              md-search-text="searchText"
 	              md-items="item in querySearch(searchText)"
-	              md-item-text="(!$parent.DkNames) ? item.FullName : item.Vernacularname_DK.vernacularname_dk"
+	              md-item-text="item"
 	              placeholder="{{(newTaxon.length ===0) ? $translate.instant('Skriv art')  : ''}}"
 	 			 ng-disabled="newTaxon.length >0"
+				 md-menu-class="autocomplete-custom-template"
 	 			flex class="taxon-autocomplete">
-	            <span md-highlight-text="searchText" ng-if="!$parent.DkNames">{{($parent.onlyHigherTaxa) ? item.FullName +' sp.' : item.FullName}}</span>
-				<span md-highlight-text="searchText" ng-if="$parent.DkNames">{{($parent.onlyHigherTaxa) ? 'Art af ' +item.Vernacularname_DK.vernacularname_dk : item.Vernacularname_DK.vernacularname_dk}}</span>
+	            
+				
+				<md-item-template>
+				          <span class="item-title">
+				            <ng-md-icon icon="error_outline" size="20" ng-if="(item._id !== item.acceptedTaxon._id) "></ng-md-icon>
+						<span ng-if="item.Vernacularname_DK">
+				            <span ng-if="$parent.onlyHigherTaxa"> {{'Art af ' +item.Vernacularname_DK.vernacularname_dk}} </span>
+							<span ng-if="!$parent.onlyHigherTaxa"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+						</span>
+						<span ng-if="!item.Vernacularname_DK">
+				            <span ng-if="$parent.onlyHigherTaxa" class="item-emphasis"> {{item.FullName +' sp.'}} </span>
+							<span ng-if="!$parent.onlyHigherTaxa" class="item-emphasis"> {{item.FullName}} </span>
+							<span ng-if="!$parent.onlyHigherTaxa" class="item-author"> {{item.Author}} </span>
+						</span>
+				          </span>
+				          <span class="item-metadata" ng-if="item.Vernacularname_DK ">
+							  
+				            <span class="item-metastat item-emphasis" ng-if="$parent.onlyHigherTaxa "> {{item.FullName +' sp.'}} </span>
+							<span class="item-metastat item-emphasis" ng-if="!$parent.onlyHigherTaxa"> {{item.FullName}} </span>
+				           	<span class="item-metastat" ng-if="!$parent.onlyHigherTaxa"> {{item.Author}} </span>
+				          </span>
+						  <span class="item-metadata" ng-if="(item._id !== item.acceptedTaxon._id) ">
+							  <span class="item-emphasis" ng-if="item._id !== item.acceptedTaxon._id">{{'Syn. til' | translate}} {{item.acceptedTaxon.FullName}}</span>
+							  <span class="item-metastat"> {{item.Author}} </span>
+						  </span>
+				        </md-item-template>
+				
+				
+				
+			<!--	<span md-highlight-text="searchText" ng-if="$parent.onlyHigherTaxa">{{(item.Vernacularname_DK.vernacularname_dk) ? 'Art af ' +item.Vernacularname_DK.vernacularname_dk +' ('+item.FullName +' sp.)' : item.FullName +' sp.'}}</span>
+				<span md-highlight-text="searchText" ng-if="!$parent.onlyHigherTaxa">{{(item.Vernacularname_DK.vernacularname_dk) ? item.Vernacularname_DK.vernacularname_dk +' ('+item.FullName +')' : item.FullName }}</span> -->
 	          </md-autocomplete>
 	          <md-chip-template>
 	            <span ng-if="!$parent.onlyHigherTaxa">

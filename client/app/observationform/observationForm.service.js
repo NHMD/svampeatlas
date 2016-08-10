@@ -345,6 +345,7 @@ angular.module('svampeatlasApp')
 									};
 
 									var q = {
+										
 										where: {
 											RankID: RankID
 										},
@@ -371,42 +372,35 @@ angular.module('svampeatlasApp')
 									};
 									
 									var parts = query.split(' ');
-									if ($scope.DkNames) {
-										q.include[1].where = JSON.stringify({
-											vernacularname_dk: {
-												like: "%" + query + "%"
-											}
-										})
-										
-										q.order = "Vernacularname_DK.vernacularname_dk ASC"
-									} else if($scope.threePlusThree && parts.length > 1){
+									
 										
 										q.where = {
-											FullName: {
-												like:  parts[0] + "%"
-											},
-											TaxonName: {
-												like:  parts[1] + "%"
-											},
+											$or: [{
+												FullName: {
+												like: "%" + query + "%"
+											}}, 
+											{"$Vernacularname_DK.vernacularname_dk$" : {like: "%" + query + "%" }}
+										],
+											
 											
 											RankID: RankID
 										};
 										q.order = "FullName ASC"
 										
-									} else {
-
-										q.where = {
-											FullName: {
-												like: "%" + query + "%"
+										if(parts.length > 1){
+											q.where.$or.push({FullName: {
+												like:  parts[0] + "%"
 											},
-											RankID: RankID
-										};
-										q.order = "FullName ASC"
+											TaxonName: {
+												like:  parts[1] + "%"
+											}})
+										}
 										
-									}
+									
 
 
 									var results = query ? Taxon.query({
+										nocount :  true,
 										where: JSON.stringify(q.where),
 										include: JSON.stringify(q.include),
 										order: q.order,

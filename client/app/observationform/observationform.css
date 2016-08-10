@@ -36,3 +36,33 @@ md-grid-tile-footer.obs-form-image {
 .dragover {
     border: 5px dashed rgb(255,64,129);
 }
+
+ .autocomplete-custom-template li {
+  border-bottom: 1px solid #ccc;
+  height: auto;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  white-space: normal; 
+  min-height: 40px;}
+.autocomplete-custom-template li:last-child {
+  border-bottom-width: 0; }
+.autocomplete-custom-template .item-title,
+.autocomplete-custom-template .item-metadata {
+  display: block;
+  line-height: 2; }
+ .autocomplete-custom-template .item-metadata {
+	 font-size: 10px;
+	 
+ }
+ .autocomplete-custom-template  .item-emphasis {
+	font-style: italic;
+ }
+ 
+ .autocomplete-custom-template  .item-author {
+	 font-size:10px;
+ }
+ 
+ 
+.autocomplete-custom-template .item-title md-icon {
+  height: 18px;
+  width: 18px; }
