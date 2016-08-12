@@ -98,9 +98,15 @@ exports.index = function(req, res) {
 	if(req.query.order) {
 		query.order = req.query.order;
 	}
-
+	if(req.query.geometry || req.query.selectedMonths){
+		query.where.$and = [];
+	}
 	if(req.query.geometry){
-		query.where = { $and: models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))}
+		query.where.$and.push(models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom')));
+	}
+	
+	if(req.query.selectedMonths){
+		query.where.$and.push(models.sequelize.literal('MONTH(observationDate) IN ('+req.query.selectedMonths.toString() +')')) ;
 	}
 
 	if (req.query.where) {

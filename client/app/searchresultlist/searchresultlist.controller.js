@@ -169,6 +169,7 @@ angular.module('svampeatlasApp')
 					offset: offset,
 					limit: limit,
 					activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,
+					selectedMonths: ObservationSearchService.getSearch().selectedMonths,
 					where: ObservationSearchService.getSearch().where || {},
 					include: JSON.stringify($scope.queryinclude)
 				};

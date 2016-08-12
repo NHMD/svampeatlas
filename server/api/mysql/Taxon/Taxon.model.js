@@ -77,6 +77,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: true,
     },
+    
 	/*
     diagnose: {
       type: DataTypes.STRING,
@@ -162,6 +163,11 @@ module.exports = function(sequelize, DataTypes) {
     accepted_id: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
+    },
+    probability: {
+      type: DataTypes.INTEGER(11),
+		allowNull: true,
+    defaultValue: 0,
     }
 
   }, {

@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
    	allowNull: true,
    },
    observationDate: {
-   	type: DataTypes.DATE,
+   	type: DataTypes.DATEONLY,
    	allowNull: false
    },
    observationDateAccuracy: {

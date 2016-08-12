@@ -24,3 +24,12 @@
 md-toolbar.searchtabs {
 	min-height: 96px;
 }
+.search-sub-header {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1em;
+    margin: 0 0 0 0;
+    position: relative;
+	color: rgb(96,125,139);
+}

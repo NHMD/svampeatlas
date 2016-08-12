@@ -24,6 +24,7 @@
 	"angular-material": "1.1.0-rc.5",
 	"angular-material-icons": "0.7.0",
 	"moment": "2.11.0",
+	"moment-timezone": "",
 	"leaflet" : "0.7.7",
 	"leaflet.draw" : "",
 	"leaflet-draw-drag" : "",
