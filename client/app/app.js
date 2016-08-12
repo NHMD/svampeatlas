@@ -5,6 +5,7 @@ angular.module('svampeatlasApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
+	'ngMessages',
 //  'btford.socket-io',
   'ui.router',
 	'mgcrea.ngStrap', 

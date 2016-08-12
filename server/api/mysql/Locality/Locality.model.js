@@ -73,7 +73,11 @@ module.exports = function(sequelize, DataTypes) {
    mainlocality: {
    	type: DataTypes.BOOLEAN,
    	allowNull: false,
-   }
+   },
+   probability: {
+   	type: DataTypes.INTEGER,
+   	allowNull: true,
+   },
   }, {
     	tableName: 'Locality',
     	timestamps: true,

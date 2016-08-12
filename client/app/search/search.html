@@ -2,22 +2,303 @@
 <!--<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div> -->
  <md-toolbar class="searchtabs"  ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
 <div layout="row" flex>					
-<md-content layout="row" layout-fill  layout-padding flex>
+<md-content layout="row"    flex>
+					
 					
 
-      <form layout-fill>
-		<div layout-gt-xs="row">
-		 <span flex layout-fill></span> <md-button ng-click="toggleSearchMapSideNav()"
-	  				            class="md-primary"  ng-show="mdMedia('xs')">
-	  				            {{'Søgning på kort' | translate}}
-	  				          </md-button>
+      <form name="searchForm" layout-padding layout-fill>
+  		  <div  md-whiteframe="3" layout-padding>
+  			   <span class="search-sub-header">{{'Art / taxon' | translate}}</span>
+			   		<div layout-gt-xs="row">
+			         <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" ng-show="!search.DkNames" class="md-block" flex-gt-xs>
+
+			           <md-autocomplete
+			     	  	md-min-length="3"
+			     		md-no-cache="true"
+			               md-selected-item="selectedItem"
+			               md-search-text="searchText"
+			               md-items="item in querySearch(searchText)"
+			               md-item-text="item.FullName"
+			               placeholder="{{taxonPlaceholder}}">
+			             <span md-highlight-text="searchText">{{item.FullName}}</span>
+			           </md-autocomplete>
+			           <md-chip-template>
+			             <span>
+			               <strong>{{($chip.FullName) ? $chip.FullName: $chip.vernacularname_dk}}</strong>
+
+			             </span>
+			           </md-chip-template>
+		
+			         </md-chips>
+			         <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" ng-show="search.DkNames" class="md-block" flex-gt-xs>
+
+			           <md-autocomplete
+			     	  	md-min-length="3"
+			     		md-no-cache="true"
+			               md-selected-item="selectedItem"
+			               md-search-text="searchText"
+			               md-items="item in querySearch(searchText)"
+			               md-item-text="item.vernacularname_dk"
+			               placeholder="{{taxonPlaceholder}}">
+			             <span md-highlight-text="searchText">{{item.vernacularname_dk}}</span>
+			           </md-autocomplete>
+			           <md-chip-template>
+			             <span>
+			               <strong>{{($chip.FullName) ? $chip.FullName: $chip.vernacularname_dk}}</strong>
+
+			             </span>
+			           </md-chip-template>
+		
+			         </md-chips>
+			       <md-switch ng-model="search.threePlusThree" aria-label="threePlusThree" ng-show="!search.onlyHigherTaxa && !search.DkNames">
+			           {{'3+3' | translate}}
+			         </md-switch>
+ 	
+			     </div>
+  
+ 
+			     <div layout-gt-xs="row">
+			      	<md-switch ng-model="search.DkNames" aria-label="Søg danske navne">
+			      	   <span translate> Danske navne</span>
+			      	  </md-switch>
+			     </div>
+			      <div layout-gt-xs="row">
+			   <md-switch ng-model="search.onlyHigherTaxa" aria-label="Højere taxa">
+			      <span translate>Søg i slægter, familier, ordener osv.</span>
+			     </md-switch>
+	 
+			     </div>
+	  		   	 <md-input-container >	
+	  		   	<label translate>Rødlistestatus</label>  
+	  		   <md-select aria-label="rødlistestatus" id="redlist" ng-model="search.include[0].where.Taxon_redlist_status">
+	    		 	<md-option value=""></md-option>
+	  		     <md-option ng-value="{{['RE','CR', 'EN', 'VU', 'NT']}}" ng-selected="search.include[0].where.Taxon_redlist_status.length > 2">{{'Alle rødlistede' | translate}}</md-option>
+	  		     <md-option value="RE">RE - {{'Forsvundet' | translate}}</md-option>
+	  		     <md-option value="CR">CR - {{'Kritisk truet' | translate}}</md-option>
+	  		     <md-option value="EN">EN - {{'Moderat truet' | translate}}</md-option>
+	  		     <md-option value="VU">VU - {{'Sårbar' | translate}}</md-option>
+	  		     <md-option value="NT">NT - {{'Næsten truet' | translate}}</md-option>
+	  		     <md-option value="LC">LC - {{'Ikke truet' | translate}}</md-option>
+	  		     <md-option value="DD">DD - {{'Utilstrækkelige data' | translate}}</md-option>
+	  		     <md-option value="NA">NA - {{'Ikke mulig' | translate}}</md-option>
+	  		     <md-option value="NE">NE - {{'Ikke bedømt' | translate}}</md-option>
+	  		             </md-select>
+	  		   	  </md-input-container>
+  		</div>
+  		  <div  md-whiteframe="3" layout-padding>
+  			   <span class="search-sub-header">{{'Geografi' | translate}}</span>
+			    <div layout-gt-xs="row">
+			   <md-chips ng-model="search.selectedLocalities" md-autocomplete-snap md-require-match="false" class="md-block" flex-gt-xs>
+
+			     <md-autocomplete
+			   	md-min-length="3"
+			 	md-no-cache="true"
+			         md-selected-item="selectedItem"
+			         md-search-text="searchText"
+			         md-items="item in querySearchLocality(searchText)"
+			         md-item-text="item"
+			         placeholder="{{'Lokalitet' | translate}}">
+			       <span md-highlight-text="searchText">{{item}}</span>
+			     </md-autocomplete>
+			     <md-chip-template>
+			       <span>
+			         <strong>{{$chip}}</strong>
+
+			       </span>
+			     </md-chip-template>
+	
+			   </md-chips>
+
+			   </div>
+			   <div layout-gt-xs="row">
+			 	  <md-switch ng-model="search.includeForeign" aria-label="Inkludér udenlandske fund" >
+			 	      <span translate>Inkludér udenlandske fund</span>
+			 	    </md-switch>
+			 	    <md-switch ng-model="search.onlyForeign" aria-label="Vis kun udenlandske fund" >
+			 	        <span translate>Kun udenlandske fund</span>
+			 	      </md-switch>
+			 	</div>
+				<md-button ng-click="toggleSearchMapSideNav()"
+					  				            class="md-primary"  ng-show="mdMedia('xs')">
+					  				            {{'Søgning på kort' | translate}}
+					  				          </md-button>
+  		</div>
+  		  <div  md-whiteframe="3" layout-padding>
+  			   <span class="search-sub-header">{{'Tid' | translate}}</span>
+			   <div layout-gt-xs="row">
+		 	  
+	           <md-datepicker ng-model="search.fromDate" md-placeholder="{{(search.exactDate) ? ('Dato' | translate ):('Fra dato' | translate)}}">
+	           </md-datepicker>
+        
+          
+	           <md-datepicker ng-model="search.toDate" ng-show="!search.exactDate" md-placeholder="{{'Til dato' | translate}}">
+	           </md-datepicker>
+ 		 	  <md-switch ng-model="search.exactDate" aria-label="På eksakt dato" layout-margin>
+ 		 	      <span translate>Eksakt dato</span>
+ 		 	    </md-switch>
+			   </div>
+			   <div layout-gt-xs="row">
+				   <md-input-container class="md-block" flex-gt-sm>
+				            <label>{{'Fra år' | translate}}</label>
+				            <input name="fromYear" ng-model="fromYear" ng-pattern="/^[0-9]{2,4}$/" ng-change="setFromYear(fromYear)"/>
+							<div ng-messages="searchForm.fromYear.$error" role="alert" >
+							              
+							              <div ng-message="pattern" >{{'Indtast et gyldigt årstal.'}}
+							              </div>
+							             
+							            </div>
+				         
+				          </md-input-container>
+	   				   <md-input-container class="md-block" flex-gt-sm>
+	   				            <label>{{'Til år' | translate}}</label>
+	   				            <input name="toYear" ng-model="toYear" ng-pattern="/^[0-9]{2,4}$/" ng-change="setToYear(toYear)"/>
+							<div ng-messages="searchForm.toYear.$error" role="alert" >
+							              
+							              <div ng-message="pattern" >{{'Indtast et gyldigt årstal.'}}
+							              </div>
+							             
+							            </div>
+				         
+	   				          </md-input-container>
+			   </div>
+			   <label>{{'Måneder' | translate}}</label>
+			   <div layout-gt-xs="row">
+				    
+			    <md-checkbox class="md-primary" ng-repeat="month in months" ng-checked="exists(month, search.selectedMonths)" ng-click="toggle(month, search.selectedMonths)">{{month}}</md-checkbox>
+				</div>
+  		</div>
+  		  <div  md-whiteframe="3" layout-padding>
+  			   <span class="search-sub-header">{{'Økologi' | translate}}</span>
+			   <div layout-gt-xs="row" >
+			   	 <md-input-container >	
+			   	<label translate>Livsstrategi - *beta*</label>  
+			   <md-select aria-label="livsstrategi" id="livsstrategi" ng-model="search.livsstrategi">
+			 	<md-option value=""></md-option>
+    
+			     <md-option value="{{str.key}}" ng-repeat="str in strategiesUI">{{str[$translate.use()]}}</md-option>
+    
+			             </md-select>
+			   	  </md-input-container>
+			   <md-input-container>
+			           <label>{{'Substrat' | translate}}</label>
+			           <md-select name="substrate" ng-model="search.selectedSubstrate" >
+			             <md-option ng-repeat="sub in substrates" value="{{sub._id}}" >
+			               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+			             </md-option>
+			           </md-select>
+					   
+			         </md-input-container>
+ 				   <md-input-container>
+ 				           <label>{{'Vegetationstype' | translate}}</label>
+ 				           <md-select ng-model="search.selectedVegetationType" name="vegetationType">
+ 				             <md-option ng-repeat="veg in vegetationtypes" value="{{veg._id}}" >
+							  {{($translate.use() === 'en') ? veg.name_uk : veg.name}}
+ 				              
+ 				             </md-option>
+ 				           </md-select>
+						   
+ 				         </md-input-container>
+				  
+				  
+			   </div>
+			   
+ 			   <div  layout="row">
+  				  <md-chips ng-model="search.associatedOrganism" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
+
+  				    <md-autocomplete
+ 					
+					
+  				        md-selected-item="selectedItem"
+  				        md-search-text="searchText"
+  				        md-items="item in querySearchPlantTaxon(searchText)"
+  				        md-item-text="item.DKandLatinName"
+  				        placeholder="{{'Skriv vært' | translate }}"
+  						>
+  				      <span md-highlight-text="searchText">{{item.DKandLatinName}}</span>
+  				    </md-autocomplete>
+  				    <md-chip-template>
+  				      <span>
+  				        <strong>{{$chip.DKandLatinName}}</strong>
+
+  				      </span>
+  				    </md-chip-template>
+	
+  				  </md-chips>
+ 			
+			   	
+ 			  </div>
+			   
+  		
+  		</div>
+  		  <div  md-whiteframe="3" layout-padding>
+  			   <span class="search-sub-header">{{'Personer' | translate}}</span>
+	           <div layout-gt-xs="row">
+		  
+	 		   <md-input-container class="md-block" flex-gt-xs>
+	 		           <label translate>Finder</label>
+	 		           <input  ng-model="search.finder" >
+	 		         </md-input-container>
+	 	  		   <md-input-container>
+	 	  		           <label translate>Initialer</label>
+	 	  		           <input  ng-model="search.include[1].where.Initialer">
+	 	  		         </md-input-container>
+						 </div>
+						 <div>
+			 			 	<md-switch ng-model="search.notMyObservations" aria-label="Søg ikke i mine fund" ng-if="Auth.isLoggedIn()">
+			 			 	   <span translate>Ikke mine fund</span>
+			 			 	  </md-switch>
+			 		 	<md-switch ng-model="search.onlyMyObservations" aria-label="Søg mine fund" ng-if="Auth.isLoggedIn()">
+			 		 	   <span translate>Kun mine fund</span>
+			 		 	  </md-switch>
+		   </div>
+	           
+  		
+  		</div>
+  		  <div  md-whiteframe="3" layout-padding>
+  			   <span class="search-sub-header">{{'Fundegenskaber' | translate}}</span>
+		            <div layout-gt-xs="row">
+		   	<md-input-container class="md-block" flex-gt-xs>	
+		   	<label>Status</label> 
+		   		 <md-select aria-label="status" ng-model="search.include[0].where.Determination_validation">
+		   		           <md-option ng-value="{{['Godkendt','Valideres', 'Afventer', 'Gammelvali']}}">{{'Alle' | translate}}</md-option>        
+		   		   <md-option value="Godkendt">{{'Godkendte' | translate}}</md-option>
+		   		   <md-option value="Valideres">{{'Valideres' | translate}}</md-option>
+		   		   <md-option value="Afventer">{{'Afventer' | translate}}</md-option>
+		   		   <md-option value="Afvist" ng-if="Auth.hasRole('validator')">{{'Afviste' | translate}}</md-option>
+		   		   <md-option value="Gammelvali">{{'Ældre fund afventer' | translate}}</md-option>
+		   		                 </md-select>
+		   						 </md-input-container>
+						 
+						
+		             
+           
+		  
+		            </div>
+           <div layout-gt-xs="row">
+    	   <md-input-container class="md-block" flex-gt-xs>
+    	           <label translate>Databasenummer</label>
+    	           <input  ng-model="search.databasenumber" >
+    	         </md-input-container>
+ 	     	   <md-input-container class="md-block" flex-gt-xs>
+ 	     	           <label translate>Kollektionsnummer</label>
+ 	     	           <input  ng-model="search.fieldnumber" >
+ 	     	         </md-input-container>
+		   	
 			
-			 	<md-switch ng-model="search.notMyObservations" aria-label="Søg ikke i mine fund" ng-if="Auth.isLoggedIn()">
-			 	   <span translate>Ikke mine fund</span>
-			 	  </md-switch>
-		 	<md-switch ng-model="search.onlyMyObservations" aria-label="Søg mine fund" ng-if="Auth.isLoggedIn()">
-		 	   <span translate>Kun mine fund</span>
-		 	  </md-switch>
+           </div>
+  		</div>
+		  
+		  
+		  
+		  
+		  
+		  
+		  <div  md-whiteframe="3" layout-padding>
+			   <span class="search-sub-header">Unread Messages</span>
+		<div layout-gt-xs="row">
+		 <span flex layout-fill></span> 
+			
+			 	
 		 	
 		 
 	 	<md-switch ng-model="search.activeThreadsOnly" aria-label="Søg aktive tråde" ng-if="Auth.isLoggedIn()">
@@ -25,171 +306,16 @@
 	 	  </md-switch>
 			 
 							  </div>
-         <div layout-gt-xs="row">
-	<md-input-container class="md-block" flex-gt-xs>	
-	<label>Status</label> 
-		 <md-select aria-label="status" ng-model="search.include[0].where.Determination_validation">
-		           <md-option ng-value="{{['Godkendt','Valideres', 'Afventer', 'Gammelvali']}}">{{'Alle' | translate}}</md-option>        
-		   <md-option value="Godkendt">{{'Godkendte' | translate}}</md-option>
-		   <md-option value="Valideres">{{'Valideres' | translate}}</md-option>
-		   <md-option value="Afventer">{{'Afventer' | translate}}</md-option>
-		   <md-option value="Afvist" ng-if="Auth.hasRole('validator')">{{'Afviste' | translate}}</md-option>
-		   <md-option value="Gammelvali">{{'Ældre fund afventer' | translate}}</md-option>
-		                 </md-select>
-						 </md-input-container>
-						 
-						
-		             
-           <md-datepicker ng-model="search.fromDate" md-placeholder="{{'Fra dato' | translate}}">
-           </md-datepicker>
+							  </div>
+							
+         
         
-          
-           <md-datepicker ng-model="search.toDate" md-placeholder="{{'Til dato' | translate}}">
-           </md-datepicker>
-		  
-         </div>
-          <div layout-gt-xs="row">
-		  
-		   <md-input-container class="md-block" flex-gt-xs>
-		           <label translate>Finder</label>
-		           <input  ng-model="search.finder" >
-		         </md-input-container>
-	  		   <md-input-container>
-	  		           <label translate>Initialer</label>
-	  		           <input  ng-model="search.include[1].where.Initialer">
-	  		         </md-input-container>
-		   
-          </div>
-          <div layout-gt-xs="row">
-   	   <md-input-container class="md-block" flex-gt-xs>
-   	           <label translate>Databasenummer</label>
-   	           <input  ng-model="search.databasenumber" >
-   	         </md-input-container>
-	     	   <md-input-container class="md-block" flex-gt-xs>
-	     	           <label translate>Kollektionsnummer</label>
-	     	           <input  ng-model="search.fieldnumber" >
-	     	         </md-input-container>
-		   	 <md-input-container >	
-		   	<label translate>Rødlistestatus</label>  
-		   <md-select aria-label="rødlistestatus" id="redlist" ng-model="search.include[0].where.Taxon_redlist_status">
-  		 	<md-option value=""></md-option>
-		     <md-option ng-value="{{['RE','CR', 'EN', 'VU', 'NT']}}" ng-selected="search.include[0].where.Taxon_redlist_status.length > 2">{{'Alle rødlistede' | translate}}</md-option>
-		     <md-option value="RE">RE - {{'Forsvundet' | translate}}</md-option>
-		     <md-option value="CR">CR - {{'Kritisk truet' | translate}}</md-option>
-		     <md-option value="EN">EN - {{'Moderat truet' | translate}}</md-option>
-		     <md-option value="VU">VU - {{'Sårbar' | translate}}</md-option>
-		     <md-option value="NT">NT - {{'Næsten truet' | translate}}</md-option>
-		     <md-option value="LC">LC - {{'Ikke truet' | translate}}</md-option>
-		     <md-option value="DD">DD - {{'Utilstrækkelige data' | translate}}</md-option>
-		     <md-option value="NA">NA - {{'Ikke mulig' | translate}}</md-option>
-		     <md-option value="NE">NE - {{'Ikke bedømt' | translate}}</md-option>
-		             </md-select>
-		   	  </md-input-container>
-			
-          </div>
 		
 
-		<div layout-gt-xs="row">
-      <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" ng-show="!search.DkNames" class="md-block" flex-gt-xs>
 
-        <md-autocomplete
-  	  	md-min-length="3"
-  		md-no-cache="true"
-            md-selected-item="selectedItem"
-            md-search-text="searchText"
-            md-items="item in querySearch(searchText)"
-            md-item-text="item.FullName"
-            placeholder="{{taxonPlaceholder}}">
-          <span md-highlight-text="searchText">{{item.FullName}}</span>
-        </md-autocomplete>
-        <md-chip-template>
-          <span>
-            <strong>{{($chip.FullName) ? $chip.FullName: $chip.vernacularname_dk}}</strong>
 
-          </span>
-        </md-chip-template>
-		
-      </md-chips>
-      <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" ng-show="search.DkNames" class="md-block" flex-gt-xs>
-
-        <md-autocomplete
-  	  	md-min-length="3"
-  		md-no-cache="true"
-            md-selected-item="selectedItem"
-            md-search-text="searchText"
-            md-items="item in querySearch(searchText)"
-            md-item-text="item.vernacularname_dk"
-            placeholder="{{taxonPlaceholder}}">
-          <span md-highlight-text="searchText">{{item.vernacularname_dk}}</span>
-        </md-autocomplete>
-        <md-chip-template>
-          <span>
-            <strong>{{($chip.FullName) ? $chip.FullName: $chip.vernacularname_dk}}</strong>
-
-          </span>
-        </md-chip-template>
-		
-      </md-chips>
-    <md-switch ng-model="search.threePlusThree" aria-label="threePlusThree" ng-show="!search.onlyHigherTaxa && !search.DkNames">
-        {{'3+3' | translate}}
-      </md-switch>
- 	
-  </div>
   
- 
-  <div layout-gt-xs="row">
-   	<md-switch ng-model="search.DkNames" aria-label="Søg danske navne">
-   	   <span translate> Danske navne</span>
-   	  </md-switch>
-  </div>
-   <div layout-gt-xs="row">
-<md-switch ng-model="search.onlyHigherTaxa" aria-label="Højere taxa">
-   <span translate>Søg i slægter, familier, ordener osv.</span>
-  </md-switch>
-	 
-  </div>
-   <div layout-gt-xs="row">
-  <md-chips ng-model="search.selectedLocalities" md-autocomplete-snap md-require-match="false" class="md-block" flex-gt-xs>
 
-    <md-autocomplete
-  	md-min-length="3"
-	md-no-cache="true"
-        md-selected-item="selectedItem"
-        md-search-text="searchText"
-        md-items="item in querySearchLocality(searchText)"
-        md-item-text="item"
-        placeholder="{{'Lokalitet' | translate}}">
-      <span md-highlight-text="searchText">{{item}}</span>
-    </md-autocomplete>
-    <md-chip-template>
-      <span>
-        <strong>{{$chip}}</strong>
-
-      </span>
-    </md-chip-template>
-	
-  </md-chips>
-
-  </div>
-  <div layout-gt-xs="row">
-	  <md-switch ng-model="search.includeForeign" aria-label="Inkludér udenlandske fund" >
-	      <span translate>Inkludér udenlandske fund</span>
-	    </md-switch>
-	    <md-switch ng-model="search.onlyForeign" aria-label="Vis kun udenlandske fund" >
-	        <span translate>Kun udenlandske fund</span>
-	      </md-switch>
-	</div>  
-  <div layout-gt-xs="row" ng-if="Auth.hasRole('validator')">
-  	 <md-input-container >	
-  	<label translate>Livsstrategi</label>  
-  <md-select aria-label="livsstrategi" id="livsstrategi" ng-model="search.livsstrategi">
-	<md-option value=""></md-option>
-    
-    <md-option value="{{str.key}}" ng-repeat="str in strategiesUI">{{str[$translate.use()]}}</md-option>
-    
-            </md-select>
-  	  </md-input-container>
-  </div>
    <div layout="row" class="validator-button-container" >
 	   <span layout-fill flex="80"></span>
 	   <md-button class="md-fab md-warn" aria-label="Nulstil formular" ng-click="resetForm()">

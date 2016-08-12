@@ -30,7 +30,7 @@ angular.module('svampeatlasApp')
 		  'Nyheder' : 'News',
 		  'Indstillinger' : 'Settings',
 		  'Inkludér udenlandske fund' : 'Include foreign findings',
-		  'Søg i slægter, familier, ordener osv.' : 'Search genera, families, orders etc.',
+		  'Søg i familier, ordener osv.' : 'Search families, orders etc.',
 		  'Danske navne' : 'Danish names',
 		  'Rødlistestatus' : 'Red list status',
 		  'Databasenummer' : 'Database id',

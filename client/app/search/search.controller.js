@@ -1,13 +1,16 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate',
-		function($scope, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'Substrate', 'VegetationType', 'PlantTaxon', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter',
+		function($scope, ObservationSearchService, Taxon, TaxonDKnames, Locality, Substrate,VegetationType, PlantTaxon, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter) {
 			$scope.Auth = Auth;
 			$scope.state = $state;
 			$scope.mdMedia = $mdMedia;
 			$scope.$translate = $translate;
 			$scope.toggleSearchMapSideNav = buildToggler('searchmapsidenav');
+			
+			$scope.substrates = Substrate.query();
+			$scope.vegetationtypes = VegetationType.query();
 			
 	  	  $scope.openMenu = function($mdOpenMenu, ev) {
      		 
@@ -310,7 +313,55 @@ angular.module('svampeatlasApp')
 			$scope.strategies = ['mycorrhizal', 'lichenized', 'parasite', 'saprobe', 'on_lichens', 'on_wood']
 			$scope.search.selectedHigherTaxa = $scope.search.selectedHigherTaxa || [];
 			$scope.search.selectedLocalities = $scope.search.selectedLocalities || [];
+			$scope.search.associatedOrganism = $scope.search.associatedOrganism || [];
+			
+			$scope.querySearchPlantTaxon = function(query) {
 
+
+				var results = query ? PlantTaxon.query({
+					where: {
+						$or: [{
+							DKname: {
+								like: query + "%"
+							}
+						}, {
+							LatinName: {
+								like: query + "%"
+							}
+						}]
+						
+
+					},
+					limit: 30,
+					order: "probability DESC"
+				}).$promise : [];
+
+				return results;
+
+			};
+			
+			
+			$scope.setFromYear = function(year){
+				$scope.search.fromDate = new Date(year, 0, 1);
+			}
+			
+			$scope.setToYear = function(year){
+				$scope.search.toDate = new Date(year, 11, 31);
+			}
+			$scope.months = [1,2,3,4,5,6,7,8,9,10,11,12];
+			$scope.search.selectedMonths = $scope.search.selectedMonths || [];
+			      $scope.toggle = function (item, list) {
+			        var idx = list.indexOf(item);
+			        if (idx > -1) {
+			          list.splice(idx, 1);
+			        }
+			        else {
+			          list.push(item);
+			        }
+			      };
+				  $scope.exists = function (item, list) {
+				          return list.indexOf(item) > -1;
+				        };
 			//observationSearch.where.observationDate.$between[0]
 			$scope.$watch('search', function(newVal, oldVal) {
 
@@ -345,6 +396,18 @@ angular.module('svampeatlasApp')
 
 				}
 				
+				if($scope.search.selectedVegetationType){
+					$scope.observationSearch.where.vegetationtype_id = $scope.search.selectedVegetationType;
+				} else {
+					delete $scope.observationSearch.where.vegetationtype_id;
+				}
+				
+				if($scope.search.selectedSubstrate){
+					$scope.observationSearch.where.substrate_id = $scope.search.selectedSubstrate;
+				} else {
+					delete $scope.observationSearch.where.substrate_id;
+				}
+				
 
 				if (newVal.DkNames === true) {
 					$scope.taxonPlaceholder = $translate.instant("Dansk navn");
@@ -353,10 +416,6 @@ angular.module('svampeatlasApp')
 				}
 				
 				
-				
-				$scope.$watch('selectedItem', function(newval, oldval){
-					console.log("selectedItem " +newval)
-				})
 				
 				if($scope.search.onlyForeign){
 					$scope.search.include[2].required = false;
@@ -409,6 +468,7 @@ angular.module('svampeatlasApp')
 				} else {
 					delete $scope.search.include[2].where.$or;
 				}
+				
 
 				/*
 				if ($scope.search.include[0].where.Taxon_redlist_status === "ALL") {
@@ -435,6 +495,18 @@ angular.module('svampeatlasApp')
 				$scope.observationSearch.include = $scope.search.include;
 				
 				
+				if ($scope.search.associatedOrganism.length > 0) {
+					$scope.observationSearch.where.primaryassociatedorganism_id = {$in: _.map($scope.search.associatedOrganism, function(org) {
+						return org._id
+					})}
+					
+					
+				} else {
+					delete $scope.observationSearch.where.primaryassociatedorganism_id;
+				}
+				
+				
+				
 				if ($scope.search.onlyMyObservations) {
 					$scope.observationSearch.where.primaryuser_id = Auth.getCurrentUser()._id
 				} 
@@ -456,22 +528,25 @@ angular.module('svampeatlasApp')
 					$scope.observationSearch.include[0].where.Determination_validation = $scope.search.include[0].where.Determination_validation;
 				}
 				if ($scope.search.fieldnumber) {
-					$scope.observationSearch.where.fieldnumber = {$like: $scope.search.fieldnumber+"%"} ;
+					$scope.observationSearch.where.fieldnumber = {$like: "%"+$scope.search.fieldnumber+"%"} ;
 				} else {
 					delete $scope.observationSearch.where.fieldnumber;
 				}
 				if ($scope.search.fromDate && $scope.search.toDate) {
 					$scope.observationSearch.where.observationDate = {
 
-						$between: [moment($scope.search.fromDate).subtract(1, 'day'), moment($scope.search.toDate).add(1, 'day')]
+						$between: [$filter('date')($scope.search.fromDate, "yyyy-MM-dd", '+0200'), $filter('date')($scope.search.toDate, "yyyy-MM-dd", '+0200')]
 					}
 				} else if ($scope.search.fromDate) {
-					$scope.observationSearch.where.observationDate = {
-						$gte: $scope.search.fromDate
-					}
+					var formattedDate = $filter('date')($scope.search.fromDate, "yyyy-MM-dd", '+0200');
+					$scope.observationSearch.where.observationDate = ($scope.search.exactDate) ? formattedDate : {
+						$gte: formattedDate
+						
+					};
+					
 				} else if ($scope.search.toDate) {
 					$scope.observationSearch.where.observationDate = {
-						$lte: $scope.search.toDate
+						$lte:  $filter('date')($scope.search.toDate, "yyyy-MM-dd", '+0200')
 					}
 				}
 				if ($scope.search.geometry) {
@@ -484,6 +559,12 @@ angular.module('svampeatlasApp')
 					$scope.observationSearch.activeThreadsOnly = $scope.search.activeThreadsOnly;
 				} else {
 					delete $scope.observationSearch.activeThreadsOnly;
+				}
+				
+				if($scope.search.selectedMonths.length > 0){
+					$scope.observationSearch.selectedMonths = $scope.search.selectedMonths;
+				} else {
+					delete $scope.observationSearch.selectedMonths
 				}
 
 			}, true)

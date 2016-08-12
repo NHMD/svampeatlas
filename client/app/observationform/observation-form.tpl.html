@@ -32,27 +32,29 @@
 				
 				<md-item-template>
 				          <span class="item-title">
-				            <ng-md-icon icon="error_outline" size="20" ng-if="(item._id !== item.acceptedTaxon._id) "></ng-md-icon>
+							  
 						<span ng-if="item.Vernacularname_DK">
-				            <span ng-if="$parent.onlyHigherTaxa"> {{'Art af ' +item.Vernacularname_DK.vernacularname_dk}} </span>
-							<span ng-if="!$parent.onlyHigherTaxa"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+				            <span ng-if="10000 > item.RankID"> {{(item.RankID === 5000)? 'Art af ':''}} {{item.Vernacularname_DK.vernacularname_dk}} </span>
+							<span ng-if="item.RankID > 9999"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 						</span>
 						<span ng-if="!item.Vernacularname_DK">
-				            <span ng-if="$parent.onlyHigherTaxa" class="item-emphasis"> {{item.FullName +' sp.'}} </span>
-							<span ng-if="!$parent.onlyHigherTaxa" class="item-emphasis"> {{item.FullName}} </span>
-							<span ng-if="!$parent.onlyHigherTaxa" class="item-author"> {{item.Author}} </span>
+				            <span ng-if="10000 > item.RankID" class="item-emphasis"> {{item.FullName}} {{(item.RankID === 5000)? ' sp.' :''}} </span>
+							<span ng-if="item.RankID > 9999" class="item-emphasis"> {{item.FullName}} </span>
+							<span ng-if="item.RankID > 9999" class="item-author"> {{item.Author}} </span>
 						</span>
 				          </span>
 				          <span class="item-metadata" ng-if="item.Vernacularname_DK ">
 							  
-				            <span class="item-metastat item-emphasis" ng-if="$parent.onlyHigherTaxa "> {{item.FullName +' sp.'}} </span>
-							<span class="item-metastat item-emphasis" ng-if="!$parent.onlyHigherTaxa"> {{item.FullName}} </span>
-				           	<span class="item-metastat" ng-if="!$parent.onlyHigherTaxa"> {{item.Author}} </span>
+				            <span class="item-metastat item-emphasis" ng-if="10000 > item.RankID"> {{item.FullName}} {{(item.RankID === 5000)? ' sp.' :''}}</span>
+							<span class="item-metastat item-emphasis" ng-if="item.RankID > 9999"> {{item.FullName}} </span>
+				           	<span class="item-metastat" ng-if="item.RankID > 9999"> {{item.Author}} </span>
 				          </span>
 						  <span class="item-metadata" ng-if="(item._id !== item.acceptedTaxon._id) ">
 							  <span class="item-emphasis" ng-if="item._id !== item.acceptedTaxon._id">{{'Syn. til' | translate}} {{item.acceptedTaxon.FullName}}</span>
 							  <span class="item-metastat"> {{item.Author}} </span>
 						  </span>
+						 <span class="item-metadata" ng-if="item.probability === 0 && item.acceptedTaxon.attributes.PresentInDK === false && item.RankID > 9999"> 
+						  <ng-md-icon icon="error_outline" size="20"></ng-md-icon> {{'Ikke kendt fra Danmark'}}</span>
 				        </md-item-template>
 				
 				
@@ -61,12 +63,12 @@
 				<span md-highlight-text="searchText" ng-if="!$parent.onlyHigherTaxa">{{(item.Vernacularname_DK.vernacularname_dk) ? item.Vernacularname_DK.vernacularname_dk +' ('+item.FullName +')' : item.FullName }}</span> -->
 	          </md-autocomplete>
 	          <md-chip-template>
-	            <span ng-if="!$parent.onlyHigherTaxa">
+	            <span ng-if="$chip.RankID > 4999">
 	 			   <strong ng-if="$chip.Vernacularname_DK">{{$chip.Vernacularname_DK.vernacularname_dk | capitalize}} (</strong>
 	              <strong><em>{{$chip.FullName}}</em> {{$chip.Author}}</strong>
 				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
 	            </span>
-	            <span ng-if="$parent.onlyHigherTaxa">
+	            <span ng-if="5000 > $chip.RankID">
 	 			   <strong ng-if="$chip.Vernacularname_DK">Art af {{$chip.Vernacularname_DK.vernacularname_dk}} (</strong>
 	              <strong><em>{{$chip.FullName}} sp.</em></strong>
 				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
@@ -76,18 +78,11 @@
 	        </md-chips>
 			<md-button class="md-raised md-warn" ng-click="handleUndetermined()" ng-if="newTaxon.length === 0">Ubestemt svamp</md-button>
 	 	      </div>
-		 		  <div layout="row" layout-margin>
-				   	<md-switch ng-model="$parent.$parent.$parent.DkNames" aria-label="Søg danske navne" ng-show="newTaxon.length ===0">
-				   	    {{'Danske navne' | translate}}
-				   	  </md-switch>
-  		 	   <md-switch ng-model="$parent.$parent.$parent.threePlusThree" aria-label="threePlusThree" ng-show="!$parent.$parent.$parent.onlyHigherTaxa && !$parent.$parent.$parent.DkNames && newTaxon.length ===0">
-  		 	       {{'3+3' | translate}}
-  		 	     </md-switch>
-		 	 </div>
+		 		
 			 <div layout="row" layout-margin>
   		 	   
   		 	   <md-switch ng-model="$parent.$parent.$parent.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
-  		 	       {{'Søg i slægter, familier, ordener osv.' | translate}}
+  		 	       {{'Søg i familier, ordener osv.' | translate}}
   		 	     </md-switch>
 				 
 			 </div>
