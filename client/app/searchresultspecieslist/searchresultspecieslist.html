@@ -11,17 +11,17 @@
 	<div class="table-responsive-vertical shadow-z-1">
 
 
-<table  class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed">
+<table  class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-table="displayed" st-safe-src='serverData'>
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
 	<thead>
 		<tr ng-show="displayed && !isLoading">
-			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultlist/pagination.tpl.html">
+			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultspecieslist/pagination.tpl.html">
 			</th>
 		</tr>
 	<tr>
 		
 		
-		<th st-sort="DeterminationView.Taxon_FullName"  translate>Art</th>
+		<th st-sort="DeterminationView.Taxon_FullName" translate>Art</th>
 		<th st-sort="observationCount"  translate>Antal fund</th>
 		
 		
@@ -31,7 +31,9 @@
 	<tr ng-repeat="row in displayed">
 		
 		
-		<td data-title="{{'Art' | translate}}"> <span ng-if="row.DeterminationView.Taxon_vernacularname_dk"><strong>{{row.DeterminationView.Taxon_vernacularname_dk}}</strong> - </span><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span></td>
+		<td data-title="{{'Art' | translate}}"> <em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp. </span></em>
+			<span ng-if="row.DeterminationView.Taxon_vernacularname_dk">- {{row.DeterminationView.Taxon_vernacularname_dk}} </span>
+			<span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span></td>
 		<td data-title="{{'Antal fund' | translate}}">{{row.observationCount}}</td>	
 		
 				
@@ -53,7 +55,7 @@
 
 	<tfoot  ng-show="displayed && !isLoading">
 	<tr>
-		<td st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultlist/pagination.tpl.html">
+		<td st-pagination="" st-displayed-pages="7" st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultspecieslist/pagination.tpl.html">
 		</td>
 	</tr>
 	</tfoot> 

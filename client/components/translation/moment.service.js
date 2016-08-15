@@ -15,10 +15,10 @@ angular.module('svampeatlasApp').config(function($mdDateLocaleProvider) {
     // Example uses moment.js to parse and format dates.
     $mdDateLocaleProvider.parseDate = function(dateString) {
       var m = moment(dateString, 'L', true);
-      return m.isValid() ? m.tz("Europe/Copenhagen").toDate() : new Date(NaN);
+      return m.isValid() ? m.toDate() : new Date(NaN);
     };
     $mdDateLocaleProvider.formatDate = function(date) {
-      return (date) ? moment.tz(date, "Europe/Copenhagen").format('L'): "";
+      return (date) ? moment(date).format('L'): "";
     };
     $mdDateLocaleProvider.monthHeaderFormatter = function(date) {
       return myShortMonths[date.getMonth()] + ' ' + date.getFullYear();

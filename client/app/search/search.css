@@ -7,6 +7,7 @@
   #searchmap-sidenav {
     width: 500px !important;
     max-width: 500px !important;
+	margin-top: 8px;
   }
 }
 
@@ -14,6 +15,7 @@
   #searchmap-sidenav {
     width: 400px !important;
     max-width: 400px !important;
+	margin-top: 8px;
   }
 }
 
@@ -33,3 +35,8 @@ md-toolbar.searchtabs {
     position: relative;
 	color: rgb(96,125,139);
 }
+
+.search-section {
+	margin-bottom: 16px;
+}
+

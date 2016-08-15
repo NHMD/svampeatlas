@@ -1,0 +1,26 @@
+<!-- <nav ng-if="pages.length >= 2">
+  <ul class="pagination">
+	<li>{{totalItemCount}}</li>  
+    <li><a ng-click="selectPage(1)">First</a>
+    </li><li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
+    </li><li><a><page-select></page-select> of {{numPages}}</a>
+    </li><li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
+    </li><li><a ng-click="selectPage(numPages)">Last</a></li>
+  </ul>
+</nav> -->
+
+<md-content layout="row"  layout-align="end center" class="pagination-container">
+    
+
+<p class="pagination-text">{{totalItemCount}} {{'records'}}</p>
+     
+        
+      
+<md-button class="md-icon-button" aria-label="Previous page" >
+        <ng-md-icon icon="chevron_left" ng-click="selectPage(currentPage - 1)"></ng-md-icon>
+      </md-button>
+ <md-button class="md-icon-button" aria-label="Next page" >
+         <ng-md-icon icon="chevron_right" ng-click="selectPage(currentPage + 1)"></ng-md-icon>
+       </md-button> 
+
+  </md-content>

@@ -131,7 +131,16 @@ angular.module('svampeatlasApp')
 		  'Danske arter' : 'Danish checklist',
 		  'Checkliste for danske arter' : 'Checklist of Danish fungi',
 		  'Udfør'	: 'Execute',
-		  'Syn. til': 'Syn. of'	           
+		  'Syn. til': 'Syn. of'	,
+		  'Rapportør': 'Reported by',
+		  'Skriv art/slægt': 'Type species/genus',
+		  'Skriv familie, orden etc': 'Type family, order etc',
+		  'Art / taxon' : 'Species / taxon' ,
+		  'Geografi' : 'Geography' ,
+		  'Tid' : 'Time',
+		  'Økologi' : 'Ecology',
+		  'Personer' : 'Involved persons',
+		  'Ikke mine fund' : 'Exclude my sightings'         
 
 	    });
 	  

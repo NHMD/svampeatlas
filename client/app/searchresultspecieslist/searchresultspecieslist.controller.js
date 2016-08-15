@@ -19,12 +19,12 @@ if ($stateParams.where) {
 	search.include = [{
 			model: "DeterminationView",
 			as: "DeterminationView",
-			attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
+			attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id'],
 			where: {}
 		}, {
 			model: "User",
 			as: 'PrimaryUser',
-			attributes: ['email', 'Initialer', 'name'],
+			attributes: [ 'Initialer', 'name'],
 			where: {}
 		}, {
 			model: "Locality",
@@ -51,12 +51,15 @@ if ($stateParams.where) {
 				$state.go('search')
 			};
 			// if we came directly from the map view, remove images and forum from include
-			$scope.search.include = $scope.search.include.slice(0, 4);
-			$scope.search.include[0].attributes = ['Taxon_id',  'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID',  'Taxon_redlist_status', ],
-			$scope.search.include[1].attributes = ['email', 'Initialer', 'name'];
-
-
-			$scope.queryinclude = _.map($scope.search.include, function(n) {
+			/*
+			$scope.search.include = $scope.search.include.slice(0, 5);
+		
+			
+			$scope.search.include[0].attributes = ['Taxon_id',  'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID',  'Taxon_redlist_status', 'Determination_user_id'],
+			$scope.search.include[1].attributes = [ 'Initialer', 'name'];
+			
+*/
+			$scope.queryinclude = _.map(_.filter($scope.search.include, function(e){ return e.model !== 'GeoNames'}), function(n) {
 				return JSON.stringify(n);
 			});
 
@@ -65,8 +68,32 @@ if ($stateParams.where) {
 
 
 			$scope.mdMedia = $mdMedia;
+			
+			var geometry = ObservationSearchService.getSearch().geometry;
+			var query = {
+		
+				activeThreadsOnly: $scope.search.activeThreadsOnly,
+				selectedMonths: $scope.search.selectedMonths,
+				where: $scope.search.where || {},
+				include: JSON.stringify($scope.queryinclude)
+			};
+		
+			if (geometry) {
+				query.geometry = geometry;
+			}
+			$scope.isLoading = true;
+			Observation.getSpeciesList(query, function(result, headers) {
 
-
+				//$scope.taxonCount = headers('count');
+				$scope.totalItemCount = parseInt(headers('count'));
+				$scope.serverData = result;
+				$scope.isLoading = false;
+			});
+			
+			
+			
+			
+			
 			$scope.callServer = function(tableState) {
 				if ($scope.count && $scope.count < tableState.pagination.start) {
 					return false;
@@ -90,64 +117,38 @@ if ($stateParams.where) {
 					tableState.sort.reverse = true;
 				} */
 				var order = tableState.sort.predicate;
-				if (tableState.sort.reverse) {
-					order += " DESC"
-				};
+				
+				
+				
+				
+				
+				
+				
 				var geometry = ObservationSearchService.getSearch().geometry;
 				var query = {
-					order: order || 'DeterminationView.Taxon_FullName ASC',
+					// order: order || 'DeterminationView.Taxon_FullName ASC',
+				//	_order:  [['DeterminationView.Taxon_FullName', 'ASC']],
 					offset: offset,
-					limit: limit,
-					activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,
-					where: ObservationSearchService.getSearch().where || {},
+					//limit: limit,
+					activeThreadsOnly: $scope.search.activeThreadsOnly,
+					selectedMonths: $scope.search.selectedMonths,
+					where: $scope.search.where || {},
 					include: JSON.stringify($scope.queryinclude)
 				};
-
+				if(order) {
+					query._order = [[order]]
+					
+					if(tableState.sort.reverse){
+						query._order[0].push('DESC')
+					} else {
+						query._order[0].push('ASC')
+					}
+					query._order = JSON.stringify(query._order)
+				}
 				if (geometry) {
 					query.geometry = geometry;
 				}
-				/*
-					//if we reset (like after a search or an order)
-					if (tableState.pagination.start === 0 && lastStart <= tableState.pagination.start) {
-						 Observation.query(query, function(result, headers){
-							$scope.displayed = result;
-							$scope.count = headers('count');
-							var numPages = Math.ceil(parseInt(headers('count')) / limit);
-							tableState.pagination.numberOfPages = numPages; //set the number of pages so the pagination can update
-							tableState.pagination.totalItemCount = parseInt(headers('count'));
-							$scope.isLoading = false;
-						})
-					} else if(tableState.pagination.totalItemCount > $scope.displayed.length) {
-						//we load more
-						Observation.query(query).$promise.then(function(result){
-							console.log("dataset length: "+$scope.displayed.length)
-							//remove first nodes if needed
-							if(lastStart < tableState.pagination.start){
-								$scope.displayed = $scope.displayed.concat(result);
-		//remove first nodes if needed
-		                        if (lastStart < tableState.pagination.start && $scope.displayed.length > maxNodes) {
-		                            //remove the first nodes
-		                            $scope.displayed.splice(0, 500);
-		                        }
-							} else {
-								$scope.displayed = result.concat($scope.displayed);
-		                        if (lastStart > tableState.pagination.start && $scope.displayed.length > maxNodes) {
-		                            //remove the first nodes
-		                            $scope.displayed.splice(($scope.displayed.length -500), 500);
-		                        }
-							}
-							
-							
-							lastStart = tableState.pagination.start;
 
-							$scope.isLoading = false;
-						});
-
-
-					} else {
-						$scope.isLoading = false;
-					}
-					*/
 
 
 

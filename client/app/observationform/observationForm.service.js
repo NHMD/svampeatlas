@@ -7,8 +7,8 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', '$mdDialog', 'Taxon', 'TaxonDKnames', 'TaxonAttributes', 'Locality', 'User', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate',
-							function($scope, $filter, $q, $http, Auth, ErrorHandlingService, $mdDialog, Taxon, TaxonDKnames, TaxonAttributes, Locality, User, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate) {
+						controller: ['$scope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', 'Taxon',  'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate',
+							function($scope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality,  Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate) {
 
 
 								$scope.$translate = $translate;
@@ -127,6 +127,9 @@ angular.module('svampeatlasApp')
 												};
 												$scope.newTaxon.push(obs.PrimaryDetermination.Taxon);
 												$scope.users = obs.users;
+												if(obs.users.length === 0 && obs.verbatimLeg !== undefined){
+													$scope.users = [obs.verbatimLeg]
+												}
 												$scope.determiner.push(obs.PrimaryDetermination.User)
 												$scope.associatedOrganism = obs.associatedTaxa;
 												$scope.observationDate = new Date(obs.observationDate);
@@ -298,7 +301,7 @@ angular.module('svampeatlasApp')
 									if ((!Auth.hasRole('validator')) && ($scope.determiner.length === 0 || !$scope.determiner[0]._id)) valid = false;
 									if (!$scope.selectedSubstrate) valid = false;
 									if (!$scope.selectedVegetationType) valid = false;
-									if ($scope.users.length === 0 || !$scope.users[0]._id) valid = false;
+									if ($scope.users.length === 0 ) valid = false;
 									if (($scope.selectedLocality.length === 0 || !$scope.selectedLocality[0]._id) && (!$scope.foreignLocality)) valid = false;
 
 									return valid;
@@ -308,187 +311,25 @@ angular.module('svampeatlasApp')
 
 
 
-								$scope.querySearchLocality = function(query) {
-
-									var q = {
-										where: {
-											name: {
-												like: "%" + query + "%"
-											},
-											include: 1
-										},
-										limit: 30,
-										order: "probability DESC, name ASC"
-
-									};
-
-									if ($scope.mapsettings.markers.position) {
-
-										var bounds = L.circle(L.latLng($scope.mapsettings.markers.position.lat, $scope.mapsettings.markers.position.lng), 5000).getBounds();
-
-
-										q.where.decimalLongitude = {
-											$between: [bounds.getWest(), bounds.getEast()]
-										}
-										q.where.decimalLatitude = {
-											$between: [bounds.getSouth(), bounds.getNorth()]
-										}
-
-									}
-
-									var results = query ? Locality.query(q).$promise : [];
-
-									return results;
+								$scope.querySearchLocality = function(query){
+									var bounds =($scope.mapsettings.markers.position) ? L.circle(L.latLng($scope.mapsettings.markers.position.lat, $scope.mapsettings.markers.position.lng), 5000).getBounds() : undefined;
+									return SearchService.querySearchLocality(query, bounds)
+								};
+								
+								$scope.querySearch = function(query){
+									return SearchService.querySearchTaxon(query, $scope.onlyHigherTaxa)
 								}
-								$scope.onlyPresentInDK = true;
 
-								$scope.querySearch = function(query) {
-
-									var RankID = ($scope.onlyHigherTaxa) ? {
-										lt: 5000
-									} : {
-										gt: 4999
-									};
-
-									var q = {
-
-										limit: 30,
-
-										include: [{
-											model: "Taxon",
-											as: 'acceptedTaxon',
-											include: JSON.stringify({
-											model: "TaxonAttributes",
-											as: "attributes",
-											attributes: ["PresentInDK"],
-											where: JSON.stringify({})
-										})
-
-										}, {
-											model: "TaxonDKnames",
-											as: "Vernacularname_DK"
-										}]
-									};
-
-								/*	if ($scope.onlyPresentInDK === true && !$scope.onlyHigherTaxa) {
-
-										q.include[0].include = JSON.stringify({
-											model: "TaxonAttributes",
-											as: "attributes",
-											attributes: ["PresentInDK"],
-											where: JSON.stringify({})
-										});
-									};
-									*/
-									var parts = query.split(' ');
-
-
-									q.where = {
-										RankID: RankID,
-										$or: [{
-											FullName: {
-												like: "%" + query + "%"
-											}
-										}, {
-											"$Vernacularname_DK.vernacularname_dk$": {
-												like: "%" + query + "%"
-											}
-										}]
-									};
-									q.order = "RankID ASC, probability DESC, FullName ASC"
-
-									if (parts.length > 1) {
-										q.where.$or.push({
-											FullName: {
-												like: parts[0] + "%"
-											},
-											TaxonName: {
-												like: parts[1] + "%"
-											}
-										})
-									}
-
-
-
-
-									var results = query ? Taxon.query({
-										nocount: true,
-										where: JSON.stringify(q.where),
-										include: JSON.stringify(q.include),
-										order: q.order,
-										limit: 30
-
-									}).$promise : [];
-
-									return results;
-
-								};
-
-								$scope.querySearchPlantTaxon = function(query) {
-
-
-									var results = query ? PlantTaxon.query({
-										where: {
-											$or: [{
-												DKname: {
-													like: query + "%"
-												}
-											}, {
-												LatinName: {
-													like: query + "%"
-												}
-											}]
-											
-
-										},
-										limit: 30,
-										order: "probability DESC"
-									}).$promise : [];
-
-									return results;
-
-								};
+								$scope.querySearchPlantTaxon = SearchService.querySearchPlantTaxon;
 
 								$scope.querySearchGBIFPlantTaxon = function(query) {
 
 
-									var results = query ? $http({
-										method: 'GET',
-										url: 'http://api.gbif.org/v1/species/suggest',
-										params: {
-											datasetKey: '046bbc50-cae2-47ff-aa43-729fbf53f7c5',
-											q: query,
-											rank: "SPECIES"
-										}
-									}).then(function(res) {
-										return res.data;
-									}) : [];
-
-									return results;
+									return SearchService.querySearchPlantTaxon(query, 'SPECIES')
 
 								};
 
-								$scope.querySearchUser = function(query) {
-
-									var results = query ? User.query({
-										where: {
-											$or: [{
-												name: {
-													like: query + "%"
-												}
-											}, {
-												Initialer: {
-													like: query + "%"
-												}
-											}]
-
-										},
-										limit: 30
-									}).$promise : [];
-
-									return results;
-
-								};
+								$scope.querySearchUser = SearchService.querySearchUser;
 
 
 								var mapCenter = (ObservationFormStateService.getState().mapCenter) ? ObservationFormStateService.getState().mapCenter : {
@@ -969,7 +810,6 @@ angular.module('svampeatlasApp')
 									var promises = [];
 									_.each($scope.associatedOrganismImport, function(e) {
 										promises.push(PlantTaxon.save({
-
 											DKandLatinName: e.species,
 											LatinName: e.species,
 											gbiftaxon_id: e.nubKey
@@ -1016,7 +856,7 @@ angular.module('svampeatlasApp')
 
 									var obs = {
 										observationDate: $filter('date')($scope.observationDate, "yyyy-MM-dd", '+0200'),
-										primaryuser_id: $scope.users[0]._id,
+										primaryuser_id: $scope.currentUser._id,
 
 										substrate_id: $scope.selectedSubstrate,
 										vegetationtype_id: $scope.selectedVegetationType,
@@ -1030,10 +870,12 @@ angular.module('svampeatlasApp')
 
 										associatedOrganisms: $scope.associatedOrganism,
 										associatedOrganismImport: $scope.associatedOrganismImport,
-										users: $scope.users
+										users: _.filter($scope.users, function(u){ return u._id !== undefined })
 
 									};
-
+									if($scope.users.length === 1 && $scope.users[0]._id === undefined){
+										obs.verbatimLeg = $scope.users[0];
+									}
 									// only post determination if new observation
 									if (!row) {
 										obs.determination = {
