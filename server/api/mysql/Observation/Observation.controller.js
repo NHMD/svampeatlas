@@ -98,6 +98,9 @@ exports.index = function(req, res) {
 	if(req.query.order) {
 		query.order = req.query.order;
 	}
+	if (req.query._order) {
+		query.order = JSON.parse(req.query._order);
+	}
 	if(req.query.geometry || req.query.selectedMonths){
 		query.where.$and = [];
 	}
@@ -244,21 +247,28 @@ exports.index = function(req, res) {
 exports.indexSpeciesList = function(req, res) {
 	
 	if(!req.query.limit){
-		req.query.limit = 10000;
+	//	req.query.limit = 10000;
 	}
 	if(!req.query.offset){
-		req.query.offset = 0;
+	//	req.query.offset = 0;
 	}
 
 	var query = {
 		offset: parseInt(req.query.offset) ,
 		limit: parseInt(req.query.limit),
 		where: {},
-		attributes : [[models.sequelize.fn('count', models.sequelize.col('Observation._id')), 'observationCount']],
+		attributes : [[models.sequelize.fn('count', models.sequelize.col('Observation._id')), 'observationCount'], 'primaryuser_id', 'locality_id'],
 		group: "DeterminationView.Taxon_id"
 	};
 	if(req.query.order) {
 		query.order = req.query.order;
+	}
+	if(req.query._order) {
+		query.order = JSON.parse(req.query._order);
+		
+		if(query.order[0][0] === 'observationCount'){
+			query.order[0][0]  = models.sequelize.col('observationCount')
+		}
 	}
 
 	if(req.query.geometry){
@@ -268,12 +278,12 @@ exports.indexSpeciesList = function(req, res) {
 	if (req.query.where) {
 		_.merge(query.where, JSON.parse(req.query.where));
 	}
-
+/*
 	if(req.query.group){
 		
 		query['group'] =	JSON.parse(req.query.group)
 		
-	};
+	}; */
 	
 	if (req.query.include) {
 	
@@ -315,7 +325,7 @@ exports.indexSpeciesList = function(req, res) {
 			}, {
 				model: models.User,
 				as: 'PrimaryUser',
-				attributes: ['email', 'Initialer', 'name']
+				attributes: ['email', 'Initialer', 'name', '_id']
 			}, {
 				model: models.Locality,
 				as: 'Locality'

@@ -7,64 +7,76 @@
 					
 
       <form name="searchForm" layout-padding layout-fill>
-  		  <div  md-whiteframe="3" layout-padding>
-  			   <span class="search-sub-header">{{'Art / taxon' | translate}}</span>
+  		  <div  md-whiteframe="3" class="search-section" layout-padding>
+  			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="fungus"></ng-md-icon> {{'Art / taxon' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('taxonomy')" icon="refresh"></ng-md-icon></div>
 			   		<div layout-gt-xs="row">
-			         <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" ng-show="!search.DkNames" class="md-block" flex-gt-xs>
+	        <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
 
-			           <md-autocomplete
-			     	  	md-min-length="3"
-			     		md-no-cache="true"
-			               md-selected-item="selectedItem"
-			               md-search-text="searchText"
-			               md-items="item in querySearch(searchText)"
-			               md-item-text="item.FullName"
-			               placeholder="{{taxonPlaceholder}}">
-			             <span md-highlight-text="searchText">{{item.FullName}}</span>
-			           </md-autocomplete>
-			           <md-chip-template>
-			             <span>
-			               <strong>{{($chip.FullName) ? $chip.FullName: $chip.vernacularname_dk}}</strong>
+	          <md-autocomplete
+	    	  	md-min-length="4"
+	    		md-no-cache="false"
+				md-input-id="taxon-autocomplete"
+				md-select-on-match="true"
+				md-match-case-insensitive="true"
+	              md-selected-item="selectedItem"
+	              md-search-text="searchText"
+	              md-items="item in querySearch(searchText)"
+	              md-item-text="item"
+	              placeholder="{{(!search.onlyHigherTaxa) ? $translate.instant('Skriv art/slægt')  : $translate.instant('Skriv familie, orden etc')}}"
+	 			 ng-disabled="newTaxon.length >0"
+				 md-menu-class="autocomplete-custom-template"
+	 			flex class="taxon-autocomplete">
+	            
+				
+				<md-item-template>
+				          <span class="item-title">
+							  
+						<span ng-if="item.Vernacularname_DK">
+				            <span ng-if="10000 > item.RankID"> {{(item.RankID === 5000)? 'Arter af ':''}}{{(item.RankID < 5000)? 'Arter i ':''}} {{item.Vernacularname_DK.vernacularname_dk}} </span>
+							<span ng-if="item.RankID > 9999"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+						</span>
+						<span ng-if="!item.Vernacularname_DK">
+				            <span ng-if="10000 > item.RankID" class="item-emphasis"> {{item.FullName}}</span>
+							<span ng-if="item.RankID > 9999" class="item-emphasis"> {{item.FullName}} </span>
+							<span ng-if="item.RankID > 9999" class="item-author"> {{item.Author}} </span>
+						</span>
+				          </span>
+				          <span class="item-metadata" ng-if="item.DanishNames.length >0 && item.DanishNames[0]._id !== item.vernacularname_dk_id">
+							   <span class="item-metastat" > = {{item.DanishNames[0].vernacularname_dk}}</span>
+						   </span>
+				          <span class="item-metadata" ng-if="item.Vernacularname_DK ">
+							   
+				            <span class="item-metastat item-emphasis" ng-if="10000 > item.RankID"> {{item.FullName}}</span>
+							<span class="item-metastat item-emphasis" ng-if="item.RankID > 9999"> {{item.FullName}} </span>
+				           	<span class="item-metastat" ng-if="item.RankID > 9999"> {{item.Author}} </span>
+				          </span>
+						  <span class="item-metadata" ng-if="(item._id !== item.acceptedTaxon._id) ">
+							  <span class="item-emphasis" ng-if="item._id !== item.acceptedTaxon._id">{{'Syn. til' | translate}} {{item.acceptedTaxon.FullName}}</span>
+							  <span class="item-metastat"> {{item.Author}} </span>
+						  </span>
+						 <span class="item-metadata" ng-if="item.probability === 0 && item.acceptedTaxon.attributes.PresentInDK === false && item.RankID > 9999"> 
+						  <ng-md-icon icon="error_outline" size="20"></ng-md-icon> {{'Ikke kendt fra Danmark'}}</span>
+				        </md-item-template>
 
-			             </span>
-			           </md-chip-template>
+	          </md-autocomplete>
+	          <md-chip-template>
+	            <span ng-if="$chip.RankID > 5000">
+	 			   <strong ng-if="$chip.Vernacularname_DK">{{$chip.Vernacularname_DK.vernacularname_dk | capitalize}} (</strong>
+	              <strong><em>{{$chip.FullName}}</em> {{$chip.Author}}</strong>
+				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
+	            </span>
+	            <span ng-if="5000 >= $chip.RankID">
+	 			   <strong ng-if="$chip.Vernacularname_DK">{{($chip.RankID === 5000)? 'Arter af ':''}}{{($chip.RankID < 5000)? 'Arter i ':''}} {{$chip.Vernacularname_DK.vernacularname_dk}} (</strong>
+	              <strong><em>{{$chip.FullName}}</em></strong>
+				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
+	            </span>
+	          </md-chip-template>
 		
-			         </md-chips>
-			         <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" ng-show="search.DkNames" class="md-block" flex-gt-xs>
-
-			           <md-autocomplete
-			     	  	md-min-length="3"
-			     		md-no-cache="true"
-			               md-selected-item="selectedItem"
-			               md-search-text="searchText"
-			               md-items="item in querySearch(searchText)"
-			               md-item-text="item.vernacularname_dk"
-			               placeholder="{{taxonPlaceholder}}">
-			             <span md-highlight-text="searchText">{{item.vernacularname_dk}}</span>
-			           </md-autocomplete>
-			           <md-chip-template>
-			             <span>
-			               <strong>{{($chip.FullName) ? $chip.FullName: $chip.vernacularname_dk}}</strong>
-
-			             </span>
-			           </md-chip-template>
-		
-			         </md-chips>
-			       <md-switch ng-model="search.threePlusThree" aria-label="threePlusThree" ng-show="!search.onlyHigherTaxa && !search.DkNames">
-			           {{'3+3' | translate}}
-			         </md-switch>
- 	
-			     </div>
-  
- 
-			     <div layout-gt-xs="row">
-			      	<md-switch ng-model="search.DkNames" aria-label="Søg danske navne">
-			      	   <span translate> Danske navne</span>
-			      	  </md-switch>
+	        </md-chips>
 			     </div>
 			      <div layout-gt-xs="row">
 			   <md-switch ng-model="search.onlyHigherTaxa" aria-label="Højere taxa">
-			      <span translate>Søg i slægter, familier, ordener osv.</span>
+			      <span translate>Søg i familier, ordener osv.</span>
 			     </md-switch>
 	 
 			     </div>
@@ -85,8 +97,9 @@
 	  		             </md-select>
 	  		   	  </md-input-container>
   		</div>
-  		  <div  md-whiteframe="3" layout-padding>
-  			   <span class="search-sub-header">{{'Geografi' | translate}}</span>
+  		  <div  md-whiteframe="3" class="search-section" layout-padding>
+			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="map"></ng-md-icon> {{'Geografi' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('geography')" icon="refresh"></div>
+  			   
 			    <div layout-gt-xs="row">
 			   <md-chips ng-model="search.selectedLocalities" md-autocomplete-snap md-require-match="false" class="md-block" flex-gt-xs>
 
@@ -96,13 +109,13 @@
 			         md-selected-item="selectedItem"
 			         md-search-text="searchText"
 			         md-items="item in querySearchLocality(searchText)"
-			         md-item-text="item"
+			         md-item-text="item.name"
 			         placeholder="{{'Lokalitet' | translate}}">
-			       <span md-highlight-text="searchText">{{item}}</span>
+			       <span md-highlight-text="searchText">{{item.name}}</span>
 			     </md-autocomplete>
 			     <md-chip-template>
 			       <span>
-			         <strong>{{$chip}}</strong>
+			         <strong>{{($chip.name) ? $chip.name : $chip}}</strong>
 
 			       </span>
 			     </md-chip-template>
@@ -123,8 +136,9 @@
 					  				            {{'Søgning på kort' | translate}}
 					  				          </md-button>
   		</div>
-  		  <div  md-whiteframe="3" layout-padding>
-  			   <span class="search-sub-header">{{'Tid' | translate}}</span>
+  		  <div  md-whiteframe="3" class="search-section" layout-padding>
+			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="date_range"></ng-md-icon> {{'Tid' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('period')" icon="refresh"></div>
+  			   
 			   <div layout-gt-xs="row">
 		 	  
 	           <md-datepicker ng-model="search.fromDate" md-placeholder="{{(search.exactDate) ? ('Dato' | translate ):('Fra dato' | translate)}}">
@@ -161,24 +175,18 @@
 				         
 	   				          </md-input-container>
 			   </div>
-			   <label>{{'Måneder' | translate}}</label>
+			   <label class="md-body-1">{{'Måneder' | translate}}</label>
 			   <div layout-gt-xs="row">
 				    
 			    <md-checkbox class="md-primary" ng-repeat="month in months" ng-checked="exists(month, search.selectedMonths)" ng-click="toggle(month, search.selectedMonths)">{{month}}</md-checkbox>
 				</div>
   		</div>
-  		  <div  md-whiteframe="3" layout-padding>
-  			   <span class="search-sub-header">{{'Økologi' | translate}}</span>
+  		  <div  md-whiteframe="3" class="search-section" layout-padding>
+			  <div layout="row"> <span class="search-sub-header"><md-icon md-font-icon="fa fa-tree fa-lg" class="material-icons md-light md-48 md-primary" /> {{'Økologi' | translate}}</span> <span flex></span> 
+				   <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('ecology')" icon="refresh"></div>
+  			   
 			   <div layout-gt-xs="row" >
-			   	 <md-input-container >	
-			   	<label translate>Livsstrategi - *beta*</label>  
-			   <md-select aria-label="livsstrategi" id="livsstrategi" ng-model="search.livsstrategi">
-			 	<md-option value=""></md-option>
-    
-			     <md-option value="{{str.key}}" ng-repeat="str in strategiesUI">{{str[$translate.use()]}}</md-option>
-    
-			             </md-select>
-			   	  </md-input-container>
+			   	
 			   <md-input-container>
 			           <label>{{'Substrat' | translate}}</label>
 			           <md-select name="substrate" ng-model="search.selectedSubstrate" >
@@ -198,6 +206,15 @@
  				           </md-select>
 						   
  				         </md-input-container>
+		  			   	 <md-input-container >	
+		  			   	<label translate>Livsstrategi (beta)</label>  
+		  			   <md-select aria-label="livsstrategi" id="livsstrategi" ng-model="search.livsstrategi">
+		  			 	<md-option value=""></md-option>
+    
+		  			     <md-option value="{{str.key}}" ng-repeat="str in strategiesUI">{{str[$translate.use()]}}</md-option>
+    
+		  			             </md-select>
+		  			   	  </md-input-container>
 				  
 				  
 			   </div>
@@ -230,19 +247,85 @@
 			   
   		
   		</div>
-  		  <div  md-whiteframe="3" layout-padding>
-  			   <span class="search-sub-header">{{'Personer' | translate}}</span>
-	           <div layout-gt-xs="row">
-		  
-	 		   <md-input-container class="md-block" flex-gt-xs>
-	 		           <label translate>Finder</label>
-	 		           <input  ng-model="search.finder" >
-	 		         </md-input-container>
-	 	  		   <md-input-container>
-	 	  		           <label translate>Initialer</label>
-	 	  		           <input  ng-model="search.include[1].where.Initialer">
-	 	  		         </md-input-container>
-						 </div>
+  		  <div  md-whiteframe="3" class="search-section" layout-padding>
+			  <div layout="row">  <span class="search-sub-header"><ng-md-icon icon="group"></ng-md-icon> {{'Personer' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('persons')" icon="refresh"></div>
+  			  
+ 			   <div  layout="row">
+  				  <md-chips ng-model="search.PrimaryUser" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
+
+  				    <md-autocomplete
+			
+			
+  				        md-selected-item="selectedItem"
+  				        md-search-text="searchText"
+  				        md-items="item in querySearchUser(searchText)"
+  				        md-item-text="item.name"
+  				        placeholder="{{'Rapportør' | translate}}"
+  						>
+  				      <span md-highlight-text="searchText">{{item.name}} ({{item.Initialer}})</span>
+  				    </md-autocomplete>
+  				    <md-chip-template>
+  				      <span>
+  				        <strong>{{$chip.name}} ({{$chip.Initialer}})</strong>
+
+  				      </span>
+  				    </md-chip-template>
+
+  				  </md-chips>
+	
+	   	
+ 			  </div>
+		 			   <div  layout="row">
+		  				  <md-chips ng-model="search.collectors" md-autocomplete-snap md-require-match="search.collectors.length > 0"  class="md-block"  flex-gt-xs>
+
+		  				    <md-autocomplete
+ 					
+					
+		  				        md-selected-item="selectedItem"
+		  				        md-search-text="searchText"
+		  				        md-items="item in querySearchUser(searchText)"
+		  				        md-item-text="item.name"
+		  				        placeholder="{{'Finder' | translate}}"
+								ng-disabled = "search.collectors.length === 1 && search.collectors[0]._id === undefined"
+		  						>
+		  				      <span md-highlight-text="searchText">{{item.name}} ({{item.Initialer}})</span>
+		  				    </md-autocomplete>
+		  				    <md-chip-template>
+		  				      <span>
+		  				        <strong ng-if="$chip._id">{{$chip.name}} ({{$chip.Initialer}})</strong>
+<strong ng-if="!$chip._id">{{$chip}}</strong>
+		  				      </span>
+		  				    </md-chip-template>
+	
+		  				  </md-chips>
+ 			
+			   	
+		 			  </div>
+		 			   <div  layout="row">
+		  				  <md-chips ng-model="search.determiner" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
+
+		  				    <md-autocomplete
+ 					
+					
+		  				        md-selected-item="selectedItem"
+		  				        md-search-text="searchText"
+		  				        md-items="item in querySearchUser(searchText)"
+		  				        md-item-text="item.name"
+		  				        placeholder="{{'Bestemmer' | translate}}"
+		  						>
+		  				      <span md-highlight-text="searchText">{{item.name}} ({{item.Initialer}})</span>
+		  				    </md-autocomplete>
+		  				    <md-chip-template>
+		  				      <span>
+		  				        <strong >{{$chip.name}} ({{$chip.Initialer}})</strong>
+
+		  				      </span>
+		  				    </md-chip-template>
+	
+		  				  </md-chips>
+ 			
+			   	
+		 			  </div>
 						 <div>
 			 			 	<md-switch ng-model="search.notMyObservations" aria-label="Søg ikke i mine fund" ng-if="Auth.isLoggedIn()">
 			 			 	   <span translate>Ikke mine fund</span>
@@ -254,8 +337,9 @@
 	           
   		
   		</div>
-  		  <div  md-whiteframe="3" layout-padding>
-  			   <span class="search-sub-header">{{'Fundegenskaber' | translate}}</span>
+  		  <div  md-whiteframe="3" class="search-section" layout-padding>
+			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="settings"> </ng-md-icon> {{'Fundegenskaber' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('recordproperties')" icon="refresh"></ng-md-icon></div>
+  			   
 		            <div layout-gt-xs="row">
 		   	<md-input-container class="md-block" flex-gt-xs>	
 		   	<label>Status</label> 
@@ -286,6 +370,13 @@
 		   	
 			
            </div>
+		   <div layout-gt-xs="row">
+ 		 	<md-switch ng-model="search.onlyWithImages" aria-label="Kun med billeder" >
+ 		 	   <span translate>Kun fund med billeder</span>
+ 		 	  </md-switch>
+  	           <md-datepicker ng-model="search.imageMaxAge" md-placeholder="Siden dato">
+  	           </md-datepicker>
+		   </div>
   		</div>
 		  
 		  
@@ -293,12 +384,20 @@
 		  
 		  
 		  
-		  <div  md-whiteframe="3" layout-padding>
-			   <span class="search-sub-header">Unread Messages</span>
+		  <div  md-whiteframe="3" class="search-section" layout-padding>
+			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="forum"></ng-md-icon> {{'Forum' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('forum')" icon="refresh"></ng-md-icon></div>
+			   
+	 		   <div layout-gt-xs="row">
+	  		 	<md-switch ng-model="search.onlyWithForum" aria-label="Kun med forum" >
+	  		 	   <span translate>Kun kommenterede fund</span>
+	  		 	  </md-switch>
+   	           <md-datepicker ng-model="search.forumMaxAge" md-placeholder="Siden dato">
+   	           </md-datepicker>
+	 		   </div>
 		<div layout-gt-xs="row">
-		 <span flex layout-fill></span> 
+		
 			
-			 	
+	 		   
 		 	
 		 
 	 	<md-switch ng-model="search.activeThreadsOnly" aria-label="Søg aktive tråde" ng-if="Auth.isLoggedIn()">

@@ -102,7 +102,7 @@ angular.module('svampeatlasApp')
 				search.include = [{
 						model: "DeterminationView",
 						as: "DeterminationView",
-						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
+						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id'],
 						where: { Determination_validation: ['Godkendt','Valideres', 'Afventer', 'Gammelvali']}
 					}, {
 						model: "User",
@@ -138,7 +138,8 @@ angular.module('svampeatlasApp')
 			var geometry = $scope.search.geometry;
 
 			// if we came directly from the list table view, remove images and forum from include
-			$scope.search.include = $scope.search.include.slice(0,4);
+			/*
+			$scope.search.include = $scope.search.include.slice(0,5);
 
 			$scope.search.include.push({
 				model: "ObservationImage",
@@ -147,10 +148,11 @@ angular.module('svampeatlasApp')
 				limit: 1
 
 			});
+			*/
 			$scope.queryinclude = _.map($scope.search.include, function(n) {
 
 				if (n.model === "DeterminationView") {
-					n.attributes = ['Taxon_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Determination_validation'];
+					n.attributes = ['Taxon_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Determination_validation', 'Determination_user_id'];
 				}
 				if (n.model === "Locality") {
 					n.attributes = ['name'];
@@ -164,6 +166,7 @@ angular.module('svampeatlasApp')
 
 				where: $scope.search.where || {},
 				activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,
+				selectedMonths: ObservationSearchService.getSearch().selectedMonths,
 				include: JSON.stringify($scope.queryinclude)
 			};
 

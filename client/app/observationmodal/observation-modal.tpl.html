@@ -5,7 +5,7 @@
           <md-button class="md-icon-button" ng-click="cancel()">
             <ng-md-icon icon="arrow_back" aria-label="Close dialog"></ng-md-icon>
           </md-button>
-        <h2>ID: {{obs.PrimaryUser.Initialer}}{{(obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : ''}}-{{obs._id}}</h2>
+        <h2>ID: DMS-{{obs._id}}</h2>
         <span flex></span>
 		<div class="clipboard-copy" data-clipboard-text="{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK ? (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) +', ' : ''}}{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}, {{obs.Locality ? obs.Locality.name +', ': ''}}{{!obs.Locality && obs.verbatimLocality ? obs.verbatimLocality+', ' : ''}}{{'lat: '+obs.decimalLatitude +' lon: '+obs.decimalLongitude+', '}}{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}, Leg: {{obs.users | getUserNamesAsList}} Det: {{obs.PrimaryDetermination.User ? obs.PrimaryDetermination.User.name: ''}}{{obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator ? obs.PrimaryDetermination.verbatimdeterminator : ''}},  {{obs.PrimaryUser.Initialer}}{{(obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : ''}}-{{obs._id}}">
  <md-button class="md-icon-button"
@@ -46,7 +46,7 @@
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
 	   	           <h3>{{'Finder(e)' | translate}}</span></h3>
-	  			   <p><span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span></p>
+	  			   <p><span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>{{obs.verbatimLeg}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
@@ -220,7 +220,7 @@ flex>
 	  	<tr >
 	  		<td class="rightalign"><strong>{{'Finder(e)' | translate}}:</strong></td><td >
 			
-			<span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>
+			<span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>{{obs.verbatimLeg}}
 			</td>
 			<td class="rightalign"><strong>{{'Bestemmer' | translate}}:</strong></td><td ><span ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</span>
 		  

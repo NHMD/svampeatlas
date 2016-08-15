@@ -41,13 +41,13 @@ angular.module('svampeatlasApp')
 						as: 'Images',
 						separate: true,
 						offset: 0,
-						limit: 10
+						limit: 1
 					}, {
 						model: "ObservationForum",
 						as: 'Forum',
 						separate: true,
 						offset: 0,
-						limit: 10
+						limit: 1
 
 					}
 
@@ -106,15 +106,16 @@ angular.module('svampeatlasApp')
 				$state.go('search')
 			};
 			// if we came directly from the map view, remove images and forum from include
-			$scope.search.include = $scope.search.include.slice(0, 4);
-			$scope.search.include[0].attributes = ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
-			$scope.search.include[1].attributes = ['email', 'Initialer', 'name'];
+			/*
+			$scope.search.include = $scope.search.include.slice(0, 5);
+			$scope.search.include[0].attributes = ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id'],
+			$scope.search.include[1].attributes = [ 'Initialer', 'name'];
 			$scope.search.include.push({
 				model: "ObservationImage",
 				as: 'Images',
 				separate: true,
 				offset: 0,
-				limit: 10
+				limit: 1
 			});
 
 			$scope.search.include.push({
@@ -122,10 +123,11 @@ angular.module('svampeatlasApp')
 				as: 'Forum',
 				separate: true,
 				offset: 0,
-				limit: 10
+				limit: 1
 
 			});
-
+			*/
+			
 			$scope.queryinclude = _.map($scope.search.include, function(n) {
 				return JSON.stringify(n);
 			});
@@ -159,13 +161,23 @@ angular.module('svampeatlasApp')
 					tableState.sort.predicate = 'observationDate';
 					tableState.sort.reverse = true;
 				} */
+				/*
 				var order = tableState.sort.predicate;
 				if (tableState.sort.reverse) {
 					order += " DESC"
 				};
+				*/
+				var order = (tableState.sort.predicate) ? [[tableState.sort.predicate]] : [['observationDate', 'DESC'], ['_id', 'DESC']];
+								if (tableState.sort.reverse && tableState.sort.predicate) {
+									order[0].push("DESC");
+								} else {
+									order[0].push("ASC");
+								};
+				
 				var geometry = ObservationSearchService.getSearch().geometry;
 				var query = {
-					order: order || 'observationDate DESC',
+					//order: order || 'observationDate DESC',
+					_order: JSON.stringify(order),
 					offset: offset,
 					limit: limit,
 					activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,

@@ -143,6 +143,13 @@ module.exports = function(sequelize, DataTypes) {
 				  foreignKey: 'observation_id',
 				as: 'users'
 				});
+				
+				models.Observation.hasMany(models.ObservationUser, {
+				 
+				  foreignKey: 'observation_id',
+				as: 'userIds'
+				});
+				
 				models.User.belongsToMany(models.Observation, {
 				  through: models.ObservationUser,
 				  foreignKey: 'user_id'

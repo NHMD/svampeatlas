@@ -16,7 +16,7 @@
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
 	<thead>
 		<tr ng-show="displayed && !isLoading">
-			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultlist/pagination.tpl.html">
+			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="9" st-template="app/searchresultlist/pagination.tpl.html">
 			</th>
 		</tr>
 	<tr>
@@ -24,10 +24,15 @@
 		<th ></th>
 		<th st-sort="observationDate" translate>Dato</th>
 		
-		<th st-sort="DeterminationView.Taxon_FullName"  translate>Art</th>
-		<th st-sort="DeterminationView.Taxon_vernacularname_dk"  translate>Dansk navn</th>
-		<th st-sort="Locality.name"  translate>Lokalitet</th>
-		<th st-sort="PrimaryUser.Initialer" ><span ng-if="!Auth.isLoggedIn()" translate>Finder</span><span ng-if="Auth.isLoggedIn()" translate>Databasenummer</span></th>
+		<th translate>Art</th>
+	<!--	<th st-sort="DeterminationView.Taxon_FullName"  translate>Art</th> -->
+		<th  translate>Dansk navn</th>
+		<!--<th st-sort="DeterminationView.Taxon_vernacularname_dk"  translate>Dansk navn</th> -->
+		<th  translate>Lokalitet</th>
+		<!--<th st-sort="Locality.name"  translate>Lokalitet</th> -->
+		<th translate>Rapportør</th>
+		<!--<th st-sort="PrimaryUser.Initialer" >Rapportør</th>-->
+		<th st-sort="_id"  translate>Databasenummer</th>
 		<th ></th>
 		
 	</tr>
@@ -54,13 +59,14 @@
 		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk}}</td>	
 		<td data-title="{{'Lokalitet' | translate}}"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
 		
-		
-			<td data-title="{{'Databasenummer' | translate}}" ng-if="Auth.isLoggedIn()"><span class="clipboard-copy" data-clipboard-text="{{row.PrimaryUser.Initialer}}{{(row.observationDateAccuracy !== 'invalid') ? (row.observationDate.split('-')[0]) : ''}}-{{row._id}}"> {{row.PrimaryUser.Initialer}}{{(row.observationDateAccuracy !== 'invalid') ? (row.observationDate.split('-')[0]) : ''}}-{{row._id}}</span></td>
-		
-		
-			<td data-title="{{'Finder' | translate}}" ng-if="!Auth.isLoggedIn()"><span ng-if="mdMedia('min-width: 768px')"><md-tooltip md-direction="left">
+			<td data-title="{{'Finder' | translate}}" ><span ng-if="mdMedia('min-width: 768px')"><md-tooltip md-direction="left">
           {{row.PrimaryUser.name}}
-        </md-tooltip>{{row.PrimaryUser.Initialer}}</span><span ng-if="mdMedia('max-width: 768px')"> {{row.PrimaryUser.name}}</span></td>	
+        </md-tooltip>{{row.PrimaryUser.Initialer}}</span><span ng-if="mdMedia('max-width: 768px')"> {{row.PrimaryUser.name}}</span></td>
+		
+			<td data-title="{{'Databasenummer' | translate}}" ng-if="Auth.isLoggedIn()"><span class="clipboard-copy" data-clipboard-text="{{row.DeterminationView.Taxon_FullName.split(' ').join('-')}}-DMS-{{row._id}}"> DMS-{{row._id}}</span></td>
+		
+		
+				
 			
 		<td data-title=""><ng-md-icon icon="camera_alt" ng-if="row.Images.length > 0" ng-click="ObservationModalService.show($event, row)"></ng-md-icon> <ng-md-icon icon="forum" ng-if="row.Forum.length > 0" ng-click="ObservationModalService.show($event, row)"></ng-md-icon></td>
 		
