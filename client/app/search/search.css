@@ -40,3 +40,7 @@ md-toolbar.searchtabs {
 	margin-bottom: 16px;
 }
 
+md-checkbox.months > div._md-label {
+	margin-left: 26px;
+}
+

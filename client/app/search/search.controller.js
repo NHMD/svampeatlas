@@ -22,6 +22,10 @@ angular.module('svampeatlasApp')
 					ObservationSearchService.reset();
 					$state.reload();
 				}
+				$scope.setDate = function(days, model){
+					
+					$scope.search[model] = moment().subtract(days, 'days').toDate() ;
+				}
 				/**
 				 * Build handler to open/close a SideNav; when animation finishes
 				 * report completion in console
@@ -120,6 +124,7 @@ angular.module('svampeatlasApp')
 						layer = e.layer;
 
 					// Do whatever else you need to. (save to db, add to map etc)
+						$scope.leafletPolygon = 	layer;
 					$scope.drawnItems.addLayer(layer);
 					map.removeControl(drawControl);
 					map.addControl(editControl);
@@ -181,6 +186,7 @@ angular.module('svampeatlasApp')
 						$scope.search.includeForeign = false;
 						$scope.search.selectedLocalities = [];
 						delete $scope.observationSearch.geometry;
+						$scope.drawnItems.removeLayer($scope.leafletPolygon);
 						break;
 					case 'period':
 						delete $scope.search.fromDate;
@@ -188,6 +194,9 @@ angular.module('svampeatlasApp')
 						delete $scope.search.fromYear;
 						delete $scope.search.toYear;
 						$scope.search.exactDate = false;
+						delete $scope.search.addedFromDate;
+						delete $scope.search.addedToDate;
+						$scope.search.addedExactDate = false;
 						$scope.search.selectedMonths = [];
 						break;
 					case 'ecology':
@@ -617,6 +626,26 @@ angular.module('svampeatlasApp')
 						$lte: $filter('date')($scope.search.toDate, "yyyy-MM-dd", '+0200')
 					}
 				}
+				
+				if ($scope.search.addedFromDate && $scope.search.addedToDate) {
+					$scope.observationSearch.where.createdAt = {
+
+						$between: [$filter('date')($scope.search.addedFromDate, "yyyy-MM-dd", '+0200'), $filter('date')($scope.search.addedToDate, "yyyy-MM-dd", '+0200')]
+					}
+				} else if ($scope.search.addedFromDate) {
+					var formattedDate = $filter('date')($scope.search.addedFromDate, "yyyy-MM-dd", '+0200');
+					$scope.observationSearch.where.createdAt = ($scope.search.addedExactDate) ? formattedDate : {
+						$gte: formattedDate
+
+					};
+
+				} else if ($scope.search.addedToDate) {
+					$scope.observationSearch.where.createdAt = {
+						$lte: $filter('date')($scope.search.addedToDate, "yyyy-MM-dd", '+0200')
+					}
+				}
+				
+				
 				if ($scope.search.geometry) {
 					$scope.observationSearch.geometry = $scope.search.geometry;
 				} else {

@@ -101,26 +101,37 @@ exports.index = function(req, res) {
 	if (req.query._order) {
 		query.order = JSON.parse(req.query._order);
 	}
-	if(req.query.geometry || req.query.selectedMonths){
+	
+	if (req.query.where) {
+		_.merge(query.where, JSON.parse(req.query.where));
+	}
+	
+	if(req.query.geometry || req.query.selectedMonths || query.where.createdAt){
+		console.log("#### "+query.where)
 		query.where.$and = [];
 	}
 	if(req.query.geometry){
 		query.where.$and.push(models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom')));
 	}
 	
+	
 	if(req.query.selectedMonths){
 		query.where.$and.push(models.sequelize.literal('MONTH(observationDate) IN ('+req.query.selectedMonths.toString() +')')) ;
 	}
 
-	if (req.query.where) {
-		_.merge(query.where, JSON.parse(req.query.where));
+	
+	if(query.where.createdAt && !query.where.createdAt.$between && !query.where.createdAt.$lte && !query.where.createdAt.$gte){
+		//query.where.createdAt = models.sequelize.fn('DATE', models.sequelize.col('createdAt'));
+		query.where.$and.push(models.sequelize.literal("DATE(Observation.createdAt) = '"+query.where.createdAt.toString()+"'")) ;
+		delete query.where.createdAt;
 	}
-
 	if(req.query.group){
 		
 		query['group'] =	req.query.group
 		
 	};
+	
+	
 	
 	if (req.query.include) {
 	
@@ -752,5 +763,78 @@ exports.destroy = function(req, res) {
 	
 		
 };
+/*
+function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
+  }
+}
+*/
 
+exports.addUserToObs = function(req, res){
+	
+	
+	return Observation.find({
+		where: {
+			_id: req.params.id
+		}})
+		.then(function(obs){
+			
+			if(!obs){
+				throw "Not found"
+			}
+			if(req.user._id !== req.body._id){
+				throw 'Forbidden'
+			} else {
+				return models.ObservationUser.upsert({observation_id: req.params.id, user_id: req.user._id})
+			}
+		})
+		.then(function() {
+			return res.send(201);
+		})
+			.
+		catch(function(err) {
+			var statusCode;
+			if(err === 'Forbidden') {statusCode = 403;}
+			else if(err === "Not found") {statusCode = 404;}
+			else  {statusCode = 500;}
+			console.log(err);
+		
+			res.status(statusCode).send(err);
+		});
+}
+
+exports.deleteUserFromObs = function(req, res){
+	
+	return Observation.find({
+		where: {
+			_id: req.params.id
+		}})
+		.then(function(obs){
+			if(!obs){
+				throw "Not found"
+			}
+			if(parseInt(req.user._id) !== parseInt(req.params.userid)){
+				console.log('req.user._id '+req.user._id+ ' req.params '+JSON.stringify(req.params))
+				throw 'Forbidden'
+			} else {
+				return models.ObservationUser.destroy({where:{observation_id: req.params.id, user_id: req.user._id}})
+			}
+		})
+		.then(function() {
+			return res.send(204);
+		})
+			.
+		catch(function(err) {
+			var statusCode;
+			if(err === 'Forbidden') {statusCode = 403;}
+			else if(err === "Not found") {statusCode = 404;}
+			else  {statusCode = 500;}
+			console.log(err);
+		
+			res.status(statusCode).send(err);
+		});
+}
 

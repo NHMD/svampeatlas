@@ -138,7 +138,8 @@
   		</div>
   		  <div  md-whiteframe="3" class="search-section" layout-padding>
 			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="date_range"></ng-md-icon> {{'Tid' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('period')" icon="refresh"></div>
-  			   
+			
+			<label class="md-title md-primary">{{'Funddato' | translate}}</label>
 			   <div layout-gt-xs="row">
 		 	  
 	           <md-datepicker ng-model="search.fromDate" md-placeholder="{{(search.exactDate) ? ('Dato' | translate ):('Fra dato' | translate)}}">
@@ -150,6 +151,11 @@
  		 	  <md-switch ng-model="search.exactDate" aria-label="På eksakt dato" layout-margin>
  		 	      <span translate>Eksakt dato</span>
  		 	    </md-switch>
+			   </div>
+			   <div layout-gt-xs="row">
+			   <md-button ng-click="setDate(3, 'fromDate')">{{'3'}} {{'dage' | translate}}</md-button>
+			   <md-button ng-click="setDate(7, 'fromDate')">{{'7'}} {{('dage' | translate)}}</md-button>
+			   <md-button ng-click="setDate(30, 'fromDate')">{{'30'}} {{('dage' | translate)}}</md-button>
 			   </div>
 			   <div layout-gt-xs="row">
 				   <md-input-container class="md-block" flex-gt-sm>
@@ -176,10 +182,32 @@
 	   				          </md-input-container>
 			   </div>
 			   <label class="md-body-1">{{'Måneder' | translate}}</label>
+			  
 			   <div layout-gt-xs="row">
 				    
-			    <md-checkbox class="md-primary" ng-repeat="month in months" ng-checked="exists(month, search.selectedMonths)" ng-click="toggle(month, search.selectedMonths)">{{month}}</md-checkbox>
+			    <md-checkbox class="md-primary months" ng-repeat="month in months" ng-checked="exists(month, search.selectedMonths)" ng-click="toggle(month, search.selectedMonths)">{{month}}</md-checkbox>
 				</div>
+ 			   
+			
+				<md-divider></md-divider>
+				<label class="md-title md-primary">{{'Fund indlagt' | translate}}</label>
+ 			   <div layout-gt-xs="row">
+		 	  
+ 	           <md-datepicker ng-model="search.addedFromDate" md-placeholder="{{(search.addedExactDate) ? ('Dato' | translate ):('Fra dato' | translate)}}">
+ 	           </md-datepicker>
+        
+          
+ 	           <md-datepicker ng-model="search.addedToDate" ng-show="!search.addedExactDate" md-placeholder="{{'Til dato' | translate}}">
+ 	           </md-datepicker>
+  		 	  <md-switch ng-model="search.addedExactDate" aria-label="På eksakt dato" layout-margin>
+  		 	      <span translate>Eksakt dato</span>
+  		 	    </md-switch>
+ 			   </div>
+			   <div layout-gt-xs="row">
+			   <md-button ng-click="setDate(3, 'addedFromDate')">{{'3'}} {{'dage' | translate}}</md-button>
+			   <md-button ng-click="setDate(7, 'addedFromDate')">{{'7'}} {{('dage' | translate)}}</md-button>
+			   <md-button ng-click="setDate(30, 'addedFromDate')">{{'30'}} {{('dage' | translate)}}</md-button>
+			   </div>
   		</div>
   		  <div  md-whiteframe="3" class="search-section" layout-padding>
 			  <div layout="row"> <span class="search-sub-header"><md-icon md-font-icon="fa fa-tree fa-lg" class="material-icons md-light md-48 md-primary" /> {{'Økologi' | translate}}</span> <span flex></span> 
@@ -207,7 +235,7 @@
 						   
  				         </md-input-container>
 		  			   	 <md-input-container >	
-		  			   	<label translate>Livsstrategi (beta)</label>  
+		  			   	<label >{{'Livsstrategi' | translate}} (beta)</label>  
 		  			   <md-select aria-label="livsstrategi" id="livsstrategi" ng-model="search.livsstrategi">
 		  			 	<md-option value=""></md-option>
     
@@ -374,9 +402,15 @@
  		 	<md-switch ng-model="search.onlyWithImages" aria-label="Kun med billeder" >
  		 	   <span translate>Kun fund med billeder</span>
  		 	  </md-switch>
-  	           <md-datepicker ng-model="search.imageMaxAge" md-placeholder="Siden dato">
+  	           <md-datepicker ng-model="search.imageMaxAge" md-placeholder="{{'Siden dato' | translate}}">
   	           </md-datepicker>
 		   </div>
+		   <div layout-gt-xs="row">
+		   <md-button ng-click="setDate(3, 'imageMaxAge')">{{'3'}} {{'dage' | translate}}</md-button>
+		   <md-button ng-click="setDate(7, 'imageMaxAge')">{{'7'}} {{('dage' | translate)}}</md-button>
+		   <md-button ng-click="setDate(30, 'imageMaxAge')">{{'30'}} {{('dage' | translate)}}</md-button>
+		   </div>
+		   
   		</div>
 		  
 		  
@@ -387,12 +421,19 @@
 		  <div  md-whiteframe="3" class="search-section" layout-padding>
 			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="forum"></ng-md-icon> {{'Forum' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('forum')" icon="refresh"></ng-md-icon></div>
 			   
-	 		   <div layout-gt-xs="row">
+	 		   <div  layout="column" layout-gt-lg="row">
+				   <div layout-gt-xs="row">
 	  		 	<md-switch ng-model="search.onlyWithForum" aria-label="Kun med forum" >
 	  		 	   <span translate>Kun kommenterede fund</span>
 	  		 	  </md-switch>
-   	           <md-datepicker ng-model="search.forumMaxAge" md-placeholder="Siden dato">
+   	           <md-datepicker ng-model="search.forumMaxAge" md-placeholder="{{'Siden dato' | translate}}">
    	           </md-datepicker>
+		   </div>
+			   <div layout-gt-xs="row">
+			   <md-button ng-click="setDate(3, 'forumMaxAge')">{{'3'}} {{'dage' | translate}}</md-button>
+			   <md-button ng-click="setDate(7, 'forumMaxAge')">{{'7'}} {{('dage' | translate)}}</md-button>
+			   <md-button ng-click="setDate(30, 'forumMaxAge')">{{'30'}} {{('dage' | translate)}}</md-button>
+			   </div>
 	 		   </div>
 		<div layout-gt-xs="row">
 		
@@ -401,7 +442,7 @@
 		 	
 		 
 	 	<md-switch ng-model="search.activeThreadsOnly" aria-label="Søg aktive tråde" ng-if="Auth.isLoggedIn()">
-	 	   <span translate>Mine aktive tråde </span>
+	 	   <span translate>Andre har kommenteret efter mig</span>
 	 	  </md-switch>
 			 
 							  </div>
