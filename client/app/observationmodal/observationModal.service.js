@@ -208,6 +208,32 @@ angular.module('svampeatlasApp')
 									}
 
 								}
+								
+								$scope.addingUser  =  false;
+								$scope.addFinder = function(obs, usr){
+									$scope.addingUser  =  true;
+									Observation.addUser({id: obs._id}, usr).$promise.then(function(){
+										$scope.addingUser  =  false;
+										obs.users.push(usr)
+										$scope.showSimpleToast(usr.name+" "+$translate.instant('tilføjet som finder'))
+										
+									})
+									
+									
+								}
+								$scope.removeFinder = function(obs, usr){
+									$scope.addingUser  =  true;
+									$scope.addUserPromise = Observation.removeUser({id: obs._id, userid: usr._id}).$promise.then(function(){
+										$scope.addingUser  =  false;
+										_.remove(obs.users, function(u){ return u._id === usr._id});
+										$scope.showSimpleToast(usr.name+" "+$translate.instant('fjernet fra findere'))
+										
+									})
+									
+								}
+								
+								
+								
 							/*	$scope.forum = Observation.getForum({
 									id: referencedDataRow._id
 								}); */
@@ -216,6 +242,14 @@ angular.module('svampeatlasApp')
 								});
 
 								$scope.obs.$promise.then(function(obs) {
+									
+									$scope.userIsFinder = function(usr){
+										var found = false;
+										for(var i =0; i< $scope.obs.users.length; i++){
+											if(usr._id === $scope.obs.users[i]._id) found = true;
+										};
+										return found;
+									}
 									
 									$scope.forum = obs.Forum
 									

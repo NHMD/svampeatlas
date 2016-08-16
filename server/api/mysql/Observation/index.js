@@ -24,11 +24,15 @@ router.get('/:id', auth.appendUser(), nocache.noCache(), controller.show);
 router.get('/:id/forum', forumController.showForumForObs);
 router.post('/:id/forum', auth.isAuthenticated(), forumController.addCommentToObs);
 
+
 router.post('/:id/determinations', auth.hasRole('validator'), determinationController.addDeterminationToObs); 
 
 
 router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), auth.appendUser(), imageController.addImagesToObs]); 
 
+
+router.post('/:id/users', auth.isAuthenticated(), controller.addUserToObs);
+router.delete('/:id/users/:userid', auth.isAuthenticated(), controller.deleteUserFromObs);
 
 router.get('/recent/localities', /*redisClient.use(), */ localityController.localititesWithRecentFindings);
 

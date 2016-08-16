@@ -37,6 +37,21 @@ angular.module('svampeatlasApp')
 				},
 				url: '/api/observations/:id/determinations'
 			},
+			'addUser': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/:id/users'
+			},
+			'removeUser': {
+				method: 'DELETE',
+				params: {
+					id: '@_id',
+					userid: 'userid'
+				},
+				url: '/api/observations/:id/users/:userid'
+			}
 			
 		});
 

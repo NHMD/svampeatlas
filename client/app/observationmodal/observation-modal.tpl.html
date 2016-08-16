@@ -46,7 +46,7 @@
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
 	   	           <h3>{{'Finder(e)' | translate}}</span></h3>
-	  			   <p><span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>{{obs.verbatimLeg}}</p>
+	  			   <p><span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>{{(obs.users.length > 0) ? "" : obs.verbatimLeg}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
@@ -218,9 +218,15 @@ flex>
 	
 	  	<tbody >
 	  	<tr >
-	  		<td class="rightalign"><strong>{{'Finder(e)' | translate}}:</strong></td><td >
+	  		<td class="rightalign"><span ng-if="Auth.isLoggedIn()" >
+				
+				<md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser()) === false" md-font-icon="fa fa-user-plus" ng-click="addFinder(obs, Auth.getCurrentUser())" class="material-icons md-light md-48 md-primary" /><md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser())" ng-click="removeFinder(obs, Auth.getCurrentUser())" md-font-icon="fa fa-user-times" class="material-icons md-light md-48 md-primary" /></span> 
+				
+				<strong>{{'Finder(e)' | translate}}:</strong>
+			<md-progress-linear ng-show="addingUser" md-mode="indeterminate"></md-progress-linear>
+			</td><td >
 			
-			<span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>{{obs.verbatimLeg}}
+			<span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>{{(obs.users.length >0) ? "" : obs.verbatimLeg}}
 			</td>
 			<td class="rightalign"><strong>{{'Bestemmer' | translate}}:</strong></td><td ><span ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</span>
 		  

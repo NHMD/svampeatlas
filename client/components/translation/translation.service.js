@@ -29,7 +29,7 @@ angular.module('svampeatlasApp')
 		  'Om svampeatlas' : 'About the Atlas of Fungi',
 		  'Nyheder' : 'News',
 		  'Indstillinger' : 'Settings',
-		  'Inkludér udenlandske fund' : 'Include foreign findings',
+		  'Inkludér udenlandske fund' : 'Include non-danish sightings',
 		  'Søg i familier, ordener osv.' : 'Search families, orders etc.',
 		  'Danske navne' : 'Danish names',
 		  'Rødlistestatus' : 'Red list status',
@@ -45,7 +45,6 @@ angular.module('svampeatlasApp')
 		  'Art' : 'Species',
 		  'Poster pr side' : 'Records / page',
 		  'af' : 'of',
-		  'Mine aktive tråde' : 'My active threads',
 		  'Fra dato': 'From date' ,
 		  'Til dato': 'To date',
 		  'Livsstrategi' : 'Life strategy',
@@ -120,7 +119,7 @@ angular.module('svampeatlasApp')
 		  'Søg kun i danske arter' : 'Search only danish species',
 		  'Vejledninger' : 'Tutorials',
 		  'Projektbeskrivelse' : 'Project description',
-		  'Kun udenlandske fund': 'Only foreign findings',
+		  'Kun udenlandske fund': 'Exclude sightings from Denmark',
 		  'Vil du slette' : 'Do you want to delete',
 		  'Fundet og alle tilhørende data vil blive permanent slettet fra databasen.': 'The record and all related data will be permanently deleted from the database.',
 		  'Slet fund': 'Delete record',
@@ -140,8 +139,21 @@ angular.module('svampeatlasApp')
 		  'Tid' : 'Time',
 		  'Økologi' : 'Ecology',
 		  'Personer' : 'Involved persons',
-		  'Ikke mine fund' : 'Exclude my sightings'         
-
+		  'Ikke mine fund' : 'Exclude my sightings'  ,
+		  'Andre har kommenteret efter mig' : 'Others have commented after me',
+		  'Kun kommenterede fund' : 'Only sightings with comments',
+		  'Eksakt dato' : 'Exact date',
+		  'Siden dato' : 'Since date',
+		  'Fra år' : 'From year',
+		  'Til år' : 'To year',
+		  'Måneder' : 'Months',
+		  'dage' : 'days' ,
+		  'Funddato' : 'Sighting date',
+		  'Fund indlagt' : 'Submitted date' ,
+		  'Kun fund med billeder' : 'Only sightings with images',
+		  'Fundegenskaber' : 'Sighting properties',
+		  'tilføjet som finder' : 'added as finder' ,    
+		  'fjernet fra findere' : 'removed from finders' 
 	    });
 	  
   	  $translateProvider.translations('dk', {
