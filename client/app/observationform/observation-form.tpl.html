@@ -34,7 +34,7 @@
 				          <span class="item-title">
 							  
 						<span ng-if="item.Vernacularname_DK">
-				            <span ng-if="10000 > item.RankID"> {{(item.RankID === 5000)? 'Art af ':''}}{{(item.RankID < 5000)? 'Art i ':''}} {{item.Vernacularname_DK.vernacularname_dk}} </span>
+				            <span ng-if="10000 > item.RankID"> {{(item.RankID === 5000)? 'Art af ':''}}{{( 5000 > item.RankID)? 'Art i ':''}} {{item.Vernacularname_DK.vernacularname_dk}} </span>
 							<span ng-if="item.RankID > 9999"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 						</span>
 						<span ng-if="!item.Vernacularname_DK">

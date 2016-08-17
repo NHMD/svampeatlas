@@ -45,14 +45,17 @@
 	  		 
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>{{'Finder(e)' | translate}}</span></h3>
+	   	           <h3>{{'Finder(e)' | translate}} <span ng-if="Auth.isLoggedIn()" >
+				
+				   				<md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser()) === false" md-font-icon="fa fa-user-plus" ng-click="addFinder(obs, Auth.getCurrentUser())" class="material-icons md-light md-48 md-primary" /><md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser())" ng-click="removeFinder(obs, Auth.getCurrentUser())" md-font-icon="fa fa-user-times" class="material-icons md-light md-48 md-primary" /></span></h3>
+				   <md-progress-linear ng-show="addingUser" md-mode="indeterminate"></md-progress-linear>
 	  			   <p><span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>{{(obs.users.length > 0) ? "" : obs.verbatimLeg}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
    	       <md-list-item class="md-2-line md-long-text">
    	         <div class="md-list-item-text">	  				
-   	           <h3>{{'Bestemmer' | translate}}</span></h3>
+   	           <h3>{{'Bestemmer' | translate}}</h3>
   			   <p ng-if="obs.PrimaryDetermination.User !== null">{{obs.PrimaryDetermination.User.name}} ({{obs.PrimaryDetermination.User.Initialer}})</p>
 			   <p ng-if="obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator">{{obs.PrimaryDetermination.verbatimdeterminator}}</p>
    	         </div>
@@ -60,7 +63,7 @@
    	       </md-list-item>
    	       <md-list-item class="md-2-line md-long-text">
    	         <div class="md-list-item-text">	  				
-   	           <h3>{{'Lokalitet' | translate}}</span></h3>
+   	           <h3>{{'Lokalitet' | translate}}</h3>
   			   <p ng-if="obs.Locality">{{obs.Locality.name}}</p>
 			   <p ng-if="!obs.Locality && obs.verbatimLocality">{{obs.verbatimLocality}}</p>
    	         </div>
@@ -68,7 +71,7 @@
    	       </md-list-item>
     	       <md-list-item class="md-2-line md-long-text">
     	         <div class="md-list-item-text">	  				
-    	           <h3>{{'Dato' | translate}}</span></h3>
+    	           <h3>{{'Dato' | translate}}</h3>
    			   <p>{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}</p>
     	         </div>
    			   <md-divider  ng-if="!$last"></md-divider>                        
@@ -82,49 +85,49 @@
     	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>{{'Substrat' | translate}}</span></h3>
+	   	           <h3>{{'Substrat' | translate}}</h3>
 				   <p> {{($translate.use() === 'en') ? obs.Substrate.name_uk : obs.Substrate.name}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>{{'Vegetationstype' | translate}}</span></h3>
+	   	           <h3>{{'Vegetationstype' | translate}}</h3>
 				   <p> {{($translate.use() === 'en') ? obs.VegetationType.name_uk : obs.VegetationType.name}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>{{'Kollektionsnummer' | translate}}</span></h3>
+	   	           <h3>{{'Kollektionsnummer' | translate}}</h3>
 	  			   <p>{{obs.fieldnumber}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>{{'Herbarium' | translate}}</span></h3>
+	   	           <h3>{{'Herbarium' | translate}}</h3>
 	  			   <p>{{obs.herbarium}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>{{'Økologi-kommentarer' | translate}}</span></h3>
+	   	           <h3>{{'Økologi-kommentarer' | translate}}</h3>
 	  			   <p>{{obs.ecologynote}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>{{'Bemærkninger' | translate}}</span></h3>
+	   	           <h3>{{'Bemærkninger' | translate}}</h3>
 	  			   <p>{{obs.note}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
 	   	       <md-list-item class="md-2-line md-long-text" ng-if="Auth.hasRole('validator')">
 	   	         <div class="md-list-item-text">	  				
-	   	           <h3>{{'Intern note' | translate}}</span></h3>
+	   	           <h3>{{'Intern note' | translate}}</h3>
 	  			   <p>{{obs.noteInternal}}</p>
 	   	         </div>
 	  			   <md-divider  ng-if="!$last"></md-divider>                        

@@ -99,29 +99,7 @@ angular.module('svampeatlasApp')
 				ObservationSearchService.reset();
 				var search = ObservationSearchService.getSearch();
 				search.where = {};
-				search.include = [{
-						model: "DeterminationView",
-						as: "DeterminationView",
-						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id'],
-						where: { Determination_validation: ['Godkendt','Valideres', 'Afventer', 'Gammelvali']}
-					}, {
-						model: "User",
-						as: 'PrimaryUser',
-						attributes: ['email', 'Initialer', 'name'],
-						where: {}
-					}, {
-						model: "Locality",
-						as: 'Locality',
-						where: {},
-						required: false
-					}, {
-						model: "GeoNames",
-						as: 'GeoNames',
-						where: {},
-						required: false
-					}
-
-				];
+				search.wasInitiatedOutsideSearchForm = true;
 				
 				if($stateParams.taxon_id ){
 								search.include[0].where.Taxon_id = $stateParams.taxon_id;

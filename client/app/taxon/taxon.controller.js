@@ -181,7 +181,7 @@ angular.module('svampeatlasApp')
 					model: "DeterminationView",
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
-							where: { Determination_validation: ['Godkendt','Valideres', 'Afventer', 'Gammelvali'], Taxon_id: $scope.taxon.accepted_id}
+							where: { Determination_validation: 'Godkendt', Taxon_id: $scope.taxon.accepted_id}
 				}),
 				JSON.stringify({
 					model: "Locality",

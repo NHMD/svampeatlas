@@ -3,6 +3,7 @@
 angular.module('svampeatlasApp')
 	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'User', 'Taxon', 'TaxonDKnames', 'Locality', 'Substrate', 'VegetationType', 'PlantTaxon', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter',
 		function($scope, ObservationSearchService, SearchService, User, Taxon, TaxonDKnames, Locality, Substrate, VegetationType, PlantTaxon, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter) {
+		
 			$scope.Auth = Auth;
 			$scope.state = $state;
 			$scope.mdMedia = $mdMedia;
@@ -21,6 +22,11 @@ angular.module('svampeatlasApp')
 
 					ObservationSearchService.reset();
 					$state.reload();
+				}
+				
+				
+				if(ObservationSearchService.getSearch().wasInitiatedOutsideSearchForm)	{
+					$scope.resetForm();
 				}
 				$scope.setDate = function(days, model){
 					
@@ -213,7 +219,7 @@ angular.module('svampeatlasApp')
 						$scope.search.notMyObservations = false;
 						break;
 					case 'recordproperties':
-						$scope.search.include[0].where.Determination_validation = ['Godkendt', 'Valideres', 'Afventer', 'Gammelvali'];
+						delete $scope.search.include[0].where.Determination_validation ;
 						delete $scope.search.fieldnumber;
 						delete $scope.search.databasenumber
 						delete $scope.search._id;
@@ -223,11 +229,12 @@ angular.module('svampeatlasApp')
 
 						break;
 					case 'forum':
+						delete $scope.search.onlyWithForum;
 						delete $scope.search.activeThreadsOnly;
 						delete $scope.search.forumMaxAge;
-						delete $scope.search.onlyWithForum;
-
-
+						
+						delete $scope.search.forumComment;
+						
 
 						break;
 
@@ -258,9 +265,7 @@ angular.module('svampeatlasApp')
 					model: "DeterminationView",
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id'],
-					where: {
-						Determination_validation: ['Godkendt', 'Valideres', 'Afventer', 'Gammelvali']
-					}
+					where: {}
 				}, {
 					model: "User",
 					as: 'PrimaryUser',
@@ -285,10 +290,12 @@ angular.module('svampeatlasApp')
 					required: false
 				}, {
 					model: "ObservationImage",
-					as: 'Images'
+					as: 'Images',
+					where: {}
 				}, {
 					model: "ObservationForum",
-					as: 'Forum'
+					as: 'Forum',
+					where: {}
 
 				}];
 			}
@@ -545,15 +552,23 @@ angular.module('svampeatlasApp')
 				if ($scope.search.forumMaxAge !== undefined) {
 					$scope.search.onlyWithForum = true;
 					var formattedDate = $filter('date')($scope.search.forumMaxAge, "yyyy-MM-dd", '+0200');
-					$scope.observationSearch.include[6].where = {
-						createdAt: {
+					$scope.observationSearch.include[6].where.createdAt = {
 							$gte: formattedDate
 						}
-					}
+					
 
 				} else {
-					delete $scope.observationSearch.include[6].where;
+					delete $scope.observationSearch.include[6].where.createdAt;
 				}
+				
+				if($scope.search.forumComment){
+					$scope.observationSearch.include[6].where.content = {like: "%"+$scope.search.forumComment+"%"}
+					$scope.search.onlyWithForum = true;
+				} else {
+					delete $scope.observationSearch.include[6].where.content;
+				}
+				
+				
 
 				if ($scope.search.onlyWithForum) {
 					$scope.observationSearch.include[6].required = true;
@@ -564,14 +579,13 @@ angular.module('svampeatlasApp')
 				if ($scope.search.imageMaxAge !== undefined) {
 					$scope.search.onlyWithImages = true;
 					var formattedDate = $filter('date')($scope.search.imageMaxAge, "yyyy-MM-dd", '+0200');
-					$scope.observationSearch.include[5].where = {
-						createdAt: {
+					$scope.observationSearch.include[5].where.createdAt = {
 							$gte: formattedDate
 						}
-					}
+					
 
 				} else {
-					delete $scope.observationSearch.include[5].where;
+					delete $scope.observationSearch.include[5].where.createdAt;
 				}
 
 				if ($scope.search.onlyWithImages) {

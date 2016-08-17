@@ -7,8 +7,8 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', 'Taxon',  'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate',
-							function($scope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality,  Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate) {
+						controller: ['$scope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', 'Taxon',  'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate','UserAgentService',
+							function($scope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality,  Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService) {
 
 
 								$scope.$translate = $translate;
@@ -871,8 +871,14 @@ angular.module('svampeatlasApp')
 										associatedOrganisms: $scope.associatedOrganism,
 										associatedOrganismImport: $scope.associatedOrganismImport,
 										users: _.filter($scope.users, function(u){ return u._id !== undefined })
+										
 
 									};
+									
+									if(!($scope.obs && $scope.obs._id)) {
+										obs.os = UserAgentService.getOS();
+										obs.browser = UserAgentService.getBrowser();
+									}
 									if($scope.users.length === 1 && $scope.users[0]._id === undefined){
 										obs.verbatimLeg = $scope.users[0];
 									}
