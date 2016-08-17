@@ -44,3 +44,7 @@ md-checkbox.months > div._md-label {
 	margin-left: 26px;
 }
 
+.refresh-section {
+	cursor: pointer;
+}
+

@@ -153,7 +153,9 @@ angular.module('svampeatlasApp')
 		  'Kun fund med billeder' : 'Only sightings with images',
 		  'Fundegenskaber' : 'Sighting properties',
 		  'tilføjet som finder' : 'added as finder' ,    
-		  'fjernet fra findere' : 'removed from finders' 
+		  'fjernet fra findere' : 'removed from finders' ,
+		  'Forum-kommentar indeholder:' : 'Forum comment contains:',
+		  'Ikke afviste' : 'Not rejected'
 	    });
 	  
   	  $translateProvider.translations('dk', {

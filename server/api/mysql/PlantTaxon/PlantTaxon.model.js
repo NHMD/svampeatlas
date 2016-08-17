@@ -64,6 +64,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: 0
+    },
+	probability: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
     }
 
   }, {

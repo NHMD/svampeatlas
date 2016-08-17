@@ -83,6 +83,7 @@ function cacheResult(req, value){
 // Get list of Observations
 exports.index = function(req, res) {
 	
+	
 	if(!req.query.limit){
 		req.query.limit = 10000;
 	}

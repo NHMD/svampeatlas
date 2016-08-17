@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination',
-		function($scope, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination) {
+	.controller('SearchListCtrl', ['$scope','$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination',
+		function($scope,$filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination) {
 			
 			$scope.Auth = Auth;
 			$scope.currentUser = Auth.getCurrentUser();
@@ -15,64 +15,31 @@ angular.module('svampeatlasApp')
 			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date) || $stateParams.taxon_id) {
 				ObservationSearchService.reset();
 				var search = ObservationSearchService.getSearch();
+				search.wasInitiatedOutsideSearchForm = true;
 				search.where = {};
-				search.include = [{
-						model: "DeterminationView",
-						as: "DeterminationView",
-						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
-						where: {}
-					}, {
-						model: "User",
-						as: 'PrimaryUser',
-						attributes: ['email', 'Initialer', 'name'],
-						where: {}
-					}, {
-						model: "Locality",
-						as: 'Locality',
-						where: {},
-						required: false
-					}, {
-						model: "GeoNames",
-						as: 'GeoNames',
-						where: {},
-						required: false
-					}, {
-						model: "ObservationImage",
-						as: 'Images',
-						separate: true,
-						offset: 0,
-						limit: 1
-					}, {
-						model: "ObservationForum",
-						as: 'Forum',
-						separate: true,
-						offset: 0,
-						limit: 1
-
-					}
-
-				];
+				
 				if ($stateParams.searchterm === "mine") {
 
 					search.include[1].where = {
 						Initialer: Auth.getCurrentUser().Initialer
-					}
-
+					} 
+					search.include[1].required = true;
 
 				} else if ($stateParams.searchterm === "3days") {
 
 					search.where.observationDate = {
-						gt: moment().subtract(3, 'days')
+						gt: $filter('date')(moment().subtract(3, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 				} else if ($stateParams.searchterm === "7days") {
 
 					search.where.observationDate = {
-						gt: moment().subtract(7, 'days')
+						gt: $filter('date')(moment().subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 
 				} else if($stateParams.locality_id && $stateParams.date){
 					search.where.observationDate = {
-						gt: moment($stateParams.date).subtract(1, 'days')
+						
+						gt: $filter('date')(moment($stateParams.date).toDate()	, "yyyy-MM-dd", '+0200')				
 					};
 					search.where.locality_id = $stateParams.locality_id;
 			} else if($stateParams.taxon_id ){

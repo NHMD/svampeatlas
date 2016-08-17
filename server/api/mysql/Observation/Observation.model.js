@@ -107,6 +107,14 @@ module.exports = function(sequelize, DataTypes) {
    geom: {
    	type: DataTypes.GEOMETRY('POINT'),
    	allowNull: true,
+   },
+   os: {
+   	type: DataTypes.STRING,
+   	allowNull: true,
+   },
+   browser: {
+   	type: DataTypes.STRING,
+   	allowNull: true,
    }
 
   }, {
