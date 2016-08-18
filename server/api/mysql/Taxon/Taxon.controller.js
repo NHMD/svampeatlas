@@ -1420,9 +1420,9 @@ return models.sequelize.query(sql,
 
 exports.importMycoKeyCharacters = function(req, res){
 	
-	var sql = "INSERT INTO GenusCharacters (`Character`, `GenusID`, `xxxx`,`BoolValue`, Probability, mark, CodedForSpecies, `check`, `RealValueMax`, `RealValueMin`, `taxon_id`) "
+	var sql = "REPLACE INTO GenusCharacters (`Character`, `GenusID`, `xxxx`,`BoolValue`, Probability, mark, CodedForSpecies, `check`, `RealValueMax`, `RealValueMin`, `taxon_id`) "
 	+ "SELECT c.`Character`, 0, 1, c.BoolValue, c.Probability, c.mark, c.CodedForSpecies, c.`check`, c.RealValueMax, c.RealValueMin,  t._id"
-	+"  FROM GenusCharacters c, Taxon t, Taxon tp WHERE c.taxon_id = :importfromid AND tp._id = :taxonId AND t._id <> c.taxon_id AND t.Path LIKE CONCAT(tp.Path, '%') ON DUPLICATE KEY UPDATE taxon_id=c.taxon_id"
+	+"  FROM GenusCharacters c, Taxon t, Taxon tp WHERE c.taxon_id = :importfromid AND tp._id = :taxonId AND t._id <> c.taxon_id AND t.Path LIKE CONCAT(tp.Path, '%')"
 	
 	return models.sequelize.query(sql,
 	  { replacements: { taxonId: req.params.id, importfromid: req.body._id }, type: models.sequelize.QueryTypes.INSERT }
@@ -1430,7 +1430,7 @@ exports.importMycoKeyCharacters = function(req, res){
 	
 	
 	.then(function(inserted) {
-		
+		console.log("###### 1")
 	  return models.Taxon.find({
 		where: {
 			_id: req.params.id
@@ -1444,7 +1444,7 @@ exports.importMycoKeyCharacters = function(req, res){
 	})
 	})
 	.then(function(taxon) {
-
+	console.log("###### 2")
 	 return  [taxon, models.TaxonLog.create({
 				eventname: "MycoKey characters imported",
 				description: taxon.character1.length+ " MycoKey characters imported from "+req.body.FullName+" (id: "+req.body._id+")  to "+ taxon.FullName + " (id: "+taxon._id+") and its descendants.",

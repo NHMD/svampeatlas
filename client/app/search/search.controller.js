@@ -1,17 +1,24 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'User', 'Taxon', 'TaxonDKnames', 'Locality', 'Substrate', 'VegetationType', 'PlantTaxon', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter',
-		function($scope, ObservationSearchService, SearchService, User, Taxon, TaxonDKnames, Locality, Substrate, VegetationType, PlantTaxon, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter',
+		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter) {
 		
 			$scope.Auth = Auth;
 			$scope.state = $state;
 			$scope.mdMedia = $mdMedia;
 			$scope.$translate = $translate;
 			$scope.toggleSearchMapSideNav = buildToggler('searchmapsidenav');
-
-			$scope.substrates = Substrate.query();
-			$scope.vegetationtypes = VegetationType.query();
+			
+			SearchService.getSubstrate().then(function(substrates){
+				$scope.substrates = substrates;
+			});
+			
+			SearchService.getVegetationType().then(function(vegtypes){
+				$scope.vegetationtypes = vegtypes;
+			})
+			
+			
 
 			$scope.openMenu = function($mdOpenMenu, ev) {
 

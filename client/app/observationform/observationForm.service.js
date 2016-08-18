@@ -7,8 +7,8 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', 'Taxon',  'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'VegetationType', 'Substrate', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate','UserAgentService',
-							function($scope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality,  Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils, VegetationType, Substrate, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService) {
+						controller: ['$scope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', 'Taxon',  'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate','UserAgentService',
+							function($scope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality,  Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils,  PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService) {
 
 
 								$scope.$translate = $translate;
@@ -183,7 +183,7 @@ angular.module('svampeatlasApp')
 
 										})
 										.then(function(obs) {
-											Substrate.query().$promise.then(function(substrates) {
+											SearchService.getSubstrate().then(function(substrates) {
 												$scope.substrates = substrates;
 
 												if (obs) {
@@ -194,7 +194,7 @@ angular.module('svampeatlasApp')
 												}
 
 											});
-											VegetationType.query().$promise.then(function(vegetationtypes) {
+											SearchService.getVegetationType().then(function(vegetationtypes) {
 												$scope.vegetationtypes = vegetationtypes;
 
 												if (obs) {
@@ -856,7 +856,7 @@ angular.module('svampeatlasApp')
 
 									var obs = {
 										observationDate: $filter('date')($scope.observationDate, "yyyy-MM-dd", '+0200'),
-										primaryuser_id: $scope.currentUser._id,
+										
 
 										substrate_id: $scope.selectedSubstrate,
 										vegetationtype_id: $scope.selectedVegetationType,

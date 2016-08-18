@@ -1,8 +1,17 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User) {
+	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User, Substrate, VegetationType) {
+		
+		var substrate = Substrate.query();
+		var vegetationType = VegetationType.query();
 
 		return {
+			getSubstrate : function(){
+				return substrate.$promise;
+			},
+			getVegetationType : function(){
+				return vegetationType.$promise;
+			},
 			querySearchLocality : function(query, leafletBounds) {
 
 				var q = {
