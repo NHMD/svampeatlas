@@ -12,9 +12,9 @@ angular.module('svampeatlasApp')
 								
 								$scope.$translate = $translate;
 								
-								$scope.editRecord = function(){
+								$scope.editRecord = function(asDuplicate){
 									$mdDialog.hide($scope.obs).then(function(obs){
-										ObservationFormService.show(null, obs)
+										ObservationFormService.show(null, obs, asDuplicate)
 									})
 								}
 								
