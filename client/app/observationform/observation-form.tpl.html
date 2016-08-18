@@ -1,16 +1,16 @@
         <form name="observationForm">
 			<div layout="row">
-  			  <div layout="column" ng-if="obs" class="inset" layout-fill>
+  			  <div layout="column" ng-if="obs && obs._id && !duplicateID" class="inset" layout-fill>
   	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
   				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
   	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader">Indlagt som <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
   	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
   	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
   		  </div>
-		  <div class="validator-button-container" ng-if="obs && Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"></div>
+		  <div class="validator-button-container" ng-if="obs && (obs._id && !duplicateID) && Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"></div>
 		  </div>
 			
-			<div ng-if="!obs">
+			<div ng-if="!obs || (!obs._id && duplicateID)">
 	 		<div  layout-margin layout-gt-xs="row">
 	        <md-chips md-max-chips=1 ng-model="newTaxon" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
 
@@ -177,7 +177,7 @@
  			
 			   	
 			  </div>
-				  <div layout-margin layout="column">
+				  <div layout-margin layout="row">
  			  <!-- 	<md-switch ng-model="$parent.$parent.$parent.extendedAssociatedOrganismSearch" aria-label="Udvidet søgning" >
  			   	    Udvidet værtssøgning
  			   	  </md-switch> -->
@@ -188,7 +188,7 @@
 					md-min-length="3"
  				        md-selected-item="selectedItem"
  				        md-search-text="searchText"
- 				        md-items="item in querySearchGBIFPlantTaxon(searchText)"
+ 				        md-items="item in querySearchGBIFPlantTaxon(searchText, extendedHostRank)"
  				        md-item-text="item.canonicalName"
  				        placeholder="{{'Udvidet værtssøgning' | translate }}"
  						>
@@ -202,6 +202,11 @@
  				    </md-chip-template>
 	
  				  </md-chips>
+				  <md-radio-group ng-model="$parent.extendedHostRank" ng-if="extendedAssociatedOrganismSearch">
+				        <md-radio-button value="SPECIES">{{'Art' | translate}}</md-radio-button>
+				        <md-radio-button value="GENUS" >{{'Slægt' | translate}}</md-radio-button>
+				       
+				      </md-radio-group>
 				 
 			   </div>
 			   <div layout-margin layout="column">

@@ -3,14 +3,15 @@ angular.module('svampeatlasApp')
 	.factory('ObservationFormService', function($mdDialog, appConstants) {
 
 			return {
-				show: function(ev, row) {
+				show: function(ev, row, duplicateRecord) {
 
 
 					$mdDialog.show({
 						controller: ['$scope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', 'Taxon',  'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate','UserAgentService',
 							function($scope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality,  Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils,  PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService) {
-
-
+								
+								
+								
 								$scope.$translate = $translate;
 								$scope.imageurl = appConstants.imageurl;
 								$scope.maxDate = new Date();
@@ -24,17 +25,12 @@ angular.module('svampeatlasApp')
 								$scope.currentUser = Auth.getCurrentUser();
 								$scope.Auth = Auth;
 								$scope.moment = moment;
-								$scope.DkNames = ObservationFormStateService.getState().DkNames;
-								$scope.$watch('DkNames', function(newVal) {
-									ObservationFormStateService.getState().DkNames = newVal;
-								})
+								
 								$scope.extendedAssociatedOrganismSearch = ObservationFormStateService.getState().extendedAssociatedOrganismSearch || false;
 								$scope.toggelExtendedAssociatedOrganismSearch = function() {
 									$scope.extendedAssociatedOrganismSearch = !$scope.extendedAssociatedOrganismSearch;
 								}
-								$scope.toggleOnlyDkTaxa = function() {
-									$scope.onlyPresentInDK = !$scope.onlyPresentInDK;
-								}
+								$scope.extendedHostRank = 'SPECIES'
 
 								$scope.resetForm = function() {
 									$scope.selectedLocality = [];
@@ -77,14 +73,14 @@ angular.module('svampeatlasApp')
 									}
 								})
 
-								$scope.showSimpleToast = function(text) {
-
+								$scope.showSimpleToast = function(text, delay) {
+									var _delay = (delay) ? delay : 3000;
 									$mdToast.show(
 										$mdToast.simple()
 										.textContent(text)
 										.position("top right")
 										.parent(document.querySelectorAll('.speeddial-parent'))
-										.hideDelay(3000)
+										.hideDelay(_delay)
 									);
 								};
 
@@ -178,7 +174,15 @@ angular.module('svampeatlasApp')
 
 												}
 											}
-
+											if(duplicateRecord) {
+												
+												$scope.duplicateID = obs._id;
+												delete obs._id;
+												obs.forum = [];
+												obs.images = [];
+												$scope.showSimpleToast($translate.instant('Du har nu klonet') + ' DMS-'+$scope.duplicateID +'. '+$translate.instant('Husk at gemme det klonede fund før du lukker dette vindue.'), 5000)
+											}
+											
 											return obs;
 
 										})
@@ -322,12 +326,7 @@ angular.module('svampeatlasApp')
 
 								$scope.querySearchPlantTaxon = SearchService.querySearchPlantTaxon;
 
-								$scope.querySearchGBIFPlantTaxon = function(query) {
-
-
-									return SearchService.querySearchPlantTaxon(query, 'SPECIES')
-
-								};
+								$scope.querySearchGBIFPlantTaxon = SearchService.querySearchGBIFPlantTaxon;
 
 								$scope.querySearchUser = SearchService.querySearchUser;
 
@@ -883,7 +882,7 @@ angular.module('svampeatlasApp')
 										obs.verbatimLeg = $scope.users[0];
 									}
 									// only post determination if new observation
-									if (!row) {
+									if ($scope.duplicateID || !row) {
 										obs.determination = {
 											taxon_id: $scope.newTaxon[0]._id,
 											user_id: $scope.determiner[0]._id

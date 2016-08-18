@@ -7,18 +7,25 @@
           </md-button>
         <h2>ID: DMS-{{obs._id}}</h2>
         <span flex></span>
+		<span ng-if="Auth.isLoggedIn()"><md-tooltip md-direction="bottom" >{{'Klon fund' | translate}}</md-tooltip>
+	    <md-button class="md-icon-button" aria-label="Kopiér fund" ng-click="editRecord(true)">
+	            <ng-md-icon icon="my_library_books" ></ng-md-icon>
+	          </md-button></span>
 		<div class="clipboard-copy" data-clipboard-text="{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK ? (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) +', ' : ''}}{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}, {{obs.Locality ? obs.Locality.name +', ': ''}}{{!obs.Locality && obs.verbatimLocality ? obs.verbatimLocality+', ' : ''}}{{'lat: '+obs.decimalLatitude.toFixed(7) +' lon: '+obs.decimalLongitude.toFixed(7)+', '}}{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}, Leg: {{obs.users | getUserNamesAsList}}, Det: {{obs.PrimaryDetermination.User ? obs.PrimaryDetermination.User.name : ''}}{{obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator ? obs.PrimaryDetermination.verbatimdeterminator : ''}}, DMS-{{obs._id}}">
+<md-tooltip md-direction="bottom" >{{'Kopier funddata til udklipsholder' | translate}}</md-tooltip>
  <md-button class="md-icon-button"
-                  aria-label="Kopiér funddata"
+                  aria-label="Kopiér funddata til udklipsholder"
                    >
          <ng-md-icon icon="content_copy" ></ng-md-icon>
        </md-button>	
    </div>
+   <span><md-tooltip md-direction="bottom" >{{'Ret fund' | translate}}</md-tooltip>
 	 <md-button ng-click="editRecord()" ng-if="obs.primaryuser_id === Auth.getCurrentUser()._id || Auth.hasRole('validator')"
 	                  aria-label="Ret fund"
 	                  class="md-icon-button" >
 	         <ng-md-icon icon="edit" ></ng-md-icon>
 	       </md-button>
+	   </span>
       </div>
     </md-toolbar>
       
