@@ -5,9 +5,9 @@
 
    <md-whiteframe class="md-whiteframe-2dp newsfeed" flex-gt-sm="33" layout >
     <md-list layout-fill layout-padding>
-      <md-subheader class="md-no-sticky"><ng-md-icon icon="info"></ng-md-icon> Vejledningerne åbner i et nyt browservindue. Du skal klikke på den grønne startside for at starte videoen.</md-subheader>
-      <md-list-item  ng-repeat="item in demos" ng-click="gotoVideo(item)">
-       <p>{{item.title}} </p>
+      <md-subheader class="md-no-sticky"><ng-md-icon icon="info"></ng-md-icon> Video-vejledningerne åbner i et nyt browservindue. Du skal klikke på den grønne startside for at starte videoen.</md-subheader>
+      <md-list-item  ng-repeat="item in demos" ng-click="gotoVideo(item)" flex>
+      <ng-md-icon icon="{{item.icon}}" ></ng-md-icon>  <p layout-padding>{{item.title}} </p>
         
 	
 		 

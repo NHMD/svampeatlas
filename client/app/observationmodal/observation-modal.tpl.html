@@ -7,7 +7,7 @@
           </md-button>
         <h2>ID: DMS-{{obs._id}}</h2>
         <span flex></span>
-		<div class="clipboard-copy" data-clipboard-text="{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK ? (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) +', ' : ''}}{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}, {{obs.Locality ? obs.Locality.name +', ': ''}}{{!obs.Locality && obs.verbatimLocality ? obs.verbatimLocality+', ' : ''}}{{'lat: '+obs.decimalLatitude +' lon: '+obs.decimalLongitude+', '}}{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}, Leg: {{obs.users | getUserNamesAsList}} Det: {{obs.PrimaryDetermination.User ? obs.PrimaryDetermination.User.name: ''}}{{obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator ? obs.PrimaryDetermination.verbatimdeterminator : ''}},  {{obs.PrimaryUser.Initialer}}{{(obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : ''}}-{{obs._id}}">
+		<div class="clipboard-copy" data-clipboard-text="{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK ? (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) +', ' : ''}}{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}, {{obs.Locality ? obs.Locality.name +', ': ''}}{{!obs.Locality && obs.verbatimLocality ? obs.verbatimLocality+', ' : ''}}{{'lat: '+obs.decimalLatitude.toFixed(7) +' lon: '+obs.decimalLongitude.toFixed(7)+', '}}{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}, Leg: {{obs.users | getUserNamesAsList}}, Det: {{obs.PrimaryDetermination.User ? obs.PrimaryDetermination.User.name : ''}}{{obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator ? obs.PrimaryDetermination.verbatimdeterminator : ''}}, DMS-{{obs._id}}">
  <md-button class="md-icon-button"
                   aria-label="Kopiér funddata"
                    >
@@ -47,7 +47,8 @@
 	   	         <div class="md-list-item-text">	  				
 	   	           <h3>{{'Finder(e)' | translate}} <span ng-if="Auth.isLoggedIn()" >
 				
-				   				<md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser()) === false" md-font-icon="fa fa-user-plus" ng-click="addFinder(obs, Auth.getCurrentUser())" class="material-icons md-light md-48 md-primary" /><md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser())" ng-click="removeFinder(obs, Auth.getCurrentUser())" md-font-icon="fa fa-user-times" class="material-icons md-light md-48 md-primary" /></span></h3>
+				   				<md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser()) === false" md-font-icon="fa fa-user-plus" ng-click="addFinder(obs, Auth.getCurrentUser())" class="material-icons md-light md-48 md-primary" ></md-icon>
+								<md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser())" ng-click="removeFinder(obs, Auth.getCurrentUser())" md-font-icon="fa fa-user-times" class="material-icons md-light md-48 md-primary" ></md-icon></span></h3>
 				   <md-progress-linear ng-show="addingUser" md-mode="indeterminate"></md-progress-linear>
 	  			   <p><span ng-repeat="usr in obs.users"> {{usr.name}} ({{usr.Initialer}})<span ng-if="!$last">, </span> </span>{{(obs.users.length > 0) ? "" : obs.verbatimLeg}}</p>
 	   	         </div>
@@ -223,7 +224,7 @@ flex>
 	  	<tr >
 	  		<td class="rightalign"><span ng-if="Auth.isLoggedIn()" >
 				
-				<md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser()) === false" md-font-icon="fa fa-user-plus" ng-click="addFinder(obs, Auth.getCurrentUser())" class="material-icons md-light md-48 md-primary" /><md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser())" ng-click="removeFinder(obs, Auth.getCurrentUser())" md-font-icon="fa fa-user-times" class="material-icons md-light md-48 md-primary" /></span> 
+				<md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser()) === false" md-font-icon="fa fa-user-plus" ng-click="addFinder(obs, Auth.getCurrentUser())" class="material-icons md-light md-48 md-primary" ></md-icon><md-icon ng-show="!addingUser && userIsFinder(Auth.getCurrentUser())" ng-click="removeFinder(obs, Auth.getCurrentUser())" md-font-icon="fa fa-user-times" class="material-icons md-light md-48 md-primary" ></md-icon></span> 
 				
 				<strong>{{'Finder(e)' | translate}}:</strong>
 			<md-progress-linear ng-show="addingUser" md-mode="indeterminate"></md-progress-linear>

@@ -325,8 +325,6 @@ angular.module('svampeatlasApp')
 			};
 
 
-
-
 		}
 
 )

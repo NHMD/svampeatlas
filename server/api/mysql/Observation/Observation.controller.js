@@ -514,7 +514,7 @@ exports.create = function(req, res) {
 	if(!userIsValidator){
 		delete observation.noteInternal;
 	};
-	
+	observation.primaryuser_id = req.user._id;
 	observation.geom = models.sequelize.fn('GeomFromText', 'POINT (' + req.body.decimalLongitude + ' ' + req.body.decimalLatitude + ')');
 
 	return models.sequelize.transaction(function(t) {
