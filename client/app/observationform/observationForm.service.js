@@ -73,12 +73,13 @@ angular.module('svampeatlasApp')
 									}
 								})
 
-								$scope.showSimpleToast = function(text, delay) {
+								$scope.showSimpleToast = function(text, delay, pos) {
 									var _delay = (delay) ? delay : 3000;
+									var position = (pos) ? pos : "top right";
 									$mdToast.show(
 										$mdToast.simple()
 										.textContent(text)
-										.position("top right")
+										.position(position)
 										.parent(document.querySelectorAll('.speeddial-parent'))
 										.hideDelay(_delay)
 									);
@@ -178,9 +179,9 @@ angular.module('svampeatlasApp')
 												
 												$scope.duplicateID = obs._id;
 												delete obs._id;
-												obs.forum = [];
-												obs.images = [];
-												$scope.showSimpleToast($translate.instant('Du har nu klonet') + ' DMS-'+$scope.duplicateID +'. '+$translate.instant('Husk at gemme det klonede fund før du lukker dette vindue.'), 5000)
+												obs.Forum = [];
+												obs.Images = [];
+												$scope.showSimpleToast($translate.instant('Du har nu klonet') + ' DMS-'+$scope.duplicateID +'. '+$translate.instant('Husk at gemme det klonede fund før du lukker dette vindue.'), 5000, 'top left')
 											}
 											
 											return obs;

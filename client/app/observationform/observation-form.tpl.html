@@ -243,7 +243,7 @@
 			   	
  			  </div>
 			  
- 			   <div layout-margin layout="row" ng-if="!obs">
+ 			   <div layout-margin layout="row" ng-if="!obs || (!obs._id && duplicateID)">
   				  <md-chips ng-model="determiner" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
 
   				    <md-autocomplete
