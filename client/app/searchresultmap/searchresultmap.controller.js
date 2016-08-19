@@ -128,7 +128,7 @@ angular.module('svampeatlasApp')
 			});
 			*/
 			$scope.queryinclude = _.map($scope.search.include, function(n) {
-
+				/*
 				if (n.model === "DeterminationView") {
 					n.attributes = ['Taxon_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Determination_validation', 'Determination_user_id'];
 				}
@@ -136,8 +136,9 @@ angular.module('svampeatlasApp')
 					n.attributes = ['name'];
 				}
 				if (n.model === "User") {
-					n.attributes = ['name'];
+					n.attributes = ['name', 'Initialer'];
 				}
+				*/
 				return JSON.stringify(n);
 			});
 			var query = {
