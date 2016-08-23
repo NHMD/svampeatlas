@@ -255,7 +255,12 @@ angular.module('svampeatlasApp')
 		  'Add' : 'Tilføj',
 		  'Remove' : 'Fjern',
 		  'Action' : 'Handling',
-		  'Batch add/remove' : 'Batch tilføj/fjern'
+		  'Batch add/remove' : 'Batch tilføj/fjern',
+		  'Phylum' : 'Række',
+		  'Class' : 'Klasse',
+		  'Order' : 'Orden',
+		  'Family': 'Familie',
+		  'Genus' : 'Slægt'
 
   	    });
 	 

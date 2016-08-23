@@ -251,22 +251,6 @@ angular.module('svampeatlasApp')
 
 
 
-
-			//	$scope.search.includeForeign = false;
-			/*	
-		for (var i = 0; i < parsedCharacters.length; i++) {
-
-			include.push({
-				model: "MycokeyCharacterView",
-				as: "character" + i,
-				where: JSON.stringify({
-					CharacterID: parsedCharacters[i].CharacterID
-				})
-			})
-			
-		}
-		
-*/
 			if (!$scope.search.include) {
 				$scope.search.include = [{
 					model: "DeterminationView",

@@ -1,0 +1,40 @@
+table.species-list-table td {
+	padding-left: 4px;
+}
+
+table.species-list-table tr {
+	line-height: 18px;
+}
+.st-selected {
+	background: rgba(0, 0, 0, 0.18);
+}
+
+md-grid-tile.list-tile > figure {
+	align-items: flex-start;
+	
+}
+
+
+md-icon.black-icon {
+	    color: rgba(0,0,0,0.87);
+}
+
+.avatar-tile  {
+	
+	text-align:center;
+	
+}
+
+
+
+md-grid-list.dashboard-gridlist md-grid-tile md-grid-tile-footer {
+	height: 44px;
+}
+
+md-grid-list.dashboard-gridlist md-grid-tile md-grid-tile-footer h3 {
+	font-size: 12px;
+}
+
+h3.grid-tile-table {
+	font-size: 18px;
+}

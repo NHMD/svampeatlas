@@ -66,7 +66,7 @@ angular.module('svampeatlasApp')
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id'],
 					where: {
-						Determination_validation: ['Godkendt', 'Valideres', 'Afventer', 'Gammelvali']
+						
 					}
 				}, {
 					model: "User",
@@ -104,6 +104,50 @@ angular.module('svampeatlasApp')
 				}]};
 				this.uistate = {};
 				
+			},
+			getNewSearch: function(){
+				return {
+				include : [{
+					model: "DeterminationView",
+					as: "DeterminationView",
+					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id'],
+					where: {
+						
+					}
+				}, {
+					model: "User",
+					as: 'PrimaryUser',
+					//	attributes: ['email', 'Initialer', 'name'],
+					required: false,
+					where: {}
+				}, {
+					model: "Locality",
+					as: 'Locality',
+					attributes: ['_id', 'name'],
+					where: {},
+					required: true
+				}, {
+					model: "GeoNames",
+					as: 'GeoNames',
+					where: {},
+					required: false
+				}, {
+					model: "ObservationUser",
+					as: 'userIds',
+					where: {},
+					required: false
+				}, {
+					model: "ObservationImage",
+					as: 'Images',
+					where: {},
+					required: false
+				}, {
+					model: "ObservationForum",
+					as: 'Forum',
+					where: {},
+					required: false
+
+				}]}
 			}
 			
 			}

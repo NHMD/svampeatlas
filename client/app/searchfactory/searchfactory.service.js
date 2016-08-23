@@ -18,8 +18,7 @@ angular.module('svampeatlasApp')
 					where: {
 						name: {
 							like: "%" + query + "%"
-						},
-						include: 1
+						}
 					},
 					limit: 30,
 					order: "probability DESC, name ASC"
