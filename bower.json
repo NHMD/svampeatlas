@@ -21,7 +21,7 @@
     "angular-xeditable": "",
     "d3": "3.5.5",
     "angular-xml": "2.1.0",
-	"angular-material": "1.1.0-rc.5",
+	"angular-material": "1.1.0",
 	"angular-material-icons": "0.7.0",
 	"moment": "2.11.0",
 	"leaflet" : "0.7.7",

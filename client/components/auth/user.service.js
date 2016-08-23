@@ -47,6 +47,66 @@ angular.module('svampeatlasApp')
         id:'me',
 		controller:'email'
       }
+    },
+    getFirstFindings: {
+      method: 'GET',
+		params: {
+			id: '@_id',
+			roleid: '@_year'
+		},
+		url: '/api/users/:id/firstfindings/:year',
+		isArray: true
+    },
+    getSpeciesCount: {
+      method: 'GET',
+		params: {
+			id: '@_id'
+		},
+		url: '/api/users/:id/species/count',
+		isArray: true
+    },
+    getObservationCount: {
+      method: 'GET',
+		params: {
+			id: '@_id'
+		},
+		url: '/api/users/:id/observations/count',
+		isArray: true
+    },
+    getForumCount: {
+      method: 'GET',
+		params: {
+			id: '@_id'
+		},
+		url: '/api/users/:id/forumposts/count',
+		isArray: true
+    },
+    getImageCount: {
+      method: 'GET',
+		params: {
+			id: '@_id'
+		},
+		url: '/api/users/:id/images/count',
+		isArray: true
+    },
+    getCountryCount: {
+      method: 'GET',
+		params: {
+			id: '@_id'
+		},
+		url: '/api/users/:id/countries/count',
+		isArray: true
+    },
+    getTaxonomicOverview: {
+      method: 'GET',
+		params: {
+			id: '@_id',
+			rankid: '@_rankid'
+		},
+		url: '/api/users/:id/observations/taxonomy/:rankid',
+		isArray: true
     }
 	  });
   });
+
+

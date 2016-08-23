@@ -156,48 +156,7 @@ angular.module('svampeatlasApp')
 				if (geometry) {
 					query.geometry = geometry;
 				}
-				/*
-					//if we reset (like after a search or an order)
-					if (tableState.pagination.start === 0 && lastStart <= tableState.pagination.start) {
-						 Observation.query(query, function(result, headers){
-							$scope.displayed = result;
-							$scope.count = headers('count');
-							var numPages = Math.ceil(parseInt(headers('count')) / limit);
-							tableState.pagination.numberOfPages = numPages; //set the number of pages so the pagination can update
-							tableState.pagination.totalItemCount = parseInt(headers('count'));
-							$scope.isLoading = false;
-						})
-					} else if(tableState.pagination.totalItemCount > $scope.displayed.length) {
-						//we load more
-						Observation.query(query).$promise.then(function(result){
-							console.log("dataset length: "+$scope.displayed.length)
-							//remove first nodes if needed
-							if(lastStart < tableState.pagination.start){
-								$scope.displayed = $scope.displayed.concat(result);
-		//remove first nodes if needed
-		                        if (lastStart < tableState.pagination.start && $scope.displayed.length > maxNodes) {
-		                            //remove the first nodes
-		                            $scope.displayed.splice(0, 500);
-		                        }
-							} else {
-								$scope.displayed = result.concat($scope.displayed);
-		                        if (lastStart > tableState.pagination.start && $scope.displayed.length > maxNodes) {
-		                            //remove the first nodes
-		                            $scope.displayed.splice(($scope.displayed.length -500), 500);
-		                        }
-							}
-							
-							
-							lastStart = tableState.pagination.start;
 
-							$scope.isLoading = false;
-						});
-
-
-					} else {
-						$scope.isLoading = false;
-					}
-					*/
 
 
 				function showTooltip(elem, msg) {

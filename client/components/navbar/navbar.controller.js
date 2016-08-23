@@ -10,6 +10,7 @@ $scope.states =
     { 'admin': { name: "Useradmin", icon: 'group'},
 	  'login': { name: "Login", icon: 'login'},
 	  'settings': { name: "Profil", icon: 'person'},
+	  'dashboard' :{name: "Dashboard", icon: "dashboard"},
 	  'news': { name: "Nyheder", icon: 'rss_feed'},
 	  'demos': { name: "Vejledninger", icon: 'school'},
 	  'about': { name: "Projektbeskrivelse", icon: 'info_outline'},

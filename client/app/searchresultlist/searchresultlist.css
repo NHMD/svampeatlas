@@ -8,7 +8,7 @@
   width: 100%;
   max-width: 100%;
   margin-bottom: 2rem;
-  background-color: #ffffff;
+
 }
 .table > thead > tr,
 .table > tbody > tr,
@@ -715,7 +715,4 @@ p.pagination-text {
     display: table-cell
 }
 
-.pagination-container {
-	background-color: #ffffff
-}
 

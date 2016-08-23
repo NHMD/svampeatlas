@@ -1,0 +1,236 @@
+		<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
+		<md-toolbar  ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
+		<md-content layout="row" md-scroll-y flex>
+	
+	   <md-grid-list
+	          md-cols-xs="1" md-cols-sm="3" md-cols-md="6" md-cols-gt-md="6"
+	          md-row-height-gt-md="1:1" md-row-height="2:2"
+	          md-gutter="12px" md-gutter-gt-sm="8px" flex class="dashboard-gridlist">
+	      <md-grid-tile class="md-whiteframe-4dp  "
+	          md-rowspan="1" md-colspan="1" >
+			  
+		
+		             <div layout="column" layout-padding class="avatar-tile">
+		               <user-avatar class="useravatar md-avatar"  size="'large'" user="getCurrentUser()" ng-if="isLoggedIn()" ></user-avatar>
+		           
+		          
+	              
+	               <span class="md-caption">{{getCurrentUser().name}}</span>
+		            
+				</div>
+	         
+	          
+		        
+	      </md-grid-tile>
+	      
+		   
+		  
+		      <md-grid-tile class="md-whiteframe-4dp " >
+			  <div layout-fill layout-margin>
+			  <ng-md-icon icon="playlist_add" ></ng-md-icon>
+		   <div layout layout-align="center center"><h1>{{observationCount}}</h1> </div>
+		  
+		  </div>
+	
+		   
+		        <md-grid-tile-footer>
+		          <h3>{{'Fund rapporteret' | translate}}</h3>
+		        </md-grid-tile-footer>
+		      </md-grid-tile>
+		  
+		  
+		  
+		  
+	      <md-grid-tile class="md-whiteframe-4dp " >
+		  <div layout-fill layout-margin>
+		  <ng-md-icon icon="fungus" ></ng-md-icon>
+	   <div layout layout-align="center center"><h1>{{speciesCount[0].count}}</h1> </div>
+	  </div>
+	        <md-grid-tile-footer>
+	          <h3>{{'Arter fundet i Danmark' | translate}}</h3>
+	        </md-grid-tile-footer>
+	      </md-grid-tile>
+		  
+		      <md-grid-tile class="md-whiteframe-4dp " >
+			  <div layout-fill layout-margin>
+			  <md-icon md-font-icon="fa fa-globe fa-lg" class="material-icons md-48 black-icon" ></md-icon>
+		   <div layout layout-align="center center"><h1>{{countryCount[0].count}}</h1> </div>
+		  
+		  </div>
+	
+		   
+		        <md-grid-tile-footer>
+		          <h3>{{'Lande rapporteret fra' | translate}}</h3>
+		        </md-grid-tile-footer>
+		      </md-grid-tile>
+		      <md-grid-tile class="md-whiteframe-4dp " >
+			  <div layout-fill layout-margin>
+			  <ng-md-icon icon="forum" ></ng-md-icon>
+		   <div layout layout-align="center center"><h1>{{forumPostCount[0].count}}</h1> </div>
+		  </div>
+		        <md-grid-tile-footer>
+		          <h3>{{'Kommentarer i forum'}}</h3>
+		        </md-grid-tile-footer>
+		      </md-grid-tile>
+			  
+			      <md-grid-tile class="md-whiteframe-4dp " >
+				  <div layout-fill layout-margin>
+				  <ng-md-icon icon="camera_alt" ></ng-md-icon>
+			   <div layout layout-align="center center"> <h1>{{imageCount[0].count}}</h1> </div>
+			  </div>
+			        <md-grid-tile-footer>
+			          <h3>{{'Fotos'}}</h3>
+			        </md-grid-tile-footer>
+			      </md-grid-tile>
+		  
+	 
+	      
+	   
+	      <md-grid-tile class="md-whiteframe-4dp list-tile"
+	          md-rowspan="3" md-colspan="2" md-colspan-sm="1" md-colspan-xs="1">
+			  <div layout-fill layout-margin>
+			  <ng-md-icon icon="date_range" ></ng-md-icon>
+			  <md-list flex class="md-dense">
+			         <md-subheader class="md-no-sticky">Fundne arter / år</md-subheader>
+			         <md-list-item class="md-3-line"  ng-repeat="g in speciesCountGrouped | orderBy:'countries[0].year':true | limitTo: 6" ng-click="null">
+			           <h2 layout-margin>{{g.countries[0].year}}</h2>
+			           <div class="md-list-item-text" layout="column">
+						   <table class='species-list-table'>
+						   <tr ng-repeat="elm in g.countries">
+			             <td >{{elm.country}} </td><td>: {{elm.count}}</td>
+			          </tr>
+					   </table>
+			           </div>
+					   
+			         </md-list-item>
+			         
+			        
+				 </md-list>
+	       </div>
+	      </md-grid-tile>
+	      <md-grid-tile class="md-whiteframe-4dp list-tile"
+	          md-rowspan="{{(taxonomicOverview.length > 5) ? 5: 3}}" md-colspan="2" md-colspan-sm="1" md-colspan-xs="1">
+  			  <div layout-fill layout-margin>
+  			  <ng-md-icon icon="taxonomy" ></ng-md-icon>
+	 					<table  class="table table-bordered profile-card-table"  st-table="displayedtaxonomicOverview" st-safe-src='taxonomicOverview'>
+				 
+	 						<thead>
+	 						<tr>
+	 							<th><h3 class="grid-tile-table">{{'Taksonomisk profil' | translate}}<h3></th>
+	 							<th><md-input-container>
+	 				          <label translate>Rang</label>
+	 				          <md-select ng-model="$parent.$parent.taxonomicOverviewRankID">
+           
+	 				            <md-option ng-repeat="taxon in higherTaxa" ng-value="taxon.RankID" >
+	 				              {{taxon.RankName | translate}}
+	 				            </md-option>
+	 				          </md-select>
+	 				        </md-input-container></th>
+	 						</tr>
+		
+	 		<tr>
+	 							<th st-sort="Taxon_FullName" >{{selectedRankName | translate}} ({{taxonomicOverview.length}})</th>
+	 							<th st-sort="taxoncount"  translate>Arter</th>
+		
+		
+	 						</tr>
+	 						<tr ng-if="!loadingtaxonomicOverviewCompleted"><td colspan=2><md-progress-linear  md-mode="indeterminate"></md-progress-linear></td></tr>
+	 						</thead>
+	 						<tbody ng-show="displayedtaxonomicOverview.length > 0">
+					
+	 						<tr ng-repeat="row in displayedtaxonomicOverview" st-select-row="row">
+		
+		
+	 							<td data-title="{{'Takson' | translate}}"> <em>{{row.FullName}} </em>
+	 								<span ng-if="row.DeterminationView.Taxon_vernacularname_dk">- {{row.DeterminationView.Taxon_vernacularname_dk}} </span>
+	 							</td>
+	 							<td data-title="{{'Antal arter' | translate}}">{{row.taxoncount}}</td>	
+		
+		
+	 						</tr>
+			
+				
+
+	 						</tbody>
+				
+	 				<tfoot>
+	 				<tr ng-show="taxonomicOverview.length > 10  && loadingtaxonomicOverviewCompleted">
+	 					<td st-pagination=""  st-items-by-page="10" colspan="2" st-template="app/searchresultspecieslist/pagination.tpl.html">
+	 					</td>
+	 				</tr>
+	 			</tfoot> 
+				
+
+	 					</table>
+	       </div>
+	      </md-grid-tile>
+		  
+	      <md-grid-tile class="md-whiteframe-4dp list-tile"
+	          md-rowspan="{{(firstFindings.length > 5) ? 5 : 3}}" md-colspan="2" md-colspan-sm="1" md-colspan-xs="1">
+			  <div layout-fill layout-margin>
+			  <md-icon md-font-icon="fa fa-trophy fa-lg" class="material-icons md-48 black-icon" ></md-icon>
+					<table  class="table table-bordered profile-card-table"  st-table="displayedfirstFindings" st-safe-src='firstFindings'>
+				
+						<thead>
+							<tr>  <th><h3 class="grid-tile-table">{{'Første fund' | translate}}</h3>  </th><th>
+								
+								<md-input-container>
+		          <label translate>År</label>
+		          <md-select ng-model="$parent.$parent.selectedYearForFirstFindings">
+           
+		            <md-option ng-repeat="year in years" ng-value="year" >
+		              {{year}}
+		            </md-option>
+		          </md-select>
+		        </md-input-container></th></tr>
+						<tr>
+		
+		
+							<th st-sort="Taxon_FullName" translate>Art ({{displayedfirstFindings.length}})</th>
+							<th st-sort="observationDate"  translate>Dato</th>
+		
+		
+						</tr>
+						<tr ng-if="!loadingFirstFindingsCompleted"><td colspan=2><md-progress-linear  md-mode="indeterminate"></md-progress-linear></td></tr>
+						</thead>
+						<tbody ng-show="displayedfirstFindings.length > 0">
+					
+						<tr ng-repeat="row in displayedfirstFindings" st-select-row="row">
+		
+		
+							<td data-title="{{'Art' | translate}}"> <em>{{row.Taxon_FullName}} </em>
+								<span ng-if="row.DeterminationView.Taxon_vernacularname_dk">- {{row.DeterminationView.Taxon_vernacularname_dk}} </span>
+							</td>
+							<td data-title="{{'Dato' | translate}}">{{row.observationDate | date : 'dd/MM/yyyy'}}</td>	
+		
+		
+						</tr>
+			
+				
+
+						</tbody>
+					<tfoot>
+					<tr ng-if="firstFindings.length > 10 && loadingFirstFindingsCompleted">
+						<td st-pagination=""  st-items-by-page="10" colspan="2" st-template="app/searchresultspecieslist/pagination.tpl.html">
+						</td>
+					</tr>
+				</tfoot>
+				
+
+					</table>
+				</div>
+	       
+	      </md-grid-tile>
+	     
+		  
+		  
+	    </md-grid-list> 
+		
+		
+
+
+			
+			
+		</md-content>
+		
+		
