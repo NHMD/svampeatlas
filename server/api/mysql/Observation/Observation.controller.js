@@ -83,7 +83,7 @@ function cacheResult(req, value){
 // Get list of Observations
 exports.index = function(req, res) {
 	
-	
+
 	if(!req.query.limit){
 		req.query.limit = 10000;
 	}
@@ -199,7 +199,11 @@ exports.index = function(req, res) {
 	if(req.user && Boolean(req.query.activeThreadsOnly) ){
 		
 		activeThreadsPromise = activeThreads(req.user)
-	} else {
+	} else if(req.user && req.query.recentlyCommented ){
+		
+		activeThreadsPromise = recentlyCommented(req.user, req.query.recentlyCommented)
+	}
+	else {
 		activeThreadsPromise = Promise.resolve(false)
 	}
 	console.log(query);
@@ -362,7 +366,11 @@ exports.indexSpeciesList = function(req, res) {
 	if(req.user && Boolean(req.query.activeThreadsOnly) ){
 		
 		activeThreadsPromise = activeThreads(req.user)
-	} else {
+	} else if(req.user && req.query.recentlyCommented ){
+		
+		activeThreadsPromise = recentlyCommented(req.user, req.query.recentlyCommented)
+	}
+	else {
 		activeThreadsPromise = Promise.resolve(false)
 	}
 	console.log(query);
@@ -410,6 +418,24 @@ function activeThreads(user){
 	
 	return _.map(observationids, function(o){
 		return o.observation_id
+	})
+ 
+})
+}
+
+
+function recentlyCommented(user, since){
+	
+	return models.sequelize.query(
+		'SELECT o._id FROM Observation o JOIN ObservationForum of1 ON o._id = of1.observation_id'
++ ' LEFT OUTER JOIN ObservationForum of2 ON o._id = of2.observation_id AND' 
+ +  ' (of1.createdAt < of2.createdAt OR of1.createdAt = of2.createdAt AND of1._id > of2._id)'
++ ' WHERE of2._id IS NULL AND of1.user_id <> o.primaryuser_id AND o.primaryuser_id = :userid AND of1.createdAt > :created',
+  { replacements: { userid: user._id, created: since }, type: models.sequelize.QueryTypes.SELECT }
+).then(function(observationids) {
+	
+	return _.map(observationids, function(o){
+		return o._id
 	})
  
 })

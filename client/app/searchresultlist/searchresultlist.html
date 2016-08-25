@@ -32,7 +32,7 @@
 		<!--<th st-sort="Locality.name"  translate>Lokalitet</th> -->
 		<th translate>Rapportør</th>
 		<!--<th st-sort="PrimaryUser.Initialer" >Rapportør</th>-->
-		<th st-sort="_id"  translate>Databasenummer</th>
+		<th st-sort="_id" ng-if="Auth.isLoggedIn()" translate>Databasenummer</th>
 		<th ></th>
 		
 	</tr>

@@ -4,31 +4,49 @@
 	
 	   <md-grid-list
 	          md-cols-xs="1" md-cols-sm="3" md-cols-md="6" md-cols-gt-md="6"
-	          md-row-height-gt-md="1:1" md-row-height="2:2"
+	          md-row-height-xs="2:1" md-row-height="1:1"
 	          md-gutter="12px" md-gutter-gt-sm="8px" flex class="dashboard-gridlist">
 	      <md-grid-tile class="md-whiteframe-4dp  "
 	          md-rowspan="1" md-colspan="1" >
 			  
-		
-		             <div layout="column" layout-padding class="avatar-tile">
-		               <user-avatar class="useravatar md-avatar"  size="'large'" user="getCurrentUser()" ng-if="isLoggedIn()" ></user-avatar>
+		<div layout="column" layout-align="center center" >
+		             <div>
+		               <user-avatar class="useravatar md-avatar"  size="'large'" user="dashBoardUser"  ></user-avatar>
 		           
 		          
 	              
-	               <span class="md-caption">{{getCurrentUser().name}}</span>
+	              
 		            
 				</div>
-	         
-	          
-		        
+	         <div class="avatar-tile" layout="column">
+				
+	           <span class="md-caption">{{dashBoardUser.name}} ({{dashBoardUser.Initialer}})</span>
+			    
+		        </div>
+				</div>
 	      </md-grid-tile>
 	      
-		   
+ 		      <md-grid-tile class="md-whiteframe-4dp " md-colspan="4" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('xs') && currentUser._id === dashboardUserID">
+ 			  <div layout-fill layout-margin>
+ 			  <ng-md-icon icon="forum" ></ng-md-icon>
+ 		   <div layout layout-align="center center"> 
+			   <md-button ng-click="gotoSearchResult('recentactivity')"><span class="md-caption">{{'Du har' | translate}} {{activytyCount}} {{'fund' | translate}} <br>{{'med nye kommentarer seneste' | translate}}</span></md-button> </div>
+			   
+			   <md-radio-group ng-model="$parent.$parent.$parent.activitySince" layout="row" layout-align="center center">
+			         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
+			         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
+			         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
+			       </md-radio-group>
+ 		  </div>
+		  
+	   
+       
+ 		      </md-grid-tile>
 		  
 		      <md-grid-tile class="md-whiteframe-4dp " >
 			  <div layout-fill layout-margin>
 			  <ng-md-icon icon="playlist_add" ></ng-md-icon>
-		   <div layout layout-align="center center"><h1>{{observationCount}}</h1> </div>
+		   <div layout layout-align="center center"><md-button ><h1 ng-click="gotoSearchResult('primaryuser_id')">{{observationCount}}</h1> </md-button > </div>
 		  
 		  </div>
 	
@@ -44,17 +62,34 @@
 	      <md-grid-tile class="md-whiteframe-4dp " >
 		  <div layout-fill layout-margin>
 		  <ng-md-icon icon="fungus" ></ng-md-icon>
-	   <div layout layout-align="center center"><h1>{{speciesCount[0].count}}</h1> </div>
+	   <div layout layout-align="center center"><md-button ><h1 ng-click="gotoSearchResult('specieslist')">{{speciesCount[0].count}}</h1> </md-button ></div>
 	  </div>
 	        <md-grid-tile-footer>
 	          <h3>{{'Arter fundet i Danmark' | translate}}</h3>
 	        </md-grid-tile-footer>
 	      </md-grid-tile>
 		  
+		  
+		  
+		      <md-grid-tile class="md-whiteframe-4dp " md-colspan="4" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('sm') && currentUser._id === dashboardUserID">
+			  <div layout-fill layout-margin>
+			  <ng-md-icon icon="forum" ></ng-md-icon>
+		   <div layout layout-align="center center"> <md-button ng-click="gotoSearchResult('recentactivity')"><p >{{'Du har' | translate}} {{activytyCount}} {{'fund' | translate}} {{'med nye kommentarer seneste' | translate}}</p></md-button> 
+		   
+		   <md-radio-group ng-model="$parent.$parent.$parent.activitySince">
+		         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
+		         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
+		         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
+		       </md-radio-group>
+		   </div>
+		  </div>
+        
+		      </md-grid-tile>
+		  
 		      <md-grid-tile class="md-whiteframe-4dp " >
 			  <div layout-fill layout-margin>
 			  <md-icon md-font-icon="fa fa-globe fa-lg" class="material-icons md-48 black-icon" ></md-icon>
-		   <div layout layout-align="center center"><h1>{{countryCount[0].count}}</h1> </div>
+		   <div layout layout-align="center center"><md-button ><h1>{{countryCount.length}}</h1></md-button > </div>
 		  
 		  </div>
 	
@@ -65,25 +100,40 @@
 		      </md-grid-tile>
 		      <md-grid-tile class="md-whiteframe-4dp " >
 			  <div layout-fill layout-margin>
-			  <ng-md-icon icon="forum" ></ng-md-icon>
-		   <div layout layout-align="center center"><h1>{{forumPostCount[0].count}}</h1> </div>
+			  <ng-md-icon icon="chat_bubble" ></ng-md-icon>
+		   <div layout layout-align="center center"><md-button ><h1 ng-click="gotoSearchResult('forum')">{{forumPostCount[0].count}}</h1> </md-button ></div>
 		  </div>
 		        <md-grid-tile-footer>
-		          <h3>{{'Kommentarer i forum'}}</h3>
+		          <h3>{{'Kommentarer i forum' | translate}}</h3>
 		        </md-grid-tile-footer>
 		      </md-grid-tile>
 			  
 			      <md-grid-tile class="md-whiteframe-4dp " >
 				  <div layout-fill layout-margin>
 				  <ng-md-icon icon="camera_alt" ></ng-md-icon>
-			   <div layout layout-align="center center"> <h1>{{imageCount[0].count}}</h1> </div>
+			   <div layout layout-align="center center"> <md-button ><h1 ng-click="gotoSearchResult('photos')">{{imageCount[0].count}}</h1></md-button> </div>
 			  </div>
 			        <md-grid-tile-footer>
-			          <h3>{{'Fotos'}}</h3>
+			          <h3>{{'Fotos' | translate}}</h3>
 			        </md-grid-tile-footer>
 			      </md-grid-tile>
 		  
-	 
+		  
+		  
+      <md-grid-tile class="md-whiteframe-4dp " md-colspan="4" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('gt-sm') && currentUser._id === dashboardUserID">
+	  <div layout-fill layout-margin>
+	  <ng-md-icon icon="forum" ></ng-md-icon>
+   <div layout layout-align="center center"> <md-button ng-click="gotoSearchResult('recentactivity')"><p >{{'Du har' | translate}} {{activytyCount}} {{'fund' | translate}} {{'med nye kommentarer seneste' | translate}}</p></md-button>
+   
+   <md-radio-group ng-model="$parent.$parent.$parent.activitySince">
+         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
+         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
+         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
+       </md-radio-group>
+    </div>
+  </div>
+        
+      </md-grid-tile>
 	      
 	   
 	      <md-grid-tile class="md-whiteframe-4dp list-tile"
@@ -91,8 +141,8 @@
 			  <div layout-fill layout-margin>
 			  <ng-md-icon icon="date_range" ></ng-md-icon>
 			  <md-list flex class="md-dense">
-			         <md-subheader class="md-no-sticky">Fundne arter / år</md-subheader>
-			         <md-list-item class="md-3-line"  ng-repeat="g in speciesCountGrouped | orderBy:'countries[0].year':true | limitTo: 6" ng-click="null">
+			         <md-subheader class="md-no-sticky" >{{'Arter fundet pr år' | translate}}</md-subheader>
+			         <md-list-item class="md-3-line"  ng-repeat="g in speciesCountGrouped | orderBy:'countries[0].year':true | limitTo: 6" ng-click="gotoSearchResult('specieslistyear', g.countries[0].year)">
 			           <h2 layout-margin>{{g.countries[0].year}}</h2>
 			           <div class="md-list-item-text" layout="column">
 						   <table class='species-list-table'>
@@ -138,13 +188,13 @@
 	 						</thead>
 	 						<tbody ng-show="displayedtaxonomicOverview.length > 0">
 					
-	 						<tr ng-repeat="row in displayedtaxonomicOverview" st-select-row="row">
+	 						<tr ng-repeat="row in displayedtaxonomicOverview" >
 		
 		
-	 							<td data-title="{{'Takson' | translate}}"> <em>{{row.FullName}} </em>
-	 								<span ng-if="row.DeterminationView.Taxon_vernacularname_dk">- {{row.DeterminationView.Taxon_vernacularname_dk}} </span>
+	 							<td data-title="{{'Takson' | translate}}" ng-click="HigherTaxonomyModalService.show($event, row, dashBoardUser)" class="clickable"> <em>{{row.FullName}} </em>
+	 								
 	 							</td>
-	 							<td data-title="{{'Antal arter' | translate}}">{{row.taxoncount}}</td>	
+	 							<td data-title="{{'Antal arter' | translate}}" ng-click="gotoSearchResult('specieslisthighertaxon', row.Path)" class="clickable">{{row.taxoncount}}</td>	
 		
 		
 	 						</tr>
@@ -186,7 +236,7 @@
 						<tr>
 		
 		
-							<th st-sort="Taxon_FullName" translate>Art ({{displayedfirstFindings.length}})</th>
+							<th st-sort="Taxon_FullName" >{{'Art' | translate}} ({{firstFindings.length}})</th>
 							<th st-sort="observationDate"  translate>Dato</th>
 		
 		
@@ -195,11 +245,11 @@
 						</thead>
 						<tbody ng-show="displayedfirstFindings.length > 0">
 					
-						<tr ng-repeat="row in displayedfirstFindings" st-select-row="row">
+						<tr ng-repeat="row in displayedfirstFindings" st-select-row="row" ng-click="ObservationModalService.show($event, row)">
 		
 		
 							<td data-title="{{'Art' | translate}}"> <em>{{row.Taxon_FullName}} </em>
-								<span ng-if="row.DeterminationView.Taxon_vernacularname_dk">- {{row.DeterminationView.Taxon_vernacularname_dk}} </span>
+								
 							</td>
 							<td data-title="{{'Dato' | translate}}">{{row.observationDate | date : 'dd/MM/yyyy'}}</td>	
 		

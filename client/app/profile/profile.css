@@ -38,3 +38,21 @@ md-grid-list.dashboard-gridlist md-grid-tile md-grid-tile-footer h3 {
 h3.grid-tile-table {
 	font-size: 18px;
 }
+
+md-grid-tile.md-whiteframe-4dp > figure h1 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.highchart-modal {
+	min-width: 550px;
+}
+
+td.clickable {
+	cursor: pointer;
+}
+
+td.clickable:hover {
+	background-color: rgba(0, 0, 0, 0.18);
+	color: rgba(0, 0, 0, 0.18);
+}
