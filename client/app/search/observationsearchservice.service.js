@@ -47,7 +47,7 @@ angular.module('svampeatlasApp')
 
 				}]},
 			
-			uistate: {},
+			uistate: {selectedMonths: []},
 			
 				
 			
@@ -102,7 +102,7 @@ angular.module('svampeatlasApp')
 					required: false
 
 				}]};
-				this.uistate = {};
+		
 				
 			},
 			getNewSearch: function(){
