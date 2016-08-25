@@ -26,9 +26,24 @@ angular.module('svampeatlasApp')
 			};
 
 			$scope.resetForm = function() {
-
+				
+				
 					ObservationSearchService.reset();
+					
+					$scope.search.selectedHigherTaxa = [];
+					$scope.search.selectedLocalities = [];
+					$scope.search.associatedOrganism = [];
+					$scope.search.collectors = [];
+					$scope.search.determiner= [];
+					$scope.search.PrimaryUser= [];
+					$scope.search.selectedMonths =  [];
+					delete $scope.search.fromYear;
+					delete $scope.search.toYear;
+					delete $scope.search.geometry;
+				$scope.drawnItems.removeLayer($scope.leafletPolygon);
 					$state.reload();
+	
+					
 				}
 				
 				
@@ -92,77 +107,79 @@ angular.module('svampeatlasApp')
 				}
 			};
 
+			function initMap(){
+				leafletData.getMap('searchformmap').then(function(map) {
+					$scope.map = map;
+					map.addLayer($scope.drawnItems);
 
+					var drawControl = new L.Control.Draw({
+						edit: {
+							featureGroup: $scope.drawnItems
+						},
+						draw: {
+							polyline: false,
+							circle: false,
+							marker: false,
+							rectangle: false
+						}
 
-			leafletData.getMap('searchformmap').then(function(map) {
-				$scope.map = map;
-				map.addLayer($scope.drawnItems);
+					});
 
-				var drawControl = new L.Control.Draw({
-					edit: {
-						featureGroup: $scope.drawnItems
-					},
-					draw: {
-						polyline: false,
-						circle: false,
-						marker: false,
-						rectangle: false
+					var editControl = new L.Control.Draw({
+						edit: {
+							featureGroup: $scope.drawnItems
+						},
+						draw: {
+							polyline: false,
+							circle: false,
+							marker: false,
+							rectangle: false,
+							polygon: false
+						}
+
+					});
+					if ($scope.drawnItems.getLayers().length === 0) {
+						map.addControl(drawControl);
+					} else {
+						map.addControl(editControl);
 					}
 
-				});
-
-				var editControl = new L.Control.Draw({
-					edit: {
-						featureGroup: $scope.drawnItems
-					},
-					draw: {
-						polyline: false,
-						circle: false,
-						marker: false,
-						rectangle: false,
-						polygon: false
-					}
-
-				});
-				if ($scope.drawnItems.getLayers().length === 0) {
-					map.addControl(drawControl);
-				} else {
-					map.addControl(editControl);
-				}
 
 
+					map.on('draw:created', function(e) {
+						var type = e.layerType,
+							layer = e.layer;
 
-				map.on('draw:created', function(e) {
-					var type = e.layerType,
-						layer = e.layer;
+						// Do whatever else you need to. (save to db, add to map etc)
+							$scope.leafletPolygon = 	layer;
+						$scope.drawnItems.addLayer(layer);
+						map.removeControl(drawControl);
+						map.addControl(editControl);
 
-					// Do whatever else you need to. (save to db, add to map etc)
-						$scope.leafletPolygon = 	layer;
-					$scope.drawnItems.addLayer(layer);
-					map.removeControl(drawControl);
-					map.addControl(editControl);
+						$scope.search.geometry = layer.toGeoJSON();
+					});
 
-					$scope.search.geometry = layer.toGeoJSON();
-				});
+					map.on('draw:edited', function(e) {
+						var layer = $scope.drawnItems.getLayers()[0];
 
-				map.on('draw:edited', function(e) {
-					var layer = $scope.drawnItems.getLayers()[0];
+						$scope.search.geometry = layer.toGeoJSON();
+					});
 
-					$scope.search.geometry = layer.toGeoJSON();
-				});
-
-				map.on('draw:deleted', function(e) {
-
-
-					delete $scope.search.geometry;
-
-					map.removeControl(editControl);
-					map.addControl(drawControl);
-				});
-
-			})
+					map.on('draw:deleted', function(e) {
 
 
+						delete $scope.search.geometry;
+
+						map.removeControl(editControl);
+						map.addControl(drawControl);
+					});
+
+				})
+			}
+
+
+
+			initMap();
 
 
 
@@ -320,7 +337,7 @@ angular.module('svampeatlasApp')
 			$scope.search.collectors = $scope.search.collectors || [];
 			$scope.search.determiner = $scope.search.determiner || [];
 			$scope.search.PrimaryUser = $scope.search.PrimaryUser || [];
-
+			$scope.search.selectedMonths = $scope.search.selectedMonths || [];
 			$scope.querySearchPlantTaxon = SearchService.querySearchPlantTaxon;
 
 
@@ -332,7 +349,7 @@ angular.module('svampeatlasApp')
 				$scope.search.toDate = new Date(year, 11, 31);
 			}
 			$scope.months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-			$scope.search.selectedMonths = $scope.search.selectedMonths || [];
+			
 			$scope.toggle = function(item, list) {
 				var idx = list.indexOf(item);
 				if (idx > -1) {

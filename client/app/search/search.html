@@ -7,6 +7,18 @@
 					
 
       <form name="searchForm" layout-padding layout-fill>
+		   <div layout="row" >
+			   <span layout-fill flex></span>
+			   <md-button class="md-fab md-warn" aria-label="Nulstil formular" ng-click="resetForm()">
+			               <ng-md-icon icon="autorenew"></ng-md-icon>
+			           </md-button>
+			   
+	   
+
+	
+
+
+		  </div>
   		  <div  md-whiteframe="3" class="search-section" layout-padding>
 			
   			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="fungus"></ng-md-icon> {{'Art / taxon' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('taxonomy')" icon="refresh"></ng-md-icon></div>
@@ -458,7 +470,7 @@
 							  </div>
 							
          
-        
+
 		
 
 
@@ -466,7 +478,7 @@
   
 
    <div layout="row" class="validator-button-container" >
-	   <span layout-fill flex="80"></span>
+	   <span layout-fill flex></span>
 	   <md-button class="md-fab md-warn" aria-label="Nulstil formular" ng-click="resetForm()">
 	               <ng-md-icon icon="autorenew"></ng-md-icon>
 	           </md-button>
@@ -493,7 +505,7 @@
         <md-menu-item>
             <md-button aria-label="artsliste"  ng-click="state.go('search-specieslist')">
   		  
-              <ng-md-icon icon="list"></ng-md-icon> <span translate>Artsliste</span>
+              <ng-md-icon icon="playlist_add_check"></ng-md-icon> <span translate>Artsliste</span>
             </md-button>
         </md-menu-item>
        
@@ -501,26 +513,6 @@
       </md-menu-content>
     </md-menu>
 
-
-<!--	<md-fab-speed-dial  md-direction="up" class='md-scale' class="validator-button-container">
-	        <md-fab-trigger >
-	          <md-button aria-label="menu" class="md-fab md-warn">
-		  
-	            <ng-md-icon icon="search"></ng-md-icon>
-	          </md-button>
-	        </md-fab-trigger>
-	        <md-fab-actions>
-          <md-button aria-label="liste" class="md-fab md-raised md-mini" ng-click="state.go('search-list')">
-		  <md-tooltip md-direction="left" ><span translate>Resultat i liste</span></md-tooltip>
-            <ng-md-icon icon="list"></ng-md-icon>
-          </md-button>
-	          <md-button aria-label="map" class="md-fab md-raised md-mini" ng-click="state.go('search-map')">
-			  <md-tooltip md-direction="left" ><span translate>Resultat på kort</span></md-tooltip>
-	            <ng-md-icon icon="map"></ng-md-icon>
-	          </md-button>
-	          
-	        </md-fab-actions>
-	      </md-fab-speed-dial> -->
 
   </div>
 		 
