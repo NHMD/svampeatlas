@@ -1,0 +1,49 @@
+<md-dialog aria-label="Taxonomy"  class="highchart-modal">
+ 
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <ng-md-icon icon="taxonomy"></ng-md-icon> <h2> {{'Taksonomisk profil' | translate}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <ng-md-icon icon="close"></ng-md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content layout-padding>
+	
+	<div layout="column" layout-align="center center" >
+	             <div>
+	               <user-avatar class="useravatar md-avatar"  size="'large'" user="user"  ></user-avatar>
+	           
+	          
+              
+              
+	            
+			</div>
+         <div class="avatar-tile" layout="column">
+			
+           <span class="md-caption">{{user.name}} ({{user.Initialer}})</span>
+		    <span class ="md-subhead">{{taxon.taxoncount}} {{'species recorded in Denmark' | translate}}</span>
+			<div layout="row">
+				<ng-md-icon icon="{{star.icon}}" ng-repeat="star in stars"></ng-md-icon>
+				
+			</div>
+	        </div>
+			</div>
+	
+
+	<md-progress-linear md-mode="determinate" value="{{percentageOfSpecies}}"></md-progress-linear>
+ 				
+ 	<highchart id="chart2" config="chartOptions" ></highchart>
+       
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      
+      <span flex></span>
+      <md-button ng-click="cancel()">
+       Luk
+      </md-button>
+      
+    </md-dialog-actions>
+  </form>
+</md-dialog>

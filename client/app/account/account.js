@@ -31,14 +31,7 @@ angular.module('svampeatlasApp')
         templateUrl: 'app/account/signup/signup.html',
         controller: 'SignupCtrl'
       })
-      .state('dashboard', {
-        url: '/dashboard',
-        templateUrl: 'app/account/profile/profile.html',
-        controller: 'ProfileCtrl',
-        authenticate: function(Auth){
-		  	return Auth.isLoggedIn();
-		  }
-      })
+
       .state('settings', {
         url: '/settings',
         templateUrl: 'app/account/settings/settings.html',

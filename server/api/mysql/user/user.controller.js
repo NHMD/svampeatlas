@@ -252,7 +252,7 @@ exports.authCallback = function(req, res, next) {
 exports.showFirstFindings = function(req, res) {
 
 
-	var sql = 'SELECT b.firstRec as observationDate, b.Taxon_FullName FROM (SELECT MIN(o.observationDate) as firstRec, d.Taxon_FullName , d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Observation o WHERE u.observation_id = o._id AND d.Determination_observation_id = o._id AND d.Determination_validation = "Godkendt"  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND u.user_id = :userid AND YEAR(observationDate) = :year' +
+	var sql = 'SELECT b._id, b.firstRec as observationDate, b.Taxon_FullName FROM (SELECT MIN(o.observationDate) as firstRec, o._id, d.Taxon_FullName , d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Observation o WHERE u.observation_id = o._id AND d.Determination_observation_id = o._id AND d.Determination_validation = "Godkendt"  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND u.user_id = :userid AND YEAR(observationDate) = :year' +
 		' GROUP BY d.Taxon_id) b, (SELECT MIN(ox.observationDate) as firstRec, dx.Taxon_id FROM Observation ox, DeterminationView2 dx WHERE ox._id=dx.Determination_observation_id  AND dx.Determination_validation = "Godkendt" AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) = :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id) a WHERE a.firstRec = b.firstRec AND a.Taxon_id=b.Taxon_id;';
 
 	return models.sequelize.query(sql, {
@@ -274,6 +274,7 @@ exports.showFirstFindings = function(req, res) {
 
 exports.showSpeciesCount = function(req, res) {
 	var sql;
+	var sqlOnlyDk = (!req.query.global ) ? ' AND o.locality_id IS NOT NULL' : '';
 	if (req.query.group && req.query.group === "countryName, year") {
 		sql = 'SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country,  YEAR(observationDate) as year, COUNT(distinct d.Taxon_id) as count FROM  DeterminationView2 d, ObservationUsers u, Observation o LEFT JOIN GeoNames g ON o.geonameid=g.geonameid' +
 			' WHERE u.observation_id = o._id AND d.Determination_observation_id = o._id AND d.Determination_validation = "Godkendt" AND d.Taxon_RankID > 9950 AND u.user_id = :userid GROUP BY g.countryName, YEAR(observationDate) ORDER BY  YEAR(observationDate) DESC';
@@ -282,7 +283,8 @@ exports.showSpeciesCount = function(req, res) {
 		' WHERE u.observation_id = o._id AND d.Determination_observation_id = o._id AND d.Determination_validation = "Godkendt" AND d.Taxon_RankID > 9950 AND u.user_id = :userid GROUP BY g.countryName ORDER BY count DESC';
 	} else {
 	sql = 'SELECT COUNT(distinct d.Taxon_id) as count FROM  DeterminationView2 d, ObservationUsers u, Observation o ' +
-		' WHERE u.observation_id = o._id AND d.Determination_observation_id = o._id AND d.Determination_validation = "Godkendt" AND d.Taxon_RankID > 9950 AND u.user_id = :userid';
+		' WHERE u.observation_id = o._id AND d.Determination_observation_id = o._id AND d.Determination_validation = "Godkendt" AND d.Taxon_RankID > 9950 AND u.user_id = :userid'
+		+ sqlOnlyDk;
 	} 
 
 	return models.sequelize.query(sql, {
@@ -382,10 +384,11 @@ exports.showImageCount = function(req, res) {
 exports.showObservationCountAsHigherTaxonomy = function(req, res) {
 	
 	var sqlOnlyDk = (!req.query.global ) ? 'AND o.locality_id IS NOT NULL ' : '';
-	var sql = 'SELECT tf._id, tf.FullName, count(distinct d.Taxon_id) taxoncount FROM Taxon tf, Observation o, DeterminationView2 d, ObservationUsers u'
-	+'  WHERE u.observation_id = o._id AND d.Determination_observation_id = o._id AND d.Determination_validation = "Godkendt" '
+	var sql = 'SELECT tf._id, tf.Path, tf.RankID, tf.FullName, count(x.Taxon_id) taxoncount FROM Taxon tf JOIN '
+	+'(SELECT d.Taxon_id , d.Taxon_Path FROM Observation o, DeterminationView2 d, ObservationUsers u  WHERE u.observation_id = o._id AND d.Determination_observation_id = o._id '
+	+'AND d.Determination_validation = "Godkendt" '
 	+ sqlOnlyDk
-	+'AND u.user_id = :userid AND tf.RankID = :rankid AND d.Taxon_Path LIKE CONCAT(tf.Path, "%") GROUP BY tf._id ORDER BY taxoncount DESC;'
+	+'AND u.user_id = :userid GROUP BY d.Taxon_id) x ON x.Taxon_Path LIKE CONCAT(tf.Path, "%") AND tf.RankID = :rankid GROUP BY tf._id ORDER BY taxoncount DESC;'
 
 
 	return models.sequelize.query(sql, {
@@ -405,9 +408,9 @@ exports.showObservationCountAsHigherTaxonomy = function(req, res) {
 };
 
 exports.showCountryCount = function(req, res) {
+	//SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country
 	
-	
-	var sql = 'SELECT COUNT(distinct g.countryname) as count FROM Observation o LEFT JOIN GeoNames g ON o.geonameid=g.geonameid WHERE o.primaryuser_id=:userid';
+	var sql = 'SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country FROM Observation o LEFT JOIN GeoNames g ON o.geonameid=g.geonameid WHERE o.primaryuser_id=:userid group by country';
 
 
 	return models.sequelize.query(sql, {

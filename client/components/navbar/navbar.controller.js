@@ -11,6 +11,7 @@ $scope.states =
 	  'login': { name: "Login", icon: 'login'},
 	  'settings': { name: "Profil", icon: 'person'},
 	  'dashboard' :{name: "Dashboard", icon: "dashboard"},
+	  'userstats' :{name: "Statistik", icon: "show_chart"},
 	  'news': { name: "Nyheder", icon: 'rss_feed'},
 	  'demos': { name: "Vejledninger", icon: 'school'},
 	  'about': { name: "Projektbeskrivelse", icon: 'info_outline'},
