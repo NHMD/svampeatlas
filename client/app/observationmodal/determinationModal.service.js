@@ -3,81 +3,29 @@ angular.module('svampeatlasApp')
 	.factory('DeterminationModalService', function($mdDialog, appConstants) {
 
 			return {
-				show: function(ev, obs, sender) {
+				show: function(ev, obs, sender, editMode) {
 			      $mdDialog.show({
 					locals: {obs: obs},  
-			        controller: ['$scope','$mdDialog','Taxon','Observation', 'obs','ObservationModalService', 'ObservationFormService', 'User', '$translate',
-					  				function($scope, $mdDialog,Taxon, Observation, obs, ObservationModalService, ObservationFormService, User, $translate) {
+			        controller: ['$scope','$mdDialog','Observation', 'Determination', 'obs','ObservationModalService', 'ObservationFormService',  '$translate','SearchService',
+					  				function($scope, $mdDialog, Observation, Determination, obs, ObservationModalService, ObservationFormService,  $translate, SearchService) {
+										$scope.$translate = $translate;
+										$scope.querySearch = SearchService.querySearchTaxon;
+										$scope.editMode = editMode;
 										$scope.obs = obs;
 										$scope.newTaxon = [];
-										$scope.determination = {confidence : 'sikker'};
+									//	$scope.determination = {confidence : 'sikker'};
 										$scope.determiner = [];
-										$scope.querySearch = function(query) {
+										if($scope.editMode === true){
+											$scope.newTaxon.push(obs.PrimaryDetermination.Taxon)
+											$scope.determiner.push(obs.PrimaryDetermination.User)
+											$scope.determination = obs.PrimaryDetermination;
 											
-											var RankID = ($scope.onlyHigherTaxa) ? {
-												lt: 10000
-											} : {
-												gt: 5000
-											};
-											
-											
-											var parts = query.split(' ');
+										} else {
+											$scope.determination = {confidence : 'sikker'};
+										}
 									
-											var where = ($scope.threePlusThree && parts.length > 1) ? {
-													FullName: {
-														like:  parts[0] + "%"
-													},
-													TaxonName: {
-														like:  parts[1] + "%"
-													},
-											
-													RankID: RankID
-												} : {
-												FullName: {
-													like: "%" + query + "%"
-												},
-												RankID: RankID
-
-											};
-
-											var results = query ? Taxon.query({
-												where: JSON.stringify(where),
-												include: JSON.stringify([{
-													model: "Taxon",
-													as: 'acceptedTaxon'
-												},{
-													model: "TaxonDKnames",
-													as: "Vernacularname_DK"
-												}]),
-												limit: 30
-
-											}).$promise : [];
-
-											return results;
 										
-										};
-										
-										$scope.querySearchUser = function(query) {
-
-											var results = query ? User.query({
-												where: {
-													$or: [{
-														name: {
-															like: query + "%"
-														}
-													}, {
-														Initialer: {
-															like: query + "%"
-														}
-													}]
-
-												},
-												limit: 30
-											}).$promise : [];
-
-											return results;
-
-										};
+										$scope.querySearchUser = SearchService.querySearchUser;
 										
 										  $scope.cancel = function() {
 										    $mdDialog.hide()
@@ -85,12 +33,25 @@ angular.module('svampeatlasApp')
 											  	ObservationModalService.show(null, $scope.obs)
 											   });
 										  };
+										  
+										  function updateOrCreate(){
+											  if($scope.editMode) {
+											  return	Determination.update({id: $scope.determination._id},$scope.determination).$promise
+											  } else {
+											  	return Observation.addDetermination({id: $scope.obs._id}, $scope.determination).$promise
+											  }
+										  }
+										  
 										  $scope.reopenObs = function() {
 											  $scope.determination.taxon_id = $scope.newTaxon[0]._id;
 											  if($scope.determiner.length > 0){
 											  	$scope.determination.user_id = $scope.determiner[0]._id;
 											  }
-											Observation.addDetermination({id: $scope.obs._id}, $scope.determination).$promise
+											  
+											  
+											  
+											  
+											updateOrCreate()
 											  .then(function(DeterminationView){
 												  $scope.obs.DeterminationView = DeterminationView; 
 	  										   return  $mdDialog.hide()

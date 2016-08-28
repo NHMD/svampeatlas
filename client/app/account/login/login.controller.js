@@ -48,7 +48,7 @@ angular.module('svampeatlasApp')
   		 
 		 $mdDialog.cancel();
 		  
-         // $state.go('main');
+          $state.go('dashboard');
         })
         .catch(function(err) {
           $scope.errors.other = 'Forkert password og/eller initialer.';
