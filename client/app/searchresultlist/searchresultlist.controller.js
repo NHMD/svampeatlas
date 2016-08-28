@@ -8,7 +8,7 @@ angular.module('svampeatlasApp')
 			$scope.currentUser = Auth.getCurrentUser();
 			$scope.stItemsPrPage = 100;
 			$scope.ObservationModalService = ObservationModalService;
-
+			$scope.$state = $state;
 			$scope.ObservationFormService = ObservationFormService;
 			
 			

@@ -102,7 +102,16 @@ angular.module('svampeatlasApp')
 					required: false
 
 				}]};
-		
+				this.uistate = {
+					selectedHigherTaxa : [],
+					selectedLocalities : [],
+					associatedOrganism : [],
+					collectors : [],
+					determiner :[],
+					PrimaryUser: [],
+					selectedMonths :  [],
+					
+				}
 				
 			},
 			getNewSearch: function(){

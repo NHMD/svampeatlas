@@ -59,9 +59,9 @@
 		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk}}</td>	
 		<td data-title="{{'Lokalitet' | translate}}"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
 		
-			<td data-title="{{'Finder' | translate}}" ><span ng-if="mdMedia('min-width: 768px')"><md-tooltip md-direction="left">
+			<td data-title="{{'Finder' | translate}}" ><a ng-if="mdMedia('min-width: 768px')" class="cursor-pointer" ng-click="$state.go('userstats', {userid: row.PrimaryUser._id})"><md-tooltip md-direction="left">
           {{row.PrimaryUser.name}}
-        </md-tooltip>{{row.PrimaryUser.Initialer}}</span><span ng-if="mdMedia('max-width: 768px')"> {{row.PrimaryUser.name}}</span></td>
+        </md-tooltip>{{row.PrimaryUser.Initialer}}</a><a ng-if="mdMedia('max-width: 768px')" class="cursor-pointer" ng-click="$state.go('userstats', {userid: row.PrimaryUser._id})"> {{row.PrimaryUser.name}}</a></td>
 		
 			<td data-title="{{'Databasenummer' | translate}}" ng-if="Auth.isLoggedIn()"><span class="clipboard-copy" data-clipboard-text="{{row.DeterminationView.Taxon_FullName.split(' ').join('-')}}-DMS-{{row._id}}"> DMS-{{row._id}}</span></td>
 		

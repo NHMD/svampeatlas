@@ -285,7 +285,7 @@ flex>
 		 <md-subheader class="md-no-sticky">{{'Kommentarer' | translate}}</md-subheader>
  	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in forum">
 		   
-		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
+		   <user-avatar class="useravatar md-avatar" user="elm.User" ng-click="$state.go('userstats', {userid: elm.user_id}); cancel()"></user-avatar> 
 	   
  	         <div class="md-list-item-text">
 				 <div layout="row" flex>

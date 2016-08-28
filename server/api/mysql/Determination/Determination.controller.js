@@ -183,7 +183,7 @@ exports.updateValidation = (req, res)=> {
 		determination.validator_id = req.user._id;
 		return determination.save({fields: ['validation', 'validator_id']})
 	}).then(function(determination){
-		return res.status(200).json(determination)
+		return res.status(204).json(determination)
 	})
 }
 
@@ -235,7 +235,20 @@ catch (handleError(res));
 
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
-
+	Determination.find({
+		where: {
+			_id: req.params.id
+		}
+	})
+		.then(handleEntityNotFound(res))
+		.then(function(det){
+			return det.update(req.body)
+		})
+		.then(function(det){
+			return res.status(204).json(det)
+		})
+		.
+	catch (handleError(res));
 	
 };
 

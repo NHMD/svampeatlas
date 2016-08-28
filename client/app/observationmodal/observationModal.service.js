@@ -7,11 +7,11 @@ angular.module('svampeatlasApp')
 
 
 					$mdDialog.show({
-						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout','DeterminationModalService','ObservationFormService', '$translate',
-							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService,ObservationFormService, $translate) {
+						controller: ['$scope', 'Auth','ErrorHandlingService','$mdDialog', 'Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout','DeterminationModalService','ObservationFormService', '$translate','$state',
+							function($scope, Auth,ErrorHandlingService, $mdDialog, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService,ObservationFormService, $translate, $state) {
 								
 								$scope.$translate = $translate;
-								
+								$scope.$state = $state;
 								$scope.editRecord = function(asDuplicate){
 									$mdDialog.hide($scope.obs).then(function(obs){
 										ObservationFormService.show(null, obs, asDuplicate)
@@ -71,6 +71,9 @@ angular.module('svampeatlasApp')
 								
 							    $scope.showDeterminationDialog = function($event, obs){
 							    	DeterminationModalService.show($event, obs, 'ObservationModalService');
+							    }
+							    $scope.showDeterminationEditDialog = function($event, obs){
+							    	DeterminationModalService.show($event, obs, 'ObservationModalService', true);
 							    }
 								
 								

@@ -715,4 +715,6 @@ p.pagination-text {
     display: table-cell
 }
 
-
+.cursor-pointer {
+	cursor: pointer;
+}

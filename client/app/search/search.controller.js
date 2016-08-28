@@ -29,7 +29,8 @@ angular.module('svampeatlasApp')
 				
 				
 					ObservationSearchService.reset();
-					
+					/*
+					$scope.search = ObservationSearchService.getSearch();
 					$scope.search.selectedHigherTaxa = [];
 					$scope.search.selectedLocalities = [];
 					$scope.search.associatedOrganism = [];
@@ -37,10 +38,18 @@ angular.module('svampeatlasApp')
 					$scope.search.determiner= [];
 					$scope.search.PrimaryUser= [];
 					$scope.search.selectedMonths =  [];
+					
 					delete $scope.search.fromYear;
 					delete $scope.search.toYear;
 					delete $scope.search.geometry;
-				$scope.drawnItems.removeLayer($scope.leafletPolygon);
+					delete $scope.search.databasenumber;
+					if($scope.drawnItems){
+						$scope.drawnItems.removeLayer($scope.leafletPolygon);
+					}
+				*/
+					if($scope.drawnItems){
+						$scope.drawnItems.removeLayer($scope.leafletPolygon);
+					}
 					$state.reload();
 	
 					
@@ -616,7 +625,10 @@ angular.module('svampeatlasApp')
 				}
 
 				if ($scope.search.databasenumber) {
-					$scope.observationSearch.where._id = $scope.search.databasenumber.split("-")[1] || $scope.search.databasenumber;
+					
+					var splitted = $scope.search.databasenumber.split("-");
+					var dbnr = (splitted.length > 0) ? splitted[splitted.length -1] : $scope.search.databasenumber;
+					$scope.observationSearch.where._id = dbnr;
 					$scope.observationSearch.include[2].required = false;
 					delete $scope.observationSearch.include[0].where.Determination_validation;
 

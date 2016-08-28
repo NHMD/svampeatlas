@@ -64,6 +64,42 @@ angular.module('svampeatlasApp', [
 				type: 'action',
 				requireLogin: true,
 			}]},{
+				id: 'Settings',
+				name: 'Bruger',
+				type: 'heading',
+				requireLogin: true,
+				children: [{
+					id: 'Dashboard',
+					name: 'Dashboard',
+					state: 'dashboard',
+					type: 'link',
+					icon: 'dashboard',
+					requireLogin: true
+				},{
+						id: 'search_my_obs',
+						name: 'Mine rapporteringer',
+						state: 'search-list',
+					type: 'link',
+					icon: 'playlist_add',
+						params: {searchterm: 'mine'},
+						requireLogin: true
+
+					},{
+					id: 'Profile',
+					name: 'Profil',
+					state: 'settings',
+					type: 'link',
+					icon: 'person',
+					requireLogin: true
+				},{
+					id: 'Logout',
+					name: 'Logout',
+					state: 'logout',
+					type: 'link',
+					icon: 'logout',
+					requireLogin: true
+				}]
+			},{
 				id: 'SearchAtlas',
 				name: 'Søg i Svampeatlas',
 				type: 'heading',
@@ -74,13 +110,6 @@ angular.module('svampeatlasApp', [
 					type: 'toggle',
 					icon: 'search',
 					pages: [{
-						id: 'search_my_obs',
-						name: 'Mine fund',
-						state: 'search-list',
-						params: {searchterm: 'mine'},
-						requireLogin: true
-
-					},{
 						id: 'search_form',
 						name: 'Søgeformular',
 						state: 'search'
@@ -181,27 +210,7 @@ angular.module('svampeatlasApp', [
 				state: 'admin',
 				type: 'link',
 				requireRole: 'useradmin',
-			}, {
-				id: 'Settings',
-				name: 'Indstillinger',
-				type: 'heading',
-				requireLogin: true,
-				children: [{
-					id: 'Logout',
-					name: 'Logout',
-					state: 'logout',
-					type: 'link',
-					icon: 'logout',
-					requireLogin: true
-				}, {
-					id: 'Profile',
-					name: 'Profil',
-					state: 'settings',
-					type: 'link',
-					icon: 'person',
-					requireLogin: true
-				}]
-			}]);
+			}, ]);
 
 	  
 	

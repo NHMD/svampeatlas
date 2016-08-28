@@ -106,6 +106,9 @@ angular.module('svampeatlasApp')
 								$scope.showDeterminationDialog = function($event, obs) {
 									DeterminationModalService.show($event, obs, 'ObservationFormService');
 								}
+								$scope.showDeterminationEditDialog = function($event, obs) {
+									DeterminationModalService.show($event, obs, 'ObservationFormService', true);
+								}
 
 
 								// wrap initial load of obs in timeout to increase speed
