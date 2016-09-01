@@ -544,4 +544,7 @@ p.pagination-text {
 	margin-left: 20px;
 }
 
+.species-table > tbody > tr > td {
+	vertical-align: middle;
+}
 
