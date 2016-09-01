@@ -6,8 +6,8 @@ angular.module('svampeatlasApp')
 				show: function(ev, obs, sender, editMode) {
 			      $mdDialog.show({
 					locals: {obs: obs},  
-			        controller: ['$scope','$mdDialog','Observation', 'Determination', 'obs','ObservationModalService', 'ObservationFormService',  '$translate','SearchService', '$state',
-					  				function($scope, $mdDialog, Observation, Determination, obs, ObservationModalService, ObservationFormService,  $translate, SearchService, $state) {
+			        controller: ['$scope', '$rootScope' , '$mdDialog','Observation', 'Determination', 'obs','ObservationModalService', 'ObservationFormService',  '$translate','SearchService', '$state',
+					  				function($scope,$rootScope, $mdDialog, Observation, Determination, obs, ObservationModalService, ObservationFormService,  $translate, SearchService, $state) {
 										$scope.$translate = $translate;
 										$scope.querySearch = SearchService.querySearchTaxon;
 										$scope.editMode = editMode;
@@ -50,7 +50,7 @@ angular.module('svampeatlasApp')
 										  												  if(sender === 'ObservationPage'){
 										  												  	$state.go('observations', {observationid: obs._id}, {reload: true})
 										  												  }
-											  	
+											  											  $rootScope.$emit('observation_updated', obs);
 										  											   }
 										  
 										  

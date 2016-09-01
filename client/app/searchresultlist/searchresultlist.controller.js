@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope','$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination',
-		function($scope,$filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination) {
+	.controller('SearchListCtrl', ['$scope','$rootScope','$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination) {
 			
 			$scope.moment = moment;
 			$scope.Auth = Auth;
@@ -12,6 +12,35 @@ angular.module('svampeatlasApp')
 			$scope.$state = $state;
 			$scope.ObservationFormService = ObservationFormService;
 			$scope.$stateParams = $stateParams;
+			
+			$rootScope.$on('new_observation', function(ev, obs){
+				
+				var singleObsSearch = ObservationSearchService.getNewSearch();
+				singleObsSearch.where = {_id: obs._id};
+				var include = _.map(singleObsSearch.include, function(n) {
+					return JSON.stringify(n);
+				});
+				Observation.query({where: {_id: obs._id}, include: JSON.stringify(include) }, function(result, headers) {
+				$scope.displayed.unshift(result[0])
+					$scope.displayed.pop();
+			})
+		});
+		
+		$rootScope.$on('observation_updated', function(ev, obs){
+			
+			var singleObsSearch = ObservationSearchService.getNewSearch();
+			singleObsSearch.where = {_id: obs._id};
+			var include = _.map(singleObsSearch.include, function(n) {
+				return JSON.stringify(n);
+			});
+			Observation.query({where: {_id: obs._id}, include: JSON.stringify(include) }, function(result, headers) {
+			
+			var index = _.indexOf($scope.displayed, _.find($scope.displayed, {_id: obs._id}));
+			
+			$scope.displayed.splice(index, 1, result[0]);
+				
+		})
+	});
 			
 			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date) || $stateParams.taxon_id) {
 				ObservationSearchService.reset();
@@ -221,14 +250,11 @@ angular.module('svampeatlasApp')
 					var clipboard = new Clipboard('.clipboard-copy');
 					clipboard.on('success', function(e) {
 					    e.clearSelection();
-					    console.info('Action:', e.action);
-					    console.info('Text:', e.text);
-					    console.info('Trigger:', e.trigger);
+					    
 					    showTooltip(e.trigger, 'Copied!');
 					});
 					clipboard.on('error', function(e) {
-					    console.error('Action:', e.action);
-					    console.error('Trigger:', e.trigger);
+					   
 					    showTooltip(e.trigger, fallbackMessage(e.action));
 					});
 				}, function(err){
