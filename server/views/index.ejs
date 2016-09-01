@@ -19,6 +19,9 @@
 	<meta property="og:site_name"              content="Danmarks svampeatlas" />
 	<meta property="og:description"        content="<%= description %>" />
 	<meta property="og:image"              content="<%= image %>" />
+	<% for(var i=0; i < imgProps.length; i++) {%>
+	   <meta property="<%= imgProps[i].name %>"              content="<%= imgProps[i].value %>" />
+	<% } %>
 	<meta property="og:locale" content="da_DK" />
 	<meta property="og:locale:alternate" content="en_GB" />
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->

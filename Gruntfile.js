@@ -443,6 +443,7 @@ module.exports = function(grunt) {
 					dest: '<%= yeoman.dist %>/client',
 					src: [
 						'assets/images/public/mycena_crop.jpg',
+						'assets/images/public/SvampetlasLogo.png',
 						'assets/images/flags/flags/shiny/16/Denmark.png',
 						'assets/images/flags/flags/shiny/16/United-Kingdom.png'
 					]

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('ObservationCtrl',['$scope', 'Auth','ErrorHandlingService','$mdDialog',  '$mdSidenav','ssSideNav','Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout','DeterminationModalService','ObservationFormService', '$translate','$state','$stateParams','appConstants','ObservationStateService', 
-							function($scope, Auth,ErrorHandlingService, $mdDialog, $mdSidenav,ssSideNav, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService,ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService) {
+  .controller('ObservationCtrl',['$scope', '$rootScope', 'Auth','ErrorHandlingService','$mdDialog',  '$mdSidenav','ssSideNav','Observation','Determination', '$mdMedia','$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout','DeterminationModalService','ObservationFormService', '$translate','$state','$stateParams','appConstants','ObservationStateService', 
+							function($scope, $rootScope, Auth,ErrorHandlingService, $mdDialog, $mdSidenav,ssSideNav, Observation,Determination, $mdMedia,$mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService,ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService) {
 								
 								 $scope.mdSidenav = $mdSidenav;
 								 $scope.menu = ssSideNav;
@@ -88,6 +88,9 @@ angular.module('svampeatlasApp')
 										delete $scope.newComment;
 										delete $scope.$parent.newComment;
 										$scope.sendingComment = false;
+										
+										
+										$rootScope.$emit('observation_updated', obs);
 									})
 									.catch(function(err){
 										$scope.sendingComment = false;

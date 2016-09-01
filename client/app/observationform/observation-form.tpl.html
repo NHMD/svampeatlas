@@ -75,7 +75,7 @@
 	          </md-chip-template>
 		
 	        </md-chips>
-			<md-button class="md-raised md-warn" ng-click="handleUndetermined()" ng-if="newTaxon.length === 0">Ubestemt svamp</md-button>
+			<md-button class="md-raised md-warn" ng-click="handleUndetermined()" ng-if="newTaxon.length === 0">{{'Ubestemt svamp'  | translate}}</md-button>
 	 	      </div>
 		 		
 			 <div layout="row" layout-margin>
@@ -100,7 +100,7 @@
 				        md-search-text="searchText"
 				        md-items="item in querySearchLocality(searchText)"
 				        md-item-text="item.name"
-				        placeholder="Lokalitet"
+				        placeholder="{{'Lokalitet' | translate}}"
 						ng-disabled="selectedLocality.length > 0">
 				      <span md-highlight-text="searchText">{{item.name}}</span>
 				    </md-autocomplete>

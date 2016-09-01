@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('ObservationFormCtrl',['$scope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', '$mdSidenav', 'ssSideNav','Taxon',  'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate','UserAgentService', 'appConstants','ObservationStateService',
-							function($scope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog,$mdSidenav,ssSideNav, Taxon, TaxonAttributes, Locality,  Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils,  PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService) {
+  .controller('ObservationFormCtrl',['$scope','$rootScope','$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', '$mdSidenav', 'ssSideNav','Taxon',  'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate','UserAgentService', 'appConstants','ObservationStateService',
+							function($scope,$rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog,$mdSidenav,ssSideNav, Taxon, TaxonAttributes, Locality,  Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, GeoJsonUtils,  PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService) {
 								var row = ObservationStateService.get();
 							 $scope.mdSidenav = $mdSidenav;
 							 $scope.menu = ssSideNav;
@@ -770,6 +770,7 @@ angular.module('svampeatlasApp')
 											$scope.obs.Forum.push(comment);
 											delete $scope.newComment;
 											$scope.sendingComment = false;
+											$rootScope.$emit('observation_updated', obs);
 										})
 										.catch(function(err) {
 											$scope.sendingComment = false;
@@ -987,13 +988,18 @@ angular.module('svampeatlasApp')
 														var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
 														$scope.fileProgress = progressPercentage;
 														console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+													})
+													.then(function(){
+														return obs
 													});
 											} else {
-												return true
+												return obs
 											}
 
 										})
-										.then(function() {
+										.then(function(obs) {
+											var evt = ($scope.obs && $scope.obs._id) ? 'observation_updated' : 'new_observation';
+											$rootScope.$emit(evt, obs);
 											$scope.newTaxon = [];
 											$scope.showSimpleToast($translate.instant('Fundet blev gemt'),3000, 'bottom right')
 											$scope.statusMsg = "";

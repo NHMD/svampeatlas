@@ -46,7 +46,7 @@
 		      <md-grid-tile class="md-whiteframe-4dp " >
 			  <div layout-fill layout-margin>
 			  <ng-md-icon icon="playlist_add" ></ng-md-icon>
-		   <div layout layout-align="center center"><md-button ><h1 ng-click="gotoSearchResult('primaryuser_id')">{{observationCount}}</h1> </md-button > </div>
+		   <div layout layout-align="center center"><md-button ng-click="gotoSearchResult('primaryuser_id')"><h1 >{{observationCount}}</h1> </md-button > </div>
 		  
 		  </div>
 	
@@ -62,7 +62,7 @@
 	      <md-grid-tile class="md-whiteframe-4dp " >
 		  <div layout-fill layout-margin>
 		  <ng-md-icon icon="fungus" ></ng-md-icon>
-	   <div layout layout-align="center center"><md-button ><h1 ng-click="gotoSearchResult('specieslist')">{{speciesCount[0].count}}</h1> </md-button ></div>
+	   <div layout layout-align="center center"><md-button ng-click="gotoSearchResult('specieslist')"><h1 >{{speciesCount[0].count}}</h1> </md-button ></div>
 	  </div>
 	        <md-grid-tile-footer>
 	          <h3>{{'Arter fundet i Danmark' | translate}}</h3>
@@ -101,7 +101,7 @@
 		      <md-grid-tile class="md-whiteframe-4dp " >
 			  <div layout-fill layout-margin>
 			  <ng-md-icon icon="chat_bubble" ></ng-md-icon>
-		   <div layout layout-align="center center"><md-button ><h1 ng-click="gotoSearchResult('forum')">{{forumPostCount[0].count}}</h1> </md-button ></div>
+		   <div layout layout-align="center center"><md-button ng-click="gotoSearchResult('forum')"><h1 >{{forumPostCount[0].count}}</h1> </md-button ></div>
 		  </div>
 		        <md-grid-tile-footer>
 		          <h3>{{'Kommentarer i forum' | translate}}</h3>
@@ -111,7 +111,7 @@
 			      <md-grid-tile class="md-whiteframe-4dp " >
 				  <div layout-fill layout-margin>
 				  <ng-md-icon icon="camera_alt" ></ng-md-icon>
-			   <div layout layout-align="center center"> <md-button ><h1 ng-click="gotoSearchResult('photos')">{{imageCount[0].count}}</h1></md-button> </div>
+			   <div layout layout-align="center center"> <md-button ng-click="gotoSearchResult('photos')"><h1 >{{imageCount[0].count}}</h1></md-button> </div>
 			  </div>
 			        <md-grid-tile-footer>
 			          <h3>{{'Fotos' | translate}}</h3>

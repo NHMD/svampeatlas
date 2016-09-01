@@ -169,7 +169,11 @@ angular.module('svampeatlasApp')
 			'Første fund': 'First yearly findings',
 			'Statistik': 'Statistics',
 			'Du har' : 'You have',
-			'med nye kommentarer seneste' : 'with comments since'
+			'med nye kommentarer seneste' : 'with comments since',
+			'Mine rapporteringer' : 'My reportings',
+			'Bruger' : 'User',
+			'Ubestemt svamp' : 'Undetermined fungus',
+			'Indlagt' : 'Submitted'
 			
 			
 		});
