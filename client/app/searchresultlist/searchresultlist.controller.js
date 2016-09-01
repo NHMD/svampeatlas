@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope','$rootScope','$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination',
-		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination) {
+	.controller('SearchListCtrl', ['$scope','$rootScope','$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination','$cookies',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies) {
 			
 			$scope.moment = moment;
 			$scope.Auth = Auth;
@@ -84,7 +84,11 @@ angular.module('svampeatlasApp')
 
 			}
 			$scope.getCreatedAt = function(createdAt){
-				return moment(createdAt).fromNow();
+				var lang = "da";
+				if($cookies.get('preferred_language') === "en"){
+					lang = "en"
+				}
+				return moment(createdAt).lang(lang).fromNow();
 			}
 			
 			$scope.getDate = function(observationDate, observationDateAccuracy) {

@@ -11,7 +11,7 @@
 	<div class="table-responsive-vertical shadow-z-1">
 
 
-<table  class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-table="displayed" st-safe-src='serverData'>
+<table  class="table species-table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-table="displayed" st-safe-src='serverData'>
 	
 	<thead>
 		<tr ng-show="displayed && !isLoading">
@@ -20,7 +20,7 @@
 		</tr>
 	<tr>
 		
-		
+		<th st-ratio="5"></th>
 		<th st-sort="DeterminationView.Taxon_FullName" translate>Art</th>
 		<th st-sort="observationCount"  translate>Antal fund</th>
 		
@@ -30,7 +30,31 @@
 	<tbody ng-show="displayed.length > 0">
 	<tr ng-repeat="row in displayed">
 		
-		
+		<td st-ratio="5"><md-menu md-position-mode="target-right target" >
+			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+			               <ng-md-icon icon="more_vert" ></ng-md-icon>
+			            </md-button>
+			            <md-menu-content width="4" >
+			              <md-menu-item >
+			                <md-button ng-click="showSpeciesSearch(row, 'list')">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Vis fund i liste' | translate}}</p>
+			                      <ng-md-icon icon="list" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			              <md-menu-item >
+			                <md-button ng-click="showSpeciesSearch(row, 'map')">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Vis fund på kort'  | translate}}</p>
+			                      <ng-md-icon  icon="map" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			          
+			            </md-menu-content>
+			          </md-menu></td>
 		<td data-title="{{'Art' | translate}}"> <em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp. </span></em>
 			<span ng-if="row.DeterminationView.Taxon_vernacularname_dk">- {{row.DeterminationView.Taxon_vernacularname_dk}} </span>
 			<span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span></td>

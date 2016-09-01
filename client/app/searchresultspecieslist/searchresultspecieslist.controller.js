@@ -8,6 +8,16 @@ angular.module('svampeatlasApp')
 			$scope.stItemsPrPage = 100;
 			
 $scope.ObservationFormService = ObservationFormService;
+
+$scope.showSpeciesSearch = function(row, view){
+	var search = ObservationSearchService.getSearch();
+	search.include[0].where = {Taxon_id: row.DeterminationView.Taxon_id };
+	if(view === 'list'){
+		$state.go('search-list')
+	} else if(view === 'map'){
+		$state.go('search-map')
+	}
+}
 			
 if ($stateParams.where) {
 	ObservationSearchService.reset();
@@ -44,7 +54,10 @@ if ($stateParams.where) {
 		search.include[0].where = $stateParams.determinationViewWhere;
 	}
 }
-
+var search = ObservationSearchService.getSearch();
+if(search.include[0].where.Taxon_id){
+	delete search.include[0].where.Taxon_id;
+}
 			$scope.search = angular.copy(ObservationSearchService.getSearch());
 
 			if (_.isEmpty($scope.search)) {
