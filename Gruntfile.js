@@ -227,7 +227,8 @@ module.exports = function(grunt) {
 		// Automatically inject Bower components into the app
 		wiredep: {
 			target: {
-				src: '<%= yeoman.client %>/index.html',
+			//	src: '<%= yeoman.client %>/index.html',
+				src: 'server/views/index.ejs',
 				ignorePath: '<%= yeoman.client %>/',
 				exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/']
 			}
@@ -261,7 +262,7 @@ module.exports = function(grunt) {
 
 		// Performs rewrites based on rev and the useminPrepare configuration
 		usemin: {
-			html: ['<%= yeoman.dist %>/client/{,*/}*.html'],
+			html: ['<%= yeoman.dist %>/client/{,*/}*.html', '<%= yeoman.dist %>/server/views/index.ejs'],
 			css: ['<%= yeoman.dist %>/client/{,*/}*.css'],
 			js: ['<%= yeoman.dist %>/client/{,*/}*.js', '!<%= yeoman.dist %>/client/bower_components/*.{css,js}'],
 			options: {
@@ -607,6 +608,13 @@ module.exports = function(grunt) {
 							'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
 							'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js'
 						]
+					],
+					'server/views/index.ejs': [
+						['{.tmp,<%= yeoman.client %>}/{app,components}/**/*.js',
+							'!{.tmp,<%= yeoman.client %>}/app/app.js',
+							'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.spec.js',
+							'!{.tmp,<%= yeoman.client %>}/{app,components}/**/*.mock.js'
+						]
 					]
 				}
 			},
@@ -624,6 +632,9 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'<%= yeoman.client %>/index.html': [
+						'<%= yeoman.client %>/{app,components}/**/*.css'
+					],
+					'server/views/index.ejs': [
 						'<%= yeoman.client %>/{app,components}/**/*.css'
 					]
 				}

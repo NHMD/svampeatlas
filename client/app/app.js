@@ -60,8 +60,10 @@ angular.module('svampeatlasApp', [
 				id: 'AddObservation',
 				icon: 'add',
 				name: 'Nyt fund',
-				//state: 'admin',
-				type: 'action',
+				state: 'observationform',
+		
+						
+				type: 'link',
 				requireLogin: true,
 			}]},{
 				id: 'Settings',

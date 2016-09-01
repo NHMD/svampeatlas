@@ -188,6 +188,11 @@ module.exports = function(sequelize, DataTypes) {
 					as: "DeterminationView"
 				});	
 				
+		models.DeterminationView
+				.belongsTo(models.TaxonAttributes, {
+					foreignKey: "Taxon_id" ,
+					as: "attributes"
+				});		
 
 			//	models.MycokeyCharacterView.belongsToMany(models.DeterminationView, { foreignKey: 'Taxon_id',  constraints: false});
 					
