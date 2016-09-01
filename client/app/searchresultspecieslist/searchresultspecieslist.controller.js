@@ -50,6 +50,7 @@ if ($stateParams.where) {
 			if (_.isEmpty($scope.search)) {
 				$state.go('search')
 			};
+
 			// if we came directly from the map view, remove images and forum from include
 			/*
 			$scope.search.include = $scope.search.include.slice(0, 5);

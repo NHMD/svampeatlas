@@ -1,10 +1,10 @@
-<md-dialog aria-label="Forum" class="fullscreen-dialog" ng-cloak  id="observation-modal" >
+
   
     <md-toolbar>
       <div class="md-toolbar-tools">
-          <md-button class="md-icon-button" ng-click="cancel()">
-            <ng-md-icon icon="arrow_back" aria-label="Close dialog"></ng-md-icon>
-          </md-button>
+         <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
+           <ng-md-icon icon="menu"></ng-md-icon>
+         </md-button>
         <h2>ID: DMS-{{obs._id}}</h2>
         <span flex></span>
 		<span ng-if="Auth.isLoggedIn()"><md-tooltip md-direction="bottom" >{{'Klon fund' | translate}}</md-tooltip>
@@ -29,7 +29,7 @@
       </div>
     </md-toolbar>
       
-    <md-dialog-content>
+    <md-content>
 
 		  
 	 <md-tabs md-dynamic-height md-border-bottom  ng-if="!$mdMedia('gt-sm')">
@@ -352,7 +352,7 @@ flex>
  </div>
  </div>
      
-    </md-dialog-content>
+    </md-content>
    
    <!-- <md-dialog-actions layout="row">
       <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
@@ -367,4 +367,3 @@ flex>
       </md-button>
     </md-dialog-actions> -->
   
-</md-dialog>

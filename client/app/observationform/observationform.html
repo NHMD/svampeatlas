@@ -1,9 +1,7 @@
-<md-dialog aria-label="Observation" class="fullscreen-dialog" ng-cloak id="observation-modal">
-  
     <md-toolbar>
       <div class="md-toolbar-tools">
-          <md-button class="md-icon-button" ng-click="cancel()">
-            <ng-md-icon icon="arrow_back" aria-label="Close dialog"></ng-md-icon>
+          <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
+            <ng-md-icon icon="menu"></ng-md-icon>
           </md-button>
         <h2 ng-if="!obs || !obs._id">{{'Nyt fund' | translate}} {{(duplicateID) ? ('('+('klonet fra' | translate)+' DMS-'+duplicateID+')') : ''}}</h2>
 		<h2 ng-if="obs && obs._id">DMS-{{obs._id}} </h2>
@@ -13,15 +11,15 @@
 			                  class="md-icon-button" >
 			         <ng-md-icon icon="camera_alt" ></ng-md-icon>
 			       </md-button>
-		 <div>
-		<md-tooltip md-direction="bottom" >{{'Gem fund' | translate}}</md-tooltip>	 
+		 
+			 
 		 <md-button  ng-disabled="!observationIsValid() || savingObservation || processingImage"
 		                  aria-label="Publicer observation"
 		                  class="md-icon-button" 
 						  ng-click="submitObservation()">
 		         <ng-md-icon icon="send" ></ng-md-icon>
 		       </md-button>
-		   </div>
+			   
 			  <md-menu md-position-mode="target-right target" >
 			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
 			               <ng-md-icon icon="more_vert" ></ng-md-icon>
@@ -53,13 +51,11 @@
 	<md-progress-linear ng-if="fileUploadInProgress" md-mode="determinate" value="{{fileProgress}}"></md-progress-linear>
     <md-progress-linear ng-if="savingObservation || processingImage" md-mode="indeterminate"></md-progress-linear>  
 	<md-subheader ng-if="statusMsg">{{statusMsg}}</md-subheader>
-    <md-dialog-content ng-include="$mdMedia('gt-sm') ? 'app/observationform/observation-form-view-desktop.tpl.html' : 'app/observationform/observation-form-view-mobile.tpl.html'">
+    <md-content ng-include="$mdMedia('gt-sm') ? 'app/observationform/observation-form-view-desktop.tpl.html' : 'app/observationform/observation-form-view-mobile.tpl.html'">
 
 		  
 
      
-    </md-dialog-content>
+    </md-content>
    
 
-  
-</md-dialog>

@@ -273,7 +273,7 @@ exports.indexSpeciesList = function(req, res) {
 		offset: parseInt(req.query.offset) ,
 		limit: parseInt(req.query.limit),
 		where: {},
-		attributes : [[models.sequelize.fn('count', models.sequelize.col('Observation._id')), 'observationCount'], 'primaryuser_id', 'locality_id'],
+		attributes : [[models.sequelize.fn('count', models.sequelize.fn('distinct', models.sequelize.col('Observation._id'))), 'observationCount'], 'primaryuser_id', 'locality_id'],
 		group: "DeterminationView.Taxon_id"
 	};
 	if(req.query.order) {

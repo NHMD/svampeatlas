@@ -4,13 +4,14 @@ angular.module('svampeatlasApp')
 	.controller('SearchListCtrl', ['$scope','$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination',
 		function($scope,$filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination) {
 			
+			$scope.moment = moment;
 			$scope.Auth = Auth;
 			$scope.currentUser = Auth.getCurrentUser();
 			$scope.stItemsPrPage = 100;
 			$scope.ObservationModalService = ObservationModalService;
 			$scope.$state = $state;
 			$scope.ObservationFormService = ObservationFormService;
-			
+			$scope.$stateParams = $stateParams;
 			
 			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date) || $stateParams.taxon_id) {
 				ObservationSearchService.reset();
@@ -21,9 +22,11 @@ angular.module('svampeatlasApp')
 				if ($stateParams.searchterm === "mine") {
 
 					search.include[1].where = {
-						Initialer: Auth.getCurrentUser().Initialer
+						_id: Auth.getCurrentUser()._id
 					} 
 					search.include[1].required = true;
+					// include foreign
+					search.include[2].required = false;
 
 				} else if ($stateParams.searchterm === "3days") {
 
@@ -51,7 +54,10 @@ angular.module('svampeatlasApp')
 			};
 
 			}
-
+			$scope.getCreatedAt = function(createdAt){
+				return moment(createdAt).fromNow();
+			}
+			
 			$scope.getDate = function(observationDate, observationDateAccuracy) {
 
 				var splitted = observationDate.split(" ")[0].split("-");

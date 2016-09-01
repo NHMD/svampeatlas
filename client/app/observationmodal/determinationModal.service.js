@@ -6,8 +6,8 @@ angular.module('svampeatlasApp')
 				show: function(ev, obs, sender, editMode) {
 			      $mdDialog.show({
 					locals: {obs: obs},  
-			        controller: ['$scope','$mdDialog','Observation', 'Determination', 'obs','ObservationModalService', 'ObservationFormService',  '$translate','SearchService',
-					  				function($scope, $mdDialog, Observation, Determination, obs, ObservationModalService, ObservationFormService,  $translate, SearchService) {
+			        controller: ['$scope','$mdDialog','Observation', 'Determination', 'obs','ObservationModalService', 'ObservationFormService',  '$translate','SearchService', '$state',
+					  				function($scope, $mdDialog, Observation, Determination, obs, ObservationModalService, ObservationFormService,  $translate, SearchService, $state) {
 										$scope.$translate = $translate;
 										$scope.querySearch = SearchService.querySearchTaxon;
 										$scope.editMode = editMode;
@@ -29,9 +29,7 @@ angular.module('svampeatlasApp')
 										
 										  $scope.cancel = function() {
 										    $mdDialog.hide()
-											  .then(function(){
-											  	ObservationModalService.show(null, $scope.obs)
-											   });
+											  .then(reopenObs);
 										  };
 										  
 										  function updateOrCreate(){
@@ -41,6 +39,20 @@ angular.module('svampeatlasApp')
 											  	return Observation.addDetermination({id: $scope.obs._id}, $scope.determination).$promise
 											  }
 										  }
+										  
+										  function reopenObs(){
+										  												  if(sender === 'ObservationModalService'){
+										  												  	ObservationModalService.show(null, $scope.obs)
+										  												  }
+										  												  if(sender === 'ObservationFormService'){
+										  												  	ObservationFormService.show(null, $scope.obs)
+										  												  }
+										  												  if(sender === 'ObservationPage'){
+										  												  	$state.go('observations', {observationid: obs._id}, {reload: true})
+										  												  }
+											  	
+										  											   }
+										  
 										  
 										  $scope.reopenObs = function() {
 											  $scope.determination.taxon_id = $scope.newTaxon[0]._id;
@@ -56,15 +68,7 @@ angular.module('svampeatlasApp')
 												  $scope.obs.DeterminationView = DeterminationView; 
 	  										   return  $mdDialog.hide()
 											  }) 
-											  .then(function(){
-												  if(sender === 'ObservationModalService'){
-												  	ObservationModalService.show(null, $scope.obs)
-												  }
-												  if(sender === 'ObservationFormService'){
-												  	ObservationFormService.show(null, $scope.obs)
-												  }
-											  	
-											   }); 
+											  .then(reopenObs); 
 										   
 										  };
 					  				}],
