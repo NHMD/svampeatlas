@@ -11,6 +11,29 @@ angular.module('svampeatlasApp')
 			$scope.biotrofNutrionLimit = 10;
 			$scope.$timeout = $timeout;
 			$scope.stateParams = $stateParams;
+			
+			$scope.capitalizeFirstLetter = function (string) {
+				return string.charAt(0).toUpperCase() + string.slice(1);
+			}
+
+			$scope.lowerCaseFirstLetter = function (string) {
+				return string.charAt(0).toLowerCase() + string.slice(1);
+			}
+			
+			$scope.getTaxonName = function(){
+				if($scope.taxon.Vernacularname_DK) {
+					return $scope.capitalizeFirstLetter($scope.taxon.Vernacularname_DK.vernacularname_dk)+ " ("+$scope.taxon.FullName+")";
+				} else {
+					return $scope.taxon.FullName;
+				}
+			}
+			
+			$scope.moveTextToGyldendal = function(){
+				$scope.taxon.attributes.bogtekst_gyldendal = $scope.getTaxonName() +" er "+ $scope.lowerCaseFirstLetter($scope.taxon.attributes.diagnose)+ "\n    "+$scope.taxon.attributes.forvekslingsmuligheder+ "\n    "+$scope.taxon.attributes.bogtekst_faenologi_udbredelse;
+			 Taxon.updateAttributes({id: $scope.taxon._id}, $scope.taxon.attributes)
+			
+			}
+			
  if ($stateParams.id) {
 				
 				$scope.taxon = Taxon.get({
@@ -210,7 +233,7 @@ angular.module('svampeatlasApp')
 			   }
 			   
 			   $scope.getBogtekstLength = function(){
-				   return $("#bogtekst").text().length;
+				   return $("#bogtekstny").text().length;
 				
 			   }
 		/*	$scope.ranktabs = [

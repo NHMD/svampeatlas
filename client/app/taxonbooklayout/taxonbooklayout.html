@@ -167,7 +167,7 @@
 				<md-whiteframe class="md-whiteframe-z3" layout="column" layout-padding layout-margin>
 				    
 				  
-				<h3><em>{{taxon.FullName}}</em> <span ng-show="taxon.vernacularname_dk">- {{taxon.vernacularname_dk}}</span></h3>
+				<h3><em>{{taxon.FullName}}</em> <span ng-show="taxon.Vernacularname_DK">- {{taxon.Vernacularname_DK.vernacularname_dk}}</span></h3>
 		      <carousel disable-ng-animate interval="">
 		        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
 		          <img ng-src="{{slide.uri}}" style="margin:auto;">
@@ -179,14 +179,24 @@
 		        </slide>
 	
 		      </carousel>
-				<div id="bogtekst">
+  				<div>
+					<span id="bogtekstny">
+  					<p>{{getTaxonName() +" er "+ lowerCaseFirstLetter(taxon.attributes.diagnose)}}</p>
+  				<p>{{taxon.attributes.forvekslingsmuligheder}}</p>
+  				<p>{{taxon.attributes.bogtekst_faenologi_udbredelse}}</p>
+			</span>
+  				- <em ng-class="taxon.attributes.bogtekst_gyldendal.length < 550 || (taxon.attributes.bogtekst_gyldendal.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{getBogtekstLength()}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
+				<md-button ng-click="moveTextToGyldendal()"><ng-md-icon icon="arrow_downward"></ng-md-icon> overfør tekst til gyldendal</md-button>
+  			</div>
+			  
+			<!--	<div id="bogtekst">
 					<p><em>
 						{{taxon.attributes.diagnose}}
 					</em></p>
 				<p><strong>Forvekslingsmuligheder:</strong> {{taxon.attributes.forvekslingsmuligheder}}</p>
 				<p><strong>Status:</strong><span ng-if="redlistdata.VerbatimStatus"> {{redlistdata.VerbatimStatus}} {{redlistdata.year}}.</span><span ng-repeat="nutritionStrategy in taxon.nutritionstrategies | orderBy: '_id'"><span ng-if="nutritionStrategy._id > 2">,</span> {{nutritionStrategy.name}}</span>. {{taxon.attributes.oekologi}}</p>
 				- <em ng-class="taxon.attributes.bogtekst_gyldendal.length < 550 || (taxon.attributes.bogtekst_gyldendal.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{getBogtekstLength()}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
-			</div>
+			</div> -->
 			</md-whiteframe>
 			<div class="col-md-12" layout="row">
 			<md-switch  ng-model="taxon.attributes.bog_Gyldendal_art_medtages" aria-label="Medtages i Noreuropas svampe" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
