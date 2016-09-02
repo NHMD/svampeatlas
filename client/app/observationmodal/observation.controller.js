@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', 'Auth', 'ErrorHandlingService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService',
-		function($scope, $rootScope, Auth, ErrorHandlingService, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope','$window', 'Auth', 'ErrorHandlingService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService',
+		function($scope, $rootScope,$window, Auth, ErrorHandlingService, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService) {
 
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
@@ -14,6 +14,21 @@ angular.module('svampeatlasApp')
 			}
 			$scope.$translate = $translate;
 			$scope.$state = $state;
+			
+			$scope.sendMail = function(emailId,subject,message){
+			    $window.open("mailto:"+ emailId + "?subject=" + subject+"&body="+message,"_self");
+			};
+			
+			$scope.shareOnFacebook = function(){
+				FB.ui(
+				 {
+				  method: 'share',
+				  href: 'http://svampe.databasen.org/observations/'+$scope.obs._id
+				}, function(response){
+					
+				});
+			}
+			
 			$scope.editRecord = function(asDuplicate) {
 				$mdDialog.hide($scope.obs).then(function(obs) {
 					ObservationFormService.show(null, obs, asDuplicate)

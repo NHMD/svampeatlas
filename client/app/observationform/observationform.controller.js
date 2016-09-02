@@ -1001,6 +1001,7 @@ angular.module('svampeatlasApp')
 											var evt = ($scope.obs && $scope.obs._id) ? 'observation_updated' : 'new_observation';
 											$rootScope.$emit(evt, obs);
 											$scope.newTaxon = [];
+											$scope.files = [];
 											$scope.showSimpleToast($translate.instant('Fundet blev gemt'),3000, 'bottom right')
 											$scope.statusMsg = "";
 											$scope.cancel();
