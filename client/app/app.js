@@ -87,11 +87,11 @@ angular.module('svampeatlasApp', [
 						requireLogin: true
 
 					},{
-					id: 'Profile',
-					name: 'Profil',
+					id: 'Settings',
+					name: 'Indstillinger',
 					state: 'settings',
 					type: 'link',
-					icon: 'person',
+					icon: 'settings',
 					requireLogin: true
 				},{
 					id: 'Logout',

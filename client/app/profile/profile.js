@@ -16,7 +16,7 @@ angular.module('svampeatlasApp')
       })
       .state('userstats', {
 	
-        url: '/userstats/:userid?',
+        url: '/userprofile/:userid?',
         templateUrl: 'app/profile/profile.html',
         controller: 'ProfileCtrl'
       });

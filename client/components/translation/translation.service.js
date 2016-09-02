@@ -72,7 +72,7 @@ angular.module('svampeatlasApp')
 			'Kun de første 50000 vises på kortet, prøv evt. at afgrænse din søgning yderligere.': 'Only the first 50000 records is shown on the map, try narrowing your search further.',
 			'Din søgning gav': 'Your search returned',
 			'resultater': 'records',
-			'Ret fund': 'Edit sighting',
+			'Ret fund': 'Edit record',
 			'Vis mere': 'Show sighting',
 			'Finder(e)': 'Found by',
 			'Bestemmer': 'Determined by',
@@ -173,8 +173,10 @@ angular.module('svampeatlasApp')
 			'Mine rapporteringer' : 'My reportings',
 			'Bruger' : 'User',
 			'Ubestemt svamp' : 'Undetermined fungus',
-			'Indlagt' : 'Submitted'
-			
+			'Indlagt' : 'Submitted',
+			'Kopier funddata til udklipsholder' : 'Copy data to clipboard',
+			'Klon fund' : 'Clone record',
+			'Del fund' : 'Share'
 			
 		});
 

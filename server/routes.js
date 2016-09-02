@@ -92,7 +92,7 @@ module.exports = function(app) {
 
 	}
 
-	app.get('/userstats/:id', function(req, res) {
+	app.get('/userprofile/:id', function(req, res) {
 
 		var sql = 'SELECT COUNT(distinct d.Taxon_id) as count FROM  DeterminationView2 d, ObservationUsers u, Observation o ' +
 			' WHERE u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND d.Determination_validation = "Godkendt" AND d.Taxon_RankID > 9950 AND u.user_id = :userid' +
@@ -142,7 +142,7 @@ module.exports = function(app) {
 
 			}
 			res.render('index.ejs', {
-				url: 'http://svampe.databasen.org/userstats/' + req.params.id,
+				url: 'http://svampe.databasen.org/userprofile/' + req.params.id,
 				type: 'profile',
 				title: 'Profil for ' + user.name + " på Danmarks svampetalas",
 				description: desc,
@@ -200,8 +200,7 @@ module.exports = function(app) {
 				required: false
 			}]
 		}).then(function(obs) {
-			console.log("#### tax " + obs.DeterminationView.Determination_taxon_id)
-			console.log("#### rec " + obs.DeterminationView.Recorded_as_id)
+
 			var taxon = (obs.DeterminationView.Taxon_vernacularname_dk) ? capitalizeFirstLetter(obs.DeterminationView.Taxon_vernacularname_dk) + " (" + obs.DeterminationView.Taxon_FullName + ")" : obs.DeterminationView.Taxon_FullName;
 			var date = obs.observationDate.getDate() + "/" + (obs.observationDate.getMonth() + 1) + "/" + obs.observationDate.getFullYear();
 			var loc = "";
