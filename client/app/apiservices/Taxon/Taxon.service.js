@@ -269,6 +269,14 @@ angular.module('svampeatlasApp')
 				url: '/api/taxa/:id/dknames/:nameid',
 				isArray: false
 			},
+			'getAcceptedTaxon': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/taxa/:id/acceptedtaxon',
+				isArray: false
+			},
 		});
 
 	});

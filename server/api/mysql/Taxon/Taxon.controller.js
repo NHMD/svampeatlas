@@ -240,6 +240,72 @@ exports.show = function(req, res) {
 	catch (handleError(res));
 };
 
+exports.showAcceptedTaxon = function(req, res) {
+	
+	Taxon.find({
+	where: {
+		_id: req.params.id
+	}
+	})
+	.then(
+		function(tx){
+			console.log("######## "+tx._id+ " ######### "+tx.accepted_id)
+	return	Taxon.find({
+		where: {
+			_id: tx.accepted_id
+		},
+		include: [{
+				model: models.TaxonDKnames,
+				as: "Vernacularname_DK"
+			},{
+				model: models.TaxonDKnames,
+				as: "DanishNames"
+			},
+			{
+				model: models.TaxonImages,
+				as: "images"
+			}, {
+				model: models.TaxonSpeciesHypothesis,
+				as: 'specieshypothesis'
+			},
+			 {
+				model: models.Taxon,
+				as: "Parent"
+			}, {
+				model: models.Taxon,
+				as: "synonyms",
+				required: false,
+				include: [{
+				model: models.TaxonImages,
+				as: "images",
+					required: false
+			}]
+			}, {
+				model: models.TaxonAttributes,
+				as: "attributes"
+			}, {
+				model: models.Naturtype,
+				as: 'naturtyper'
+			}, {
+				model: models.ErnaeringsStrategi,
+				as: 'nutritionstrategies'
+			}, {
+				model: models.TaxonomyTag,
+				as: 'tags'
+			},
+			{
+							model: models.MycokeyCharacterView,
+							as: 'character1'
+						}
+
+		]
+	})})
+		.then(handleEntityNotFound(res))
+		.then(responseWithResult(res))
+		.
+	catch (handleError(res));
+};
+
 exports.showSiblings = function(req, res) {
 	Taxon.find({
 		where: {
