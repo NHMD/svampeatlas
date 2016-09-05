@@ -173,7 +173,8 @@ angular.module('svampeatlasApp')
 					order += " DESC"
 				};
 				*/
-				var order = (tableState.sort.predicate) ? [[tableState.sort.predicate]] : [['observationDate', 'DESC'], ['_id', 'DESC']];
+				var defaultOrder = ($stateParams.searchterm && $stateParams.searchterm === "mine") ? [['createdAt', 'DESC'], ['_id', 'DESC']] : [['observationDate', 'DESC'], ['_id', 'DESC']];
+				var order = (tableState.sort.predicate) ? [[tableState.sort.predicate]] : defaultOrder;
 								if (tableState.sort.reverse && tableState.sort.predicate) {
 									order[0].push("DESC");
 								} else {

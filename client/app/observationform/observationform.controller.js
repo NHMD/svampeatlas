@@ -770,7 +770,7 @@ angular.module('svampeatlasApp')
 											$scope.obs.Forum.push(comment);
 											delete $scope.newComment;
 											$scope.sendingComment = false;
-											$rootScope.$emit('observation_updated', obs);
+											$rootScope.$emit('observation_updated', $scope.obs);
 										})
 										.catch(function(err) {
 											$scope.sendingComment = false;
