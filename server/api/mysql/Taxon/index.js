@@ -23,8 +23,10 @@ router.get('/', controller.index);
 // router.get('/updateallidsbynameforunacceptedspecies', controller.syncAllFUNIdsByNameMatchForNewParentSpecies);
 router.get('/tree', auth.hasRole('taxonomyadmin'), controller.showTree);
 router.get('/:id', controller.show);
-router.get('/:id/updatesystematics', controller.updateSystematics);
+//router.get('/:id/updatesystematics', controller.updateSystematics);
 
+
+router.get('/:id/acceptedtaxon', controller.showAcceptedTaxon);
 
 router.post('/', auth.hasRole('taxonomyadmin'), controller.create);
 router.put('/:id',auth.hasRole('taxonomyadmin'),  controller.update);

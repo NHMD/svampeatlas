@@ -6,7 +6,7 @@ angular.module('svampeatlasApp')
 			
 			$scope.Auth = Auth;
 			$scope.stItemsPrPage = 100;
-
+			$scope.$state = $state;
 			$scope.mdMedia = $mdMedia;
 			
 			

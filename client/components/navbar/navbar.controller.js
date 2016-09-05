@@ -15,7 +15,8 @@ $scope.states =
 	  'news': { name: "Nyheder", icon: 'rss_feed'},
 	  'demos': { name: "Vejledninger", icon: 'school'},
 	  'about': { name: "Projektbeskrivelse", icon: 'info_outline'},
-	  'checklist': { name: "Checkliste for danske arter", icon: 'playlist_add_check'}
+	  'checklist': { name: "Checkliste for danske arter", icon: 'playlist_add_check'},
+	  'species': { name: "Artsside", icon: 'fungus'}
 	};
 	
 	$scope.openSideNav = function(){

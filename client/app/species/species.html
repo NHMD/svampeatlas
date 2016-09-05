@@ -1,0 +1,81 @@
+
+	<md-toolbar  ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
+	<md-content>
+
+		<md-whiteframe class="md-whiteframe-z3" layout="column" layout-padding layout-margin>
+		    
+		  <div>
+		<h3 ng-show="taxon.Vernacularname_DK" class="md-display-1">{{capitalizeFirstLetter(taxon.Vernacularname_DK.vernacularname_dk)}} </h3>
+		<h4 class="md-subhead" ng-show="taxon.Vernacularname_DK"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h4>
+		<h3 ng-show="!taxon.Vernacularname_DK" class="md-headline"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
+		 <div class="md-caption" layout="column"> <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">≈ <em> {{syn.FullName}}</em> {{syn.Author}}<span>
+	</div>
+      <div layout="row" flex><carousel disable-ng-animate interval="" ng-if="taxon.images.length>0">
+        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
+          <img ng-src="{{slide.uri}}" style="margin:auto;">
+          <div class="carousel-caption">
+
+            &copy; {{slide.photographer}}, {{slide.collectionNumber}}
+          </div>
+
+        </slide>
+
+      </carousel>
+	  <span layout-fill></span>
+  </div>
+		<div>
+			<span>
+			<p>{{taxon.attributes.diagnose}}</p>
+		<p>{{taxon.attributes.forvekslingsmuligheder}}</p>
+		<p>{{taxon.attributes.bogtekst_faenologi_udbredelse}}</p>
+	</span>
+
+	</div>
+	  
+	<!--	<div id="bogtekst">
+			<p><em>
+				{{taxon.attributes.diagnose}}
+			</em></p>
+		<p><strong>Forvekslingsmuligheder:</strong> {{taxon.attributes.forvekslingsmuligheder}}</p>
+		<p><strong>Status:</strong><span ng-if="redlistdata.VerbatimStatus"> {{redlistdata.VerbatimStatus}} {{redlistdata.year}}.</span><span ng-repeat="nutritionStrategy in taxon.nutritionstrategies | orderBy: '_id'"><span ng-if="nutritionStrategy._id > 2">,</span> {{nutritionStrategy.name}}</span>. {{taxon.attributes.oekologi}}</p>
+		- <em ng-class="taxon.attributes.bogtekst_gyldendal.length < 550 || (taxon.attributes.bogtekst_gyldendal.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{getBogtekstLength()}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
+	</div> -->
+	</md-whiteframe>
+	<div ng-include="'app/species/species.tpl.html'"> </div>
+	
+</md-content>
+
+
+
+	
+	  
+<!--<header class="hero-unit" id="banner" >
+  <div class="container">
+    <h1 translate>Danmarks svampeatlas</h1>
+    <p translate class="lead">internetstedet hvor du kan deltage i kortlægningen af Danmarks svampe</p>
+    <img src="assets/images/mycena_crop.jpg" class="img-circle" width="200" height="200" alt="Mycena">
+  </div>
+</header>-->
+
+<!--<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">Features:</h1>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
+        <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}<button type="button" class="close" ng-click="deleteThing(thing)">&times;</button></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <form class="thing-form">
+    <label>Syncs in realtime across clients</label>
+    <p class="input-group">
+      <input type="text" class="form-control" placeholder="Add a new thing here." ng-model="newThing">
+      <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary" ng-click="addThing()">Add New</button>
+      </span>
+    </p>
+  </form>
+</div> -->
+
+<!-- <div ng-include="'components/footer/footer.html'"></div> -->
