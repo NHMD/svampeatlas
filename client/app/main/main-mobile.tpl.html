@@ -1,4 +1,6 @@
 <md-button ng-if="Auth.isLoggedIn()" ng-click="ObservationFormService.show()" class="md-raised md-primary"><ng-md-icon icon="add"></ng-md-icon> <span translate>Nyt fund</span></md-button>
+<md-button ng-if="Auth.isLoggedIn()" ng-click="$state.go('dashboard')" class="md-raised md-primary"><ng-md-icon icon="dashboard"></ng-md-icon> <span translate>Dashboard</span></md-button>
+<md-button ng-if="Auth.isLoggedIn()" ng-click="$state.go('search-list', {searchterm: 'mine'})" class="md-raised md-primary"><ng-md-icon icon="playlist_add"></ng-md-icon> <span translate>Mine rapporteringer</span></md-button>
 <md-button ng-if="!Auth.isLoggedIn()" ng-click="showLogin()" class="md-raised md-primary"><ng-md-icon icon="login"></ng-md-icon> <span translate>Login</span></md-button>
 <md-button ng-click="$state.go('search')" class="md-raised md-primary"><ng-md-icon icon="search"></ng-md-icon> <span translate>Søg fund</span></md-button>
 <div ng-if="mdMedia('xs')"><div layout flex><md-button flex=85 ng-click="locateAndGoToSpeciesList()" class="md-raised md-primary"><ng-md-icon icon="location_on"></ng-md-icon> <span translate>Hvad findes her?</span></md-button>

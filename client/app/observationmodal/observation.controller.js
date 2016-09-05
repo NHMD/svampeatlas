@@ -115,7 +115,7 @@ angular.module('svampeatlasApp')
 						$scope.sendingComment = false;
 
 
-						$rootScope.$emit('observation_updated', obs);
+						$rootScope.$emit('observation_updated', $scope.obs);
 					})
 					.catch(function(err) {
 						$scope.sendingComment = false;

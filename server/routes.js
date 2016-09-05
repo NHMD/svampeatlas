@@ -152,8 +152,7 @@ module.exports = function(app) {
 
 		}).
 		catch(function(err) {
-			console.log(err)
-			res.send(500)
+			defaultRoute(req, res)
 		})
 
 	});
@@ -241,8 +240,7 @@ module.exports = function(app) {
 
 		}).
 		catch(function(err) {
-			console.log(err)
-			res.send(err)
+			defaultRoute(req, res)
 		})
 
 	});
