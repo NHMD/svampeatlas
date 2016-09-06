@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope','$window', 'Auth', 'ErrorHandlingService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService',
-		function($scope, $rootScope,$window, Auth, ErrorHandlingService, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope','$window', 'Auth', 'ErrorHandlingService', '$mdPanel','$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService','$cookies',
+		function($scope, $rootScope,$window, Auth, ErrorHandlingService,$mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies) {
 
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
@@ -15,6 +15,55 @@ angular.module('svampeatlasApp')
 			$scope.$translate = $translate;
 			$scope.$state = $state;
 			
+			$scope.showDeterminationsPanel = function(evt) {
+			  var position = $mdPanel.newPanelPosition()
+			      .absolute()
+			      .center();
+
+			  var config = {
+			    attachTo: angular.element(document.body),
+			    controller: PanelDialogCtrl,
+			    controllerAs: 'ctrl',
+			    disableParentScroll: true,
+			    templateUrl: 'app/observationmodal/determination-panel.tpl.html',
+			    hasBackdrop: true,
+			    panelClass: 'demo-dialog-example',
+			    position: position,
+			    trapFocus: true,
+			    zIndex: 150,
+			    clickOutsideToClose: true,
+			    escapeToClose: true,
+			    focusOnOpen: true
+			  };
+
+			  $mdPanel.open(config);
+			};
+			
+			function PanelDialogCtrl(mdPanelRef) {
+			  this._mdPanelRef = mdPanelRef;
+			  this.obs = $scope.obs;
+			  this.moment = moment;
+  			this.getCreatedAt = function(createdAt){
+  				var lang = "da";
+  				if($cookies.get('preferred_language') === "en"){
+  					lang = "en"
+  				}
+  				return moment(createdAt).lang(lang).fromNow();
+  			}
+			}
+			PanelDialogCtrl.prototype.closeDialog = function() {
+			  var panelRef = this._mdPanelRef;
+
+			  panelRef && panelRef.close().then(function() {
+			    angular.element(document.querySelector('.demo-dialog-open-button')).focus();
+			    panelRef.destroy();
+			  });
+			};
+			
+			$scope.showUser= function(id){
+				$mdDialog.cancel();
+				$state.go('userstats', {userid: id});
+			}
 			$scope.sendMail = function(emailId,subject,message){
 			    $window.open("mailto:"+ emailId + "?subject=" + subject+"&body="+message,"_self");
 			};
@@ -56,8 +105,9 @@ angular.module('svampeatlasApp')
 			}
 			$scope.deleteObs = function(ev, obs) {
 
-				var displayedId = obs.PrimaryUser.Initialer + ((obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : '') + '-' + obs._id;
-
+				//var displayedId = obs.PrimaryUser.Initialer + ((obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : '') + '-' + obs._id;
+				var displayedId = 'DMS-' + obs._id;
+				
 				var confirm = $mdDialog.confirm()
 					.title($translate.instant('Vil du slette') + ' ' + displayedId + '?')
 					.textContent($translate.instant('Fundet og alle tilhørende data vil blive permanent slettet fra databasen.'))
@@ -69,6 +119,7 @@ angular.module('svampeatlasApp')
 					Observation.delete({
 						id: obs._id
 					}).$promise.then(function() {
+						$rootScope.$emit('observation_deleted', $scope.obs);
 						$scope.showSimpleToast($translate.instant('Record') + ' ' + displayedId + ' ' + $translate.instant('slettet.'))
 					})
 				});

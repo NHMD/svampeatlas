@@ -26,6 +26,7 @@ angular.module('svampeatlasApp')
 			})
 		});
 		
+		
 		$rootScope.$on('observation_updated', function(ev, obs){
 			
 			var singleObsSearch = ObservationSearchService.getNewSearch();
@@ -33,14 +34,23 @@ angular.module('svampeatlasApp')
 			var include = _.map(singleObsSearch.include, function(n) {
 				return JSON.stringify(n);
 			});
-			Observation.query({where: {_id: obs._id}, include: JSON.stringify(include) }, function(result, headers) {
+			if(!$scope.updateProgress){
+			$scope.updateProgress = Observation.query({where: {_id: obs._id}, include: JSON.stringify(include) }, function(result, headers) {
 			
 			var index = _.indexOf($scope.displayed, _.find($scope.displayed, {_id: obs._id}));
 			
 			$scope.displayed.splice(index, 1, result[0]);
+			delete $scope.updateProgress;
 				
-		})
+		})}
 	});
+	
+	$rootScope.$on('observation_deleted', function(ev, obs){
+		
+		var index = _.indexOf($scope.displayed, _.find($scope.displayed, {_id: obs._id}));
+		
+		$scope.displayed.splice(index, 1);
+});
 			
 			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date) || $stateParams.taxon_id) {
 				ObservationSearchService.reset();

@@ -176,7 +176,8 @@ angular.module('svampeatlasApp')
 			'Indlagt' : 'Submitted',
 			'Kopier funddata til udklipsholder' : 'Copy data to clipboard',
 			'Klon fund' : 'Clone record',
-			'Del fund' : 'Share'
+			'Del fund' : 'Share',
+			'Dette fund er valideret og godkendt af' : 'This sighting is validated and accepted by'
 			
 		});
 

@@ -15,7 +15,10 @@ angular.module('svampeatlasApp')
 						parent: angular.element(document.body),
 						targetEvent: ev,
 						clickOutsideToClose: true,
-						fullscreen: true
+						fullscreen: true,
+						onRemoving: function(){
+							ObservationStateService.reset();
+						}
 					})
 
 

@@ -740,7 +740,7 @@ angular.module('svampeatlasApp')
 								}
 								$scope.deleteObs = function(ev, obs) {
 
-									var displayedId = obs.PrimaryUser.Initialer + ((obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : '') + '-' + obs._id;
+									var displayedId = 'DMS-' + obs._id;
 
 									var confirm = $mdDialog.confirm()
 										.title($translate.instant('Vil du slette') + ' ' + displayedId + '?')
@@ -753,6 +753,7 @@ angular.module('svampeatlasApp')
 										Observation.delete({
 											id: obs._id
 										}).$promise.then(function() {
+											$rootScope.$emit('observation_deleted', $scope.obs);
 											$scope.showSimpleToast($translate.instant('Record') + ' ' + displayedId + ' ' + $translate.instant('slettet.'))
 										})
 									});
@@ -1002,6 +1003,13 @@ angular.module('svampeatlasApp')
 											$rootScope.$emit(evt, obs);
 											$scope.newTaxon = [];
 											$scope.files = [];
+											
+											
+											delete $scope.fieldnumber;
+											delete $scope.herbarium;
+											delete $scope.note;
+											delete $scope.noteInternal;
+											
 											$scope.showSimpleToast($translate.instant('Fundet blev gemt'),3000, 'bottom right')
 											$scope.statusMsg = "";
 											$scope.cancel();

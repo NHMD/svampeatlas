@@ -42,7 +42,11 @@
 	<tr ng-repeat="row in displayed">
 		
 		
-		<td colspan=2 data-title="{{'Art' | translate}}"><a class="cursor-pointer" ng-click="$state.go('species', {taxon_id: row._id})"> <em>{{row.FullName}} </em><span ng-if="row.redlistdata && row.redlistdata.length === 1 ">({{row.redlistdata[0].status}})</span> <span ng-if="row.Vernacularname_DK">- {{row.Vernacularname_DK.vernacularname_dk}} </span> </a>
+		<td colspan=2 data-title="{{'Art' | translate}}">
+			<!--<a class="cursor-pointer" ng-click="$state.go('species', {taxon_id: row._id})"> -->
+				<em>{{row.FullName}} </em><span ng-if="row.redlistdata && row.redlistdata.length === 1 "> 
+				({{row.redlistdata[0].status}})</span> <span ng-if="row.Vernacularname_DK">- {{row.Vernacularname_DK.vernacularname_dk}} </span> 
+				<!-- </a> -->
 			
 			
 			<md-button class="md-icon-button md-primary" ng-click="showRecords(row._id, 'list')">

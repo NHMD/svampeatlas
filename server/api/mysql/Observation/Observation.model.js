@@ -126,10 +126,17 @@ module.exports = function(sequelize, DataTypes) {
     		associate: function(models) {
 				
 		models.Observation
-				.hasOne(models.Determination, {
-					foreignKey: "observation_id" ,
+				.belongsTo(models.Determination, {
+					foreignKey: "primarydetermination_id" ,
 					as: "PrimaryDetermination"
 				});	
+				
+				models.Observation.hasMany(models.Determination, {
+				 
+				  foreignKey: 'observation_id',
+				as: 'Determinations'
+				});
+				
 		models.Observation
 				.belongsTo(models.User, {
 					foreignKey: "primaryuser_id" ,
