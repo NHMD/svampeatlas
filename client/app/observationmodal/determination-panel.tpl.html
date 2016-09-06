@@ -1,0 +1,32 @@
+<div role="dialog" aria-label="Eat me!" layout="column" layout-align="center center">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2 translate>Bestemmelser</h2>
+    </div>
+  </md-toolbar>
+
+  <div class="demo-dialog-content">
+	<md-list flex>
+	        
+	        <md-list-item class="md-3-line" ng-repeat="det in ctrl.obs.Determinations | orderBy:'createdAt' : true" ng-click="null">
+	          <md-icon md-font-icon="fa fa-tag fa-2x" class="material-icons md-light md-48 md-primary" ></md-icon>
+	          <div class="md-list-item-text" layout="column">
+	            <h3>{{ det.Taxon.acceptedTaxon.FullName }} {{(det.Taxon.RankID < 9950) ? 'sp.' : ''}} {{(det._id === ctrl.obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
+	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
+	            <p>Status: {{ det.validation }} </p>
+				<p>{{(det.Validator) ? ('Status senest ændret af '+ det.Validator.name+' ('+det.Validator.Initialer+')'):"" }}</p>
+	          </div>
+			  
+			  
+			  <md-divider ></md-divider>
+	        </md-list-item>
+	        
+		</md-list>
+  </div>
+
+  <div layout="row" class="demo-dialog-button">
+    <md-button md-autofocus flex class="md-primary" ng-click="ctrl.closeDialog()" translate>
+      Luk
+    </md-button>
+  </div>
+</div>
