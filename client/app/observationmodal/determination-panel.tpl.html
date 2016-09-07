@@ -11,7 +11,7 @@
 	        <md-list-item class="md-3-line" ng-repeat="det in ctrl.obs.Determinations | orderBy:'createdAt' : true" ng-click="null">
 	          <md-icon md-font-icon="fa fa-tag fa-2x" class="material-icons md-light md-48 md-primary" ></md-icon>
 	          <div class="md-list-item-text" layout="column">
-	            <h3>{{ det.Taxon.acceptedTaxon.FullName }} {{(det.Taxon.RankID < 9950) ? 'sp.' : ''}} {{(det._id === ctrl.obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
+	            <h3>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === ctrl.obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
 	            <p>Status: {{ det.validation }} </p>
 				<p>{{(det.Validator) ? ('Status senest ændret af '+ det.Validator.name+' ('+det.Validator.Initialer+')'):"" }}</p>

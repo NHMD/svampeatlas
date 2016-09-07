@@ -19,10 +19,13 @@ angular.module('svampeatlasApp')
 			  var position = $mdPanel.newPanelPosition()
 			      .absolute()
 			      .center();
-
+				 
 			  var config = {
 			    attachTo: angular.element(document.body),
-			    controller: PanelDialogCtrl,
+			    controller: 'DeterminationPanelCtrl',
+				locals: {
+					obs: $scope.obs
+				},
 			    controllerAs: 'ctrl',
 			    disableParentScroll: true,
 			    templateUrl: 'app/observationmodal/determination-panel.tpl.html',
@@ -33,32 +36,19 @@ angular.module('svampeatlasApp')
 			    zIndex: 150,
 			    clickOutsideToClose: true,
 			    escapeToClose: true,
-			    focusOnOpen: true
+			    focusOnOpen: true,
+				animation:   $mdPanel.newPanelAnimation()
+				  .openFrom('#determinations-btn')
+				  .closeTo('#determinations-btn')
+				  .withAnimation($mdPanel.animation.SCALE)
 			  };
-
+			  
+			  
+			  
 			  $mdPanel.open(config);
 			};
 			
-			function PanelDialogCtrl(mdPanelRef) {
-			  this._mdPanelRef = mdPanelRef;
-			  this.obs = $scope.obs;
-			  this.moment = moment;
-  			this.getCreatedAt = function(createdAt){
-  				var lang = "da";
-  				if($cookies.get('preferred_language') === "en"){
-  					lang = "en"
-  				}
-  				return moment(createdAt).lang(lang).fromNow();
-  			}
-			}
-			PanelDialogCtrl.prototype.closeDialog = function() {
-			  var panelRef = this._mdPanelRef;
-
-			  panelRef && panelRef.close().then(function() {
-			    angular.element(document.querySelector('.demo-dialog-open-button')).focus();
-			    panelRef.destroy();
-			  });
-			};
+		
 			
 			$scope.showUser= function(id){
 				$mdDialog.cancel();
