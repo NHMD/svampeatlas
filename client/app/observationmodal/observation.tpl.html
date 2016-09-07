@@ -190,7 +190,7 @@ flex>
         </md-card-title-text>
 		<div ng-if="Auth.hasRole('validator') && obs && obs.Determinations && obs.Determinations.length > 1">
 			 <md-tooltip md-direction="left" >{{'Tidligere bestemmelser' | translate}}</md-tooltip>
-			<md-button class="md-icon-button md-primary demo-dialog-open-button" aria-label="Determinations" ng-click="showDeterminationsPanel($event)">
+			<md-button id="determinations-btn" class="md-icon-button md-primary demo-dialog-open-button" aria-label="Determinations" ng-click="showDeterminationsPanel($event)">
 			        <md-icon md-font-icon="fa fa-tags fa-lg" class="material-icons md-light md-48 md-primary" ></md-icon>
 			      </md-button>
 			</div>

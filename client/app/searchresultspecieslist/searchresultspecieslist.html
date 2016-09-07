@@ -15,7 +15,18 @@
 	
 	<thead>
 		<tr ng-show="displayed && !isLoading">
-			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultspecieslist/pagination.tpl.html">
+	  		<tr ng-show="displayed && !isLoading">
+	  			<th colspan="2">
+	  			    <!--<md-radio-group ng-model="group">
+	  			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
+	  			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
+	  			         <md-radio-button value="lichens">kun laver</md-radio-button>
+	  			       </md-radio-group> -->
+	  				<md-input-container>
+	          <label>Filter</label>
+	          <input st-search="DeterminationView.Taxon_FullName">
+	        </md-input-container> </th>
+			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="2" st-template="app/searchresultspecieslist/pagination.tpl.html">
 			</th>
 		</tr>
 	<tr>
@@ -30,7 +41,7 @@
 	<tbody ng-show="displayed.length > 0">
 	<tr ng-repeat="row in displayed">
 		
-		<td st-ratio="5"><md-menu  >
+		<td data-title="" ><md-menu  >
 			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
 			               <ng-md-icon icon="more_vert" ></ng-md-icon>
 			            </md-button>
