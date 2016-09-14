@@ -2,13 +2,63 @@
 	<md-toolbar  ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
 	<md-content>
 
-		<md-whiteframe class="md-whiteframe-z3" layout="column" layout-padding layout-margin>
-		    
-		  <div>
-		<h3 ng-show="taxon.Vernacularname_DK" class="md-display-1">{{capitalizeFirstLetter(taxon.Vernacularname_DK.vernacularname_dk)}} </h3>
+		
+		  <div layout-gt-xs="row" layout-margin>  
+			 
+		<div>	
+		  <md-expansion-panel md-component-id="panelOne">
+
+		    <md-expansion-panel-collapsed>
+		      <div class="md-title">Klassifikation</div>
+		      <div class="md-summary"><span  ng-repeat="tx in higherTaxa" ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}{{(!$last) ? ', ': ''}}</span></div>
+		      <md-expansion-panel-icon></md-expansion-panel-icon>
+		    </md-expansion-panel-collapsed>
+
+
+		    <md-expansion-panel-expanded>
+
+		      <md-expansion-panel-header ng-click="$panel.collapse()">
+		        <div class="md-title">Klassifikation</div>
+		         <div class="md-summary"><span  ng-repeat="tx in higherTaxa" ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}{{(!$last) ? ', ': ''}}</span></div>
+		        <md-expansion-panel-icon ></md-expansion-panel-icon>
+		      </md-expansion-panel-header>
+
+		      <md-expansion-panel-content>
+		        
+				
+		  	  <table  class="table table-bordered" st-table>
+	
+		  	  	<tbody >
+		  	  	<tr ng-repeat="tx in higherTaxa">
+		  	  		<td class="rightalign" ng-class="{'classification-last-row': $last}" translate>{{tx.RankName}}</td><td ng-class="{'classification-last-row': $last}"><span ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}</span><br ng-if="tx.Vernacularname_DK"><em> {{tx.FullName}}</em></td>
+					</tr>
+				<tbody >
+				 </table>
+		      </md-expansion-panel-content>
+
+		      <md-expansion-panel-footer>
+		        <div flex></div>
+		        <md-button class="md-accent" ng-click="$panel.collapse()">Luk</md-button>
+		      </md-expansion-panel-footer>
+
+		    </md-expansion-panel-expanded>
+
+		  </md-expansion-panel>  
+		  <div class="md-whiteframe-z3" layout-padding>
+			  <div>
+		<h3 ng-show="vernacularname_dk" class="md-display-1">{{vernacularname_dk}} </h3>
 		<h4 class="md-subhead" ng-show="taxon.Vernacularname_DK"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h4>
 		<h3 ng-show="!taxon.Vernacularname_DK" class="md-headline"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
-		 <div class="md-caption" layout="column"> <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">≈ <em> {{syn.FullName}}</em> {{syn.Author}}<span>
+		 <div class="md-caption" layout="column"> <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">≈ <em> {{syn.FullName}}</em> {{syn.Author}}</span>
+	</div>
+		<!-- <div class="md-caption" layout-gt-xs="row" flex> <div  ng-repeat="tx in higherTaxa"><div ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}{{(!$last) ? ',': ''}}</div>
+		 <div ng-if="!tx.Vernacularname_DK"></div>
+		 <em> {{tx.FullName}}{{(!$last) ? ',': ''}}</em></div>
+	</div>-->
+	
+
+	
+	
 	</div>
       <div layout="row" flex><carousel disable-ng-animate interval="" ng-if="taxon.images.length>0">
         <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
@@ -21,17 +71,56 @@
         </slide>
 
       </carousel>
-	  <span layout-fill></span>
+	  
   </div>
+    
 		<div>
 			<span>
-			<p>{{taxon.attributes.diagnose}}</p>
-		<p>{{taxon.attributes.forvekslingsmuligheder}}</p>
-		<p>{{taxon.attributes.bogtekst_faenologi_udbredelse}}</p>
+			<p ng-if="taxon.attributes.diagnose"><strong>Diagnose: </strong>{{taxon.attributes.diagnose}}</p>
+		<p ng-if="taxon.attributes.forvekslingsmuligheder"><strong>Forvekslingsmuligheder: </strong>{{taxon.attributes.forvekslingsmuligheder}}</p>
+		
 	</span>
+	<div ng-if="taxon.redlistdata.length > 0">
+	<h4 class="md-title">Rødlistedata (ukritisk gengivet fra Den Danske Rødliste 2009):</h4>
+		<p><strong>Kategori: </strong>{{taxon.redlistdata[0].Status
+	}}</p>
+	<p><strong>National status: </strong>{{taxon.redlistdata[0].roedlisteNationalStatus
+}}</p>
+	<p><strong>Bestandsudvikling: </strong>{{taxon.redlistdata[0].roedlisteBestandsudvikling
+}}</p>
+	<p><strong>Udbredelse: </strong>{{taxon.redlistdata[0].Udbredelse
+}}</p>
 
+
+
+</div>
+<p><strong>Antal fund i svampeatlas:</strong> {{count}}</p>
+</div>
 	</div>
-	  
+</div>
+	<div layout="column" layout-margin>
+	 <div  class="md-whiteframe-z3" layout-padding>
+	    <leaflet id="speciesmap" width="400px" height="400px" center="mapsettings.center" defaults="mapsettings.defaults" paths="mapsettings.paths" layers="mapsettings.layers" event-broadcast="mapsettings.events"></leaflet>
+   	
+	 <md-radio-group ng-model="timeinterval" layout="row" ng-change="updateMap(timeinterval)">
+	 		<md-radio-button value="all" >Alle</md-radio-button>
+   	       <md-radio-button value="1991" >Før 1991</md-radio-button>
+   	       <md-radio-button value="2008">1991-2008 </md-radio-button>
+   	       <md-radio-button value="2009">Efter 2008</md-radio-button>
+   	     </md-radio-group>
+		 </div>
+	<div width="400px"  class="md-whiteframe-z3">
+	<highchart id="monthChart" class="species-chart" config="monthChartOptions" ></highchart>
+	</div>
+	<div  class="md-whiteframe-z3">
+		
+	<highchart id="decadesChart" class="species-chart" config="decadeChartOptions" ></highchart>
+	</div>
+	<div  class="md-whiteframe-z3">
+	<highchart id="hostsChart" class="species-chart" config="hostChartOptions" ></highchart>
+</div>
+	</div>
+		 </div>
 	<!--	<div id="bogtekst">
 			<p><em>
 				{{taxon.attributes.diagnose}}
@@ -40,7 +129,7 @@
 		<p><strong>Status:</strong><span ng-if="redlistdata.VerbatimStatus"> {{redlistdata.VerbatimStatus}} {{redlistdata.year}}.</span><span ng-repeat="nutritionStrategy in taxon.nutritionstrategies | orderBy: '_id'"><span ng-if="nutritionStrategy._id > 2">,</span> {{nutritionStrategy.name}}</span>. {{taxon.attributes.oekologi}}</p>
 		- <em ng-class="taxon.attributes.bogtekst_gyldendal.length < 550 || (taxon.attributes.bogtekst_gyldendal.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{getBogtekstLength()}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
 	</div> -->
-	</md-whiteframe>
+	
 	<div ng-include="'app/species/species.tpl.html'"> </div>
 	
 </md-content>

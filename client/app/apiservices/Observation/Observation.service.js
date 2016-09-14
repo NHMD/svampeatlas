@@ -44,6 +44,11 @@ angular.module('svampeatlasApp')
 				},
 				url: '/api/observations/:id/users'
 			},
+			'getCount': {
+				method: 'GET',
+				url: '/api/observations/count',
+				isArray: true
+			},
 			'removeUser': {
 				method: 'DELETE',
 				params: {

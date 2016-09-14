@@ -249,21 +249,30 @@ exports.showAcceptedTaxon = function(req, res) {
 	})
 	.then(
 		function(tx){
-			console.log("######## "+tx._id+ " ######### "+tx.accepted_id)
+			
 	return	Taxon.find({
 		where: {
 			_id: tx.accepted_id
 		},
 		include: [{
 				model: models.TaxonDKnames,
-				as: "Vernacularname_DK"
+				as: "Vernacularname_DK",
+			required: false
 			},{
 				model: models.TaxonDKnames,
-				as: "DanishNames"
+				as: "DanishNames",
+				required: false
+			},
+			{
+				model: models.TaxonRedListData,
+				as: "redlistdata",
+				where: {year: 2009},
+				required: false
 			},
 			{
 				model: models.TaxonImages,
-				as: "images"
+				as: "images",
+				required: false
 			}, {
 				model: models.TaxonSpeciesHypothesis,
 				as: 'specieshypothesis'
@@ -1301,6 +1310,37 @@ exports.numberOfDanishSpecies = function(req, res){
 
 }
 
+exports.higherTaxa = function(req, res) {
+	
+	return models.sequelize.query(
+		"SELECT t2._id FROM Taxon t JOIN Taxon t2 ON t.Path LIKE CONCAT(t2.Path, '%') AND t._id = :taxon_id",
+  { replacements: { taxon_id: req.params.id }, type: models.sequelize.QueryTypes.SELECT }
+)
+.then(function(ids) {
+	var idArr = _.map(ids, function(e){
+		return e._id
+	})
+	
+return Taxon.findAll({where: {_id : { $in: idArr}, RankID: {$gt: 0}}, order: 'RankID ASC', include: [{
+				model: models.TaxonDKnames,
+				as: "Vernacularname_DK"
+			}]})
+	
+	
+ 
+})
+.then(function(taxa) {
+
+	return res.status(200).json(taxa);
+ 
+})
+	.
+catch (function(err) {
+	console.log(JSON.stringify(err))
+	return res.status(500).send(err);
+});
+	
+}
 
 exports.showTree = function(req, res) {
 
@@ -1510,7 +1550,7 @@ exports.importMycoKeyCharacters = function(req, res){
 	})
 	})
 	.then(function(taxon) {
-	console.log("###### 2")
+	
 	 return  [taxon, models.TaxonLog.create({
 				eventname: "MycoKey characters imported",
 				description: taxon.character1.length+ " MycoKey characters imported from "+req.body.FullName+" (id: "+req.body._id+")  to "+ taxon.FullName + " (id: "+taxon._id+") and its descendants.",

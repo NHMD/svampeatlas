@@ -1,95 +1,434 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('SpeciesCtrl', function($scope,  $translate, $mdMedia, Taxon,  Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService,  $state, $stateParams ) {
-	 
-	//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
-	 
-	  $scope.$state = $state;
-	 
+	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService) {
 
-	  $scope.ObservationModalService = ObservationModalService;
-	  
-	$scope.capitalizeFirstLetter = function (string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
-	}
+		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 
-	$scope.lowerCaseFirstLetter = function (string) {
-		return string.charAt(0).toLowerCase() + string.slice(1);
-	}
-	  
-	$scope.taxon = Taxon.getAcceptedTaxon({
-		id: $stateParams.taxon_id
-	})
-	
-	$scope.taxon.$promise.then(function(){
+		$scope.$state = $state;
 		
-		_.each($scope.taxon.synonyms, function(s){
-			if(s._id !== s.accepted_id){
-				$scope.taxon.images = $scope.taxon.images.concat(s.images)
+
+		$scope.ObservationModalService = ObservationModalService;
+
+		var capitalizeFirstLetter = function(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+		$scope.capitalizeFirstLetter = capitalizeFirstLetter;
+		$scope.lowerCaseFirstLetter = function(string) {
+			return string.charAt(0).toLowerCase() + string.slice(1);
+		}
+		$scope.timeinterval = "all"
+		$scope.mapsettings = {
+			defaults: {
+				attributionControl: false
+			},
+			center: {
+				lat: 56,
+				lng: 11,
+				zoom: 6
+			},
+			paths: {
+
+			},
+			events: {
+			                    path: {
+			                        enable: [ 'click' ]
+			                    }
+			                },
+			layers: {
+				baselayers: {
+					osm: {
+						name: 'OpenStreetMap',
+						url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+						type: 'xyz'
+					}
+				},
+				overlays: {
+					2009: {
+						name: '2009',
+						visible: true,
+						type: 'featureGroup'
+						
+					},
+					2008: {
+						name: '2008',
+						visible: true,
+						type: 'featureGroup'
+						
+					},
+					1991: {
+						name: '1991',
+						visible: true,
+						type: 'featureGroup'
+					}
+
+
+				}
 			}
+		};
+
+		function getPath(obs) {
+
+			var path = {
+
+				latlngs: {
+					lat: obs.decimalLatitude,
+					lng: obs.decimalLongitude
+				},
+				type: "circleMarker",
+				radius: 5,
+				weight: 2,
+				opacity: 1,
+
+				fillOpacity: 0.8,
+
+				name: obs._id,
+
+
+			};
+			var y = obs.observationDate.split("-")[0];
+			if (y < 1991) {
+				
+				path.layer = '1991';
+				path.color = "#FFEB3B";
+				return path;
+			} else if (y > 1991 && y < 2009) {
+				
+				path.layer = '2008';
+				path.color = "#FF9800";
+				return path;
+			} else {
+				
+				path.layer = '2009';
+				path.color = "#2196F3";
+				
+				return path;
+			}
+		}
+		function showAllLayers(show){
+			$scope.mapsettings.layers.overlays['1991'].visible = show;
+			$scope.mapsettings.layers.overlays['2008'].visible = show;
+			$scope.mapsettings.layers.overlays['2009'].visible = show;
+			/*if(show)
+			{ leafletData.getMap("speciesmap").then(function(map){
+					
+					leafletData.getLayers().then(function(layers) {
+						
+						layers.overlays['2009'].bringToFront();
+						
+					
+						
+						
+					});
+				
+			})
+		
+		}*/
+		}
+		$scope.$on('leafletDirectivePath.speciesmap.click', function (event, args) {
+		               ObservationModalService.show(event, {_id: args.modelName})
+		            });
+
+		$scope.updateMap = function(timeinterval) {
+
+			switch (timeinterval) {
+				case '1991':
+					showAllLayers(false),
+					$scope.mapsettings.layers.overlays['1991'].visible = true;
+					
+					break;
+				case '2008':
+					showAllLayers(false);
+					$scope.mapsettings.layers.overlays['2008'].visible = true;
+					
+					break;
+				case '2009':
+					showAllLayers(false);
+					$scope.mapsettings.layers.overlays['2009'].visible = true;
+					break;
+				case 'all':
+					showAllLayers(false);
+					showAllLayers(true);
+					break;
+				default:
+					showAllLayers(false);
+					showAllLayers(true);
+
+			}
+
+		}
+	
+		
+		
+		
+		
+		$scope.monthChartOptions = {
+			options: {
+				chart: {
+					plotBackgroundColor: null,
+					plotBorderWidth: null,
+					plotShadow: false,
+					type: 'column',
+					height: 300,
+					width: 400,
+				},
+				title: {
+					text: "Fundfordeling over måneder"
+				},
+				
+				xAxis: {
+				            type: 'category',
+				            labels: {
+				                rotation: -45,
+				                style: {
+				                    fontSize: '13px',
+				                    fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
+				                }
+				            }
+				        },
+				        yAxis: {
+				            min: 0,
+				            title: {
+				                text: 'Antal fund'
+				            }
+				        },
+				        legend: {
+				            enabled: false
+				        }
+			}
+			
+		}
+		
+		var hostChartOpts = angular.copy($scope.monthChartOptions);
+		hostChartOpts.options.title= "Fordeling på de 10 hyppigste værter";
+		$scope.hostChartOptions = hostChartOpts;
+		
+		var decadeChartOpts = angular.copy($scope.monthChartOptions);
+		decadeChartOpts.options.title= "Fordeling af fund over 10 års perioder";
+		decadeChartOpts.options.tooltip = {
+														pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
+													};
+													decadeChartOpts.options.yAxis.title.text = 		'Antal fund pr 100.000';									
+		$scope.decadeChartOptions = decadeChartOpts;
+		
+		$scope.months = _.map(['januar', 'februar', 'marts', 'april', 'maj','juni', 'juli', 'august','september','oktober', 'november', 'december'], function(m){
+			return [capitalizeFirstLetter(m), 0];
+		})
+		$scope.hosts = [];
+		$scope.decades = [];
+		$scope.decadesWeighted = [];
+		var search = ObservationSearchService.getNewSearch();
+
+		search.include[0].where = {
+			Taxon_id: $stateParams.taxon_id,
+			Determination_validation: 'Godkendt'
+		};
+		search.include[2].required = true;
+
+		search.include.splice(3, 4);
+		search.include.push({
+			model: "PlantTaxon",
+			as : "PrimaryAssociatedOrganism"
+		})
+		var queryinclude = _.map(_.filter(search.include, function(e) {
+			return e.model !== 'GeoNames'
+		}), function(n) {
+			return JSON.stringify(n);
 		});
-	    $scope.tiles = 	Observation.query({
-	    		nocount: true,
-	    		order: 'observationDate DESC',
-	    		limit: 24,
-  		
 		
-	    		include: JSON.stringify(
-	    			[
-	    				JSON.stringify({
-	    					model: "DeterminationView",
-	    					as: "DeterminationView",
-	    					where: {
-	    						Taxon_id: $scope.taxon.accepted_id,
-	    						Determination_validation: 'Godkendt'
-	    					}
-	    				}),
-	    				JSON.stringify({
-	    					model: "ObservationImage",
-	    					as: 'Images',
-	    					required: true,
-	  					where: {hide: 0}
+		
+		Observation.query({
+			where: {},
+			include: JSON.stringify(queryinclude)
+		}, function(result, headers) {
 
-	    				}), 
-	    				JSON.stringify({
-	    					model: "User",
-	    					as: 'PrimaryUser',
-	    					attributes: ['_id','email', 'Initialer', 'name'],
-	    					where: {}
-	    				}),
-	    				JSON.stringify({
-	    					model: "Locality",
-	    					as: 'Locality',
-	    					where: {}
-	    				}),
-	    			]
-	    		)
+			$scope.observations = result;
+			$scope.count = headers('count');
+			$scope.mapsettings.paths = {};
+			var hostsMap = {};
+			var decadesMap = {};
+			for (var i = 0; i < result.length; i++) {
+				$scope.mapsettings.paths[result[i]._id] = getPath(result[i]);
+				
+				var mth = parseInt(result[i].observationDate.split("-")[1], 10);
+				
+				if(mth > 0){
+					$scope.months[mth-1][1] ++;
+				}
+				
+				if(result[i].PrimaryAssociatedOrganism){
+					if(hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName]){
+						hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName] ++ ;
+					} else {
+						hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName] = 1;
+					}
+				};
+				
+				var dec = 	(Math.floor(result[i].observationDate.split("-")[0] / 10)) * 10;
+				
+				if(decadesMap[dec]){
+					decadesMap[dec] ++;
+				} else {
+					decadesMap[dec] = 1;
+				}
+				
+			};
+			
+			/*
+			for (var key in decadesMap){
+				if (decadesMap.hasOwnProperty(key)) {
+				$scope.decades.push([key+"-"+(parseInt(key)+9), decadesMap[key]]);
+			}
+			};
+			 */
+			ObservationCountService.getCount().then(function(globalDecades){
+				for(var i=0; i < globalDecades.length; i++){
+					if(decadesMap.hasOwnProperty(globalDecades[i].decade)){
+						$scope.decadesWeighted.push([globalDecades[i].decade.toString()+"-"+(globalDecades[i].decade +9).toString(), (parseInt(decadesMap[globalDecades[i].decade]) / parseInt(globalDecades[i].count))*100000])
+					}
+					
+				}
+			})
+			
+			for (var key in hostsMap){
+				if (hostsMap.hasOwnProperty(key)) {
+				$scope.hosts.push([key, hostsMap[key]]);
+			}
+			};
+			
+			$scope.hosts.sort(function(a, b){
+				return  b[1] - a[1];
+			})
+			/*
+			$scope.decades.sort(function(a, b){
+				return  b[0] - a[0];
+			}) */
+			$scope.hosts = $scope.hosts.slice(0, 10);
+			//$scope.decades = $scope.decades.slice(0, 11);
+			$scope.monthChartOptions.series = [{ name: "Antal fund", data: $scope.months, dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
+                }
+            }}];
+			
+			$scope.hostChartOptions.series = [{ name: "Antal fund", data: $scope.hosts, dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
+                }
+            }}];
+			
+			$scope.decadeChartOptions.series = [{ name: "Antal fund pr 100.000", data: $scope.decadesWeighted, dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.1f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
+                }
+            }}];
+			
+
+		})
+
+		$scope.taxon = Taxon.getAcceptedTaxon({
+			id: $stateParams.taxon_id
+		})
 		
-	    	})
+		 
+		
+		$scope.taxon.$promise.then(function(){
+			if($scope.taxon.Vernacularname_DK){
+				$scope.vernacularname_dk = capitalizeFirstLetter($scope.taxon.Vernacularname_DK.vernacularname_dk)
+				}
+				$scope.higherTaxa = Taxon.higherTaxa({id: $scope.taxon._id})
+		})
+
+		$scope.taxon.$promise.then(function() {
+
+			_.each($scope.taxon.synonyms, function(s) {
+				if (s._id !== s.accepted_id) {
+					$scope.taxon.images = $scope.taxon.images.concat(s.images)
+				}
+			});
+			$scope.tiles = Observation.query({
+				nocount: true,
+				order: 'observationDate DESC',
+				limit: 24,
+
+
+				include: JSON.stringify(
+					[
+						JSON.stringify({
+							model: "DeterminationView",
+							as: "DeterminationView",
+							where: {
+								Taxon_id: $scope.taxon.accepted_id,
+								Determination_validation: 'Godkendt'
+							}
+						}),
+						JSON.stringify({
+							model: "ObservationImage",
+							as: 'Images',
+							required: true,
+							where: {
+								hide: 0
+							}
+
+						}),
+						JSON.stringify({
+							model: "User",
+							as: 'PrimaryUser',
+							attributes: ['_id', 'email', 'Initialer', 'name'],
+							where: {}
+						}),
+						JSON.stringify({
+							model: "Locality",
+							as: 'Locality',
+							where: {}
+						}),
+					]
+				)
+
+			})
+		})
+
+
+
+
+
+		$scope.loaded = {};
+		$scope.failed = {};
+		$scope.imageHasLoaded = function(img) {
+			$scope.loaded[img] = true;
+
+		};
+		$scope.imageHasFailed = function(img) {
+			$scope.failed[img] = true;
+
+		};
+		$scope.getImageUrl = function(tile) {
+
+			return appConstants.imageurl + tile.Images[0].name + ".JPG";
+		}
+
+
+
+
 	})
-	
-	  
-	  
-	  
-	  
-  	$scope.loaded = {};
-  	$scope.failed = {};
-  	$scope.imageHasLoaded = function(img){
-  		$scope.loaded[img] = true;
-		
-  	};
-  	$scope.imageHasFailed = function(img){
-  		$scope.failed[img] = true;
-		
-  	};
-  	$scope.getImageUrl = function(tile){
-		
-  		return appConstants.imageurl+tile.Images[0].name +".JPG";		
-  	}
-	  
- 
-	  
-	
-  })
-

@@ -865,6 +865,35 @@ exports.destroy = function(req, res) {
 
 
 };
+
+exports.getCount = function(req, res) {
+
+	var groups = {
+		'Year' : 'select year(observationDate) as year, count(*) as count from Observation group by year(observationDate)',
+		'Decade' : 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation group by decade'
+	}
+	var sql = (req.query.group) ? groups[req.query.group] : 'select count(*) as count from Observation ';
+	
+
+	return models.sequelize.query(sql, {
+	
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		if (req.query.cachekey && (!req.query.group || (req.query.cachekey.indexOf(req.query.group) > -1))) {
+			return cacheResult(req, JSON.stringify(result)).then(function() {
+				return res.status(200).json(result)
+			})
+		} else {
+			return res.status(200).json(result)
+		}
+	}).catch(handleError(res));
+
+
+};
+
 /*
 function wait(ms){
    var start = new Date().getTime();

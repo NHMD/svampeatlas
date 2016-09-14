@@ -54,19 +54,7 @@ angular.module('svampeatlasApp')
 				$mdDialog.cancel();
 				$state.go('userstats', {userid: id});
 			}
-			$scope.sendMail = function(emailId,subject,message){
-			    $window.open("mailto:"+ emailId + "?subject=" + subject+"&body="+message,"_self");
-			};
-			
-			$scope.shareOnFacebook = function(){
-				FB.ui(
-				 {
-				  method: 'share',
-				  href: 'http://svampe.databasen.org/observations/'+$scope.obs._id
-				}, function(response){
-					
-				});
-			}
+
 			
 			$scope.editRecord = function(asDuplicate) {
 				$mdDialog.hide($scope.obs).then(function(obs) {
@@ -381,6 +369,7 @@ angular.module('svampeatlasApp')
 			})
 
 			$scope.imageurl = appConstants.imageurl;
+			$scope.baseUrl = appConstants.baseurl;
 			$scope.loaded = {};
 			$scope.failed = {};
 			$scope.imageHasLoaded = function(img) {

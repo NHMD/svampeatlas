@@ -228,7 +228,7 @@ module.exports = function(grunt) {
 		wiredep: {
 			target: {
 			//	src: '<%= yeoman.client %>/index.html',
-				src: 'server/views/index.ejs',
+				src: ['server/views/index.ejs', '<%= yeoman.client %>/index.html'],
 				ignorePath: '<%= yeoman.client %>/',
 				exclude: [/bootstrap-sass-official/, /bootstrap.js/, '/json3/', '/es5-shim/']
 			}
@@ -263,7 +263,7 @@ module.exports = function(grunt) {
 		// Performs rewrites based on rev and the useminPrepare configuration
 		usemin: {
 			html: ['<%= yeoman.dist %>/client/{,*/}*.html', '<%= yeoman.dist %>/server/views/index.ejs'],
-			css: ['<%= yeoman.dist %>/client/{,*/}*.css'],
+			css: ['<%= yeoman.dist %>/client/{,*/}*.css', '<%= yeoman.dist %>/server/views/index.ejs'],
 			js: ['<%= yeoman.dist %>/client/{,*/}*.js', '!<%= yeoman.dist %>/client/bower_components/*.{css,js}'],
 			options: {
 				assetsDirs: [

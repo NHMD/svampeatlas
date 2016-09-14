@@ -284,7 +284,18 @@ angular.module('svampeatlasApp')
 			'Order': 'Orden',
 			'Family': 'Familie',
 			'Genus': 'Slægt',
-			'species recorded in Denmark' : 'arter fundet i Danmark'
+			'species recorded in Denmark' : 'arter fundet i Danmark',
+			'regn.' : 'Rige',
+			'phyl.' : 'Række',
+			'subphyl.' : 'Underrække',
+			'class.' : 'Klasse',
+			'subclass.' : 'Underklasse',
+			'ord.' : 'Orden',
+			'fam.' : 'Familie',
+			'gen.' : 'Slægt',
+			'sp.' : 'Art',
+			'var.' : 'Varietet'
+
 
 		});
 
