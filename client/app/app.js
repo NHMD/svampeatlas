@@ -17,6 +17,7 @@ angular.module('svampeatlasApp', [
 	'ngMdIcons',
 	//'ngMenuSidenav',
 	'sasrio.angular-material-sidenav',
+	'material.components.expansionPanels',
 	'pascalprecht.translate',
 	'leaflet-directive',
 	'userAvatar',
@@ -47,6 +48,8 @@ angular.module('svampeatlasApp', [
                 })
 				.accentPalette('pink')
 				;
+				
+	
 	
 	            ssSideNavSectionsProvider.initWithTheme($mdThemingProvider);
 				
@@ -219,7 +222,8 @@ angular.module('svampeatlasApp', [
   })
   .constant("appConstants", {
          "imageurl": "/uploads/",
-	  "Fungi_id" : 60212
+	  "Fungi_id" : 60212,
+	  "baseurl" : "http://svampe.databasen.org"
         
      })
 .filter('synonymsWithoutSelf', function() {
@@ -278,7 +282,7 @@ angular.module('svampeatlasApp', [
        var js, fjs = d.getElementsByTagName(s)[0];
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
-       js.src = "//connect.facebook.net/en_US/sdk.js";
+       js.src = "//connect.facebook.net/da_DK/sdk.js";
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
 	 

@@ -17,6 +17,8 @@ var router = express.Router();
 
 router.get('/', auth.appendUser(), redisClient.use(), controller.index);
 
+router.get('/count',  redisClient.use(), controller.getCount);
+
 router.get('/specieslist', auth.appendUser(), controller.indexSpeciesList)
 
 router.get('/:id', auth.appendUser(), nocache.noCache(), controller.show);

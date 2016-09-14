@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('DeterminationPanelCtrl',	['mdPanelRef'	,'obs'	,function (mdPanelRef, obs) {
+	.controller('DeterminationPanelCtrl',	['mdPanelRef'	,'obs',	'$cookies',function (mdPanelRef, obs, $cookies) {
 			  this._mdPanelRef = mdPanelRef;
 			  this.obs = obs;
 			  this.moment = moment;

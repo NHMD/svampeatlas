@@ -159,6 +159,13 @@ module.exports = function(sequelize, DataTypes) {
 				as: 'users'
 				});
 				
+				
+				models.Observation.belongsTo(models.PlantTaxon, {
+				 
+				  foreignKey: 'primaryassociatedorganism_id',
+				as: 'PrimaryAssociatedOrganism'
+				});
+			
 				models.Observation.hasMany(models.ObservationUser, {
 				 
 				  foreignKey: 'observation_id',

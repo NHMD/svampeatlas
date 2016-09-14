@@ -11,13 +11,13 @@ angular.module('svampeatlasApp')
 			update: {
 				method: 'PUT' // this method issues a PUT request
 			},
-			'getParents': {
+			'higherTaxa': {
 				method: 'GET',
 				params: {
 					id: '@_id'
 				},
-				url: '/api/taxa/:id/parents',
-				isArray: false
+				url: '/api/taxa/:id/highertaxa',
+				isArray: true
 			},
 			'getNumberOfDanishSpecies': {
 				method: 'GET',

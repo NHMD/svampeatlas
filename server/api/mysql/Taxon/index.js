@@ -25,7 +25,7 @@ router.get('/tree', auth.hasRole('taxonomyadmin'), controller.showTree);
 router.get('/:id', controller.show);
 //router.get('/:id/updatesystematics', controller.updateSystematics);
 
-
+router.get('/:id/highertaxa', controller.higherTaxa);
 router.get('/:id/acceptedtaxon', controller.showAcceptedTaxon);
 
 router.post('/', auth.hasRole('taxonomyadmin'), controller.create);

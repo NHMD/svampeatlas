@@ -9,7 +9,8 @@
         <span flex></span>
   		<div>
   		 <md-tooltip md-direction="bottom" >{{'Del fund' | translate}}</md-tooltip>
-  	  <md-menu md-position-mode="target-right target" >
+		 <sharing mail-subject="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK ? (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) +' ('+obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName+')' : obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName)+' DMS-'+obs._id" mail-body="baseUrl+'/observations/'+obs._id" sharing-uri="baseUrl+'/observations/'+obs._id"> </sharing>
+  	<!--  <md-menu md-position-mode="target-right target" >
 	 
   	            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
   	               <ng-md-icon icon="share" ></ng-md-icon>
@@ -36,7 +37,7 @@
   	              </md-menu-item>
 	          
   	            </md-menu-content>
-  	          </md-menu>
+  	          </md-menu>-->
   		</div>
 		<span ng-if="Auth.isLoggedIn()"><md-tooltip md-direction="bottom" >{{'Klon fund' | translate}}</md-tooltip>
 	    <md-button class="md-icon-button" aria-label="Kopiér fund" ng-click="editRecord(true)">
