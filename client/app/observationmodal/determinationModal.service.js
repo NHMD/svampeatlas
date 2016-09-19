@@ -65,7 +65,7 @@ angular.module('svampeatlasApp')
 										reload: true
 									})
 								}
-								$rootScope.$emit('observation_updated', obs);
+								$rootScope.$broadcast('observation_updated', obs);
 							}
 
 

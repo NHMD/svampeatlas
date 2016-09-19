@@ -11,10 +11,10 @@
 
 
 
-<table  class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed">
+<table  st-persist="dkchecklist_table" class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed">
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
 	<thead class="show-filter">
-		<tr ng-show="displayed && !isLoading">
+		<tr ng-show="displayed">
 			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
 			    <!--<md-radio-group ng-model="group">
 			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
@@ -22,8 +22,18 @@
 			         <md-radio-button value="lichens">kun laver</md-radio-button>
 			       </md-radio-group> -->
 				<md-input-container>
-        <label>Filter</label>
-        <input st-search="FullName">
+        <label>Latinsk navn</label>
+        <input st-search="FullName"  ng-model="uiFullName">
+      </md-input-container> </th>
+			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
+			    <!--<md-radio-group ng-model="group">
+			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
+			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
+			         <md-radio-button value="lichens">kun laver</md-radio-button>
+			       </md-radio-group> -->
+				<md-input-container>
+        <label>Dansk navn</label>
+        <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="uiDkName">
       </md-input-container> </th>
 			<th ng-if="mdMedia('gt-xs')" st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultlist/pagination.tpl.html">
 			</th>

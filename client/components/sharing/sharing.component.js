@@ -32,6 +32,30 @@ angular.module('svampeatlasApp')
 				
 			});
 		}
+		
+		this.tweet = function(){
+			$window.open( "https://twitter.com/intent/tweet?url="+self.sharingUri+"&hashtags=fungi,mycology,svampeatlas,atlasofdanishfungi","_blank");
+		}
+		
+		this.shareOnGooglePLus = function(){
+			$window.open( "https://plus.google.com/share?url="+self.sharingUri+"&hl=da","_blank");
+		}
+		
+		function showTooltip(elem, msg) {
+			elem.setAttribute('class', 'clipboard-copy tooltipped tooltipped-e');
+			elem.setAttribute('aria-label', msg);
+		}
+		
+		var clipboard = new Clipboard('.clipboard-copy-sharing');
+		clipboard.on('success', function(e) {
+			e.clearSelection();
+
+			showTooltip(e.trigger, 'Copied!');
+		});
+		clipboard.on('error', function(e) {
+
+			showTooltip(e.trigger, fallbackMessage(e.action));
+		});
 
     }
 ])
@@ -55,11 +79,41 @@ $templateCache.put('views/sharing/sharing.tmpl.html',
   	                +    '</div>'
   	                +'</md-button>'
   	              +'</md-menu-item>'
+  	            +  '<md-menu-item >'
+  	             +  ' <md-button ng-click="$ctrl.tweet()">'
+  	              +      '<div layout="row" flex>'
+							
+  	               +       '<p flex><ng-md-icon icon="twitter" style="margin: auto 3px auto 0;"></ng-md-icon> {{"Twitter" | translate}}</p>'
+	                      
+  	                +    '</div>'
+  	                +'</md-button>'
+  	              +'</md-menu-item>'
+  	              +'</md-menu-item>'
+  	            +  '<md-menu-item >'
+  	             +  ' <md-button ng-click="$ctrl.shareOnGooglePLus()">'
+  	              +      '<div layout="row" flex>'
+							
+  	               +       '<p flex><ng-md-icon icon="google-plus" style="margin: auto 3px auto 0;"></ng-md-icon> {{"Google+" | translate}}</p>'
+	                      
+  	                +    '</div>'
+  	                +'</md-button>'
+  	              +'</md-menu-item>'
+	
   	              +'<md-menu-item >'
   	              +  '<md-button ng-click="$ctrl.sendMail()">'
   	               +     '<div layout="row" flex>'
 							
   	                +      '<p flex><ng-md-icon  icon="email" style="margin: auto 3px auto 0;"></ng-md-icon> {{"Email"  | translate}}</p>'
+	                      
+						 
+  	                +   ' </div>'
+  	              + ' </md-button>'
+  	              + '</md-menu-item>'
+  	              +'<md-menu-item >'
+  	              +  '<md-button >'
+  	               +     '<div layout="row" flex>'
+							
+  	                +      '<p flex><ng-md-icon  icon="link" style="margin: auto 3px auto 0;"></ng-md-icon> <span class="clipboard-copy-sharing" data-clipboard-text="{{$ctrl.sharingUri}}">{{"Kopier link" | translate}}</span></p>'
 	                      
 						 
   	                +   ' </div>'
@@ -71,3 +125,8 @@ $templateCache.put('views/sharing/sharing.tmpl.html',
 }]);
 
 })(window, window.angular);
+
+
+/*<a class="twitter-share-button"
+  href="https://twitter.com/intent/tweet" url="{{$ctrl.sharingUri}}">
+Tweet</a> */

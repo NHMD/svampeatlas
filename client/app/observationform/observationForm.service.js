@@ -1,6 +1,6 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('ObservationFormService', function($mdDialog, ObservationStateService) {
+	.factory('ObservationFormService', function($mdDialog, ObservationStateService, $rootScope) {
 
 			return {
 				show: function(ev, row, duplicateRecord) {
@@ -16,8 +16,11 @@ angular.module('svampeatlasApp')
 						targetEvent: ev,
 						clickOutsideToClose: true,
 						fullscreen: true,
-						onRemoving: function(){
+						onRemoving: function(element, removePromise){
 							ObservationStateService.reset();
+							removePromise.then(function(){
+								$rootScope.$broadcast('dialogRemoved', row)
+							})
 						}
 					})
 
