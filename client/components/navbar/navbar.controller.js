@@ -2,10 +2,14 @@
 
 angular.module('svampeatlasApp')
   .controller('NavbarCtrl', function ($scope, $state, ssSideNav, $mdMedia, $mdSidenav) {
+	 /*
 	  $scope.mdMedia = $mdMedia;
 	  $scope.mdSidenav = $mdSidenav;
-	  $scope.state = $state;
 	  $scope.menu = ssSideNav;
+	  */
+	  $scope.state = $state;
+	  
+	  
 $scope.states = 
     { 'admin': { name: "Useradmin", icon: 'group'},
 	  'login': { name: "Login", icon: 'login'},
@@ -18,6 +22,21 @@ $scope.states =
 	  'checklist': { name: "Checkliste for danske arter", icon: 'playlist_add_check'},
 	  'species': { name: "Artspræsentation", icon: 'fungus'}
 	};
+	/*
+	$scope.openSideNav = function(){
+	
+			$scope.menu.userHasForceClosed = false;
+	
+		 $mdSidenav('left').open();
+	}
+	*/
+	
+  })
+  .controller('SideNavBtnCtrl', function ($scope, $state, ssSideNav, $mdMedia, $mdSidenav) {
+	  $scope.mdMedia = $mdMedia;
+	  $scope.mdSidenav = $mdSidenav;
+	  $scope.state = $state;
+	  $scope.menu = ssSideNav;
 	
 	$scope.openSideNav = function(){
 	
@@ -26,4 +45,5 @@ $scope.states =
 		 $mdSidenav('left').open();
 	}
 	
-  });
+  })
+  ;

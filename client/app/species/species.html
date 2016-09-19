@@ -1,5 +1,23 @@
 
-	<md-toolbar  ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
+	<md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu" ng-controller="SideNavBtnCtrl">
+        <ng-md-icon icon="menu"></ng-md-icon>
+      </md-button>
+	  <ng-md-icon icon="fungus" ></ng-md-icon>
+	  
+      <h3 class="inset">
+        {{'Artspræsentation' | translate}}
+      </h3>
+      <span flex></span>
+	  <div>
+	  <md-tooltip md-direction="bottom" >{{'Del' | translate}}</md-tooltip>
+	  <sharing mail-subject="'Danmarks svampeatlas: '+(taxon.Vernacularname_DK ? (taxon.Vernacularname_DK.vernacularname_dk | capitalize) +' ('+taxon.FullName+')' : taxon.FullName)" mail-body="baseUrl+'/taxon/'+taxon._id" sharing-uri="baseUrl+'/taxon/'+taxon._id"> </sharing>
+  </div>
+	 <span layout-margin ng-if="mdMedia('gt-xs')"> <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>
+	   <a href="/"><img  class="logo-upper-right" src="assets/images/LogoSmallest.png"></a>
+    </div>
+ </md-toolbar>
 	<md-content>
 
 		
@@ -75,8 +93,9 @@
   </div>
     
 		<div>
+		<div layout><span flex></span>	<a ng-href="{{taxon.attributes.MycoKeyIDDKWebLink}}" ng-if="taxon.attributes.MycoKeyIDDKWebLink" target="_BLANK">Nøgler, beskrivelser mm i MycoKey</a></div>
 			<span>
-			<p ng-if="taxon.attributes.diagnose"><strong>Diagnose: </strong>{{taxon.attributes.diagnose}}</p>
+			<p ng-if="taxon.attributes.diagnose"><strong>Beskrivelse: </strong>{{taxon.attributes.diagnose}}</p>
 		<p ng-if="taxon.attributes.forvekslingsmuligheder"><strong>Forvekslingsmuligheder: </strong>{{taxon.attributes.forvekslingsmuligheder}}</p>
 		
 	</span>
@@ -100,7 +119,7 @@
 </div>
 	<div layout="column" layout-margin>
 	 <div  class="md-whiteframe-z3" layout-padding>
-	    <leaflet id="speciesmap" width="400px" height="400px" center="mapsettings.center" defaults="mapsettings.defaults" paths="mapsettings.paths" layers="mapsettings.layers" event-broadcast="mapsettings.events"></leaflet>
+	    <leaflet id="speciesmap"  center="mapsettings.center" defaults="mapsettings.defaults" paths="mapsettings.paths" layers="mapsettings.layers" event-broadcast="mapsettings.events"></leaflet>
    	
 	 <md-radio-group ng-model="timeinterval" layout="row" ng-change="updateMap(timeinterval)">
 	 		<md-radio-button value="all" >Alle</md-radio-button>
@@ -109,62 +128,22 @@
    	       <md-radio-button value="2009">Efter 2008</md-radio-button>
    	     </md-radio-group>
 		 </div>
-	<div width="400px"  class="md-whiteframe-z3">
-	<highchart id="monthChart" class="species-chart" config="monthChartOptions" ></highchart>
+	<div  width="300px" class="md-whiteframe-z3 ">
+	<highchart id="monthChart" config="monthChartOptions" ></highchart>
 	</div>
 	<div  class="md-whiteframe-z3">
 		
-	<highchart id="decadesChart" class="species-chart" config="decadeChartOptions" ></highchart>
+	<highchart id="decadesChart"  config="decadeChartOptions" ></highchart>
 	</div>
 	<div  class="md-whiteframe-z3">
-	<highchart id="hostsChart" class="species-chart" config="hostChartOptions" ></highchart>
+	<highchart id="hostsChart"  config="hostChartOptions" ></highchart>
 </div>
 	</div>
 		 </div>
-	<!--	<div id="bogtekst">
-			<p><em>
-				{{taxon.attributes.diagnose}}
-			</em></p>
-		<p><strong>Forvekslingsmuligheder:</strong> {{taxon.attributes.forvekslingsmuligheder}}</p>
-		<p><strong>Status:</strong><span ng-if="redlistdata.VerbatimStatus"> {{redlistdata.VerbatimStatus}} {{redlistdata.year}}.</span><span ng-repeat="nutritionStrategy in taxon.nutritionstrategies | orderBy: '_id'"><span ng-if="nutritionStrategy._id > 2">,</span> {{nutritionStrategy.name}}</span>. {{taxon.attributes.oekologi}}</p>
-		- <em ng-class="taxon.attributes.bogtekst_gyldendal.length < 550 || (taxon.attributes.bogtekst_gyldendal.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{getBogtekstLength()}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
-	</div> -->
+
 	
 	<div ng-include="'app/species/species.tpl.html'"> </div>
 	
 </md-content>
 
 
-
-	
-	  
-<!--<header class="hero-unit" id="banner" >
-  <div class="container">
-    <h1 translate>Danmarks svampeatlas</h1>
-    <p translate class="lead">internetstedet hvor du kan deltage i kortlægningen af Danmarks svampe</p>
-    <img src="assets/images/mycena_crop.jpg" class="img-circle" width="200" height="200" alt="Mycena">
-  </div>
-</header>-->
-
-<!--<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <h1 class="page-header">Features:</h1>
-      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
-        <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}<button type="button" class="close" ng-click="deleteThing(thing)">&times;</button></a></li>
-      </ul>
-    </div>
-  </div>
-
-  <form class="thing-form">
-    <label>Syncs in realtime across clients</label>
-    <p class="input-group">
-      <input type="text" class="form-control" placeholder="Add a new thing here." ng-model="newThing">
-      <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ng-click="addThing()">Add New</button>
-      </span>
-    </p>
-  </form>
-</div> -->
-
-<!-- <div ng-include="'components/footer/footer.html'"></div> -->

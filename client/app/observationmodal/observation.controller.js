@@ -97,7 +97,7 @@ angular.module('svampeatlasApp')
 					Observation.delete({
 						id: obs._id
 					}).$promise.then(function() {
-						$rootScope.$emit('observation_deleted', $scope.obs);
+						$rootScope.$broadcast('observation_deleted', $scope.obs);
 						$scope.showSimpleToast($translate.instant('Record') + ' ' + displayedId + ' ' + $translate.instant('slettet.'))
 					})
 				});
@@ -144,7 +144,7 @@ angular.module('svampeatlasApp')
 						$scope.sendingComment = false;
 
 
-						$rootScope.$emit('observation_updated', $scope.obs);
+						$rootScope.$broadcast('observation_updated', $scope.obs);
 					})
 					.catch(function(err) {
 						$scope.sendingComment = false;

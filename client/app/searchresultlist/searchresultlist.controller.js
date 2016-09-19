@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope','$rootScope','$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService','ErrorHandlingService', 'Determination','$cookies',
-		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies) {
-			
+	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies) {
+
 			$scope.moment = moment;
 			$scope.Auth = Auth;
 			$scope.currentUser = Auth.getCurrentUser();
@@ -12,57 +12,108 @@ angular.module('svampeatlasApp')
 			$scope.$state = $state;
 			$scope.ObservationFormService = ObservationFormService;
 			$scope.$stateParams = $stateParams;
-			
-			$rootScope.$on('new_observation', function(ev, obs){
-				
+
+
+			$scope.tableUpdate = {};
+
+			$scope.$on('dialogRemoved', function(ev, obs) {
+
+
+				//	$('#'+obs._id).addClass('row-updated');
+
+				if (ObservationStateService.updated) {
+					delete ObservationStateService.updated;
+					var singleObsSearch = ObservationSearchService.getNewSearch();
+					singleObsSearch.where = {
+						_id: obs._id
+					};
+					singleObsSearch.include[2].required = false;
+					var include = _.map(singleObsSearch.include, function(n) {
+						return JSON.stringify(n);
+					});
+
+					Observation.query({
+						where: {
+							_id: obs._id
+						},
+						include: JSON.stringify(include)
+					}, function(result, headers) {
+
+						var index = _.indexOf($scope.displayed, _.find($scope.displayed, {
+							_id: obs._id
+						}));
+
+
+
+						$scope.displayed[index] = result[0];
+						$scope.displayed[index].isSelected = true;
+
+						$timeout(function() {
+							$('md-content').animate({
+								scrollTop: $(".st-selected").offset().top - 100
+							}, 300);
+
+							$timeout(function() {
+								delete $scope.displayed[index].isSelected;
+							}, 3000)
+						}, 0)
+
+
+
+					})
+				}
+
+			});
+
+
+
+			$scope.$on('new_observation', function(ev, obs) {
+
 				var singleObsSearch = ObservationSearchService.getNewSearch();
-				singleObsSearch.where = {_id: obs._id};
+				singleObsSearch.where = {
+					_id: obs._id
+				};
+				singleObsSearch.include[2].required = false;
 				var include = _.map(singleObsSearch.include, function(n) {
 					return JSON.stringify(n);
 				});
-				Observation.query({where: {_id: obs._id}, include: JSON.stringify(include) }, function(result, headers) {
-				$scope.displayed.unshift(result[0])
+				Observation.query({
+					where: {
+						_id: obs._id
+					},
+					include: JSON.stringify(include)
+				}, function(result, headers) {
+					$scope.displayed.unshift(result[0])
 					$scope.displayed.pop();
-			})
-		});
-		
-		
-		$rootScope.$on('observation_updated', function(ev, obs){
-			
-			var singleObsSearch = ObservationSearchService.getNewSearch();
-			singleObsSearch.where = {_id: obs._id};
-			var include = _.map(singleObsSearch.include, function(n) {
-				return JSON.stringify(n);
+				})
 			});
-			if(!$scope.updateProgress){
-			$scope.updateProgress = Observation.query({where: {_id: obs._id}, include: JSON.stringify(include) }, function(result, headers) {
-			
-			var index = _.indexOf($scope.displayed, _.find($scope.displayed, {_id: obs._id}));
-			
-			$scope.displayed.splice(index, 1, result[0]);
-			delete $scope.updateProgress;
-				
-		})}
-	});
-	
-	$rootScope.$on('observation_deleted', function(ev, obs){
-		
-		var index = _.indexOf($scope.displayed, _.find($scope.displayed, {_id: obs._id}));
-		
-		$scope.displayed.splice(index, 1);
-});
-			
+
+			$scope.$on('observation_updated', function(ev, obs) {
+
+				ObservationStateService.updated = true;
+			});
+
+
+			$scope.$on('observation_deleted', function(ev, obs) {
+
+				var index = _.indexOf($scope.displayed, _.find($scope.displayed, {
+					_id: obs._id
+				}));
+
+				$scope.displayed.splice(index, 1);
+			});
+
 			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date) || $stateParams.taxon_id) {
 				ObservationSearchService.reset();
 				var search = ObservationSearchService.getSearch();
 				search.wasInitiatedOutsideSearchForm = true;
 				search.where = {};
-				
+
 				if ($stateParams.searchterm === "mine") {
 
 					search.include[1].where = {
 						_id: Auth.getCurrentUser()._id
-					} 
+					}
 					search.include[1].required = true;
 					// include foreign
 					search.include[2].required = false;
@@ -78,39 +129,41 @@ angular.module('svampeatlasApp')
 						gt: $filter('date')(moment().subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 
-				} else if($stateParams.locality_id && $stateParams.date){
+				} else if ($stateParams.locality_id && $stateParams.date) {
 					search.where.observationDate = {
-						
-						gt: $filter('date')(moment($stateParams.date).toDate()	, "yyyy-MM-dd", '+0200')				
+
+						gt: $filter('date')(moment($stateParams.date).toDate(), "yyyy-MM-dd", '+0200')
 					};
 					search.where.locality_id = $stateParams.locality_id;
-			} else if($stateParams.taxon_id ){
-				search.include[0].where.Taxon_id = $stateParams.taxon_id;
-				
-				
-				search.include[0].where.Determination_validation = ['Godkendt','Valideres', 'Afventer', 'Gammelvali'];
-					
-			};
+				} else if ($stateParams.taxon_id) {
+					search.include[0].where.Taxon_id = $stateParams.taxon_id;
+
+
+					search.include[0].where.Determination_validation = ['Godkendt', 'Valideres', 'Afventer', 'Gammelvali'];
+
+				};
 
 			}
-			$scope.getCreatedAt = function(createdAt){
+			$scope.getCreatedAt = function(createdAt) {
 				var lang = "da";
-				if($cookies.get('preferred_language') === "en"){
+				if ($cookies.get('preferred_language') === "en") {
 					lang = "en"
 				}
 				return moment(createdAt).lang(lang).fromNow();
 			}
-			
+
 			$scope.getDate = function(observationDate, observationDateAccuracy) {
 
-				var splitted = observationDate.split(" ")[0].split("-");
-
-				if (observationDateAccuracy === 'month') {
+				var splitted = observationDate.split("T")[0].split("-");
+				if(splitted.length ===3)
+				{if (observationDateAccuracy === 'month') {
 					//console.log("spl "+parseInt(splitted[1]))
 					return moment.months()[parseInt(splitted[1]) - 1] + " " + splitted[0];
 				} else if (observationDateAccuracy === 'year') {
 					return splitted[0];
 				} else if (observationDateAccuracy === 'invalid') {
+					return "ingen dato"
+				}} else {
 					return "ingen dato"
 				}
 
@@ -143,7 +196,7 @@ angular.module('svampeatlasApp')
 
 			});
 			*/
-			
+
 			$scope.queryinclude = _.map($scope.search.include, function(n) {
 				return JSON.stringify(n);
 			});
@@ -172,25 +225,33 @@ angular.module('svampeatlasApp')
 
 				console.log("offset " + offset)
 				console.log("count " + $scope.count)
-				/*
-				if (!tableState.sort.predicate) {
-					tableState.sort.predicate = 'observationDate';
-					tableState.sort.reverse = true;
-				} */
-				/*
-				var order = tableState.sort.predicate;
-				if (tableState.sort.reverse) {
-					order += " DESC"
+					/*
+					if (!tableState.sort.predicate) {
+						tableState.sort.predicate = 'observationDate';
+						tableState.sort.reverse = true;
+					} */
+					/*
+					var order = tableState.sort.predicate;
+					if (tableState.sort.reverse) {
+						order += " DESC"
+					};
+					*/
+				var defaultOrder = ($stateParams.searchterm && $stateParams.searchterm === "mine") ? [
+					['createdAt', 'DESC'],
+					['_id', 'DESC']
+				] : [
+					['observationDate', 'DESC'],
+					['_id', 'DESC']
+				];
+				var order = (tableState.sort.predicate) ? [
+					[tableState.sort.predicate]
+				] : defaultOrder;
+				if (tableState.sort.reverse && tableState.sort.predicate) {
+					order[0].push("DESC");
+				} else {
+					order[0].push("ASC");
 				};
-				*/
-				var defaultOrder = ($stateParams.searchterm && $stateParams.searchterm === "mine") ? [['createdAt', 'DESC'], ['_id', 'DESC']] : [['observationDate', 'DESC'], ['_id', 'DESC']];
-				var order = (tableState.sort.predicate) ? [[tableState.sort.predicate]] : defaultOrder;
-								if (tableState.sort.reverse && tableState.sort.predicate) {
-									order[0].push("DESC");
-								} else {
-									order[0].push("ASC");
-								};
-				
+
 				var geometry = ObservationSearchService.getSearch().geometry;
 				var query = {
 					//order: order || 'observationDate DESC',
@@ -211,38 +272,43 @@ angular.module('svampeatlasApp')
 
 
 				function showTooltip(elem, msg) {
-				    elem.setAttribute('class', 'clipboard-copy tooltipped tooltipped-s');
-				    elem.setAttribute('aria-label', msg);
+					elem.setAttribute('class', 'clipboard-copy tooltipped tooltipped-s');
+					elem.setAttribute('aria-label', msg);
 				}
+
 				function fallbackMessage(action) {
-				    var actionMsg = '';
-				    var actionKey = (action === 'cut' ? 'X' : 'C');
-				    if (/iPhone|iPad/i.test(navigator.userAgent)) {
-				        actionMsg = 'No support for copying:(';
-				    } else if (/Mac/i.test(navigator.userAgent)) {
-				        actionMsg = 'Press ⌘-' + actionKey + ' to ' + action;
-				    } else {
-				        actionMsg = 'Press Ctrl-' + actionKey + ' to ' + action;
-				    }
-				    return actionMsg;
+					var actionMsg = '';
+					var actionKey = (action === 'cut' ? 'X' : 'C');
+					if (/iPhone|iPad/i.test(navigator.userAgent)) {
+						actionMsg = 'No support for copying:(';
+					} else if (/Mac/i.test(navigator.userAgent)) {
+						actionMsg = 'Press ⌘-' + actionKey + ' to ' + action;
+					} else {
+						actionMsg = 'Press Ctrl-' + actionKey + ' to ' + action;
+					}
+					return actionMsg;
 				}
-				
-				$scope.updateValidation = function(row, validation){
-					
-					
-					
-					Determination.updateValidation({id: row.primarydetermination_id}, {validation: 'Godkendt'}).$promise
-					.then(function(determination){
-						row.DeterminationView.Determination_validation = 'Godkendt'
-						
-						//var txt = (determination.validation === "Afventer") ? "Bestemmelse afventer" : ("Fundet er "+determination.validation);
-						//$scope.showSimpleToast(txt)
-					})
-					.catch(function(err){
-						
-						ErrorHandlingService.handle500();
-					})
-					
+
+				$scope.updateValidation = function(row, validation) {
+
+
+
+					Determination.updateValidation({
+							id: row.primarydetermination_id
+						}, {
+							validation: 'Godkendt'
+						}).$promise
+						.then(function(determination) {
+							row.DeterminationView.Determination_validation = 'Godkendt'
+
+							//var txt = (determination.validation === "Afventer") ? "Bestemmelse afventer" : ("Fundet er "+determination.validation);
+							//$scope.showSimpleToast(txt)
+						})
+						.catch(function(err) {
+
+							ErrorHandlingService.handle500();
+						})
+
 				}
 
 
@@ -264,21 +330,21 @@ angular.module('svampeatlasApp')
 					$scope.isLoading = false;
 					var clipboard = new Clipboard('.clipboard-copy');
 					clipboard.on('success', function(e) {
-					    e.clearSelection();
-					    
-					    showTooltip(e.trigger, 'Copied!');
+						e.clearSelection();
+
+						showTooltip(e.trigger, 'Copied!');
 					});
 					clipboard.on('error', function(e) {
-					   
-					    showTooltip(e.trigger, fallbackMessage(e.action));
+
+						showTooltip(e.trigger, fallbackMessage(e.action));
 					});
-				}, function(err){
+				}, function(err) {
 					console.log(err, status)
-					
-					if(err.status === 504) {
+
+					if (err.status === 504) {
 						ErrorHandlingService.handle504();
 					}
-					if(err.status === 500) {
+					if (err.status === 500) {
 						ErrorHandlingService.handle500();
 					}
 				});
@@ -288,4 +354,5 @@ angular.module('svampeatlasApp')
 
 
 		}
+
 	]);

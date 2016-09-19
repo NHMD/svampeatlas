@@ -6,7 +6,7 @@ angular.module('svampeatlasApp')
 		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 
 		$scope.$state = $state;
-		
+		$scope.baseUrl = appConstants.baseurl;
 
 		$scope.ObservationModalService = ObservationModalService;
 
@@ -31,10 +31,10 @@ angular.module('svampeatlasApp')
 
 			},
 			events: {
-			                    path: {
-			                        enable: [ 'click' ]
-			                    }
-			                },
+				path: {
+					enable: ['click']
+				}
+			},
 			layers: {
 				baselayers: {
 					osm: {
@@ -48,13 +48,13 @@ angular.module('svampeatlasApp')
 						name: '2009',
 						visible: true,
 						type: 'featureGroup'
-						
+
 					},
 					2008: {
 						name: '2008',
 						visible: true,
 						type: 'featureGroup'
-						
+
 					},
 					1991: {
 						name: '1991',
@@ -76,7 +76,7 @@ angular.module('svampeatlasApp')
 					lng: obs.decimalLongitude
 				},
 				type: "circleMarker",
-				radius: 5,
+				radius: 3,
 				weight: 2,
 				opacity: 1,
 
@@ -88,24 +88,25 @@ angular.module('svampeatlasApp')
 			};
 			var y = obs.observationDate.split("-")[0];
 			if (y < 1991) {
-				
+
 				path.layer = '1991';
 				path.color = "#FFEB3B";
 				return path;
 			} else if (y > 1991 && y < 2009) {
-				
+
 				path.layer = '2008';
 				path.color = "#FF9800";
 				return path;
 			} else {
-				
+
 				path.layer = '2009';
 				path.color = "#2196F3";
-				
+
 				return path;
 			}
 		}
-		function showAllLayers(show){
+
+		function showAllLayers(show) {
 			$scope.mapsettings.layers.overlays['1991'].visible = show;
 			$scope.mapsettings.layers.overlays['2008'].visible = show;
 			$scope.mapsettings.layers.overlays['2009'].visible = show;
@@ -125,22 +126,24 @@ angular.module('svampeatlasApp')
 		
 		}*/
 		}
-		$scope.$on('leafletDirectivePath.speciesmap.click', function (event, args) {
-		               ObservationModalService.show(event, {_id: args.modelName})
-		            });
+		$scope.$on('leafletDirectivePath.speciesmap.click', function(event, args) {
+			ObservationModalService.show(event, {
+				_id: args.modelName
+			})
+		});
 
 		$scope.updateMap = function(timeinterval) {
 
 			switch (timeinterval) {
 				case '1991':
 					showAllLayers(false),
-					$scope.mapsettings.layers.overlays['1991'].visible = true;
-					
+						$scope.mapsettings.layers.overlays['1991'].visible = true;
+
 					break;
 				case '2008':
 					showAllLayers(false);
 					$scope.mapsettings.layers.overlays['2008'].visible = true;
-					
+
 					break;
 				case '2009':
 					showAllLayers(false);
@@ -157,11 +160,11 @@ angular.module('svampeatlasApp')
 			}
 
 		}
-	
-		
-		
-		
-		
+
+
+		var chartWidth = $mdMedia('gt-xs') ? 400 : 300
+
+
 		$scope.monthChartOptions = {
 			options: {
 				chart: {
@@ -170,48 +173,48 @@ angular.module('svampeatlasApp')
 					plotShadow: false,
 					type: 'column',
 					height: 300,
-					width: 400,
+					width: chartWidth,
 				},
 				title: {
 					text: "Fundfordeling over måneder"
 				},
-				
+
 				xAxis: {
-				            type: 'category',
-				            labels: {
-				                rotation: -45,
-				                style: {
-				                    fontSize: '13px',
-				                    fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
-				                }
-				            }
-				        },
-				        yAxis: {
-				            min: 0,
-				            title: {
-				                text: 'Antal fund'
-				            }
-				        },
-				        legend: {
-				            enabled: false
-				        }
+					type: 'category',
+					labels: {
+						rotation: -45,
+						style: {
+							fontSize: '13px',
+							fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
+						}
+					}
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'Antal fund'
+					}
+				},
+				legend: {
+					enabled: false
+				}
 			}
-			
+
 		}
-		
+
 		var hostChartOpts = angular.copy($scope.monthChartOptions);
-		hostChartOpts.options.title= "Fordeling på de 10 hyppigste værter";
+		hostChartOpts.options.title.text = "Fordeling på de 10 hyppigste værter";
 		$scope.hostChartOptions = hostChartOpts;
-		
+
 		var decadeChartOpts = angular.copy($scope.monthChartOptions);
-		decadeChartOpts.options.title= "Fordeling af fund over 10 års perioder";
+		decadeChartOpts.options.title.text = "Fordeling af fund over 10 års perioder";
 		decadeChartOpts.options.tooltip = {
-														pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
-													};
-													decadeChartOpts.options.yAxis.title.text = 		'Antal fund pr 100.000';									
+			pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
+		};
+		decadeChartOpts.options.yAxis.title.text = 'Antal fund pr 100.000';
 		$scope.decadeChartOptions = decadeChartOpts;
-		
-		$scope.months = _.map(['januar', 'februar', 'marts', 'april', 'maj','juni', 'juli', 'august','september','oktober', 'november', 'december'], function(m){
+
+		$scope.months = _.map(['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'], function(m) {
 			return [capitalizeFirstLetter(m), 0];
 		})
 		$scope.hosts = [];
@@ -228,15 +231,15 @@ angular.module('svampeatlasApp')
 		search.include.splice(3, 4);
 		search.include.push({
 			model: "PlantTaxon",
-			as : "PrimaryAssociatedOrganism"
+			as: "PrimaryAssociatedOrganism"
 		})
 		var queryinclude = _.map(_.filter(search.include, function(e) {
 			return e.model !== 'GeoNames'
 		}), function(n) {
 			return JSON.stringify(n);
 		});
-		
-		
+
+
 		Observation.query({
 			where: {},
 			include: JSON.stringify(queryinclude)
@@ -249,31 +252,32 @@ angular.module('svampeatlasApp')
 			var decadesMap = {};
 			for (var i = 0; i < result.length; i++) {
 				$scope.mapsettings.paths[result[i]._id] = getPath(result[i]);
-				
+
 				var mth = parseInt(result[i].observationDate.split("-")[1], 10);
-				
-				if(mth > 0){
-					$scope.months[mth-1][1] ++;
+
+				if (mth > 0) {
+					$scope.months[mth - 1][1]++;
 				}
-				
-				if(result[i].PrimaryAssociatedOrganism){
-					if(hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName]){
-						hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName] ++ ;
+
+				if (result[i].PrimaryAssociatedOrganism) {
+					if (hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName]) {
+						hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName]++;
 					} else {
 						hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName] = 1;
 					}
 				};
-				
-				var dec = 	(Math.floor(result[i].observationDate.split("-")[0] / 10)) * 10;
-				
-				if(decadesMap[dec]){
-					decadesMap[dec] ++;
-				} else {
-					decadesMap[dec] = 1;
+
+				var dec = (Math.floor(result[i].observationDate.split("-")[0] / 10)) * 10;
+				if (dec > 0) {
+					if (decadesMap[dec]) {
+						decadesMap[dec]++;
+					} else {
+						decadesMap[dec] = 1;
+					}
 				}
-				
+
 			};
-			
+
 			/*
 			for (var key in decadesMap){
 				if (decadesMap.hasOwnProperty(key)) {
@@ -281,84 +285,67 @@ angular.module('svampeatlasApp')
 			}
 			};
 			 */
-			ObservationCountService.getCount().then(function(globalDecades){
-				for(var i=0; i < globalDecades.length; i++){
-					if(decadesMap.hasOwnProperty(globalDecades[i].decade)){
-						$scope.decadesWeighted.push([globalDecades[i].decade.toString()+"-"+(globalDecades[i].decade +9).toString(), (parseInt(decadesMap[globalDecades[i].decade]) / parseInt(globalDecades[i].count))*100000])
+			ObservationCountService.getCount().then(function(globalDecades) {
+				for (var i = 0; i < globalDecades.length; i++) {
+					if (decadesMap.hasOwnProperty(globalDecades[i].decade)) {
+						$scope.decadesWeighted.push([globalDecades[i].decade.toString() + "-" + (globalDecades[i].decade + 9).toString(), (parseInt(decadesMap[globalDecades[i].decade]) / parseInt(globalDecades[i].count)) * 100000])
 					}
-					
+
 				}
 			})
-			
-			for (var key in hostsMap){
+
+			for (var key in hostsMap) {
 				if (hostsMap.hasOwnProperty(key)) {
-				$scope.hosts.push([key, hostsMap[key]]);
-			}
+					$scope.hosts.push([key, hostsMap[key]]);
+				}
 			};
-			
-			$scope.hosts.sort(function(a, b){
-				return  b[1] - a[1];
-			})
-			/*
-			$scope.decades.sort(function(a, b){
-				return  b[0] - a[0];
-			}) */
+
+			$scope.hosts.sort(function(a, b) {
+					return b[1] - a[1];
+				})
+				/*
+				$scope.decades.sort(function(a, b){
+					return  b[0] - a[0];
+				}) */
 			$scope.hosts = $scope.hosts.slice(0, 10);
 			//$scope.decades = $scope.decades.slice(0, 11);
-			$scope.monthChartOptions.series = [{ name: "Antal fund", data: $scope.months, dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: '#FFFFFF',
-                align: 'right',
-                format: '{point.y}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '13px',
-                    fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
-                }
-            }}];
-			
-			$scope.hostChartOptions.series = [{ name: "Antal fund", data: $scope.hosts, dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: '#FFFFFF',
-                align: 'right',
-                format: '{point.y}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '13px',
-                    fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
-                }
-            }}];
-			
-			$scope.decadeChartOptions.series = [{ name: "Antal fund pr 100.000", data: $scope.decadesWeighted, dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: '#FFFFFF',
-                align: 'right',
-                format: '{point.y:.1f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '13px',
-                    fontFamily: 'Roboto, "Helvetica Neue", sans-serif'
-                }
-            }}];
-			
+			$scope.monthChartOptions.series = [{
+				name: "Antal fund",
+				data: $scope.months
+			}];
+
+			$scope.hostChartOptions.series = [{
+				name: "Antal fund",
+				data: $scope.hosts
+			}];
+
+			$scope.decadeChartOptions.series = [{
+				name: "Antal fund pr 100.000",
+				data: $scope.decadesWeighted
+			}];
+
 
 		})
 
 		$scope.taxon = Taxon.getAcceptedTaxon({
 			id: $stateParams.taxon_id
 		})
-		
-		 
-		
-		$scope.taxon.$promise.then(function(){
-			if($scope.taxon.Vernacularname_DK){
+
+
+
+		$scope.taxon.$promise.then(function() {
+			if ($scope.taxon.Vernacularname_DK) {
 				$scope.vernacularname_dk = capitalizeFirstLetter($scope.taxon.Vernacularname_DK.vernacularname_dk)
-				}
-				$scope.higherTaxa = Taxon.higherTaxa({id: $scope.taxon._id})
+			}
+			$scope.higherTaxa = Taxon.higherTaxa({
+				id: $scope.taxon._id
+			})
 		})
+
+
+		$scope.tileOffset = 0;
+		$scope.tileLimit = 24;
+		$scope.tileCount = 0;
 
 		$scope.taxon.$promise.then(function() {
 
@@ -367,10 +354,18 @@ angular.module('svampeatlasApp')
 					$scope.taxon.images = $scope.taxon.images.concat(s.images)
 				}
 			});
+			$scope.loadTiles($scope.tileOffset, $scope.tileLimit);
+		})
+
+		$scope.loadTiles = function(offset, limit) {
+
+			$scope.tileOffset = offset;
+			$scope.tileLimit = limit;
+
 			$scope.tiles = Observation.query({
-				nocount: true,
+				offset: $scope.tileOffset,
 				order: 'observationDate DESC',
-				limit: 24,
+				limit: $scope.tileLimit,
 
 
 				include: JSON.stringify(
@@ -406,10 +401,11 @@ angular.module('svampeatlasApp')
 					]
 				)
 
+			}, function(result, headers) {
+				$scope.tileCount = headers('count');
 			})
-		})
 
-
+		}
 
 
 

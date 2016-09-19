@@ -1,6 +1,4 @@
-.species-chart {
-	max-width: 400px;
-}
+
 
 .classification-last-row {
 	border-bottom-width: 0px !important;
@@ -8,4 +6,23 @@
 
 md-expansion-panel-header.md-stick .md-expansion-panel-header-container {
 	z-index: 1 !important;
+}
+
+@media screen and  (min-width: 600px)  {
+  #speciesmap {
+    width: 400px !important;
+    max-width: 400px !important;
+	height: 400px;
+  }
+  
+
+}
+
+@media screen and  (max-width: 599px)  {
+    #speciesmap {
+      width: 300px !important;
+      max-width: 300px !important;
+  	height: 400px;
+    }
+
 }

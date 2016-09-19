@@ -177,7 +177,8 @@ angular.module('svampeatlasApp')
 			'Kopier funddata til udklipsholder' : 'Copy data to clipboard',
 			'Klon fund' : 'Clone record',
 			'Del fund' : 'Share',
-			'Dette fund er valideret og godkendt af' : 'This sighting is validated and accepted by'
+			'Dette fund er valideret og godkendt af' : 'This sighting is validated and accepted by',
+			'Kopier link' : 'Copy link'
 			
 		});
 
@@ -294,7 +295,8 @@ angular.module('svampeatlasApp')
 			'fam.' : 'Familie',
 			'gen.' : 'Slægt',
 			'sp.' : 'Art',
-			'var.' : 'Varietet'
+			'var.' : 'Varietet',
+			'Kopier link' : 'Kopiér link'
 
 
 		});

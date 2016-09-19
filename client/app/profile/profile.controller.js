@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('ProfileCtrl', function($scope,$filter, User, Auth, $window, $http, $mdMedia, $mdDialog, $mdToast, $translate, ObservationSearchService, Observation, ErrorHandlingService, $stateParams, $state, HigherTaxonomyModalService, ObservationModalService) {
+  .controller('ProfileCtrl', function($scope,$filter, User, Auth, $window, $http, $mdMedia, $mdDialog, $mdToast, $translate, ObservationSearchService, Observation, ErrorHandlingService, $stateParams, $state, HigherTaxonomyModalService, ObservationModalService, appConstants) {
 	  $scope.HigherTaxonomyModalService = HigherTaxonomyModalService;
 	  $scope.ObservationModalService = ObservationModalService;
 	$scope.$mdMedia = $mdMedia;
 	$scope.currentUser = Auth.getCurrentUser();
 	$scope.isLoggedIn = Auth.isLoggedIn;
-	
+	$scope.baseUrl = appConstants.baseurl;
+	$scope.$state = $state;
 	$scope.dashBoardUser = ($stateParams.userid) ? User.get({id:$stateParams.userid}) : User.get();
 	$scope.dashBoardUser.$promise.then(function(usr){
 		$scope.dashboardUserID = usr._id;
@@ -34,7 +35,7 @@ angular.module('svampeatlasApp')
 		search.where = {primaryuser_id : userid};
 		var d = moment().subtract($scope.activitySince, 'days').toDate()
 		
-		
+		search.include[2].required = false;
 		search.include[6].required = true;
 		search.recentlyCommented = $filter('date')(d, "yyyy-MM-dd", '+0200')
 		var queryinclude = _.map(search.include, function(n) {

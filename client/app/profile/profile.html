@@ -1,5 +1,27 @@
 		<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
-		<md-toolbar  ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
+
+	   	<md-toolbar>
+	       <div class="md-toolbar-tools">
+	         <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu" ng-controller="SideNavBtnCtrl">
+	           <ng-md-icon icon="menu"></ng-md-icon>
+	         </md-button>
+	   	  <ng-md-icon icon="{{($state.current.name === 'dashboard') ? 'dashboard' : 'person'}}" ></ng-md-icon>
+	  
+	         <h3 class="inset" ng-if="$state.current.name === 'dashboard'">
+	           {{'Dashboard' | translate}}
+	         </h3>
+	         <h3 class="inset" ng-if="$state.current.name === 'userstats'">
+	           {{'Profil' | translate}}
+	         </h3>
+	         <span flex></span>
+	   	  <div>
+	   	  <md-tooltip md-direction="bottom" >{{'Del' | translate}}</md-tooltip>
+	   	  <sharing mail-subject="'Brugerprofil for '+dashBoardUser.name+' ('+dashBoardUser.Initialer+') på Danmarks svampeatlas'" mail-body="baseUrl+'/userprofile/'+dashBoardUser._id" sharing-uri="baseUrl+'/userprofile/'+dashBoardUser._id"> </sharing>
+	     </div>
+	   	 <span layout-margin ng-if="mdMedia('gt-xs')"> <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>
+	   	   <a href="/"><img  class="logo-upper-right" src="assets/images/LogoSmallest.png"></a>
+	       </div>
+	    </md-toolbar>
 		<md-content layout="row" md-scroll-y flex>
 	
 	   <md-grid-list

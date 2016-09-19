@@ -753,7 +753,7 @@ angular.module('svampeatlasApp')
 										Observation.delete({
 											id: obs._id
 										}).$promise.then(function() {
-											$rootScope.$emit('observation_deleted', $scope.obs);
+											$rootScope.$broadcast('observation_deleted', $scope.obs);
 											$scope.showSimpleToast($translate.instant('Record') + ' ' + displayedId + ' ' + $translate.instant('slettet.'))
 										})
 									});
@@ -771,7 +771,7 @@ angular.module('svampeatlasApp')
 											$scope.obs.Forum.push(comment);
 											delete $scope.newComment;
 											$scope.sendingComment = false;
-											$rootScope.$emit('observation_updated', $scope.obs);
+											$rootScope.$broadcast('observation_updated', $scope.obs);
 										})
 										.catch(function(err) {
 											$scope.sendingComment = false;
@@ -1000,7 +1000,7 @@ angular.module('svampeatlasApp')
 										})
 										.then(function(obs) {
 											var evt = ($scope.obs && $scope.obs._id) ? 'observation_updated' : 'new_observation';
-											$rootScope.$emit(evt, obs);
+											$rootScope.$broadcast(evt, obs);
 											$scope.newTaxon = [];
 											$scope.files = [];
 											
