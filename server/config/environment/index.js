@@ -65,6 +65,10 @@ var all = {
 	      'client_secret': 'b28294483b294d778f12d6749e620387',
   },
   
+  mapbox: {
+	  access_token: 'pk.eyJ1Ijoic3ZhbXBlYXRsYXMiLCJhIjoiY2l0ZWMzemh4MDBjYTJ4dG9iZW0yZGh2dSJ9.kZHV0dNh7o0_ifC6hWzHEQ'
+  },
+  
   redisTTL: {
 	  latestredlisted: 60 * 60 * 24,
 	  todayslocalities:  60 * 15,

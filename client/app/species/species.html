@@ -113,11 +113,24 @@
 
 
 </div>
-<p><strong>Antal fund i svampeatlas:</strong> {{count}}</p>
+<p><strong>Antal fund i svampeatlas:</strong> {{count}} <md-button class="md-icon-button md-primary" ng-click="showRecords('list')">
+			<md-tooltip md-direction="bottom" >
+			          {{'Vis fund i liste' | translate}}
+			        </md-tooltip>
+        <ng-md-icon icon="list"></ng-md-icon> 
+      </md-button><md-button class="md-icon-button md-primary" ng-click="showRecords('map')">
+			<md-tooltip md-direction="bottom" >
+			          {{'Vis fund på kort' | translate}}
+			        </md-tooltip>
+        <ng-md-icon icon="map"></ng-md-icon> 
+      </md-button></p>
 </div>
 	</div>
 </div>
-	<div layout="column" layout-margin>
+
+<div layout="column" ng-include="'app/speciesstats/speciesstats.tpl.html'" ng-controller="SpeciesStatsCtrl" layout-margin>
+</div>
+	<!--<div layout="column" layout-margin>
 	 <div  class="md-whiteframe-z3" layout-padding>
 	    <leaflet id="speciesmap"  center="mapsettings.center" defaults="mapsettings.defaults" paths="mapsettings.paths" layers="mapsettings.layers" event-broadcast="mapsettings.events"></leaflet>
    	
@@ -138,7 +151,7 @@
 	<div  class="md-whiteframe-z3">
 	<highchart id="hostsChart"  config="hostChartOptions" ></highchart>
 </div>
-	</div>
+	</div> -->
 		 </div>
 
 	

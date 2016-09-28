@@ -1,0 +1,20 @@
+	 <div  class="md-whiteframe-z3" layout-padding>
+	    <leaflet id="speciesmap"  center="mapsettings.center" defaults="mapsettings.defaults" paths="mapsettings.paths" layers="mapsettings.layers" event-broadcast="mapsettings.events"></leaflet>
+   	
+	 <md-radio-group ng-model="timeinterval" layout="row" ng-change="updateMap(timeinterval)">
+	 		<md-radio-button value="all" >Alle</md-radio-button>
+   	       <md-radio-button value="1991" >Før 1991</md-radio-button>
+   	       <md-radio-button value="2008">1991-2008 </md-radio-button>
+   	       <md-radio-button value="2009">Efter 2008</md-radio-button>
+   	     </md-radio-group>
+		 </div>
+	<div  width="300px" class="md-whiteframe-z3 ">
+	<highchart id="monthChart" config="monthChartOptions" ></highchart>
+	</div>
+	<div  class="md-whiteframe-z3">
+		
+	<highchart id="decadesChart"  config="decadeChartOptions" ></highchart>
+	</div>
+	<div  class="md-whiteframe-z3">
+	<highchart id="hostsChart"  config="hostChartOptions" ></highchart>
+</div>

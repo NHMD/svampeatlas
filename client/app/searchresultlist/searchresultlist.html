@@ -5,21 +5,28 @@
    <md-button class="md-fab md-warn md-fab-bottom-right" aria-label="Tilføj observation" ng-click="ObservationFormService.show($event)" ng-show="Auth.isLoggedIn() && $stateParams.searchterm && $stateParams.searchterm === 'mine'">
                <ng-md-icon icon="add"></ng-md-icon>
            </md-button>
-
+		   
+   
 <md-content flex md-scroll-y layout-padding ng-cloak>
-	   
+	  <div flex layout="row" ng-if="mdMedia('xs')"><span flex></span><p>{{fromRecord +"-"+toRecord}} {{'af' | translate}} {{totalCount}}</p></div> 
 			   
 	<div class="table-responsive-vertical shadow-z-1">
 
 
-<table  class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed" >
+<table  class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed" st-persist="search_result_list_table">
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
 	<thead>
-		<tr ng-show="displayed && !isLoading">
-			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="9" st-template="app/searchresultlist/pagination.tpl.html">
+	<tr ng-show="displayed && !isLoading">
+			<th colspan="3"><md-button ng-if="10001 > totalCount" aria-label="Download csv" ng-click="getObservationCsv()" ng-csv="csv" csv-label="true" filename="svampeatlasdata.csv" ng-disabled="csvInProgress">
+             <ng-md-icon icon="file_download" ></ng-md-icon>
+
+			   Download csv
+			   <md-progress-linear ng-show="csvInProgress" ></md-progress-linear>
+           </md-button></th>
+			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="6" st-template="app/searchresultlist/pagination.tpl.html">
 			</th>
-		</tr>
-	<tr>
+		</tr> 
+
 		<th ></th>
 		<th ></th>
 		<th st-sort="createdAt" ng-if="$stateParams.searchterm || $stateParams.searchterm === 'mine'" translate>Indlagt</th>
@@ -57,7 +64,7 @@
 		<td ng-if="$stateParams.searchterm || $stateParams.searchterm === 'mine'" data-title="{{'Indlagt' | translate}}">{{(moment(row.createdAt).isSame(moment(), 'day')) ? getCreatedAt(row.createdAt) : (row.createdAt | date : 'dd/MM/yyyy')}}</td>
 		<td data-title="{{'Dato' | translate}}" >{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>
 		
-		<td data-title="{{'Art' | translate}}"><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></td>
+		<td data-title="{{'Art' | translate}}"><a ng-href='/taxon/{{row.DeterminationView.Taxon_id}}'><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></a></td>
 		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk}}</td>	
 		<td data-title="{{'Lokalitet' | translate}}"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
 		

@@ -13,7 +13,7 @@ angular.module('svampeatlasApp')
 					ObservationStateService.set(referencedDataRow);
 					$mdDialog.show({
 						controller: 'ObservationCtrl',
-						
+						controllerAs: 'ctrl',
 						templateUrl: 'app/observationmodal/observation-modal.tpl.html',
 						parent: angular.element(document.body),
 						targetEvent: ev,

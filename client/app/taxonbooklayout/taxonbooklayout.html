@@ -21,14 +21,12 @@
 				        <md-button ng-click="closeSideNav('iframeAside')" class="md-primary">
 				          {{'Close' | translate}}
 				        </md-button>
-				        <md-button  class="md-primary" href="{{getIframeSrc()}}" target="_BLANK">
-				         <i class="fa fa-external-link"></i> {{'Open in new tab' | translate}}
-				        </md-button>
+				       
 						
 						
 				      </md-content>
-					  <md-content  layout-padding>
-					  <iframe ng-src="{{getIframeSrc()}}" width="450" height="1200"></iframe>
+					  <md-content >
+					  <div layout="column" ng-include="'app/speciesstats/speciesstats.tpl.html'" ng-controller="SpeciesStatsCtrl" layout-margin> </div>
 					   </md-content>
 				    </md-sidenav>
 					<md-sidenav class="md-sidenav-right md-whiteframe-z2 iframe-sidenav" md-component-id="similarAside">

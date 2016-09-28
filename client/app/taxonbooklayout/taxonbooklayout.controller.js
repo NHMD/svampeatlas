@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonBookLayoutCtrl', ['$q','$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonRedListData','TaxonTypeaheadService', 'TaxonAttributes','NatureTypes', 'NutritionStrategies','$state' ,'$stateParams', '$timeout', '$modal', '$mdSidenav', '$mdUtil', '$log','ErrorHandlingService','$translate',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonRedListData, TaxonTypeaheadService,TaxonAttributes, NatureTypes,NutritionStrategies, $state, $stateParams, $timeout, $modal, $mdSidenav, $mdUtil, $log, ErrorHandlingService, $translate) {
+	.controller('TaxonBookLayoutCtrl', ['$q','$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonRedListData','TaxonTypeaheadService', 'TaxonAttributes','NatureTypes', 'NutritionStrategies','$state' ,'$stateParams', '$timeout', '$modal', '$mdSidenav', '$mdUtil', '$log','ErrorHandlingService','$translate','leafletData',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonRedListData, TaxonTypeaheadService,TaxonAttributes, NatureTypes,NutritionStrategies, $state, $stateParams, $timeout, $modal, $mdSidenav, $mdUtil, $log, ErrorHandlingService, $translate, leafletData) {
 			
 			$scope.Taxon = Taxon;
 			$scope.natureTypes = NatureTypes.query();
@@ -203,16 +203,26 @@ angular.module('svampeatlasApp')
 
 		
 		$scope.toggleSimilarSpecies = buildToggler('similarAside');
-		    $scope.toggleIframe = buildToggler('iframeAside');
+		 $scope.toggleIframe = buildToggler('iframeAside', function(){
+					leafletData.getMap('speciesmap').then(function(map){
+					
+						$timeout(function() {
+							map.invalidateSize();
+						}, 11);
+					})
+				});
+				
+		    
 		    /**
 		     * Build handler to open/close a SideNav; when animation finishes
 		     * report completion in console
 		     */
-		    function buildToggler(navID) {
+		    function buildToggler(navID, callback) {
 		      var debounceFn =  $mdUtil.debounce(function(){
 		            $mdSidenav(navID)
 		              .toggle()
 		              .then(function () {
+						  callback()
 		                $log.debug("toggle " + navID + " is done");
 		              });
 		          },200);

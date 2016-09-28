@@ -20,7 +20,7 @@
 	
 
 	 
-   				      <div flex layout-margin ngf-drop="" ng-model="$parent.files" ngf-keep="'distinct'" class="drop-box"
+   				      <div flex layout-margin ngf-drop="" ng-model="ctrl.files" ngf-keep="'distinct'" class="drop-box"
      ngf-drag-over-class="'dragover'" ngf-multiple="true"   ngf-pattern="'image/jpeg'"
      ngf-resize="{width: 1200, height: 800, quality: .9,  restoreExif: true}"
 	 ngf-fix-orientation="true" ngf-hide-on-drop-not-available="true"
@@ -31,7 +31,7 @@
 		<img ngf-src="file"  ngf-resize="{width: 200, height: 200}" >
 	</div> -->
 	
-	<md-card ng-repeat="file in files" ng-if="files.length > 0">
+	<md-card ng-repeat="file in ctrl.files" ng-if="ctrl.files.length > 0">
 	<md-card-header layout="row" layout-align="end start" class="img-preview" flex="nogrow">
 		
 		  

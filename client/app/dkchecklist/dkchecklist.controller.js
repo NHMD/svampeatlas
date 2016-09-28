@@ -23,7 +23,7 @@ angular.module('svampeatlasApp')
 				})
 			}
 
-
+			
 			$scope.query = {
 				acceptedTaxaOnly: true,
 				include: [{

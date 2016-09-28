@@ -58,6 +58,7 @@ module.exports = function(app) {
 	app.use('/api/dyntaxa', require('./api/soap/dyntaxa'));
 	app.use('/api/kms', require('./api/soap/kms'));
 	app.use('/api/arcgis', require('./api/soap/arcgis'));
+	app.use('/api/mapbox', require('./api/soap/mapbox'));
 	app.use('/api/plutof', require('./api/soap/plutof'));
 	app.use('/api/geonames', require('./api/soap/geonames'));
 	app.use('/auth', require('./auth'));
@@ -70,8 +71,8 @@ module.exports = function(app) {
 	// All other routes should redirect to the index.html
 
 	function defaultRoute(req, res) {
-		
-		
+
+
 
 		var imgProps = imgProps = [{
 			name: "og:image:width",
@@ -214,12 +215,17 @@ module.exports = function(app) {
 
 			var desc = (obs.users.length > 1) ? "Findere: " : "Finder: ";
 
-			desc += _.reduce(obs.users, function(prev, u) {
+			if (obs.users.length > 0) {
+				desc += _.reduce(obs.users, function(prev, u) {
 
-				var usr = (prev !== "") ? ", " + u.name : u.name;
+					var usr = (prev !== "") ? ", " + u.name : u.name;
 
-				return prev + usr;
-			}, "")
+					return prev + usr;
+				}, "")
+			} else if (obs.verbatimLeg) {
+				desc += obs.verbatimLeg;
+			}
+
 			desc += ". ";
 
 			if (obs.DeterminationView.attributes.diagnose) {
@@ -242,121 +248,125 @@ module.exports = function(app) {
 
 		}).
 		catch(function(err) {
-			
+
 			console.log(err)
 			defaultRoute(req, res)
 		})
 
 	});
-	
+
 	app.get('/taxon/:id', function(req, res) {
 
 		models.Taxon.find({
-		where: {
-			_id: req.params.id
-		}
-		})
-		.then(
-			function(tx){
-			
-		return	Promise.all([models.Taxon.find({
-			where: {
-				_id: tx.accepted_id
-			},
-			include: [{
-					model: models.TaxonDKnames,
-					as: "Vernacularname_DK",
-				required: false
-				},
-				{
-					model: models.TaxonRedListData,
-					as: "redlistdata",
-					where: {year: 2009},
-					required: false
-				},
-				{
-					model: models.TaxonImages,
-					as: "images",
-					required: false
-				},  {
-					model: models.Taxon,
-					as: "synonyms",
-					required: false,
-					include: [{
-					model: models.TaxonImages,
-					as: "images",
-						required: false
-				}]
-				}, {
-					model: models.TaxonAttributes,
-					as: "attributes"
+				where: {
+					_id: req.params.id
+				}
+			})
+			.then(
+				function(tx) {
+
+					return Promise.all([models.Taxon.find({
+						where: {
+							_id: tx.accepted_id
+						},
+						include: [{
+								model: models.TaxonDKnames,
+								as: "Vernacularname_DK",
+								required: false
+							}, {
+								model: models.TaxonRedListData,
+								as: "redlistdata",
+								where: {
+									year: 2009
+								},
+								required: false
+							}, {
+								model: models.TaxonImages,
+								as: "images",
+								required: false
+							}, {
+								model: models.Taxon,
+								as: "synonyms",
+								required: false,
+								include: [{
+									model: models.TaxonImages,
+									as: "images",
+									required: false
+								}]
+							}, {
+								model: models.TaxonAttributes,
+								as: "attributes"
+							}
+
+						]
+					}), models.sequelize.query(
+						"SELECT t2.FullName FROM Taxon t JOIN Taxon t2 ON t.Path LIKE CONCAT(t2.Path, '%') AND t._id = :taxon_id AND t2.RankID > 0 ORDER BY t2.RankID ASC", {
+							replacements: {
+								taxon_id: tx.accepted_id
+							},
+							type: models.sequelize.QueryTypes.SELECT
+						}
+					)])
+				})
+			.spread(function(taxon, classification) {
+
+				var higherTaxa = _.reduce(classification, function(prev, c) {
+					var tx = (prev !== "") ? ", " + c.FullName : c.FullName;
+
+					return prev + tx;
+				}, "")
+				var img = (taxon.images.length > 0) ? taxon.images[0].uri : 'http://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png';
+				var txn = (taxon.Vernacularname_DK) ? capitalizeFirstLetter(taxon.Vernacularname_DK.vernacularname_dk) + " (" + taxon.FullName + ")" : taxon.FullName;
+				var desc = ""
+
+				var synonyms = _.reduce(taxon.synonyms, function(prev, s) {
+
+					var syn = (prev !== "") ? ", " + s.FullName : s.FullName;
+
+					return (s._id !== taxon._id) ? prev + syn : prev;
+				}, "")
+
+
+				if (taxon.attributes.diagnose) {
+					desc += (txn + " er en " + lowerCaseFirstLetter(taxon.attributes.diagnose));
 				}
 
-			]
-		}), models.sequelize.query(
-		"SELECT t2.FullName FROM Taxon t JOIN Taxon t2 ON t.Path LIKE CONCAT(t2.Path, '%') AND t._id = :taxon_id AND t2.RankID > 0 ORDER BY t2.RankID ASC",
-  { replacements: { taxon_id: tx.accepted_id }, type: models.sequelize.QueryTypes.SELECT }
-)])
-	})
-.spread(function(taxon, classification) {
+				if (taxon.attributes.forvekslingsmuligheder) {
+					desc += " " + capitalizeFirstLetter(taxon.attributes.forvekslingsmuligheder);
+				}
 
-			var higherTaxa = _.reduce(classification, function(prev, c){
-				var tx = (prev !== "") ? ", " + c.FullName : c.FullName;
+				if (taxon.redlistdata && _.find(["RE", "CR", "EN", "VU", "NT"], function(e) {
+						return e === taxon.redlistdata.status
+					})) {
+					var tx = (taxon.Vernacularname_DK) ? capitalizeFirstLetter(taxon.Vernacularname_DK.vernacularname_dk) : taxon.FullName;
+					desc += " " + tx + " er rødlistet i kategori " + taxon.redlistdata.status + "."
+				}
 
-				return prev + tx;
-			}, "")
-			var img = (taxon.images.length > 0) ? taxon.images[0].uri : 'http://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png';
-			var txn = (taxon.Vernacularname_DK) ? capitalizeFirstLetter(taxon.Vernacularname_DK.vernacularname_dk) + " (" + taxon.FullName + ")" : taxon.FullName;
-			var desc = ""
+				if (synonyms) {
+					desc += (" Synonymer: " + synonyms + ".");
+				}
 
-			var synonyms = _.reduce(taxon.synonyms, function(prev, s) {
+				desc += " Klassifikation: " + higherTaxa;
 
-				var syn = (prev !== "") ? ", " + s.FullName : s.FullName;
+				res.render('index.ejs', {
+					url: 'http://svampe.databasen.org/taxon/' + req.params.id,
+					type: 'article',
+					title: txn,
+					description: desc,
+					image: img,
+					imgProps: []
+				})
 
-				return (s._id !== taxon._id) ? prev + syn : prev;
-			}, "")
-			
-
-			if (taxon.attributes.diagnose) {
-				desc += (txn + " er en " + lowerCaseFirstLetter(taxon.attributes.diagnose));
-			}
-			
-			if (taxon.attributes.forvekslingsmuligheder) {
-				desc += " "+capitalizeFirstLetter(taxon.attributes.forvekslingsmuligheder);
-			}
-			
-			if (taxon.redlistdata && _.find(["RE", "CR", "EN", "VU", "NT"], function(e) {
-					return e === taxon.redlistdata.status
-				})) {
-				var tx = (taxon.Vernacularname_DK) ? capitalizeFirstLetter(taxon.Vernacularname_DK.vernacularname_dk) : taxon.FullName;
-				desc += " " + tx + " er rødlistet i kategori " + taxon.redlistdata.status + "."
-			}
-			
-			if(synonyms){
-				desc += (" Synonymer: "+synonyms +".");
-			}
-			
-			desc += " Klassifikation: "+higherTaxa;
-			
-			res.render('index.ejs', {
-				url: 'http://svampe.databasen.org/taxon/' + req.params.id,
-				type: 'article',
-				title: txn,
-				description: desc,
-				image: img,
-				imgProps: []
-			})
-
-		}).
+			}).
 		catch(function(err) {
-			
+
 			console.log(err)
 			defaultRoute(req, res)
 		})
 
 	});
 
-app.route('/*')
+	app.route('/*')
 		.get(defaultRoute);
 
 

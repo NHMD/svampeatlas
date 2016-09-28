@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope','$window', 'Auth', 'ErrorHandlingService', '$mdPanel','$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'ArcGis', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService','$cookies',
-		function($scope, $rootScope,$window, Auth, ErrorHandlingService,$mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, ArcGis, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies) {
-
+	.controller('ObservationCtrl', ['$scope', '$rootScope','$window', 'Auth', 'ErrorHandlingService', '$mdPanel','$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService','$cookies', 'ObservationImage', 'Taxon',
+		function($scope, $rootScope,$window, Auth, ErrorHandlingService,$mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon) {
+			var that = this;
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
 			$scope.openSideNav = function() {
@@ -12,6 +12,10 @@ angular.module('svampeatlasApp')
 
 				$mdSidenav('left').open();
 			}
+			$scope.openMenu = function($mdOpenMenu, ev) {
+
+				$mdOpenMenu(ev);
+			};
 			$scope.$translate = $translate;
 			$scope.$state = $state;
 			
@@ -48,7 +52,47 @@ angular.module('svampeatlasApp')
 			  $mdPanel.open(config);
 			};
 			
+			$scope.toggleHide = function(img, hide) {
+
+				img.hide = hide;
+				ObservationImage.update({
+					id: img._id
+				}, img).$promise.then(function() {
+
+					var txt = (img.hide) ? $translate.instant('Foto usynligt på taxonside') : $translate.instant('Foto synligt på taxonside')
+					$scope.showSimpleToast(txt)
+
+				})
+			}
 		
+			
+			
+			$scope.addToSpeciesPage = function(img) {
+				
+				var taxonImage = {
+					taxon_id: $scope.obs.PrimaryDetermination.Taxon.acceptedTaxon._id,
+					collectionNumber: "DMS-"+$scope.obs._id,
+					uri: appConstants.baseurl+"/uploads/"+img.name+".JPG",
+					thumburi: appConstants.baseurl+"/uploads/"+img.name+".JPG",
+					photographer: img.Photographer.name,
+					country: ($scope.obs.Locality) ? "Denmark" : $scope.obs.GeoNames.countryName
+					
+				}
+				
+				Taxon.addImage({
+					id: $scope.obs.PrimaryDetermination.Taxon.acceptedTaxon._id
+				}, taxonImage).$promise.then(function(image) {
+
+					$mdDialog.cancel();
+					$state.go($state.$current, null, {
+						reload: true
+					})
+					
+
+				})
+
+			}
+			
 			
 			$scope.showUser= function(id){
 				$mdDialog.cancel();
@@ -130,24 +174,24 @@ angular.module('svampeatlasApp')
 			}
 
 
-			$scope.postComment = function(newComment) {
-				$scope.sendingComment = true;
+			$scope.postComment = function() {
+				that.sendingComment = true;
 				Observation.postComment({
 						id: $scope.obs._id
 					}, {
-						content: newComment
+						content: that.newComment
 					})
 					.$promise.then(function(comment) {
 						$scope.forum.push(comment);
-						delete $scope.newComment;
-						delete $scope.$parent.newComment;
-						$scope.sendingComment = false;
+						delete that.newComment;
+						
+						that.sendingComment = false;
 
 
 						$rootScope.$broadcast('observation_updated', $scope.obs);
 					})
 					.catch(function(err) {
-						$scope.sendingComment = false;
+						that.sendingComment = false;
 						ErrorHandlingService.handle500();
 					})
 
@@ -167,11 +211,33 @@ angular.module('svampeatlasApp')
 				layers: {
 					baselayers: {
 						osm: {
-							name: 'Kort',
+							name: $translate.instant('Kort'),
 							url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 							type: 'xyz'
 						},
+						OpenTopoMap: {
+							name: 'OpenTopoMap',
+							url: 'http://tile.opentopomap.org/{z}/{x}/{y}.png',
+							type: 'xyz',
+							layerOptions: {
+								
+								attribution: 'Tiles &copy; opentopomap.org'
+							}
 
+						},
+						mapbox_outdoors: {
+							name: 'Mapbox Outdoors',
+							url: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/256/{z}/{x}/{y}?access_token='+MapBox.getTicket(),
+							type: 'xyz'
+
+						},
+						mapbox_satelite: {
+							name: 'Mapbox Satelite',
+							url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token='+MapBox.getTicket(),
+							type: 'xyz'
+
+						},
+						/*
 						WorldImagery: {
 							name: 'WorldImagery',
 							url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png',
@@ -193,7 +259,7 @@ angular.module('svampeatlasApp')
 							}
 						},
 
-
+*/
 
 					}
 				}
