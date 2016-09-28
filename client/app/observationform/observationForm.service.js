@@ -11,6 +11,7 @@ angular.module('svampeatlasApp')
 					}
 					$mdDialog.show({
 						controller: 'ObservationFormCtrl',
+						controllerAs: 'ctrl',
 						templateUrl: 'app/observationform/observation-form-modal.tpl.html',
 						parent: angular.element(document.body),
 						targetEvent: ev,

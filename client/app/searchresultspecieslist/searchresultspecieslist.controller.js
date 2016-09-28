@@ -1,13 +1,50 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchSpeciesListCtrl', ['$scope', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService',
-		function($scope, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService) {
+	.controller('SearchSpeciesListCtrl', ['$scope', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'appConstants',
+		function($scope, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, $stateParams, $state, ObservationModalService, ObservationFormService, appConstants) {
 			
 			$scope.Auth = Auth;
 			$scope.stItemsPrPage = 100;
 			
 $scope.ObservationFormService = ObservationFormService;
+
+
+
+
+
+
+$scope.getTaxonListCsv = function(){
+
+
+		
+		var mapped =  _.map($scope.displayed, function(e){
+			return {
+				
+				
+		
+				taxon_id: e.DeterminationView.Taxon_id,
+				taxonFullName: e.DeterminationView.Taxon_FullName,
+				taxonDanishName: e.DeterminationView.Taxon_vernacularname_dk,
+				observationCount: e.observationCount,
+				taxonRedListCategory: e.DeterminationView.Taxon_redlist_status,
+				URI: appConstants.baseurl +"/taxon/"+e.DeterminationView.Taxon_id
+				
+			
+			
+
+			}
+		})
+		
+		return mapped;
+	
+}
+
+
+
+
+
+
 
 $scope.showSpeciesSearch = function(row, view){
 	var search = ObservationSearchService.getSearch();

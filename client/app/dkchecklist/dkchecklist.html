@@ -15,15 +15,18 @@
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
 	<thead class="show-filter">
 		<tr ng-show="displayed">
+			<th st-ratio="5"></th>
 			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
 			    <!--<md-radio-group ng-model="group">
 			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
 			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
 			         <md-radio-button value="lichens">kun laver</md-radio-button>
 			       </md-radio-group> -->
-				<md-input-container>
+				<md-input-container class="md-block" >
         <label>Latinsk navn</label>
+		<md-icon md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
         <input st-search="FullName"  ng-model="uiFullName">
+		
       </md-input-container> </th>
 			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
 			    <!--<md-radio-group ng-model="group">
@@ -31,15 +34,16 @@
 			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
 			         <md-radio-button value="lichens">kun laver</md-radio-button>
 			       </md-radio-group> -->
-				<md-input-container>
+				<md-input-container class="md-block">
         <label>Dansk navn</label>
         <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="uiDkName">
+		
       </md-input-container> </th>
 			<th ng-if="mdMedia('gt-xs')" st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultlist/pagination.tpl.html">
 			</th>
 		</tr>
 	<tr>
-		
+		<th st-ratio="5"></th>
 		
 		<th st-sort="FullName"  translate>Art</th>
 		
@@ -50,28 +54,39 @@
 	<tbody ng-show="displayed.length > 0">
 		
 	<tr ng-repeat="row in displayed">
-		
+		<td data-title="" ><md-menu  >
+			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+			               <ng-md-icon icon="more_vert" ></ng-md-icon>
+			            </md-button>
+			            <md-menu-content width="4" >
+			              <md-menu-item >
+			                <md-button ng-click="showRecords(row._id, 'list')">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Vis fund i liste' | translate}}</p>
+			                      <ng-md-icon icon="list" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			              <md-menu-item >
+			                <md-button ng-click="showRecords(row._id, 'map')">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Vis fund på kort'  | translate}}</p>
+			                      <ng-md-icon  icon="map" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			          
+			            </md-menu-content>
+			          </md-menu></td>
 		
 		<td colspan=2 data-title="{{'Art' | translate}}">
-			<a class="cursor-pointer" ng-click="$state.go('species', {taxon_id: row._id})"> 
+			<a class="cursor-pointer" ng-click="$state.go('species', {id: row._id})"> 
 				<em>{{row.FullName}} </em><span ng-if="row.redlistdata && row.redlistdata.length === 1 "> 
 				({{row.redlistdata[0].status}})</span> <span ng-if="row.Vernacularname_DK">- {{row.Vernacularname_DK.vernacularname_dk}} </span> 
 				 </a> 
 			
-			
-			<md-button class="md-icon-button md-primary" ng-click="showRecords(row._id, 'list')">
-			<md-tooltip md-direction="bottom" ng-if="mdMedia('min-width: 768px')" >
-			          {{'Vis fund i liste' | translate}}
-			        </md-tooltip>
-        <ng-md-icon icon="list"></ng-md-icon> 
-      </md-button>
-	
-	  <md-button class="md-icon-button md-primary" ng-click="showRecords(row._id, 'map')">
-  	<md-tooltip md-direction="bottom" ng-if="mdMedia('min-width: 768px')" >
-  	          {{'Vis fund på kort' | translate}}
-  	        </md-tooltip>
-	          <ng-md-icon icon="map"></ng-md-icon> 
-	        </md-button>
+
 		<span ng-repeat="syn in row.synonyms | synonymsWithoutSelf" class="md-caption"><br>Syn: <em>{{syn.FullName}}</em></span>
 		</td>
 		

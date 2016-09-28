@@ -5,7 +5,7 @@ angular.module('svampeatlasApp')
     $stateProvider
       .state('species', {
 		  
-        url: '/taxon/:taxon_id',
+        url: '/taxon/:id',
         templateUrl: 'app/species/species.html',
         controller: 'SpeciesCtrl'
       });

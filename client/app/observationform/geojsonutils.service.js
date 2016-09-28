@@ -1,7 +1,11 @@
 'use strict';
 angular.module('svampeatlasApp')
 	.factory('GeoJsonUtils', function() {
-
+		
+		function isNumber(e) {
+			return !isNaN(parseFloat(e)) && isFinite(e)
+		}
+		
 		var DKbounds = {
 			"type": "Feature",
 			"properties": {},
@@ -49,6 +53,27 @@ angular.module('svampeatlasApp')
 
 		var gju = {};
 
+
+		gju.exifGpsDataToLatLong = function(GPSLatitude, GPSLongitude) {
+			
+			var t = !1,
+				n = parseInt(GPSLatitude[0]);
+			0 > n && (t = !0);
+			var o = Math.abs(GPSLatitude[1]),
+				a = Math.abs(GPSLatitude[2]);
+			t && (o = -1 * o, a = -1 * a);
+			var l = n + o / 60 + a / 3600;
+			var decimalLatitude = parseFloat(l).toFixed(8), t = !1;
+			var i = parseInt(GPSLongitude[0]);
+			0 > i && (t = !0);
+			var m = Math.abs(GPSLongitude[1]),
+				r = Math.abs(GPSLongitude[2]);
+			isNumber(i) || (i = 0), isNumber(m) || (m = 0), isNumber(r) || (r = 0), t && (m = -1 * m, r = -1 * r);
+			var d = i + m / 60 + r / 3600;
+			var decimalLongitude = parseFloat(d).toFixed(8);
+			return [decimalLatitude, decimalLongitude]
+		}
+		
 
 		// adapted from http://www.kevlindev.com/gui/math/intersection/Intersection.js
 		gju.lineStringsIntersect = function(l1, l2) {

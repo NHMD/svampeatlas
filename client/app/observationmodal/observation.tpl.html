@@ -140,11 +140,11 @@ flex>
 					   <form layout-fill>
 					   <md-input-container class="md-block">
 					             <label>{{'Skriv kommentar' | translate}}</label>
-					             <textarea ng-model="$parent.$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.$parent.sendingComment"></textarea>
+					             <textarea ng-model="ctrl.newComment"  rows="5" md-select-on-focus ng-disabled="ctrl.sendingComment"></textarea>
 					           </md-input-container>
 					   
 						   </form>
-						   <md-button class="comment-submit" ng-show="$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">{{'Send' | translate}}</md-button>
+						   <md-button class="comment-submit" ng-show="ctrl.newComment" ng-click="postComment()" ng-disabled="ctrl.sendingComment">{{'Send' | translate}}</md-button>
 			   	        </div>
 	  				
           
@@ -285,11 +285,11 @@ flex>
 			   <form layout-fill>
 			   <md-input-container class="md-block">
 			             <label>{{'Skriv kommentar' | translate}}</label>
-			             <textarea ng-model="$parent.$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
+			             <textarea ng-model="ctrl.newComment"  rows="5" md-select-on-focus ng-disabled="ctrl.sendingComment"></textarea>
 			           </md-input-container>
 					   
 				   </form>
-				   <md-button class="comment-submit" ng-show="$parent.$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">{{'Send' | translate}}</md-button>
+				   <md-button class="comment-submit" ng-show="ctrl.newComment" ng-click="postComment()" ng-disabled="ctrl.sendingComment">{{'Send' | translate}}</md-button>
 	   	        </div>
 	  				
           
@@ -315,7 +315,20 @@ flex>
            md-gutter="8px" md-gutter-gt-sm="4px" >
        <md-grid-tile ng-repeat="img in obs.Images" >
          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true" ng-click="openImage(img)">
-         
+    	       <md-grid-tile-footer class="obs-form-image">
+    		   <md-button ng-if="Auth.hasRole('validator') && !img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, true)'>
+              <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
+            </md-button>
+    		   <md-button ng-if="Auth.hasRole('validator') && img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, false)'>
+              <i class="fa fa-eye fa-2x hide-icon"></i> 
+            </md-button>
+		   
+    		   <md-button ng-if="Auth.hasRole('validator')" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='addToSpeciesPage(img)'>
+              <i class="fa fa-star fa-2x hide-icon"></i> 
+            </md-button>
+		  
+		
+    	   </md-grid-tile-footer> 
        </md-grid-tile>
      </md-grid-list>
 	 

@@ -8,13 +8,15 @@ angular.module('svampeatlasApp')
 	
         url: '/observations/new',
         templateUrl: 'app/observationform/observationform.html',
-        controller: 'ObservationFormCtrl'
+       controller: 'ObservationFormCtrl',
+		  controllerAs : 'ctrl'
       })
       .state('observations', {
 	
         url: '/observations/:observationid?',
         templateUrl: 'app/observationmodal/observation.html',
-        controller: 'ObservationCtrl'
+        controller: 'ObservationCtrl',
+		  controllerAs : 'ctrl'
       });
  
  });

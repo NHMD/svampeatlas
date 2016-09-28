@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies',
-		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies) {
+	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants) {
 
 			$scope.moment = moment;
 			$scope.Auth = Auth;
@@ -12,9 +12,131 @@ angular.module('svampeatlasApp')
 			$scope.$state = $state;
 			$scope.ObservationFormService = ObservationFormService;
 			$scope.$stateParams = $stateParams;
+			
+			
+			// Only use table state for correct pagination when a row update has occurred - otherwise delete state 
+			if (!ObservationStateService.updated){
+				localStorage.removeItem('search_result_list_table');
+			}
+			
+			
+			
+			var csvDeferred = $q.defer();
+			$scope.csv = csvDeferred.promise;
+			
+			$scope.getObservationCsv = function(){
+				
+				$scope.csvInProgress = true;
+				function getLocality(elm){
+					if(elm.Locality){
+						return elm.Locality.name
+					} else if(elm.GeoNames){
+						return elm.GeoNames.name
+					}
+				}
+				
+				function getCountry(elm){
+					if(elm.Locality){
+						return "Denmark"
+					} else if(elm.GeoNames){
+						return elm.GeoNames.countryName
+					}
+				}
+				
+				function getCollectors(elm){
+					return _.reduce(elm.users, function(prev, user){
+						return (prev === "") ? user.name : prev+", "+ user.name;
+					}, "")
+				}
+				
+				function getAssociatedTaxa(elm){
+					return _.reduce(elm.associatedTaxa, function(prev, tx){
+						return (prev === "") ? tx.DKandLatinName : prev+", "+ tx.DKandLatinName;
+					}, "")
+				}
+				
+				
+				var csvsearch = angular.copy(ObservationSearchService.getSearch());
+				csvsearch.include[0].include=JSON.stringify([JSON.stringify({model: 'User', as: "Determiner", required: false, where:{}})])
+				csvsearch.include.push({model: "VegetationType", as :"VegetationType", where: {}, required: false})
+				csvsearch.include.push({model: "Substrate", as :"Substrate", where: {}, required: false})
+				csvsearch.include.push({model: "User", as :"users", where: {}, required: false})
+				csvsearch.include.push({model: "PlantTaxon", as :"associatedTaxa", where: {}, required: false})
+				
+				
+				
+				
+				
+				
+				var csvqueryinclude = _.map(csvsearch.include, function(n) {
+					return JSON.stringify(n);
+				});
+				
+				var geometry = csvsearch.geometry;
+				var q = {
+					//order: order || 'observationDate DESC',
+					
+					nocount: true,
+					activeThreadsOnly: csvsearch.activeThreadsOnly,
+					recentlyCommented: csvsearch.recentlyCommented,
+					selectedMonths: csvsearch.selectedMonths,
+					where: csvsearch.where || {},
+					include: JSON.stringify(csvqueryinclude)
+				};
 
+				if (geometry) {
+					q.geometry = geometry;
+				}
+				
+				
+			Observation.query(q)
+				.$promise.then(function(result) {
+					delete $scope.csvInProgress;
+					var mapped =  _.map(result, function(e){
+						return {
+							_id: "DMS-"+e._id,
+							observationDate: e.observationDate,
+						//	createdDate: e.createdAt,
+							validationStatus: e.DeterminationView.Determination_validation,
+							taxon_id: e.DeterminationView.Taxon_id,
+							taxonFullName: e.DeterminationView.Taxon_FullName,
+							taxonDanishName: e.DeterminationView.Taxon_vernacularname_dk,
+							taxonRedListCategory: e.DeterminationView.Taxon_redlist_status,
+							locality: getLocality(e),
+							country: getCountry(e),
+							decimalLatitude: e.decimalLatitude,
+							decimalLongitude: e.decimalLongitude,
+							accuracy: e.accuracy,
+							reportedBy: (e.PrimaryUser) ? e.PrimaryUser.name : "",
+							substrate: (e.Substrate) ? e.Substrate.name : "",
+							vegetationType: (e.VegetationType) ? e.VegetationType.name : "",
+							associatedTaxa: getAssociatedTaxa(e),
+							leg: getCollectors(e),
+							det: (e.DeterminationView.Determiner) ? e.DeterminationView.Determiner.name : "",
+							URI: appConstants.baseurl +"/observations/"+e._id
+						
+						
 
-			$scope.tableUpdate = {};
+						}
+					})
+					
+					csvDeferred.resolve(mapped)
+					
+				})
+				.catch(function(err){
+					delete $scope.csvInProgress;
+					ErrorHandlingService.handle500();
+				});
+				
+				
+				
+				
+				
+				
+				
+			}
+
+			
 
 			$scope.$on('dialogRemoved', function(ev, obs) {
 
@@ -61,7 +183,7 @@ angular.module('svampeatlasApp')
 
 
 					})
-				}
+				} 
 
 			});
 
@@ -102,6 +224,8 @@ angular.module('svampeatlasApp')
 
 				$scope.displayed.splice(index, 1);
 			});
+
+			
 
 			if ($stateParams.searchterm || ($stateParams.locality_id && $stateParams.date) || $stateParams.taxon_id) {
 				ObservationSearchService.reset();
@@ -314,7 +438,7 @@ angular.module('svampeatlasApp')
 
 				Observation.query(query, function(result, headers) {
 
-					//$scope.taxonCount = headers('count');
+					$scope.totalCount = headers('count');
 
 					var numPages = Math.ceil(parseInt(headers('count')) / limit);
 					tableState.pagination.numberOfPages = numPages; //set the number of pages so the pagination can update

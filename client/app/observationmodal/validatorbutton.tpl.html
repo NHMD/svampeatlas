@@ -1,4 +1,4 @@
-	<md-fab-speed-dial md-open="validatorButtonIsOpen" md-direction="down"
+<!--	<md-fab-speed-dial  md-direction="down"
 	                         class='md-scale'>
 	        <md-fab-trigger>
 	          <md-button aria-label="menu" class="md-fab md-warn">
@@ -33,4 +33,59 @@
  	            <ng-md-icon icon="delete_forever"></ng-md-icon>
  	          </md-button>
 	        </md-fab-actions>
-	      </md-fab-speed-dial>
+	      </md-fab-speed-dial> -->
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+	      <md-menu md-position-mode="target-right target" >
+	        <md-button aria-label="menu" class="md-fab md-warn" ng-click="openMenu($mdOpenMenu, $event)">
+	          <ng-md-icon icon="thumbs_up_down"></ng-md-icon>
+	        </md-button>
+	        <md-menu-content width="3">
+			
+			<md-menu-item>
+ 	          <md-button aria-label="accept"  ng-if="obs.PrimaryDetermination.validation !== 'Godkendt'" ng-click="updateValidation('Godkendt')">
+ 			  <md-tooltip md-direction="left" ></md-tooltip>
+ 	            <ng-md-icon icon="thumb_up"></ng-md-icon> {{"Godkend" | translate}}
+ 	          </md-button>
+		  </md-menu-item>
+		  <md-menu-item>
+ 	          <md-button aria-label="reject"  ng-if="obs.PrimaryDetermination.validation !== 'Afventer'" ng-click="updateValidation('Afventer')">
+ 			   
+ 	           <ng-md-icon icon="pause"></ng-md-icon> {{"Afventer" | translate}}
+ 	          </md-button>
+			  </md-menu-item>
+			  <md-menu-item>
+ 	          <md-button aria-label="reject"  ng-if="obs.PrimaryDetermination.validation !== 'Afvist'" ng-click="updateValidation('Afvist')">
+ 			   
+ 	           <ng-md-icon icon="thumb_down"></ng-md-icon> {{"Afvis" | translate}}
+ 	          </md-button>
+			  </md-menu-item>
+			  <md-menu-item>
+ 	         <md-button aria-label="add determination"  ng-click="showDeterminationDialog($event, obs)">
+ 			  
+ 	            <ng-md-icon icon="undo"></ng-md-icon> {{"Ombestem" | translate}}
+ 	          </md-button> 
+			  </md-menu-item>
+			  <md-menu-item>
+  	         <md-button aria-label="add determination"  ng-click="showDeterminationEditDialog($event, obs)">
+  			  
+  	            <ng-md-icon icon="edit"></ng-md-icon> {{"Ret bestemmelse" | translate}}
+  	          </md-button>
+			  </md-menu-item>
+			  <md-menu-item>
+  	         <md-button aria-label="Delete observation"  ng-click="deleteObs($event, obs)">
+  			 
+  	            <ng-md-icon icon="delete_forever"></ng-md-icon> {{"Slet" | translate}}
+  	          </md-button>
+	  </md-menu-item>
+	 
+       
+	        </md-menu-content>
+	      </md-menu>

@@ -27,7 +27,7 @@ router.get('/:id/forum', forumController.showForumForObs);
 router.post('/:id/forum', auth.isAuthenticated(), forumController.addCommentToObs);
 
 
-router.post('/:id/determinations', auth.hasRole('validator'), determinationController.addDeterminationToObs); 
+router.post('/:id/determinations', auth.isAuthenticated(), determinationController.addDeterminationToObs); 
 
 
 router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), auth.appendUser(), imageController.addImagesToObs]); 

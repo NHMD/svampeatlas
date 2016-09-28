@@ -1,4 +1,4 @@
-        <form name="observationForm">
+        <form name="observationForm" >
 			<div layout="row">
   			  <div layout="column" ng-if="obs && obs._id && !duplicateID" class="inset" layout-fill>
   	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
@@ -7,7 +7,13 @@
   	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
   	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
   		  </div>
-		  <div class="validator-button-container" ng-if="obs && (obs._id && !duplicateID) && Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"></div>
+		  <div class="validator-button-container" ng-cloak ng-if="obs && (obs._id && !duplicateID) && Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"></div>
+		  <div ng-if="obs && (obs._id && !duplicateID) && !Auth.hasRole('validator')">
+	         <md-button aria-label="add determination" class="md-raised md-warn" ng-click="showDeterminationDialog($event, obs)">
+			  
+	            <ng-md-icon icon="undo"></ng-md-icon> {{"Ombestem" | translate}}
+	          </md-button>
+		  </div>
 		  </div>
 			
 			<div ng-if="!obs || (!obs._id && duplicateID)">
@@ -80,16 +86,18 @@
 		 		
 			 <div layout="row" layout-margin>
   		 	   
-  		 	   <md-switch ng-model="$parent.$parent.$parent.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
+  		 	   <md-switch ng-model="ctrl.onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0">
   		 	       {{'Søg i familier, ordener osv.' | translate}}
   		 	     </md-switch>
 				 
 			 </div>
 			 <md-whiteframe class="md-whiteframe-2dp valideringsrapport" layout layout-align="center center" layout-padding layout-margin ng-if="taxonAttrs && taxonAttrs.valideringsrapport">
-			     <span>{{taxonAttrs.valideringsrapport}}</span>
+			     <span >{{taxonAttrs.valideringsrapport}}</span>
 			   </md-whiteframe>
 			 </div>
 			  <div layout-margin layout-gt-xs="row" >
+	              <md-datepicker ng-if="$mdMedia('xs')" flex-offset-xs="50" ng-model="ctrl.observationDate" md-placeholder="{{'Dato' | translate}}" md-max-date="$parent.$parent.maxDate"> 
+	              </md-datepicker>
 				  <md-chips ng-model="selectedLocality" md-autocomplete-snap md-require-match="true" class="md-block" ng-if="!foreignLocality" flex-gt-xs>
 
 				    <md-autocomplete
@@ -117,32 +125,28 @@
 				            <input ng-model="foreignLocalityString" disabled>
 				          </md-input-container>
 						  
-			              <md-datepicker ng-model="$parent.$parent.observationDate" md-placeholder="{{'Dato' | translate}}" md-max-date="$parent.$parent.maxDate">
+			              <md-datepicker ng-if="$mdMedia('gt-xs')" ng-model="ctrl.observationDate" md-placeholder="{{'Dato' | translate}}" md-max-date="$parent.maxDate">
 			              </md-datepicker>
 			  </div> 
 			   <div layout-margin layout="row">
 				   <md-input-container>
 				           <label>{{'Substrat' | translate}}</label>
-				           <md-select name="substrate" ng-model="$parent.$parent.selectedSubstrate" required>
+				           <md-select name="substrate" ng-model="ctrl.selectedSubstrate" required>
 				             <md-option ng-repeat="sub in substrates" value="{{sub._id}}" >
 				               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
 				             </md-option>
 				           </md-select>
-						   <div class="errors" ng-messages="observationForm.substrate.$error" ng-if="observationForm.$dirty && observationForm.substrate.$touched && !$parent.selectedSubstrate">
-						           <div ng-message="required">{{'Obligatorisk' | translate}}</div>
-						         </div>
+						   
 				         </md-input-container>
 	 				   <md-input-container>
 	 				           <label>{{'Vegetationstype' | translate}}</label>
-	 				           <md-select ng-model="$parent.$parent.selectedVegetationType" name="vegetationType">
+	 				           <md-select ng-model="ctrl.selectedVegetationType" name="vegetationType" required>
 	 				             <md-option ng-repeat="veg in vegetationtypes" value="{{veg._id}}" >
 								  {{($translate.use() === 'en') ? veg.name_uk : veg.name}}
 	 				              
 	 				             </md-option>
 	 				           </md-select>
-							   <div class="errors" ng-messages="observationForm.vegetationType.$error" ng-if="observationForm.$dirty && observationForm.vegetationType.$touched && !$parent.selectedVegetationType">
-							           <div ng-message="required">{{'Obligatorisk' | translate}}</div>
-							         </div>
+							   
 	 				         </md-input-container>
 							 
 							 <md-button ng-show="!ecologyLocked" class="md-icon-button md-primary"  aria-label="Lock ecology" ng-click="toggleEcologyLock(true)">
@@ -212,7 +216,7 @@
 			   <div layout-margin layout="column">
 				   <md-input-container class="md-block">
 				             <label>{{'Økologi-kommentarer' | translate}}</label>
-				             <textarea ng-model="$parent.$parent.ecologynote" md-maxlength="800" rows="5" md-select-on-focus></textarea>
+				             <textarea ng-model="ctrl.ecologynote" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
 			   </div>
  			   <div layout-margin layout="row">
@@ -272,22 +276,22 @@
 			  <div layout-margin layout="row">
 				  <md-input-container class="md-block" flex-gt-sm>
 				              <label>{{'Kollektionsnummer' | translate}}</label>
-				              <input ng-model="$parent.$parent.fieldnumber">
+				              <input ng-model="ctrl.fieldnumber">
 				            </md-input-container>
 		  				  <md-input-container class="md-block" flex-gt-sm>
 		  				              <label>{{'Herbarium' | translate}}</label>
-		  				              <input ng-model="$parent.$parent.herbarium">
+		  				              <input ng-model="ctrl.herbarium">
 		  				            </md-input-container>
 			  </div>
 			   <div layout-margin layout="column">
 				   <md-input-container class="md-block">
 				             <label>{{'Kommentarer til fundet' | translate}}</label>
-				             <textarea ng-model="$parent.$parent.note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
+				             <textarea ng-model="ctrl.note" md-maxlength="800" rows="5" md-select-on-focus></textarea>
 				           </md-input-container>
 						   <div ng-show="Auth.hasRole('validator')">
  				   <md-input-container class="md-block">
  				             <label>{{'Intern note' | translate}}</label>
- 				             <textarea ng-model="$parent.$parent.noteInternal" md-maxlength="800" rows="5" md-select-on-focus></textarea>
+ 				             <textarea ng-model="ctrl.noteInternal" md-maxlength="800" rows="5" md-select-on-focus></textarea>
  				           </md-input-container>
 					   </div>
 			   </div>
@@ -298,7 +302,7 @@
 				  
 					   
 				    
-					 <md-button ngf-select ng-model="$parent.$parent.files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-capture="'camera'" ngf-resize="{width: 1200, height: 800, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ng-click="$parent.$parent.showProcessingImageStatus()"
+					 <md-button ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-capture="'camera'" ngf-resize="{width: 1200, height: 800, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ng-click="$parent.$parent.showProcessingImageStatus()"
 					                  aria-label="Tilføj billeder"
 					                  class="md-icon-button" >
 					         <ng-md-icon icon="camera_alt" ></ng-md-icon>
@@ -347,11 +351,11 @@
   			   <form layout-fill>
   			   <md-input-container class="md-block">
   			             <label>{{'Skriv kommentar' | translate}}</label>
-  			             <textarea ng-model="$parent.$parent.newComment"  rows="5" md-select-on-focus ng-disabled="$parent.sendingComment"></textarea>
+  			             <textarea ng-model="ctrl.newComment"  rows="5" md-select-on-focus ng-disabled="ctrl.sendingComment"></textarea>
   			           </md-input-container>
 			   
   				   </form>
-  				   <md-button class="comment-submit" ng-show="$parent.$parent.newComment" ng-click="postComment(newComment)" ng-disabled="$parent.sendingComment">{{'Send' | translate}}</md-button>
+  				   <md-button class="comment-submit" ng-show="ctrl.newComment" ng-click="postComment(ctrl.newComment)" ng-disabled="ctrl.sendingComment">{{'Send' | translate}}</md-button>
   	   	        </div>
  				
      

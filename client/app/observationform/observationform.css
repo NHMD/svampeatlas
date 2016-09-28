@@ -14,6 +14,7 @@
 
 .valideringsrapport {
 	margin-bottom: 18px !important;
+	background-color: wheat; 
 }
 
 #position-button {
@@ -43,7 +44,7 @@ md-grid-tile-footer.obs-form-image {
   padding-top: 8px;
   padding-bottom: 8px;
   white-space: normal; 
-  min-height: 40px;}
+  min-height: 60px;}
 .autocomplete-custom-template li:last-child {
   border-bottom-width: 0; }
 .autocomplete-custom-template .item-title,
@@ -62,10 +63,46 @@ md-grid-tile-footer.obs-form-image {
 	 font-size:10px;
  }
  
+
  
 .autocomplete-custom-template .item-title md-icon {
   height: 18px;
   width: 18px; }
+  
+  
+  .new-obs-tabs-wrapper {
+      position: relative;
+  }
+  
+md-tabs.observationform-tabs {
+min-height: 92vh !important;
+	
+} 
+
+md-tabs.observationform-tabs > md-tabs-wrapper {
+	background-color: rgb(96,125,139); 	
+	border-width: 0px !important;
+	} 
+md-tabs.observationform-tabs .md-tab.md-active {
+	color: rgb(255,255,255); 
+}
+
+md-tabs.observationform-tabs .md-tab {
+	color: rgb(207,216,220);
+	
+}
+
+
+
+
+
+
+
+	
+	
+	
+	
+
   
 
   

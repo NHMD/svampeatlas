@@ -14,6 +14,7 @@ var _ = require('lodash');
 var models = require('../')
 var Determination = models.Determination;
 var Promise = require("bluebird");
+var userTool = require("../userTool");
 
 var nestedQueryParser = require("../nestedQueryParser")
 
@@ -188,20 +189,60 @@ exports.updateValidation = (req, res)=> {
 }
 
 exports.addDeterminationToObs = (req, res)=> {
-
+	var userIsValidator = userTool.hasRole(req.user, 'validator');
 	var determination = req.body;
 	determination.observation_id = req.params.id;
 	determination.user_id = (determination.user_id) ? determination.user_id : req.user._id;
 	
-	determination.validation = "Godkendt";
+	
 	 console.log(determination)
 	 models.sequelize.transaction(function(t) {
 
-		return Determination
+		return models.Observation.find({
+					where: {
+						_id: req.params.id
+					}
+				}, {
+					transaction: t
+				})
+				.then((obs)=>{
+					return [models.Taxon.find({
+						where: {
+							_id: determination.taxon_id
+						},
+						include: [{
+							model: models.Taxon,
+							as: "acceptedTaxon",
+							include: [{
+								model: models.TaxonAttributes,
+								as: "attributes",
+								fields: ['validation']
+							}]
+						}]
+					}, {
+						transaction: t
+					}), obs]
+				})
+				.spread((taxon, obs)=>{
+
+					if (!obs) {
+						res.send(404);
+					};
+
+					if (req.user._id !== obs.primaryuser_id && !userIsValidator) {
+
+						throw "Forbidden"
+					}
+					if(userIsValidator){
+						determination.validation = "Godkendt";
+					} else {
+						determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Valideres';
+					};
+					return Determination
 			.create(determination, {
 				transaction: t
 			})
-			.then((det)=> {
+				}).then((det)=> {
 				
 				return [models.Observation.update({
 					primarydetermination_id: det._id
@@ -213,10 +254,6 @@ exports.addDeterminationToObs = (req, res)=> {
 				}
 				), det]
 			})
-			
-			
-			
-
 
 	})
 	.spread((updated, det)=>{
@@ -227,8 +264,13 @@ exports.addDeterminationToObs = (req, res)=> {
 	.then((det)=> {
 		return res.status(200).json(det);
 	})
-	.
-catch (handleError(res));
+		.
+	catch((err)=> {
+		var statusCode = (err === 'Forbidden') ? 403 : 500;
+		console.log(err);
+
+		res.status(statusCode).send(err);
+	});
 	;
 }
 

@@ -14,18 +14,27 @@
 <table  class="table species-table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-table="displayed" st-safe-src='serverData'>
 	
 	<thead>
-		<tr ng-show="displayed && !isLoading">
+		
 	  		<tr ng-show="displayed && !isLoading">
-	  			<th colspan="2">
+	 			<th><md-button aria-label="Download csv"  ng-csv="getTaxonListCsv" csv-label="true" filename="svampeatlasdata.csv">
+	                <ng-md-icon icon="file_download"></ng-md-icon>Download csv
+	            </md-button></th>
+	  			<th >
 	  			    <!--<md-radio-group ng-model="group">
 	  			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
 	  			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
 	  			         <md-radio-button value="lichens">kun laver</md-radio-button>
 	  			       </md-radio-group> -->
 	  				<md-input-container>
-	          <label>Filter</label>
+	          <label translate>Latinsk navn</label>
+			  <md-icon md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
 	          <input st-search="DeterminationView.Taxon_FullName">
-	        </md-input-container> </th>
+	        </md-input-container>
+  				<md-input-container>
+          <label translate>Dansk navn</label>
+		  
+          <input st-search="DeterminationView.Taxon_vernacularname_dk">
+        </md-input-container> </th>
 			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="2" st-template="app/searchresultspecieslist/pagination.tpl.html">
 			</th>
 		</tr>

@@ -22,7 +22,8 @@ angular.module('svampeatlasApp', [
 	'leaflet-directive',
 	'userAvatar',
 	'ngFileUpload',
-	'highcharts-ng'
+	'highcharts-ng',
+	'ngCsv'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider,$mdThemingProvider, ssSideNavSectionsProvider, $logProvider) {
     $urlRouterProvider
@@ -224,7 +225,8 @@ angular.module('svampeatlasApp', [
   .constant("appConstants", {
          "imageurl": "/uploads/",
 	  "Fungi_id" : 60212,
-	  "baseurl" : "http://svampe.databasen.org"
+	  "baseurl" : "http://svampe.databasen.org",
+	  "MapBoxToken" : "pk.eyJ1Ijoic3ZhbXBlYXRsYXMiLCJhIjoiY2l0ZWMzemh4MDBjYTJ4dG9iZW0yZGh2dSJ9.kZHV0dNh7o0_ifC6hWzHEQ"
         
      })
 .filter('synonymsWithoutSelf', function() {

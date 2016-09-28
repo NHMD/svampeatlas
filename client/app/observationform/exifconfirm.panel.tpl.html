@@ -1,0 +1,23 @@
+<div role="dialog" aria-label="Eat me!" layout="column" layout-align="center center">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2 translate>Dit foto indeholder en GPS-position</h2>
+    </div>
+  </md-toolbar>
+
+  <div class="demo-dialog-content">
+<p translate>
+      Vil du bruge denne position til dit fund? (kan justeres senere).
+    </p>
+  </div>
+
+  <div layout="row" class="demo-dialog-button">
+	  <span flex></span>
+      <md-button  class="md-primary" ng-click="ctrl.cancel()" translate>
+        Nej
+      </md-button>
+    <md-button  class="md-primary" ng-click="ctrl.use()" translate>
+      Ja
+    </md-button>
+  </div>
+</div>

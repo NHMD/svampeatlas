@@ -6,14 +6,19 @@
         <h2 ng-if="!obs || !obs._id">{{'Nyt fund' | translate}} {{(duplicateID) ? ('('+('klonet fra' | translate)+' DMS-'+duplicateID+')') : ''}}</h2>
 		<h2 ng-if="obs && obs._id">DMS-{{obs._id}} </h2>
         <span flex></span>
-			 <md-button ngf-select ng-model="files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-capture="'camera'" ngf-resize="{width: 1200, height: 800, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ng-click="showProcessingImageStatus()"
+	 <md-button ng-if="$mdMedia('xs') || $mdMedia('sm')" ng-click="moveToMapAndUseLocation()"
+	                  aria-label="Tilføj position"
+	                  class="md-icon-button" >
+	         <ng-md-icon icon="gps_fixed" ></ng-md-icon>
+	       </md-button>
+			 <md-button ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-capture="'camera'" ngf-resize="{width: 1200, height: 800, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ng-click="showProcessingImageStatus()"
 			                  aria-label="Tilføj billeder"
 			                  class="md-icon-button" >
 			         <ng-md-icon icon="camera_alt" ></ng-md-icon>
 			       </md-button>
 		 
 			 
-		 <md-button  ng-disabled="!observationIsValid() || savingObservation || processingImage"
+		 <md-button  ng-disabled="!observationIsValid() || ctrl.savingObservation || ctrl.processingImage"
 		                  aria-label="Publicer observation"
 		                  class="md-icon-button" 
 						  ng-click="submitObservation()">
@@ -49,9 +54,11 @@
     </md-toolbar>
 	
 	<md-progress-linear ng-if="fileUploadInProgress" md-mode="determinate" value="{{fileProgress}}"></md-progress-linear>
-    <md-progress-linear ng-if="savingObservation || processingImage" md-mode="indeterminate"></md-progress-linear>  
+    <md-progress-linear ng-if="ctrl.savingObservation || ctrl.processingImage" md-mode="indeterminate"></md-progress-linear>  
 	<md-subheader ng-if="statusMsg">{{statusMsg}}</md-subheader>
-    <md-content ng-include="$mdMedia('gt-sm') ? 'app/observationform/observation-form-view-desktop.tpl.html' : 'app/observationform/observation-form-view-mobile.tpl.html'">
+	 <div ng-if="$mdMedia('xs') || $mdMedia('sm')" class="new-obs-tabs-wrapper" ng-include="'app/observationform/observation-form-view-mobile.tpl.html'">
+	 </div>
+    <md-content ng-if="$mdMedia('gt-sm')" ng-include="'app/observationform/observation-form-view-desktop.tpl.html' ">
 
 		  
 
