@@ -35,6 +35,14 @@
 			                    </div>
 			                </md-button>
 			              </md-menu-item>
+						  <md-menu-item >
+			                <md-button ng-click="showDeterminationDialog($event, obs)">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Ombestem' | translate}}</p>
+			                      <ng-md-icon icon="undo" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
 			              <md-menu-item >
 			                <md-button ng-click="toggelExtendedAssociatedOrganismSearch()">
 			                    <div layout="row" flex>
@@ -44,7 +52,15 @@
 			                    </div>
 			                </md-button>
 			              </md-menu-item>
-			          
+						   <md-menu-item ng-if="Auth.getCurrentUser()._id === obs.primaryuser_id && moment(obs.createdAt) > moment().subtract(2, 'days') ">
+			   	         <md-button aria-label="Delete observation"  ng-click="deleteObs($event, obs)">
+						 <div layout="row" flex>
+							 <p flex>
+  			 {{"Slet" | translate}}
+		 </p>
+			   	            <ng-md-icon icon="delete_forever"></ng-md-icon> </div>
+			   	          </md-button>
+			          </md-menu-item>
 			            </md-menu-content>
 			          </md-menu>
       </div>

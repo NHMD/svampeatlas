@@ -8,7 +8,7 @@
   	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
   		  </div>
 		  <div class="validator-button-container" ng-cloak ng-if="obs && (obs._id && !duplicateID) && Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"></div>
-		  <div ng-if="obs && (obs._id && !duplicateID) && !Auth.hasRole('validator')">
+		  <div ng-if="$mdMedia('gt-xs') && obs && (obs._id && !duplicateID) && !Auth.hasRole('validator')">
 	         <md-button aria-label="add determination" class="md-raised md-warn" ng-click="showDeterminationDialog($event, obs)">
 			  
 	            <ng-md-icon icon="undo"></ng-md-icon> {{"Ombestem" | translate}}

@@ -1,18 +1,18 @@
-<div role="dialog" aria-label="Eat me!" layout="column" layout-align="center center">
+<div role="dialog" aria-label="Use exif position" layout="column" layout-align="center center">
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <h2 translate>Dit foto indeholder en GPS-position</h2>
+      <h2 translate>GPS-position</h2> <span flex></span><ng-md-icon icon="add_location"></ng-md-icon>
     </div>
   </md-toolbar>
 
   <div class="demo-dialog-content">
 <p translate>
-      Vil du bruge denne position til dit fund? (kan justeres senere).
+      Dit foto indeholder en GPS-position. Vil du bruge den til dit fund? (Du kan justere den senere).
     </p>
   </div>
 
   <div layout="row" class="demo-dialog-button">
-	  <span flex></span>
+	 
       <md-button  class="md-primary" ng-click="ctrl.cancel()" translate>
         Nej
       </md-button>

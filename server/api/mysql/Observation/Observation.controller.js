@@ -110,7 +110,7 @@ exports.index = function(req, res) {
 	}
 
 	if (req.query.geometry || req.query.selectedMonths || query.where.createdAt) {
-	
+
 		query.where.$and = [];
 	}
 	if (req.query.geometry) {
@@ -149,26 +149,26 @@ exports.index = function(req, res) {
 
 			}
 
-				
-				if(n.model === 'DeterminationView' && n.include){
-					n.include = JSON.parse(n.include);
-					for (var i = 0; i < n.include.length; i++){
-						
-						n.include[i] = JSON.parse(n.include[i])
-						if (n.include[i].model === "User") {
 
-							n.include[i] = userTool.secureUser(n.include[i]);
+			if (n.model === 'DeterminationView' && n.include) {
+				n.include = JSON.parse(n.include);
+				for (var i = 0; i < n.include.length; i++) {
 
-						};
-						n.include[i].model = models[n.include[i].model]
-						
-						
-						//n.include[i].where = JSON.parse(n.include[i].where)
-						
-					}
-			
+					n.include[i] = JSON.parse(n.include[i])
+					if (n.include[i].model === "User") {
+
+						n.include[i] = userTool.secureUser(n.include[i]);
+
+					};
+					n.include[i].model = models[n.include[i].model]
+
+
+					//n.include[i].where = JSON.parse(n.include[i].where)
+
 				}
-				
+
+			}
+
 			n.model = models[n.model];
 			return n;
 		})
@@ -815,22 +815,77 @@ exports.update = function(req, res) {
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
 
+	var userIsValidator = userTool.hasRole(req.user, 'validator');
 
 	return models.sequelize.transaction(function(t) {
 			return Observation.find({
 					where: {
 						_id: req.params.id
-					}
+					},
+					include: [{
+							model: models.DeterminationView,
+							as: "DeterminationView",
+							attributes: ['Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_user_id', 'Determination_validation', 'Determination_validator_id'],
+						include: [ {
+							model: models.User,
+							as: 'Determiner',
+							attributes: ['email', 'Initialer', 'name']
+						}]
+						}, {
+							model: models.User,
+							as: 'PrimaryUser',
+							attributes: ['email', 'Initialer', 'name']
+						}, {
+							model: models.Locality,
+							as: 'Locality'
+						}, {
+							model: models.ObservationImage,
+							as: 'Images',
+							separate: true,
+							offset: 0,
+							limit: 10
+						}, {
+							model: models.ObservationForum,
+							as: 'Forum',
+							separate: true,
+							offset: 0,
+							limit: 10
+
+						}
+
+					]
 
 				}, {
 					transaction: t
 				})
 				.then(function(obs) {
+					
 					if (!obs) {
 						res.send(404);
+					} else if(!userIsValidator && !(req.user._id === obs.primaryuser_id && obs.createdAt > moment().subtract(2, 'days'))){
+						throw "Forbidden"
 					}
+					var serializedObs = JSON.stringify(obs);
+					
+					return [obs, models.ObservationLog.create({
+							eventname: 'Deleted observation',
+							oldvalues: serializedObs,
+							user_id: req.user._id,
+							observation_id: req.params.id
+						}, {
+							transaction: t
+						})];
+				})
+				.spread(function(obs) {
+
 					obs.primarydetermination_id = null;
-					return obs.save()
+				
+					return obs.save({
+							transaction: t
+						});
+						
+					
+
 				})
 				.then(function(obs) {
 
@@ -845,7 +900,6 @@ exports.destroy = function(req, res) {
 						models.Determination.destroy(q),
 						models.ObservationForum.destroy(q),
 						models.ObservationImage.destroy(q),
-						models.ObservationLog.destroy(q),
 						models.ObservationPlantTaxon.destroy(q),
 						models.ObservationUser.destroy(q)
 					]
@@ -866,7 +920,12 @@ exports.destroy = function(req, res) {
 			res.send(204);
 		})
 		.
-	catch(handleError(res));
+		catch(function(err) {
+			var statusCode = (err === 'Forbidden') ? 403 : 500;
+			console.log(err);
+		
+			res.status(statusCode).send(err);
+		});
 
 
 
@@ -875,14 +934,14 @@ exports.destroy = function(req, res) {
 exports.getCount = function(req, res) {
 
 	var groups = {
-		'Year' : 'select year(observationDate) as year, count(*) as count from Observation group by year(observationDate)',
-		'Decade' : 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation group by decade'
+		'Year': 'select year(observationDate) as year, count(*) as count from Observation group by year(observationDate)',
+		'Decade': 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation group by decade'
 	}
 	var sql = (req.query.group) ? groups[req.query.group] : 'select count(*) as count from Observation ';
-	
+
 
 	return models.sequelize.query(sql, {
-	
+
 		type: models.sequelize.QueryTypes.SELECT
 	})
 

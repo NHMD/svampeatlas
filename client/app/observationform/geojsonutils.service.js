@@ -50,10 +50,33 @@ angular.module('svampeatlasApp')
 			}
 		};
 
+		function toRadians(num){
+			return num*180/Math.PI ;
+		};
 
 		var gju = {};
+		
+		
+		gju.distance = function(p1, p2){
+			var lat1 = p1.decimalLatitude; 
+			var lat2 = p2.decimalLatitude; 
+			var lon1 = p1.decimalLongitude; 
+			var lon2 = p2.decimalLongitude; 
+			var R = 6371e3; // meters
+			var lat1Radians = toRadians(lat1);
+			var lat2Radians = toRadians(lat2);
+			var deltaLat = toRadians(lat2-lat1);
+			var deltaLon = toRadians(lon2-lon1);
 
+			var a = Math.sin(deltaLat/2) * Math.sin(deltaLat/2) +
+			        Math.cos(lat1Radians) * Math.cos(lat2Radians) *
+			        Math.sin(deltaLon/2) * Math.sin(deltaLon/2);
+			var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
+			var d = R * c;
+			return d;
+		},
+	
 		gju.exifGpsDataToLatLong = function(GPSLatitude, GPSLongitude) {
 			
 			var t = !1,

@@ -32,7 +32,18 @@ angular.module('svampeatlasApp')
 			$scope.currentUser = Auth.getCurrentUser();
 			$scope.Auth = Auth;
 			$scope.moment = moment;
-
+			
+			$scope.useNearestLocalityOnClick = ObservationFormStateService.getState().useNearestLocalityOnClick || false;
+			$scope.toggleNearestLocalityOnClick = function() {
+				$scope.useNearestLocalityOnClick = !$scope.useNearestLocalityOnClick;
+				
+				if(!$scope.useNearestLocalityOnClick){
+					
+					$scope.removeLocalitiesFromMap();
+				}
+			}
+			
+			
 			$scope.extendedAssociatedOrganismSearch = ObservationFormStateService.getState().extendedAssociatedOrganismSearch || false;
 			$scope.toggelExtendedAssociatedOrganismSearch = function() {
 				$scope.extendedAssociatedOrganismSearch = !$scope.extendedAssociatedOrganismSearch;
@@ -70,15 +81,16 @@ angular.module('svampeatlasApp')
 					//If the locality was selected from autocomplete - delete position
 
 					if (!newVal[0].layer) {
-						delete $scope.mapsettings.markers.position;
-					};
+						//delete $scope.mapsettings.markers.position;
+						$scope.mapsettings.center = {
+							lat: newVal[0].decimalLatitude || newVal[0].lat,
+							lng: newVal[0].decimalLongitude || newVal[0].lng,
+							zoom: 14
+						}
+					}; 
 
 
-					$scope.mapsettings.center = {
-						lat: newVal[0].decimalLatitude || newVal[0].lat,
-						lng: newVal[0].decimalLongitude || newVal[0].lng,
-						zoom: 14
-					}
+					
 
 
 
@@ -263,23 +275,9 @@ angular.module('svampeatlasApp')
 						//console.log("########## "+GeoJsonUtils.inDK($scope.mapsettings.center))
 
 						if (!GeoJsonUtils.inDK($scope.mapsettings.markers.position)) {
-							$http({
-								method: 'GET',
-								url: '/api/geonames/findnearby',
-								params: {
-									lat: $scope.mapsettings.markers.position.lat,
-									lng: $scope.mapsettings.markers.position.lng
-								}
-							}).then(function(res) {
-								var direction = GeoJsonUtils.direction($scope.mapsettings.markers.position, res.data.geonames[0]);
-
-								$scope.foreignLocalityString = res.data.geonames[0].countryName + ", " + res.data.geonames[0].adminName1 + ", " + (Math.round(res.data.geonames[0].distance * 1000)) + " m " + direction + " " + res.data.geonames[0].name + " (" + res.data.geonames[0].fcodeName + ")";
-								$scope.foreignLocality = res.data.geonames[0];
-
-								$scope.selectedLocality = [];
-							});
+							$scope.getForeignLocality($scope.mapsettings.markers.position)
 						} else {
-							if ($scope.showLocalitiesOnMap) {
+							if ($scope.showLocalitiesOnMap || $scope.useNearestLocalityOnClick) {
 								$scope.setNearbyLocalities();
 							}
 							delete $scope.foreignLocalityString;
@@ -297,7 +295,23 @@ angular.module('svampeatlasApp')
 
 			// End timeout
 
+			$scope.getForeignLocality = function(position){
+				$http({
+					method: 'GET',
+					url: '/api/geonames/findnearby',
+					params: {
+						lat: position.lat,
+						lng: position.lng
+					}
+				}).then(function(res) {
+					var direction = GeoJsonUtils.direction(position, res.data.geonames[0]);
 
+					$scope.foreignLocalityString = res.data.geonames[0].countryName + ", " + res.data.geonames[0].adminName1 + ", " + (Math.round(res.data.geonames[0].distance * 1000)) + " m " + direction + " " + res.data.geonames[0].name + " (" + res.data.geonames[0].fcodeName + ")";
+					$scope.foreignLocality = res.data.geonames[0];
+
+					$scope.selectedLocality = [];
+				});
+			}
 
 
 
@@ -582,7 +596,7 @@ angular.module('svampeatlasApp')
 
 				_.each($scope.mapsettings.markers, function(m) {
 					if (m.layer === 'localities') {
-						delete $scope.mapsettings.markers[m.name]
+						delete $scope.mapsettings.markers[m._id]
 					}
 				})
 
@@ -605,9 +619,16 @@ angular.module('svampeatlasApp')
 					$between: [bounds.getSouth(), bounds.getNorth()]
 				}
 				Locality.query(q).$promise.then(function(localities) {
-
+					var closest;
+					var closestdist = 1000000000;
 					for (var i = 0; i < localities.length; i++) {
-						$scope.mapsettings.markers[localities[i].name] = {
+						
+						var dist = GeoJsonUtils.distance({decimalLatitude: $scope.mapsettings.markers.position.lat, decimalLongitude: $scope.mapsettings.markers.position.lng},localities[i] );
+						if(dist < closestdist){
+							closestdist = dist;
+							closest = localities[i]._id;
+						}
+						$scope.mapsettings.markers[localities[i]._id] = {
 							lat: localities[i].decimalLatitude,
 							lng: localities[i].decimalLongitude,
 							_id: localities[i]._id,
@@ -622,6 +643,16 @@ angular.module('svampeatlasApp')
 							}
 
 						};
+					}
+					
+					if($scope.useNearestLocalityOnClick){
+						$scope.selectedLocality = [$scope.mapsettings.markers[closest]]
+						$scope.mapsettings.markers[closest].icon = {
+												type: 'awesomeMarker',
+												prefix: 'fa',
+												icon: 'check-square',
+												markerColor: 'green'
+											}
 					}
 
 
@@ -648,7 +679,7 @@ angular.module('svampeatlasApp')
 
 					$scope.resetLocalityMarkerIcons();
 
-					$scope.mapsettings.markers[args.model.name].icon = {
+					$scope.mapsettings.markers[args.model._id].icon = {
 						type: 'awesomeMarker',
 						prefix: 'fa',
 						icon: 'check-square',
@@ -665,7 +696,7 @@ angular.module('svampeatlasApp')
 			$scope.resetLocalityMarkerIcons = function() {
 				_.each($scope.mapsettings.markers, function(m) {
 					if (m.layer === 'localities') {
-						$scope.mapsettings.markers[m.name].icon = {
+						$scope.mapsettings.markers[m._id].icon = {
 							type: 'awesomeMarker',
 							prefix: 'fa',
 							icon: 'crosshairs',
@@ -740,7 +771,7 @@ angular.module('svampeatlasApp')
 								$scope.selectedLocality = [];
 							});
 						} else {
-							if ($scope.showLocalitiesOnMap) {
+							if ($scope.showLocalitiesOnMap || $scope.useNearestLocalityOnClick) {
 								$scope.setNearbyLocalities();
 							}
 							delete $scope.foreignLocalityString;
@@ -806,6 +837,9 @@ angular.module('svampeatlasApp')
 						$rootScope.$broadcast('observation_deleted', $scope.obs);
 						$scope.showSimpleToast($translate.instant('Record') + ' ' + displayedId + ' ' + $translate.instant('slettet.'))
 					})
+					.catch(function(err){
+						ErrorHandlingService.handle403();
+					})
 				});
 			};
 
@@ -848,6 +882,7 @@ angular.module('svampeatlasApp')
 				 
 			  var config = {
 			    attachTo: angular.element(document.body),
+				  panelClass: "exif-panel",
 				  locals: {exif: exif},
 			    controller: ['mdPanelRef',function (mdPanelRef) {
 			  this._mdPanelRef = mdPanelRef;
@@ -863,10 +898,29 @@ angular.module('svampeatlasApp')
 					layer: 'position'
 
 				}
-
+				
+				
+				
+				if (!GeoJsonUtils.inDK($scope.mapsettings.markers.position)) {
+					$scope.getForeignLocality($scope.mapsettings.markers.position)
+				} else {
+					if ($scope.showLocalitiesOnMap || $scope.useNearestLocalityOnClick) {
+						$scope.setNearbyLocalities();
+					}
+					delete $scope.foreignLocalityString;
+					delete $scope.foreignLocality;
+				}
+				
 				$scope.mapsettings.center.lat = parseFloat(latLon[0]);
 				$scope.mapsettings.center.lng = parseFloat(latLon[1]);
 				$scope.mapsettings.center.zoom = 16;
+				$scope.precision = 15;
+				if(exif.GPSDateStamp){
+					var splitted =	exif.GPSDateStamp.split(":");
+					
+					that.observationDate = new Date(parseInt(splitted[0]), parseInt(splitted[1]) -1, parseInt(splitted[2]));
+				}
+				
   			  });
   			};
 			this.cancel = function() {
@@ -911,7 +965,7 @@ angular.module('svampeatlasApp')
 				if (newVal && newVal.length > 0) {
 					$scope.selectedTabIndex = 2;
 
-					EXIF.getData(newVal[0], function() {
+					EXIF.getData(newVal[newVal.length-1], function() {
 						var exif = this.exifdata;
 						if (exif.GPSLatitude &&
 							exif.GPSLongitude) {
