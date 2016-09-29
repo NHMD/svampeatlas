@@ -21,6 +21,21 @@ angular.module('svampeatlasApp')
 				      })
 
 			},
+			handle403: function() {
+			   
+			    $mdDialog.show(
+			        $mdDialog.alert()
+			          
+			          .clickOutsideToClose(false)
+			          .title($translate.instant('Not allowed'))
+			          .content($translate.instant('Your request cannot be fullfilled.'))
+			          .ariaLabel('Not allowed')
+			          .ok('Ok')
+			          
+			      )
+				  
+
+			},
 			
 			handle500: function() {
 			   

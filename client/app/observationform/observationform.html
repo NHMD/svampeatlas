@@ -29,12 +29,21 @@
 			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
 			               <ng-md-icon icon="more_vert" ></ng-md-icon>
 			            </md-button>
-			            <md-menu-content width="4" >
+			            <md-menu-content width="6" >
 			              <md-menu-item >
 			                <md-button ng-click="resetForm()">
 			                    <div layout="row" flex>
 			                      <p flex>{{'Nulstil dato og lokalitet' | translate}}</p>
 			                      <ng-md-icon icon="refresh" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			              <md-menu-item >
+			                <md-button ng-click="toggleNearestLocalityOnClick()">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Brug nærmeste lokalitet ved klik'  | translate}}</p>
+			                      <ng-md-icon ng-if="useNearestLocalityOnClick" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  <ng-md-icon ng-if="!useNearestLocalityOnClick" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
 			                    </div>
 			                </md-button>
 			              </md-menu-item>
@@ -47,7 +56,14 @@
 			                    </div>
 			                </md-button>
 			              </md-menu-item>
-			          
+						  
+			 			  <md-menu-item ng-if="Auth.getCurrentUser()._id === obs.primaryuser_id && moment(obs.createdAt) > moment().subtract(2, 'days') ">
+			   	         <md-button aria-label="Delete observation"  ng-click="deleteObs($event, obs)">
+			 <div layout="row" flex>
+				 <p flex> {{"Slet" | translate}}</p>
+			   	            <ng-md-icon icon="delete_forever"></ng-md-icon> </div>
+			   	          </md-button>
+			          </md-menu-item>
 			            </md-menu-content>
 			          </md-menu>
       </div>

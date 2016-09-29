@@ -296,7 +296,9 @@ angular.module('svampeatlasApp')
 			'gen.' : 'Slægt',
 			'sp.' : 'Art',
 			'var.' : 'Varietet',
-			'Kopier link' : 'Kopiér link'
+			'Kopier link' : 'Kopiér link',
+			'Not allowed' : 'Ikke tilladt',
+			'Your request cannot be fullfilled.': 'Handlingen kan ikke fuldføres'
 
 
 		});

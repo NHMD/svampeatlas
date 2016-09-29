@@ -42,7 +42,8 @@ router.get('/recent/localities', /*redisClient.use(), */ localityController.loca
 router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(),  controller.update);
 //router.patch('/:id', auth.hasRole('taxonomyadmin'),  controller.update);
-router.delete('/:id',auth.hasRole('validator'),  controller.destroy);
+//router.delete('/:id',auth.hasRole('validator'),  controller.destroy);
+router.delete('/:id', auth.isAuthenticated(),  controller.destroy);
 
 
 
