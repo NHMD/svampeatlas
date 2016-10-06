@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService) {
+	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog) {
 
 		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 
 		$scope.$state = $state;
 		$scope.baseUrl = appConstants.baseurl;
+		$scope.isModal = $stateParams.isModal;
+		$scope.cancel = function(){
+			$mdDialog.cancel()
+		}
 
 		$scope.ObservationModalService = ObservationModalService;
 
@@ -21,7 +25,7 @@ angular.module('svampeatlasApp')
 
 		$scope.showRecords = function(resulttype) {
 			$state.go('search-' + resulttype, {
-				taxon_id: $stateParams.id
+				taxon_id: $stateParams.id || 10000
 			})
 		}
 
@@ -37,7 +41,7 @@ angular.module('svampeatlasApp')
 
 
 		$scope.taxon = Taxon.getAcceptedTaxon({
-			id: $stateParams.id
+			id: $stateParams.id || 10000
 		})
 
 

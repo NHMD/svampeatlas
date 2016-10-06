@@ -21,4 +21,4 @@
   </md-grid-tile>
   </md-grid-list>
   
- <div    layout><md-button ng-if="tileOffset > 0" ng-click="loadTiles(tileOffset-tileLimit, tileLimit)"><ng-md-icon icon="arrow_back"></ng-md-icon>vis forrige</md-button><span  flex></span><md-button ng-if="tileCount > tileOffset+tiles.length" ng-click="loadTiles(tileOffest+tileLimit, tileLimit)">vis flere <ng-md-icon icon="arrow_forward"></ng-md-icon></md-button></div>
+ <div    layout><md-button aria-label="load previous tiles" ng-if="tileOffset > 0" ng-click="loadTiles(tileOffset-tileLimit, tileLimit)"><ng-md-icon icon="arrow_back"></ng-md-icon>vis forrige</md-button><span  flex></span><md-button aria-label="load more tiles" ng-if="tileCount > tileOffset+tiles.length" ng-click="loadTiles(tileOffest+tileLimit, tileLimit)">vis flere <ng-md-icon icon="arrow_forward"></ng-md-icon></md-button></div>

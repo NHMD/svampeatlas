@@ -97,6 +97,8 @@ exports.SpeciesHypothesis = function(req, res) {
 	   }
 	    // raw response 
 
+	}, function(err){
+		return res.status(500)
 	});
 
 };
@@ -107,6 +109,8 @@ exports.GetToken = function(req, res) {
 	client.methods.gettoken({ parameters: {scope : "read", grant_type:"password", client_id: config.plutof.client_id, client_secret: config.plutof.client_secret, username: config.plutof.username, password: config.plutof.password}},function(data,response){
 	    
 			 return res.status(response.statusCode).json(data);
+	}, function(err){
+		return res.status(500)
 	});
 
 };

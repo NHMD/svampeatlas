@@ -5,7 +5,7 @@
 
 <md-content flex md-scroll-y layout-padding ng-cloak>
 	   
-			
+		
 			   
 	<div class="table-responsive-vertical shadow-z-1">
 
@@ -14,18 +14,31 @@
 <table  st-persist="dkchecklist_table" class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed">
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
 	<thead class="show-filter">
+	
 		<tr ng-show="displayed">
-			<th st-ratio="5"></th>
+			<th st-ratio="5"> 
+				
+			    <label for="mySelect">Index:</label>
+			       <select name="mySelect" id="mySelect"
+			        
+			         ng-model="search.indexLetter"
+					 class="form-control" >
+					 <option  value="any">-</option>
+				 <option ng-repeat="lt in letters" value="{{lt}}">{{lt}}</option>
+				 </select>
+				
+	            
+	           </th>
 			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
 			    <!--<md-radio-group ng-model="group">
 			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
 			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
 			         <md-radio-button value="lichens">kun laver</md-radio-button>
 			       </md-radio-group> -->
-				<md-input-container class="md-block" >
+				<md-input-container class="md-block dklist" >
         <label>Latinsk navn</label>
 		<md-icon md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
-        <input st-search="FullName"  ng-model="uiFullName">
+        <input st-search="FullName"  ng-model="uiFullName" ng-model-options="{ debounce: 500 }">
 		
       </md-input-container> </th>
 			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
@@ -34,9 +47,9 @@
 			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
 			         <md-radio-button value="lichens">kun laver</md-radio-button>
 			       </md-radio-group> -->
-				<md-input-container class="md-block">
+				<md-input-container class="md-block dklist">
         <label>Dansk navn</label>
-        <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="uiDkName">
+        <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="uiDkName" ng-model-options="{ debounce: 500 }">
 		
       </md-input-container> </th>
 			<th ng-if="mdMedia('gt-xs')" st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultlist/pagination.tpl.html">
@@ -46,6 +59,7 @@
 		<th st-ratio="5"></th>
 		
 		<th st-sort="FullName"  translate>Art</th>
+		
 		
 		
 		
@@ -80,15 +94,16 @@
 			            </md-menu-content>
 			          </md-menu></td>
 		
-		<td colspan=2 data-title="{{'Art' | translate}}">
+		<td  data-title="{{'Art' | translate}}">
 			<a class="cursor-pointer" ng-click="$state.go('species', {id: row._id})"> 
 				<em>{{row.FullName}} </em><span ng-if="row.redlistdata && row.redlistdata.length === 1 "> 
-				({{row.redlistdata[0].status}})</span> <span ng-if="row.Vernacularname_DK">- {{row.Vernacularname_DK.vernacularname_dk}} </span> 
+				({{row.redlistdata[0].status}})</span> <span ng-if="row.Vernacularname_DK"> - {{row.Vernacularname_DK.vernacularname_dk | capitalize}}  </span>
 				 </a> 
 			
 
 		<span ng-repeat="syn in row.synonyms | synonymsWithoutSelf" class="md-caption"><br>Syn: <em>{{syn.FullName}}</em></span>
 		</td>
+	
 		
 		
 

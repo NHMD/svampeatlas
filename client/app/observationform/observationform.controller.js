@@ -339,7 +339,7 @@ angular.module('svampeatlasApp')
 				if (!that.selectedVegetationType) valid = false;
 				if ($scope.users.length === 0) valid = false;
 				if (($scope.selectedLocality.length === 0 || !$scope.selectedLocality[0]._id) && (!$scope.foreignLocality)) valid = false;
-
+				
 				return valid;
 
 			}
@@ -882,7 +882,6 @@ angular.module('svampeatlasApp')
 				 
 			  var config = {
 			    attachTo: angular.element(document.body),
-				  panelClass: "exif-panel",
 				  locals: {exif: exif},
 			    controller: ['mdPanelRef',function (mdPanelRef) {
 			  this._mdPanelRef = mdPanelRef;
@@ -937,7 +936,7 @@ angular.module('svampeatlasApp')
 			    disableParentScroll: true,
 			    templateUrl: 'app/observationform/exifconfirm.panel.tpl.html',
 			    hasBackdrop: true,
-			    panelClass: 'demo-dialog-example',
+			panelClass: "exif-panel",
 			    position: position,
 			    trapFocus: true,
 			    zIndex: 150,
@@ -968,7 +967,7 @@ angular.module('svampeatlasApp')
 					EXIF.getData(newVal[newVal.length-1], function() {
 						var exif = this.exifdata;
 						if (exif.GPSLatitude &&
-							exif.GPSLongitude) {
+							exif.GPSLongitude && exif.GPSLatitude[0] > 0 &&  exif.GPSLongitude[0] > 0 ) {
 
 $scope.showExifConfirmPanel(exif)
 							

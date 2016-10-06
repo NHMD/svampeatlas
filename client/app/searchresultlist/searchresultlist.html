@@ -29,7 +29,7 @@
 
 		<th ></th>
 		<th ></th>
-		<th st-sort="createdAt" ng-if="$stateParams.searchterm || $stateParams.searchterm === 'mine'" translate>Indlagt</th>
+		<th st-sort="createdAt" ng-if="$stateParams.searchterm && ($stateParams.searchterm === 'mine' || $stateParams.searchterm === 'today' || $stateParams.searchterm === '3days')" translate>Indlagt</th>
 		<th st-sort="observationDate"  translate>Dato</th>
 		
 		<th translate>Art</th>
@@ -38,7 +38,7 @@
 		<!--<th st-sort="DeterminationView.Taxon_vernacularname_dk"  translate>Dansk navn</th> -->
 		<th  translate>Lokalitet</th>
 		<!--<th st-sort="Locality.name"  translate>Lokalitet</th> -->
-		<th ng-if="!$stateParams.searchterm || $stateParams.searchterm !== 'mine'" translate>Rapportør</th>
+		<th ng-if="!($stateParams.searchterm && $stateParams.searchterm === 'mine')" translate>Rapportør</th>
 		<!--<th st-sort="PrimaryUser.Initialer" >Rapportør</th>-->
 		<th st-sort="_id" ng-if="Auth.isLoggedIn()" translate>Databasenummer</th>
 		<th ></th>
@@ -61,11 +61,11 @@
 			
 			<ng-md-icon style="fill:green" ng-if="(mdMedia('xs') || Auth.hasRole('validator') ) && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
 		</td>
-		<td ng-if="$stateParams.searchterm || $stateParams.searchterm === 'mine'" data-title="{{'Indlagt' | translate}}">{{(moment(row.createdAt).isSame(moment(), 'day')) ? getCreatedAt(row.createdAt) : (row.createdAt | date : 'dd/MM/yyyy')}}</td>
+		<td ng-if="$stateParams.searchterm && ($stateParams.searchterm === 'mine' || $stateParams.searchterm === 'today' || $stateParams.searchterm === '3days')" data-title="{{'Indlagt' | translate}}">{{(moment(row.createdAt).isSame(moment(), 'day')) ? getCreatedAt(row.createdAt) : (row.createdAt | date : 'dd/MM/yyyy')}}</td>
 		<td data-title="{{'Dato' | translate}}" >{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>
 		
 		<td data-title="{{'Art' | translate}}"><a ng-href='/taxon/{{row.DeterminationView.Taxon_id}}'><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></a></td>
-		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk}}</td>	
+		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk | capitalize}}</td>	
 		<td data-title="{{'Lokalitet' | translate}}"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
 		
 			<td  ng-if="!$stateParams.searchterm || $stateParams.searchterm !== 'mine'" data-title="{{'Rapportør' | translate}}" ><a ng-if="mdMedia('min-width: 768px')" class="cursor-pointer" ng-click="$state.go('userstats', {userid: row.PrimaryUser._id})"><md-tooltip md-direction="left">

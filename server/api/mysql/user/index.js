@@ -25,6 +25,8 @@ router.get('/:id/images/count',/* auth.isAuthenticated(),*/ controller.showImage
 router.get('/:id/species/count',/* auth.isAuthenticated(),*/ controller.showSpeciesCount);
 router.get('/:id/countries/count',/* auth.isAuthenticated(),*/ controller.showCountryCount);
 
+router.get('/:id/fieldtrips', auth.isAuthenticated(), controller.showFieldTrips);
+
 
 
 

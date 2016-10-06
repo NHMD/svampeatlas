@@ -12,6 +12,7 @@ var dkNamesController = require('../TaxonDKnames/TaxonDKnames.controller');
 //var mycoKeyCharacterController = require('../MycoKeyCharacter/MycoKeyCharacter.controller');
 var auth = require('../../../auth/auth.service');
 //var intparser = require('../../../components/hooks/parseLimitOffset');
+var redisClient = require('../../../components/hooks/redisClient');
 
 var router = express.Router();
 
@@ -21,7 +22,11 @@ router.get('/', controller.index);
 // router.get('/syncallfunidsbynamematch', controller.syncAllFUNIdsByNameMatch);
 // router.get('/updateallidsbyname/:taxonrank', controller.updateAllFUNIdsByNameMatch);
 // router.get('/updateallidsbynameforunacceptedspecies', controller.syncAllFUNIdsByNameMatchForNewParentSpecies);
-router.get('/tree', auth.hasRole('taxonomyadmin'), controller.showTree);
+router.post('/tree/danishtaxa',  auth.hasRole('taxonomyadmin'), redisClient.use(), controller.generateAndGetDkTree);
+router.get('/tree/danishtaxa', redisClient.use(), controller.showDkTree);
+
+router.get('/tree/:rootid?', auth.hasRole('taxonomyadmin'), controller.showTree);
+
 router.get('/:id', controller.show);
 //router.get('/:id/updatesystematics', controller.updateSystematics);
 

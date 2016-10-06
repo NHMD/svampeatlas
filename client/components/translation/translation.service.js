@@ -32,6 +32,7 @@ angular.module('svampeatlasApp')
 			'Indstillinger': 'Settings',
 			'Inkludér udenlandske fund': 'Include non-danish sightings',
 			'Søg i familier, ordener osv.': 'Search families, orders etc.',
+			'Søg efter slægt, familie, orden etc.': 'Search for genus, family, order etc.',
 			'Danske navne': 'Danish names',
 			'Rødlistestatus': 'Red list status',
 			'Databasenummer': 'Database id',
@@ -178,7 +179,15 @@ angular.module('svampeatlasApp')
 			'Klon fund' : 'Clone record',
 			'Del fund' : 'Share',
 			'Dette fund er valideret og godkendt af' : 'This sighting is validated and accepted by',
-			'Kopier link' : 'Copy link'
+			'Kopier link' : 'Copy link',
+			'klassifikation' : 'classification',
+			'Klassifikation' : 'Classification',
+			'Bygger' : 'Building',
+			'Gendan' : 'Rebuild',
+			'Bestemmelshjul' : 'Identification circles',
+			'I dag' : 'Today',
+			'Udenlandske fund': 'Global sightings',
+			'Svampebog' : 'Fungi book'
 			
 		});
 

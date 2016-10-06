@@ -3,11 +3,26 @@
 angular.module('svampeatlasApp')
 	.controller('DkCheckListCtrl', ['$scope', 'Auth', 'Taxon', '$timeout', '$q', '$translate', 'TaxonomyTags', '$mdMedia', '$mdDialog', '$stateParams', '$state',
 		function($scope, Auth, Taxon, $timeout, $q, $translate, TaxonomyTags, $mdMedia, $mdDialog, $stateParams, $state) {
-
+			var that = this;
 			$scope.Auth = Auth;
 			$scope.stItemsPrPage = 100;
 			$scope.$state = $state;
 			$scope.mdMedia = $mdMedia;
+			$scope.letters = "abcdefghijklmnopqrstuvwxyzæøå".toUpperCase().split("");
+			$scope.search = {};
+			if ($stateParams.indexLetter) {
+				$scope.search.indexLetter = $stateParams.indexLetter;
+			}
+			$scope.$watch('search.indexLetter', function(newVal, oldVal){
+				if(newVal && newVal !== oldVal){
+					if(newVal ==="any"){
+						$state.go($state.current, {indexLetter: undefined})
+					} else {
+						$state.go($state.current, {indexLetter: newVal})
+					}
+					
+				} 
+			})
 			var storedState = localStorage.getItem('dkchecklist_table');
 			var parsedStoredState = (storedState) ? JSON.parse(storedState) : undefined;
 			if(parsedStoredState && parsedStoredState.search && parsedStoredState.search.predicateObject && parsedStoredState.search.predicateObject.FullName){
@@ -15,6 +30,14 @@ angular.module('svampeatlasApp')
 			}
 			if(parsedStoredState && parsedStoredState.search && parsedStoredState.search.predicateObject && parsedStoredState.search.predicateObject.Vernacularname_DK){
 				$scope.uiDkName = parsedStoredState.search.predicateObject.Vernacularname_DK.vernacularname_dk;
+			}
+			
+			if(parsedStoredState && parsedStoredState.search && parsedStoredState.search.predicateObject && parsedStoredState.search.predicateObject.indexLetter){
+			
+					$scope.indexLetter = parsedStoredState.search.predicateObject.indexLetter;
+				
+				
+				
 			}
 
 			$scope.showRecords = function(taxon_id, resulttype) {
@@ -69,7 +92,7 @@ angular.module('svampeatlasApp')
 				offset = parseInt(offset);
 				limit = parseInt(limit)
 
-				var where = (tableState.search.predicateObject) ? _.mapValues(_.omit(tableState.search.predicateObject, ['Vernacularname_DK', 'synonyms']), function(value, key) {
+				var where = (tableState.search.predicateObject) ? _.mapValues(_.omit(tableState.search.predicateObject, ['Vernacularname_DK', 'synonyms', 'indexLetter']), function(value, key) {
 
 					return {
 						like: "%" +value + "%"
@@ -90,6 +113,19 @@ angular.module('svampeatlasApp')
 						}
 					});
 				};
+				
+				if($scope.search.indexLetter){
+					if(where.FullName){
+						where.FullName = { $and: [ where.FullName, {
+						like: $scope.search.indexLetter + "%"
+					}]
+					}
+				} else {
+					where.FullName = {
+						like: $scope.search.indexLetter + "%"
+					}
+				}
+			}
 
 				var dkNameWhere = (tableState.search.predicateObject && tableState.search.predicateObject.Vernacularname_DK) ? _.mapValues(tableState.search.predicateObject.Vernacularname_DK, function(value, key) {
 

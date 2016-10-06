@@ -20,7 +20,9 @@ $scope.states =
 	  'demos': { name: "Vejledninger", icon: 'school'},
 	  'about': { name: "Projektbeskrivelse", icon: 'info_outline'},
 	  'checklist': { name: "Checkliste for danske arter", icon: 'playlist_add_check'},
-	  'species': { name: "Artspræsentation", icon: 'fungus'}
+	  'species': { name: "Artspræsentation", icon: 'fungus'},
+	  'taxon-tree-dk': {name: "Klassifikation", icon: 'taxonomy'},
+	  'fieldtrips': {name: "Mine feltture", icon: 'shopping_basket'}
 	};
 	/*
 	$scope.openSideNav = function(){
