@@ -105,6 +105,14 @@ angular.module('svampeatlasApp')
 		},
 		url: '/api/users/:id/observations/taxonomy/:rankid',
 		isArray: true
+    },
+    getFieldTrips: {
+      method: 'GET',
+		params: {
+			id: '@_id'
+		},
+		url: '/api/users/:id/fieldtrips',
+		isArray: true
     }
 	  });
   });

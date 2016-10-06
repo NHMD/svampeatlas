@@ -39,7 +39,8 @@
 	"fastclick" : "",
 	"clipboard" : "",
 	"ng-csv": "",
-	"exif-js": "2.1.1"
+	"exif-js": "2.1.1",
+	"angular-ivh-treeview" : ""
   },
   "devDependencies": {
     "angular-mocks": "~1.5",

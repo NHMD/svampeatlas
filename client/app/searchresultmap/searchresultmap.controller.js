@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchResultMapCtrl', ['$scope','Auth', '$compile', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'ArcGis', '$state', 'ErrorHandlingService','ObservationModalService', 'ObservationFormService','$mdMedia','$translate',
-		function($scope, Auth, $compile, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, ArcGis, $state, ErrorHandlingService, ObservationModalService, ObservationFormService, $mdMedia, $translate) {
+	.controller('SearchResultMapCtrl', ['$scope','Auth', '$compile', 'ObservationSearchService', 'Taxon', 'TaxonDKnames', 'Locality', 'leafletData', '$timeout', '$stateParams', 'Observation', 'appConstants', 'KMS', 'MapBox', '$state', 'ErrorHandlingService','ObservationModalService', 'ObservationFormService','$mdMedia','$translate',
+		function($scope, Auth, $compile, ObservationSearchService, Taxon, TaxonDKnames, Locality, leafletData, $timeout, $stateParams, Observation, appConstants, KMS, MapBox, $state, ErrorHandlingService, ObservationModalService, ObservationFormService, $mdMedia, $translate) {
 			console.log("md media "+$mdMedia('sm'))
 			var zoom = ($mdMedia('sm')) ? 5 :7;
 			
@@ -17,31 +17,33 @@ angular.module('svampeatlasApp')
 				layers: {
 					baselayers: {
 						osm: {
-							name: 'Kort',
+							name: $translate.instant('Kort'),
 							url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 							type: 'xyz'
 						},
+						OpenTopoMap: {
+							name: 'OpenTopoMap',
+							url: 'http://tile.opentopomap.org/{z}/{x}/{y}.png',
+							type: 'xyz',
+							layerOptions: {
 
-						WorldImagery: {
-							name: 'WorldImagery',
-							url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png',
-							type: 'xyz',
-							visible: true,
-							layerOptions: {
-								token: ArcGis.getTicket(),
-								attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+								attribution: 'Tiles &copy; opentopomap.org'
 							}
+
 						},
-						WorldTopoMap: {
-							name: 'WorldTopoMap',
-							url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png',
-							type: 'xyz',
-							visible: true,
-							layerOptions: {
-								token: ArcGis.getTicket(),
-								attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
-							}
+						mapbox_outdoors: {
+							name: 'Mapbox Outdoors',
+							url: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/256/{z}/{x}/{y}?access_token=' + MapBox.getTicket(),
+							type: 'xyz'
+
 						},
+						mapbox_satelite: {
+							name: 'Mapbox Satelite',
+							url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token=' + MapBox.getTicket(),
+							type: 'xyz'
+
+						},
+						
 
 
 
@@ -176,7 +178,7 @@ angular.module('svampeatlasApp')
 				var observation = data.observation;
 				var message = "<div layout='column'>"
 				+ "<div width='301px' ng-if='observation.Images && observation.Images.length > 0'><img ng-src='{{imageurl + observation.Images[0].name + \".JPG\"}}' width='300px'  ></div>"
-				+"<span ng-if='observation.DeterminationView.Taxon_vernacularname_dk'><strong> {{observation.DeterminationView.Taxon_vernacularname_dk}} </strong> (<em> {{observation.DeterminationView.Taxon_FullName}} </em>)</span>"
+				+"<span ng-if='observation.DeterminationView.Taxon_vernacularname_dk'><strong> {{observation.DeterminationView.Taxon_vernacularname_dk | capitalize}} </strong> (<em> {{observation.DeterminationView.Taxon_FullName}} </em>)</span>"
 				+"<strong ng-if='!observation.DeterminationView.Taxon_vernacularname_dk'><em>{{observation.DeterminationView.Taxon_FullName}} </em></strong>"
 				+"<span ng-if='observation.Locality && observation.Locality.name'>{{observation.Locality.name}} , {{moment(observation.observationDate).format('DD/MM/YYYY')}} </span>"
 				+"<span ng-if='!(observation.Locality && observation.Locality.name)'>{{moment(observation.observationDate).format('DD/MM/YYYY')}} </span>"

@@ -18,6 +18,26 @@ var Promise = require("bluebird");
 Promise.promisifyAll(soap);
 var nestedQueryParser = require("../nestedQueryParser")
 
+
+
+function cacheResult(req, value) {
+	var redisClient = req.redis;
+	var cachekey;
+	if(req.query.cachekey){
+		cachekey = req.query.cachekey
+	} else if(req.body.cachekey){
+		cachekey = req.body.cachekey
+	}
+	return redisClient.setAsync(cachekey, value)
+		.then(function() {
+			return (config.redisTTL[cachekey]) ? redisClient.expireAsync(cachekey, config.redisTTL[cachekey]) : true;
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+		})
+
+}
+
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
 	return function(err) {
@@ -80,7 +100,7 @@ exports.index = function(req, res) {
 	if (req.query.acceptedTaxaOnly) {
 		_.merge(query.where, {
 			_id: {
-				$eq: models.sequelize.col("accepted_id")
+				$eq: models.sequelize.col("Taxon.accepted_id")
 			}
 		});
 
@@ -1342,13 +1362,71 @@ catch (function(err) {
 	
 }
 
+// This generates the taxon tree with count of dk taxa at species level or lower and adds it to the cache
+exports.generateAndGetDkTree = function(req, res) {
+
+	if(!(req.body && req.body.action === "generateDkTree")) {
+		res.status(404).send("Not found");
+	}
+	else {
+
+	var replacements = {
+			childRankOffset : 9999
+		};
+		var sql = 'SELECT t._id, t.Path, t.parent_id, t.RankID,t.FullName, t.TaxonName,dkn.vernacularname_dk,  count(tc._id) as count'
+		+' from Taxon tc JOIN (Taxon t LEFT JOIN TaxonDKnames dkn ON t.vernacularname_dk_id=dkn._id) JOIN TaxonAttributes a '
+		+' ON a.taxon_id=tc._id'
+		+' AND a.PresentInDK = 1 AND tc._id=tc.accepted_id AND tc.Path LIKE CONCAT(t.Path, "%") AND tc.RankId > :childRankOffset  AND t.RankID < 5001'
+		+' GROUP BY t._id ORDER BY t.RankID ASC, t.Fullname ASC';
+
+	return models.sequelize.query(sql, {
+		replacements: replacements,
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+		return cacheResult(req, JSON.stringify(result)).then(function() {
+			return res.status(200).json(result)
+		})
+		
+	})
+		.catch(handleError(res));
+	}
+};
+
+// if the cachekey is provided and no root is given, the generated tree will be fetched from the cache (see the redis hook in the route)
+exports.showDkTree = function(req, res) {
+
+
+
+	var	sql = 'SELECT t._id, t.FullName, dkn.vernacularname_dk, t.RankID, COUNT(tc._id) as count FROM'
+		+' ((Taxon t LEFT JOIN TaxonDKnames dkn ON t.vernacularname_dk_id=dkn._id) JOIN TaxonAttributes ta ON t._id=ta.taxon_id)'
+		+' LEFT JOIN (SELECT _id, parent_id from Taxon t2, TaxonAttributes t2a WHERE t2._id=t2a.taxon_id AND t2a.PresentInDK = true) tc'
+		+' ON t._id=tc.parent_id WHERE t.parent_id = :root AND (ta.PresentInDK = 1 OR tc._id IS NOT NULL) GROUP BY t._id ORDER BY t.FullName;';
+	
+	
+	
+
+	return models.sequelize.query(sql, {
+		replacements: {root: req.query.root},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+		return res.status(200).json(result)
+		
+	}).catch(handleError(res));
+
+};
+
 exports.showTree = function(req, res) {
 
+	var where = (req.params.rootid) ? {_id: req.params.rootid} :  {
+			TaxonName: "Life"
+		}
 
 	var query = {
-		where: {
-			TaxonName: "Life"
-		},
+		where: where,
 		attributes: ['_id', 'parent_id', 'TaxonName', 'RankName', 'RankID', 'accepted_id'],
 		include: [{
 			model: models.Taxon,

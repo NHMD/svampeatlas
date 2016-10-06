@@ -5,12 +5,14 @@ angular.module('svampeatlasApp')
     $stateProvider
       .state('checklist', {
 		  params: {
-			  filter: null
+			  filter: null,
+			  indexLetter: null
 		  },
 		 title: 'Checkliste over danske svampe og laver - Danmarks Svampeatlas', 
-		 ogDescription: 'Hvilke arter af svampe og laver findes i Danmark? Få svaret her. Se videnskabelige og danske navne samt synonymer og udbredelseskort.',
-        url: '/checklist',
+		// ogDescription: 'Hvilke arter af svampe og laver findes i Danmark? Få svaret her. Se videnskabelige og danske navne samt synonymer og udbredelseskort.',
+        url: '/checklist/:indexLetter?',
         templateUrl: 'app/dkchecklist/dkchecklist.html',
-        controller: 'DkCheckListCtrl'
+        controller: 'DkCheckListCtrl',
+		  controllerAs: 'ctrl'  
       });
   });

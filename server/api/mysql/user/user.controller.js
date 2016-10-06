@@ -428,3 +428,29 @@ exports.showCountryCount = function(req, res) {
 
 
 };
+
+exports.showFieldTrips = function(req, res) {
+	//SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country
+	
+	var sql = 'SELECT * from' 
+	+'(SELECT 1 as inDK, l.name as localityname, l._id as locality_id, l.decimalLatitude, l.decimalLongitude, o.observationDate, COUNT(o._id) as count FROM Observation o JOIN Locality l ON o.locality_id=l._id WHERE o.primaryuser_id = :userid GROUP BY o.observationDate, localityname'
++' UNION ALL '
++'SELECT 0 as inDK, g.adminName1 as localityname, g.geonameId as locality_id, lat as decimalLatitude, lng as decimalLongitude, o2.observationDate, COUNT(o2._id) as count FROM Observation o2 JOIN GeoNames g ON o2.geonameId=g.geonameId WHERE o2.primaryuser_id = :userid GROUP BY o2.observationDate, localityname) a'
+	+' ORDER BY a.observationDate DESC;';
+
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			userid: req.params.id
+			
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result);
+	}).catch(handleError(res));
+
+
+};

@@ -242,6 +242,10 @@ angular.module('svampeatlasApp')
 					// include foreign
 					search.include[2].required = false;
 
+				} else if ($stateParams.searchterm === "today") {
+
+					search.where.observationDate = $filter('date')(moment().toDate(), "yyyy-MM-dd", '+0200')
+					
 				} else if ($stateParams.searchterm === "3days") {
 
 					search.where.observationDate = {
@@ -252,6 +256,11 @@ angular.module('svampeatlasApp')
 					search.where.observationDate = {
 						gt: $filter('date')(moment().subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
+
+				} else if ($stateParams.searchterm === "foreign") {
+
+					search.include[2].required = false;
+					search.where.locality_id = {"$eq":null};
 
 				} else if ($stateParams.locality_id && $stateParams.date) {
 					search.where.observationDate = {

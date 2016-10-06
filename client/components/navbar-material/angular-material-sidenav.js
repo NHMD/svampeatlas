@@ -245,6 +245,17 @@
         }
     ])
 
+
+    .directive('menuExternalLink', [
+        function() {
+            return {
+                scope: {
+                    section: '='
+                },
+                templateUrl: 'views/ss/menu-external-link.tmpl.html'
+            };
+        }
+    ])
     .controller('menuLinkCtrl', [
         '$scope',
         '$state',
@@ -488,6 +499,16 @@
             '</md-button>\n'
         );
 		
+    $templateCache.put('views/ss/menu-external-link.tmpl.html',
+        '<md-button\n' +
+        '   ss-style-color="{\'background-color\':  \'primary.default\'}"' +
+        '   class="md-raised md-primary"' +
+        '   ng-href="{{section.uri}}" target="_BLANK"\n' +
+        '   ng-click="focusSection(section)">\n' +
+        '  <ng-md-icon ng-if="section.icon" icon="{{section.icon}}" ></ng-md-icon> {{section.name | translate}}\n' +
+        '</md-button>\n'
+    );
+		
     $templateCache.put('views/ss/menu-action.tmpl.html',
         '<md-button\n' +
         '   ss-style-color="{\'background-color\': isSelected(section.state) ? \'primary.800\': \'primary.default\'}"' +
@@ -537,6 +558,7 @@
             '            <li ng-repeat="child in section.children" ng-if="!child.hidden">' +
 			'                <menu-action section="child" ng-if="child.type === \'action\'"></menu-action>' +
             '                <menu-link section="child" ng-if="child.type === \'link\'"></menu-link>' +
+		    '                <menu-external-link section="child" ng-if="child.type === \'external_link\'"></menu-external-link>' +
             '                <menu-toggle section="child" ng-if="child.type === \'toggle\'"></menu-toggle>' +
             '            </li>' +
             '        </ul>' +

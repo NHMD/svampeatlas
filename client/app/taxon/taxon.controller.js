@@ -245,7 +245,9 @@ angular.module('svampeatlasApp')
 						$scope.calculateParentRanksForSlider($scope.taxon.Children);
 
 
-						$scope.attachFunRecord();
+						if($scope.taxon.FunIndexNumber){
+							$scope.attachFunRecord();
+						}
 
 
 					}).then(function() {

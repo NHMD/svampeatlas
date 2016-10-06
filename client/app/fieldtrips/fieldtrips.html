@@ -1,0 +1,104 @@
+
+<md-toolbar ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
+   <md-button class="md-fab md-warn md-fab-bottom-right" aria-label="Tilføj observation" ng-click="ObservationFormService.show($event)" ng-show="Auth.hasRole('validator')">
+               <ng-md-icon icon="add"></ng-md-icon>
+           </md-button>
+
+<md-content flex md-scroll-y layout-padding ng-cloak>
+	   
+			   
+	<div class="table-responsive-vertical shadow-z-1">
+
+
+<table  class="table species-table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-table="displayed" st-safe-src='serverData'>
+	
+	<thead>
+		
+
+		
+		<th st-ratio="5"></th>
+		<th st-ratio="10" st-sort="observationDate"  translate>Dato</th>
+		<th st-sort="localityname" translate>Lokalitet</th>
+		<th st-sort="count"  translate>Antal fund</th>
+		
+		
+	</tr>
+	</thead>
+	<tbody ng-show="displayed.length > 0">
+	<tr ng-repeat="row in displayed">
+		
+		<td data-title="" ><md-menu  >
+			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+			               <ng-md-icon icon="more_vert" ></ng-md-icon>
+			            </md-button>
+			            <md-menu-content width="4" >
+			              <md-menu-item >
+			                <md-button ng-click="showFieldTripSearch(row, 'list')">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Vis fund i liste' | translate}}</p>
+			                      <ng-md-icon icon="list" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			              <md-menu-item >
+			                <md-button ng-click="showFieldTripSearch(row, 'map')">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Vis fund på kort'  | translate}}</p>
+			                      <ng-md-icon  icon="map" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			              <md-menu-item >
+			                <md-button ng-click="addObservationToFieldTrip($event, row)">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Indlæg nyt fund'  | translate}}</p>
+			                      <ng-md-icon  icon="add" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			          
+			            </md-menu-content>
+			          </md-menu></td>
+					  <td st-ratio="10" data-title="{{'Dato' | translate}}" >{{row.observationDate | date : 'dd/MM/yyyy'}}</td>
+		<td data-title="{{'Lokalitet' | translate}}"> {{row.localityname}} </td>
+		<td data-title="{{'Antal fund' | translate}}">{{row.count}}</td>	
+		
+				
+			
+		<!--<td data-title=""><ng-md-icon icon="camera_alt" ng-if="row.Images.length > 0" ng-click="ObservationModalService.show($event, row)"></ng-md-icon> <ng-md-icon icon="forum" ng-if="row.Forum.length > 0" ng-click="ObservationModalService.show($event, row)"></td> -->
+		
+		
+	</tr>
+
+	</tbody>
+	<tbody ng-show="!displayed &&  isLoading">
+		<tr><td colspan="6" ><div layout="row" layout-align="center center"><md-progress-circular  md-diameter="96"></md-progress-circular></div></td></tr>
+		  
+	</tbody>	
+	<tbody ng-show="displayed && displayed.length===0 &&  !isLoading">
+		<tr><td colspan="6" ><div layout="row" layout-align="center center" translate>Ingen data fundet</div></td></tr>
+		  
+	</tbody>
+
+	<tfoot  ng-show="displayed && !isLoading">
+	<tr>
+		<td st-pagination="" st-displayed-pages="7" st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultspecieslist/pagination.tpl.html">
+		</td>
+	</tr>
+	</tfoot> 
+</table>
+<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
+</div>
+
+
+
+
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+	        
+	      </div>	
+</md-content>
+
+
+

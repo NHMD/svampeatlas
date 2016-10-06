@@ -1,0 +1,41 @@
+<md-toolbar  ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
+<md-content layout-margin>
+<h4 ng-if="ctrl.statusmsg">{{ctrl.statusmsg}}</h4>
+<md-progress-linear ng-show="ctrl.loadingFromserver"></md-progress-linear>
+
+ <form ng-if="!ctrl.loadingFromserver" layout="row"><md-input-container class="md-block" flex-gt-xs>
+      <label translate>Søg efter slægt, familie, orden etc.</label>
+    <md-icon id="resetTaxonTreeFilter" md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  ng-click="ctrl.resetFilter()"></md-icon>    <input ng-model="ctrl.filter" ng-model-options="{ debounce: 500 }" >
+      </md-input-container>
+	  <div ng-if="ctrl.Auth.hasRole('taxonomyadmin')"><md-button class="md-raised md-primary" ng-click="ctrl.generateTree()"><ng-md-icon icon="taxonomy"></ng-md-icon> {{'Gendan' | translate}}</md-button></div>
+  </form>
+<div 
+    ivh-treeview="ctrl.treeData" 
+	
+	ivh-treeview-expand-to-depth="1"
+	ivh-treeview-filter="ctrl.filter"
+	ivh-treeview-validate="false"
+	>
+    <script type="text/ng-template">
+		<div style="white-space: nowrap;">
+      <span ivh-treeview-toggle>
+        <span ivh-treeview-twistie></span>
+      </span>
+    <md-box ></md-box>
+	
+      <span class="ivh-treeview-node-label" ivh-treeview-toggle ng-if="node.count > 0 &&  9949 > node.RankID">
+		  <i ng-if="node.loading" class="fa fa-refresh fa-spin"  ></i>
+        <em>{{node.FullName}}</em> <strong>{{(node.vernacularname_dk !== null ) ? (node.vernacularname_dk | capitalize) : ""}}</strong> {{(node.count > 0 ) ? "("+node.count+")" : ""}} 
+      </span>
+	  <sp-link ng-if="node.count === 0 || node.RankID > 9949"></sp-link>
+	  
+	  
+      <div ivh-treeview-children ></div>
+  </div>
+    </script>
+   
+  </div>
+</md-content>
+
+
+

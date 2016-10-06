@@ -546,4 +546,8 @@ p.pagination-text {
 	margin-left: 20px;
 }
 
+th > md-input-container.dklist {
+	margin : 0px;
+}
+
 

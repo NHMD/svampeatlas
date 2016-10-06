@@ -1,0 +1,12 @@
+ul.ivh-treeview {
+  list-style-type: none;
+}
+
+.folder-icon {
+	color: rgb(96,125,139);
+	cursor: pointer;
+}
+
+sp-link > a {
+	cursor: pointer;
+}
