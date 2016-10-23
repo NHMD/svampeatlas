@@ -7,3 +7,6 @@ name_uk VARCHAR(255)
 ALTER TABLE Substrate add column _id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT;
 ALTER TABLE Substrate add column name_uk VARCHAR(255) ;
 LOAD DATA INFILE '/usr/local/mysql-5.6.21-osx10.8-x86_64/dataimport/substrate.csv' INTO  TABLE Substrate FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' (name);
+
+
+ALTER TABLE `Substrate` ADD `hide` TINYINT(2) NOT NULL DEFAULT '0' ;

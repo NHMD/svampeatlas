@@ -100,24 +100,33 @@
 	              </md-datepicker>
 				  <md-chips ng-model="selectedLocality" md-autocomplete-snap md-require-match="true" class="md-block" ng-if="!foreignLocality" flex-gt-xs>
 
-				    <md-autocomplete
-					md-input-name="locality-autocomplete"
-					md-select-on-match="true"
-					md-match-case-insensitive="true"
-				        md-selected-item="selectedItem"
-				        md-search-text="searchText"
-				        md-items="item in querySearchLocality(searchText)"
-				        md-item-text="item.name"
-				        placeholder="{{'Lokalitet' | translate}}"
-						ng-disabled="selectedLocality.length > 0">
-				      <span md-highlight-text="searchText">{{item.name}}</span>
-				    </md-autocomplete>
-				    <md-chip-template>
-				      <span>
-				        <strong>{{$chip.name}}</strong>
-
-				      </span>
-				    </md-chip-template>
+			     <md-autocomplete
+			   	md-min-length="3"
+			 	md-no-cache="true"
+			         md-selected-item="selectedItem"
+			         md-search-text="searchText"
+			         md-items="item in querySearchLocality(searchText)"
+			         md-item-text="item.name"
+					 md-menu-class="autocomplete-custom-template"
+			         placeholder="{{'Lokalitet' | translate}}">
+					 <md-item-template>
+					  <span class="item-title">
+					  	<span>{{item.name}}</span>
+					  </span>
+			       
+				  <span class="item-metadata" >
+					  
+					  <span class="item-metastat"> {{item.Municipality.name}} {{'kommune' | translate}} </span>
+				  </span>
+			  </md-item-template>
+			     </md-autocomplete>
+			     <md-chip-template>
+			       <span>
+			         <strong>{{($chip.name) ? $chip.name : $chip}}</strong>
+					 
+					 <em ng-if="$chip.Municipality">{{$chip.Municipality.name}} {{'kommune' | translate}} </em>
+			       </span>
+			     </md-chip-template>
 	
 				  </md-chips>
 				<md-input-container ng-if="foreignLocality" class="md-block" flex-gt-xs>
@@ -132,9 +141,56 @@
 				   <md-input-container>
 				           <label>{{'Substrat' | translate}}</label>
 				           <md-select name="substrate" ng-model="ctrl.selectedSubstrate" required>
-				             <md-option ng-repeat="sub in substrates" value="{{sub._id}}" >
+						   
+				             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'jord', hide: false } : true" value="{{sub._id}}" >
 				               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
 				             </md-option>
+							 <md-divider></md-divider>
+				   <md-optgroup label="{{'Ved' | translate}}">
+		             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'ved', hide: false } : true" value="{{sub._id}}" >
+		               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+		             </md-option>
+					  </md-optgroup >
+					  <md-divider></md-divider>
+   				   <md-optgroup label="{{'Plantemateriale' | translate}}">
+   		             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'plantemateriale', hide: false } : true" value="{{sub._id}}" >
+   		               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+   		             </md-option>
+   					  </md-optgroup >
+					  <md-divider></md-divider>
+      				   <md-optgroup label="{{'Mosser' | translate}}">
+      		             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'mosser', hide: false } : true" value="{{sub._id}}" >
+      		               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+      		             </md-option>
+      					  </md-optgroup >
+		          <md-divider></md-divider>
+						   <md-optgroup label="{{'Dyr' | translate}}">
+				             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'dyr', hide: false } : true" value="{{sub._id}}" >
+				               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+				             </md-option>
+							  </md-optgroup >
+		   		          <md-divider></md-divider>
+		   						   <md-optgroup label="{{'Svampe og svampedyr' | translate}}">
+		   				             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'svampe og svampedyr', hide: false } : true" value="{{sub._id}}" >
+		   				               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+		   				             </md-option>
+		   							  </md-optgroup > 
+							  
+							  
+							  <md-divider></md-divider>
+					   <md-optgroup label="{{'Sten' | translate}}">
+			             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'sten' , hide: false} : true" value="{{sub._id}}" >
+			               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+			             </md-option>
+						  </md-optgroup >	  
+							  <md-divider></md-divider>
+   				             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'brandplet' , hide: false} : true" value="{{sub._id}}" >
+   				               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+   				             </md-option>
+   				             <md-option ng-repeat="sub in substrates | filter: {group_dk: 'andet substrat' , hide: false} : true" value="{{sub._id}}" >
+   				               {{($translate.use() === 'en') ? sub.name_uk : sub.name}}
+   				             </md-option>
+							  
 				           </md-select>
 						   
 				         </md-input-container>

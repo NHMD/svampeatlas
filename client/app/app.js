@@ -189,7 +189,15 @@ angular.module('svampeatlasApp', [
 					uri: 'http://svampeatlas.dk/bestemmelseshjul.html',
 					type: 'external_link',
 					requireLogin: false,
-				}]
+				}
+				/*,{
+					id: 'identification',
+					icon: 'microscope',
+					name: 'Svampebestemmelse',
+					uri: 'http://svampeatlas.dk/bestemmelseshjul.html',
+					type: 'external_link',
+					requireLogin: false,
+				} */]
 			}, {
 				id: 'about',
 				name: 'Om svampeatlas',
@@ -350,7 +358,7 @@ angular.module('svampeatlasApp', [
 			'<rect id="svg_4" height="1.5" width="7" y="11" x="9" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="null" />')
 		.addShape('standby', '<path d="M13 3.5h-2v10h2v-10z"/><path d="M16.56 5.94l-1.45 1.45C16.84 8.44 18 10.33 18 12.5c0 3.31-2.69 6-6 6s-6-2.69-6-6c0-2.17 1.16-4.06 2.88-5.12L7.44 5.94C5.36 7.38 4 9.78 4 12.5c0 4.42 3.58 8 8 8s8-3.58 8-8c0-2.72-1.36-5.12-3.44-6.56z"/>')
 		.addShape('fungus', '<path d="M12,2C5,2,2,7.5,2,10.3c0,2.9,3.3,1.3,7.8,0.8l-1.4,8.6c-0.2,1.2,0.7,2.3,2,2.3h3.2c1.2,0,2.2-1.1,2-2.3l-1.4-8.6   c4.5,0.5,7.9,2.1,7.9-0.8C22,7.5,19,2,12,2z"/>')
-		.addShape('microscope', '<path fill="#000000" d="M9.46,6.28L11.05,9C8.47,9.26 6.5,11.41 6.5,14A5,5 0 0,0 11.5,19C13.55,19 15.31,17.77 16.08,16H13.5V14H21.5V16H19.25C18.84,17.57 17.97,18.96 16.79,20H19.5V22H3.5V20H6.21C4.55,18.53 3.5,16.39 3.5,14C3.5,10.37 5.96,7.2 9.46,6.28M12.74,2.07L13.5,3.37L14.36,2.87L17.86,8.93L14.39,10.93L10.89,4.87L11.76,4.37L11,3.07L12.74,2.07Z" />')
+		.addShape('microscope', '<path  d="M9.46,6.28L11.05,9C8.47,9.26 6.5,11.41 6.5,14A5,5 0 0,0 11.5,19C13.55,19 15.31,17.77 16.08,16H13.5V14H21.5V16H19.25C18.84,17.57 17.97,18.96 16.79,20H19.5V22H3.5V20H6.21C4.55,18.53 3.5,16.39 3.5,14C3.5,10.37 5.96,7.2 9.46,6.28M12.74,2.07L13.5,3.37L14.36,2.87L17.86,8.93L14.39,10.93L10.89,4.87L11.76,4.37L11,3.07L12.74,2.07Z" />')
 
 	editableThemes['bs3'].submitTpl = '<md-button type="submit" class="md-icon-button  md-primary" aria-label="Save"><span class="glyphicon glyphicon-ok"></span></md-button>';
 	editableThemes['bs3'].cancelTpl = '<md-button type="button" class="md-icon-button  md-warn" ng-click="$form.$cancel()" aria-label="Cancel"><span class="glyphicon glyphicon-remove"></span></md-button>';

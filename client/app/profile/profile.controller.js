@@ -104,12 +104,14 @@ angular.module('svampeatlasApp')
 		_.each(res, function(e){
 			if(grouped[e.year]){
 				grouped[e.year].countries.push(e)
+				grouped[e.year].year = parseInt(e.year)
 			} else {
 				grouped[e.year] = {countries : [e]}
+				grouped[e.year].year = parseInt(e.year)
 			}
 		});
 		$scope.speciesCountGrouped = _.values(grouped);
-		var test;
+		$scope.loadingSpeciesCountCompleted = true;
 	});
 	
 	$scope.higherTaxa = [{RankID: 500, RankName: 'Phylum'},{RankID: 1500, RankName: 'Class'},{RankID: 3000,RankName: 'Order'}, {RankID: 4000,RankName: 'Family'}, {RankID: 5000, RankName: 'Genus'}];
@@ -183,7 +185,7 @@ angular.module('svampeatlasApp')
 			search.include[5].required = true;
 			$state.go('search-list')
 		} else if(searchType === 'specieslistyear'){
-			search.where = {observationDate: {$between: [searchProfile+'-01-01', searchProfile+'-12-31']}}
+			search.where = {observationDate: {$between: [searchProfile.year+'-01-01', searchProfile.year+'-12-31']}}
 			search.include[0].where = {
 				Determination_validation: "Godkendt",
 				Taxon_RankID : { $gt: 9950}
@@ -193,7 +195,17 @@ angular.module('svampeatlasApp')
 			} 
 			search.include[4].required = true;
 			// include global obs
-			search.include[1].required = false;
+			if(!searchProfile.country){
+				search.include[2].required = false;
+			}
+			else if(searchProfile.country === 'Denmark'){ 
+				search.include[2].required = true;
+			} else if(searchProfile.country !== undefined && searchProfile.country !== 'Denmark'){
+				search.include[2].required = false;
+				search.include[3].required = true;
+				search.include[3].where = {countryName:searchProfile.country}
+			}
+			
 			$state.go('search-specieslist')
 		} else if(searchType === 'specieslisthighertaxon'){
 			

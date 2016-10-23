@@ -167,7 +167,7 @@ angular.module('svampeatlasApp')
 			'Taksonomisk profil': 'Taxonomic profile',
 			'Rang': 'Rank',
 			'Arter': 'Species',
-			'Første fund': 'First yearly findings',
+			'Års første fund': 'First yearly findings',
 			'Statistik': 'Statistics',
 			'Du har' : 'You have',
 			'med nye kommentarer seneste' : 'with comments since',

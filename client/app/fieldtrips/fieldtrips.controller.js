@@ -34,7 +34,7 @@ $scope.addObservationToFieldTrip = function(ev, row){
 	ObservationFormStateService.reset();
 	ObservationFormStateService.getState().observationDate = new Date(row.observationDate);
 	if(row.inDK ===1){
-		ObservationFormStateService.getState().Locality =  { _id: row.locality_id, name: row.localityname }
+		ObservationFormStateService.getState().Locality =  { _id: row.locality_id, name: row.localityname, decimalLatitude: row.decimalLatitude, decimalLongitude:  row.decimalLongitude}
 	}
 	
 	ObservationFormStateService.getState().mapCenter = {lat: row.decimalLatitude, lng: row.decimalLongitude , zoom: 14}

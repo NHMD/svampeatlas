@@ -386,6 +386,7 @@ angular.module('svampeatlasApp')
 				};
 
 				var geometry = ObservationSearchService.getSearch().geometry;
+				
 				var query = {
 					//order: order || 'observationDate DESC',
 					_order: JSON.stringify(order),
@@ -401,6 +402,7 @@ angular.module('svampeatlasApp')
 				if (geometry) {
 					query.geometry = geometry;
 				}
+				
 
 
 

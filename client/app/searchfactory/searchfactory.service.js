@@ -1,16 +1,19 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User, Substrate, VegetationType) {
+	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User, Substrate, VegetationType, Area) {
 		
 		var substrate = Substrate.query();
 		var vegetationType = VegetationType.query();
-
+		var municipalities = Area.query({where: {type: 'kommune'}})
 		return {
 			getSubstrate : function(){
 				return substrate.$promise;
 			},
 			getVegetationType : function(){
 				return vegetationType.$promise;
+			},
+			getMunicipalities : function(){
+				return municipalities.$promise;
 			},
 			querySearchLocality : function(query, leafletBounds) {
 
@@ -20,6 +23,11 @@ angular.module('svampeatlasApp')
 							like: "%" + query + "%"
 						}
 					},
+					include: JSON.stringify([JSON.stringify({
+						model: "Area",
+						as: 'Municipality',
+						attributes:['name']
+					})]),
 					limit: 30,
 					order: "probability DESC, name ASC"
 

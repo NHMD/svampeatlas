@@ -154,8 +154,7 @@ angular.module('svampeatlasApp')
 			if (geometry) {
 				query.geometry = geometry;
 			}
-
-
+			
 
 
 
