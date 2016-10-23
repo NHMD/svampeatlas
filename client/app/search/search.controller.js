@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter',
-		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter', 'Area',
+		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter, Area) {
 		
 			$scope.Auth = Auth;
 			$scope.state = $state;
@@ -86,6 +86,41 @@ angular.module('svampeatlasApp')
 				$mdSidenav(nav).close()
 
 			};
+			
+			$scope.setMunicipality = function(id){
+				
+				var area = _.find($scope.municipalities, function(m){
+					return m._id === parseInt(id);
+				})
+				
+				Area.geometry({id: area.verbatim_id}).$promise.then(function(geo){
+					leafletData.getMap('searchformmap').then(function(map) {
+						
+						if($scope.municipality){
+							map.removeLayer($scope.municipality);
+						};
+						$scope.municipality = new L.geoJson(geo);
+						map.addLayer($scope.municipality);
+						map.fitBounds($scope.municipality.getBounds());
+						//$scope.search.municipalityid = area._id;
+						$scope.search.include[2].where.municipality_id = area._id
+					});
+					
+				})
+			}
+			
+			$scope.deleteMunicipality = function(){
+				leafletData.getMap('searchformmap').then(function(map) {
+				if($scope.municipality){
+					map.removeLayer($scope.municipality);
+				};
+				delete $scope.municipality ;
+				
+				delete $scope.search.include[2].where.municipality_id
+				delete $scope.selectedMunicipality;
+			});
+			}
+			
 			//	ObservationSearchService.reset();
 			$scope.search = ObservationSearchService.getUIstate();
 
@@ -97,6 +132,20 @@ angular.module('svampeatlasApp')
 			} else {
 				$scope.drawnItems = new L.geoJson();
 			};
+			
+			
+			SearchService.getMunicipalities().then(function(municipalities){
+				$scope.municipalities = municipalities;
+				if ($scope.search.include[2].where.municipality_id) {
+					$scope.selectedMunicipality = parseInt($scope.search.include[2].where.municipality_id);
+				}
+					
+				
+			})
+			
+			
+
+			
 			$scope.mapsettings = {
 				center: {
 					lat: 56,
@@ -189,8 +238,16 @@ angular.module('svampeatlasApp')
 
 
 			initMap();
+			
+			
 
-
+			$scope.$watch('selectedMunicipality', function(newVal, oldVal){
+				
+				if(newVal ){
+					//var area = JSON.parse(newVal)
+					$scope.setMunicipality(newVal)
+				}
+			})
 
 
 
@@ -226,6 +283,7 @@ angular.module('svampeatlasApp')
 						$scope.search.selectedLocalities = [];
 						delete $scope.observationSearch.geometry;
 						$scope.drawnItems.removeLayer($scope.leafletPolygon);
+						$scope.deleteMunicipality()
 						break;
 					case 'period':
 						delete $scope.search.fromDate;
@@ -404,14 +462,14 @@ angular.module('svampeatlasApp')
 
 				}
 
-				if ($scope.search.selectedVegetationType) {
-					$scope.observationSearch.where.vegetationtype_id = $scope.search.selectedVegetationType;
+				if ($scope.search.selectedVegetationType && $scope.search.selectedVegetationType.length > 0) {
+					$scope.observationSearch.where.vegetationtype_id = { $in: $scope.search.selectedVegetationType};
 				} else {
 					delete $scope.observationSearch.where.vegetationtype_id;
 				}
 
-				if ($scope.search.selectedSubstrate) {
-					$scope.observationSearch.where.substrate_id = $scope.search.selectedSubstrate;
+				if ($scope.search.selectedSubstrate && $scope.search.selectedSubstrate.length > 0) {
+					$scope.observationSearch.where.substrate_id = { $in: $scope.search.selectedSubstrate};
 				} else {
 					delete $scope.observationSearch.where.substrate_id;
 				}
@@ -452,10 +510,8 @@ angular.module('svampeatlasApp')
 
 				if ($scope.search.selectedLocalities.length > 0) {
 					$scope.search.include[2].where.$or = _.map($scope.search.selectedLocalities, function(loc) {
-						return (loc.name) ? {
-							name: {
-								like: loc.name + "%"
-							}
+						return (loc.name && loc._id) ? {
+							_id: loc._id
 						} : {
 							name: {
 								like: loc + "%"
@@ -685,7 +741,13 @@ angular.module('svampeatlasApp')
 				} else {
 					delete $scope.observationSearch.geometry;
 				}
-
+					/*
+				if ($scope.search.municipalityid) {
+					$scope.observationSearch.municipalityid = $scope.search.municipalityid;
+				} else {
+					delete $scope.observationSearch.municipalityid;
+				}
+				*/
 				if ($scope.search.activeThreadsOnly) {
 					$scope.observationSearch.activeThreadsOnly = $scope.search.activeThreadsOnly;
 				} else {

@@ -48,6 +48,13 @@
    .demo-dialog-content {
      padding: 0 15px;
      width: 100%;
+	 background-color: white;
+   }
+   
+   .demo-dialog-button {
+     padding: 0 15px;
+     width: 100%;
+	 background-color: white;
    }
 
 

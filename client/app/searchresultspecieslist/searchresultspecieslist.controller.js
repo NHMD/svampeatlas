@@ -110,7 +110,7 @@ if(search.include[0].where.Taxon_id){
 			$scope.search.include[1].attributes = [ 'Initialer', 'name'];
 			
 */
-			$scope.queryinclude = _.map(_.filter($scope.search.include, function(e){ return e.model !== 'GeoNames'}), function(n) {
+			$scope.queryinclude = _.map($scope.search.include, function(n) {
 				return JSON.stringify(n);
 			});
 

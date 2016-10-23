@@ -70,7 +70,7 @@
 		<h3 ng-show="vernacularname_dk" class="md-display-1">{{vernacularname_dk}} </h3>
 		<h4 class="md-subhead" ng-show="taxon.Vernacularname_DK"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h4>
 		<h3 ng-show="!taxon.Vernacularname_DK" class="md-headline"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
-		 <div class="md-caption" layout="column"> <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">≈ <em> {{syn.FullName}}</em> {{syn.Author}}</span>
+		 <div class="md-caption" layout="column"> <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt navn:'): 'Syn.:'}}  <em> {{syn.FullName}}</em> {{syn.Author}}</span>
 	</div>
 		<!-- <div class="md-caption" layout-gt-xs="row" flex> <div  ng-repeat="tx in higherTaxa"><div ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}{{(!$last) ? ',': ''}}</div>
 		 <div ng-if="!tx.Vernacularname_DK"></div>

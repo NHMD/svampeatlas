@@ -101,7 +101,7 @@
 				 </a> 
 			
 
-		<span ng-repeat="syn in row.synonyms | synonymsWithoutSelf" class="md-caption"><br>Syn: <em>{{syn.FullName}}</em></span>
+		<span ng-repeat="syn in row.synonyms | synonymsWithoutSelf" class="md-caption"><br>{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt:'): 'Syn.:'}} <em>{{syn.FullName}}</em></span>
 		</td>
 	
 		

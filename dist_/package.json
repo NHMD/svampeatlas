@@ -1,0 +1,54 @@
+{
+  "name": "svampeatlas",
+  "version": "0.0.0",
+  "main": "server/app.js",
+  "dependencies": {
+    "express": "~4.13.3",
+    "morgan": "~1.0.0",
+    "body-parser": "~1.5.0",
+	"bluebird": "2.9.26",
+    "method-override": "~1.0.0",
+    "serve-favicon": "~2.0.1",
+    "cookie-parser": "~1.0.1",
+    "express-session": "~1.0.2",
+    "errorhandler": "~1.0.0",
+    "compression": "~1.0.1",
+    "lodash": "~3.10.0",
+    "ejs": "~0.8.4",
+    "sequelize": "3.17.1",
+    "jsonwebtoken": "5.5.4",
+    "express-jwt": "3.3.0",
+	"jws" : "3.1.1",
+	"mysql": "2.6.2",
+    "passport": "~0.2.0",
+    "passport-local": "~0.1.6",
+    "passport-facebook": "latest",
+    "passport-google-oauth": "latest",
+	"passport-oauth2" : "latest",
+    "composable-middleware": "^0.3.0",
+    "socket.io": "^1.0.6",
+    "socket.io-client": "^1.0.6",
+    "socketio-jwt": "^2.0.2",
+	"soap" : "0.13.0",
+	"node-rest-client":"1.5.1",
+	"request" : "2.55.0",
+	"xml2js" : "0.4.16",
+	"wellknown":"0.4.0",
+	"multer" : "1.1.0",
+	"shortid" : "2.2.6",
+	"moment": "^2.11.0",
+	"redis": "2.5.3"
+  },
+  "devDependencies": {
+   
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "scripts": {
+    "start": "node server/app.js",
+    "test": "grunt test",
+    "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
+  },
+  "private": true
+}
