@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter', 'Area',
-		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter, Area) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter', 'Area','StoredSearch',
+		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter, Area, StoredSearch) {
 		
 			$scope.Auth = Auth;
 			$scope.state = $state;
@@ -18,12 +18,57 @@ angular.module('svampeatlasApp')
 				$scope.vegetationtypes = vegtypes;
 			})
 			
-			
+			$scope.saveSearch = function(){
+				StoredSearch.save({
+					search: JSON.stringify($scope.search),
+					name: "test"
+				}).$promise.then(function(res){
+					alert(res)
+				}).catch(function(err){
+					alert(err)
+				})
+			}
 
+			$scope.$watch('selectedSearch', function(newVal, oldVal){
+				
+				if(newVal && newVal != oldVal){
+					StoredSearch.get({id: newVal}).$promise.then(function(ss){
+						ObservationSearchService.reset();
+						$scope.observationSearch = ObservationSearchService.getSearch();
+						if (!$scope.observationSearch.where) {
+							$scope.observationSearch.where = {};
+						}
+						$scope.search= JSON.parse(ss.search);
+						$scope.search.selectedHigherTaxa = $scope.search.selectedHigherTaxa || [];
+						$scope.search.selectedLocalities = $scope.search.selectedLocalities || [];
+						$scope.search.associatedOrganism = $scope.search.associatedOrganism || [];
+						$scope.search.collectors = $scope.search.collectors || [];
+						$scope.search.determiner = $scope.search.determiner || [];
+						$scope.search.PrimaryUser = $scope.search.PrimaryUser || [];
+						$scope.search.selectedMonths = $scope.search.selectedMonths || [];
+						
+						if($scope.search.geometry){
+							
+							leafletData.getMap('searchformmap').then(function(map) {
+								map.removeLayer($scope.drawnItems);
+								$scope.drawnItems = new L.geoJson($scope.search.geometry);
+								map.addLayer($scope.drawnItems);
+							})
+							
+							
+						}
+						
+					})
+				}
+			})
+			
+			
 			$scope.openMenu = function($mdOpenMenu, ev) {
 
 				$mdOpenMenu(ev);
 			};
+			
+			$scope.storedSearches = StoredSearch.query()
 
 			$scope.resetForm = function() {
 				
@@ -117,7 +162,7 @@ angular.module('svampeatlasApp')
 				delete $scope.municipality ;
 				
 				delete $scope.search.include[2].where.municipality_id
-				delete $scope.selectedMunicipality;
+				delete $scope.search.selectedMunicipality;
 			});
 			}
 			
@@ -137,7 +182,7 @@ angular.module('svampeatlasApp')
 			SearchService.getMunicipalities().then(function(municipalities){
 				$scope.municipalities = municipalities;
 				if ($scope.search.include[2].where.municipality_id) {
-					$scope.selectedMunicipality = parseInt($scope.search.include[2].where.municipality_id);
+					$scope.search.selectedMunicipality = parseInt($scope.search.include[2].where.municipality_id);
 				}
 					
 				
@@ -241,7 +286,7 @@ angular.module('svampeatlasApp')
 			
 			
 
-			$scope.$watch('selectedMunicipality', function(newVal, oldVal){
+			$scope.$watch('search.selectedMunicipality', function(newVal, oldVal){
 				
 				if(newVal ){
 					//var area = JSON.parse(newVal)
@@ -426,7 +471,7 @@ angular.module('svampeatlasApp')
 				}
 			};
 			$scope.exists = function(item, list) {
-				return list.indexOf(item) > -1;
+				return list && list.indexOf(item) > -1;
 			};
 			//observationSearch.where.observationDate.$between[0]
 			$scope.$watch('search', function(newVal, oldVal) {
@@ -759,6 +804,8 @@ angular.module('svampeatlasApp')
 				} else {
 					delete $scope.observationSearch.selectedMonths
 				}
+				
+				console.log(JSON.stringify($scope.search))
 
 			}, true)
 		}
