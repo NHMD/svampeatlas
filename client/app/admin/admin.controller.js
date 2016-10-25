@@ -1,8 +1,37 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('AdminCtrl', function($scope, $http, $filter, Auth, User, $modal, Role, $mdDialog, $mdMedia, $mdToast) {
+  .controller('AdminCtrl', function($scope, $http, $filter, Auth, User, $modal, Role, $mdDialog, $mdMedia, $mdToast, appConstants) {
 	 
+	  
+	  
+
+	  $scope.getUserListCsv = function(){
+
+
+		
+	  		var mapped =  _.map($scope.users, function(e){
+	  			return {
+				
+				
+		
+	  				_id: e._id,
+	  				Initialer: e.Initialer,
+	  				name: e.name,
+	  				
+					email: e.email,
+	  				URI: appConstants.baseurl +"/userprofile/"+e._id
+				
+			
+			
+
+	  			}
+	  		})
+		
+	  		return mapped;
+	
+	  }
+	  
 	  
   	$scope.showNewUserForm = function(ev){
   		var useFullScreen = $mdMedia('xs');
