@@ -63,6 +63,7 @@ module.exports = function(app) {
 	app.use('/api/geonames', require('./api/soap/geonames'));
 	app.use('/api/municipalities', require('./api/geojson/municipalities'));
 	app.use('/api/areas', require('./api/mysql/Area'));
+	app.use('/api/search', require('./api/mysql/StoredSearch'));
 	app.use('/auth', require('./auth'));
 
 	// All undefined asset or api routes should return a 404
