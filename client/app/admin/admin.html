@@ -14,6 +14,9 @@
         <a ng-click="delete(user)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
     </li>
   </ul>-->
+	 <md-button aria-label="Download csv"  ng-csv="getUserListCsv" csv-label="true" filename="svampeatlasbrugere.csv">
+	 	                <ng-md-icon icon="file_download"></ng-md-icon>Download csv
+	 	            </md-button>
   
   <table class="table usertable table-bordered" st-safe-src="users" st-table="safeUsers">
   	<thead>
