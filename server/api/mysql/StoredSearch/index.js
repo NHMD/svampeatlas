@@ -16,7 +16,7 @@ router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id',auth.isAuthenticated(),  controller.update);
 //router.put('/:id/validation', auth.hasRole('validator'),  controller.updateValidation);
 //router.patch('/:id',auth.hasRole('validator'),  controller.update);
-//router.delete('/:id',auth.hasRole('taxonomyadmin'),  controller.destroy);
+router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 
 

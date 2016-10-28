@@ -5,7 +5,7 @@ angular.module('svampeatlasApp')
     $stateProvider
       .state('search', {
 		  title: 'Søg fund i Danmarks svampeatlas',  
-        url: '/search',
+        url: '/search/:searchid?',
         templateUrl: 'app/search/search.html',
         controller: 'SearchCtrl'
       });

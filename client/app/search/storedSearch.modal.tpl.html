@@ -1,0 +1,48 @@
+<md-dialog aria-label="Gem søgning"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+       
+		<h2 translate>Gem søgning</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <ng-md-icon icon="close"></ng-md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content layout-padding layout-margin>
+
+	 <div layout="row" >
+		 <md-input-container class="md-block" layout-fill>
+		           <label>Navn til søgning</label>
+		           <input ng-model="name" >
+		         </md-input-container>
+	 </div>
+	  <div layout="row" >
+		  <p translate>eller overskriv eksisterende: </p>
+	  </div>
+	 <div layout="row">
+		 <md-input-container layout-fill>
+	           <md-select name="searches" ng-model="ctrl.selectedSearch" ng-disabled="name">
+			   <md-option value=""></md-option>
+	 	             <md-option ng-repeat="s in storedSearches" value="{{s._id}}" >
+	 	               {{ s.name}}
+	 	             </md-option>
+	 			 </md-select>
+		       
+		      </md-input-container>
+			  </div>
+      
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      
+      <span flex></span>
+      <md-button ng-click="cancel()">
+       Fortryd
+      </md-button>
+      <md-button ng-click="saveStoredSearch()" style="margin-right:20px;" >
+        Gem
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

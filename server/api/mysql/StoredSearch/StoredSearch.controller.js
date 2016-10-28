@@ -88,6 +88,11 @@ exports.show = function(req, res) {
 	Storedsearch.find({
 		where: {
 			_id: req.params.id
+		},
+		include: {
+			model: models.User,
+			as: "User",
+			attributes: ['_id', 'name', 'Initialer']
 		}
 		 
 
@@ -121,7 +126,8 @@ exports.create = function(req, res) {
 exports.update = function(req, res) {
 	Storedsearch.find({
 		where: {
-			_id: req.params.id
+			_id: req.params.id,
+			user_id: req.user._id
 		}
 	})
 		.then(handleEntityNotFound(res))
@@ -141,7 +147,8 @@ exports.update = function(req, res) {
 exports.destroy = function(req, res) {
 	Storedsearch.find({
 		where: {
-			_id: req.params.id
+			_id: req.params.id,
+			user_id: req.user._id
 		}
 	})
 		.then(handleEntityNotFound(res))
