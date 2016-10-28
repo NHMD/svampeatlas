@@ -11,16 +11,16 @@ router.post('/', function(req, res, next) {
 	 
     var error = err || info;
     if (error) {
-      return res.json(401, error);
+      return res.status(401).json( error);
     }
     if (!user) {
-      return res.json(404, {
+      return res.status(404).json( {
         message: 'Something went wrong, please try again.'
       });
     }
 
     var token = auth.signToken(user._id, user.role);
-    res.json({ token: token });
+    res.status(200).json({ token: token });
   })(req, res, next)
 });
 

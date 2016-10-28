@@ -7,18 +7,13 @@
 					
 
       <form name="searchForm" layout-padding layout-fill>
-		  <md-button ng-click="saveSearch()">Gem søgning</md-button>
-		  
-          <md-select name="searches" ng-model="selectedSearch" >
-	             <md-option ng-repeat="s in storedSearches" value="{{s._id}}" >
-	               {{ s.name}}
-	             </md-option>
-			 </md-select>
+		   
+		 	<span ng-if="storedSearch && mdMedia('xs')">{{'Aktuel søgning:' | translate}} </span>
+		   <h4 ng-if="storedSearch"><span ng-if="mdMedia('gt-xs')">{{'Aktuel søgning:' | translate}}</span> {{storedSearch.name}} <span ng-if="Auth.getCurrentUser()._id !== storedSearch.User._id"> - {{'oprettet af' | translate}} {{storedSearch.User.name}}</span><sharing mail-subject="'Søgning i Danmarks Svampeatlas: '+storedSearch.name " mail-body="baseUrl+'/search/'+storedSearch._id" sharing-uri="baseUrl+'/search/'+storedSearch._id"> </sharing></h4>
 		  
 		  
-		  
-		  
-		   <div md-whiteframe="3" class="search-section" layout="row" >
+		   <div md-whiteframe="3" class="search-section" >
+			   <div layout="row">
      	   <md-input-container class="md-block" flex-gt-xs ng-if="Auth.isLoggedIn()">
      	           <label translate>Databasenummer</label>
      	           <input  ng-model="search.databasenumber" >
@@ -27,8 +22,34 @@
 			   <md-button class="md-fab md-warn" aria-label="Nulstil formular" ng-click="resetForm()">
 			               <ng-md-icon icon="autorenew"></ng-md-icon>
 			           </md-button>
+					   
+				   </div>
 			   
+	  <md-button ng-click="StoredSearchModalService.show($event, search, storedSearches)">Gem søgning</md-button>
+	 
 	   
+       <md-menu >
+         <md-button aria-label="Open stored searches"  ng-click="openMenu($mdOpenMenu, $event)">
+           Gemte søgninger
+         </md-button>
+         <md-menu-content>
+           <md-menu-item ng-repeat="s in storedSearches">
+
+             <md-button ng-click="showStoredSearch(s)">
+                 
+                   {{s.name}}
+              
+             </md-button>
+			
+			
+	        <md-button aria-label="delete search" class="md-icon-button" ng-click="deleteStoredSearch(s)">
+	          <ng-md-icon icon="delete"></ng-md-icon>
+	        </md-button>
+           </md-menu-item>
+          
+           
+         </md-menu-content>
+       </md-menu>
 
 	
 
@@ -36,7 +57,9 @@
 		  </div>
   		  <div  md-whiteframe="3" class="search-section" layout-padding>
 			
-  			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="fungus"></ng-md-icon> {{'Art / taxon' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('taxonomy')" icon="refresh"></ng-md-icon></div>
+  			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="fungus"></ng-md-icon> {{'Art / taxon' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('taxonomy')" icon="refresh"></ng-md-icon>
+			  
+			  </div>
 			   		<div layout-gt-xs="row">
 	        <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
 

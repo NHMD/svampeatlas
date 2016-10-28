@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter', 'Area','StoredSearch',
-		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter, Area, StoredSearch) {
-		
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter', 'Area','StoredSearch', 'StoredSearchModalService', '$stateParams', 'appConstants',
+		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter, Area, StoredSearch, StoredSearchModalService, $stateParams, appConstants) {
+			$scope.baseUrl = appConstants.baseurl
 			$scope.Auth = Auth;
 			$scope.state = $state;
 			$scope.mdMedia = $mdMedia;
@@ -18,49 +18,97 @@ angular.module('svampeatlasApp')
 				$scope.vegetationtypes = vegtypes;
 			})
 			
-			$scope.saveSearch = function(){
-				StoredSearch.save({
-					search: JSON.stringify($scope.search),
-					name: "test"
-				}).$promise.then(function(res){
-					alert(res)
-				}).catch(function(err){
-					alert(err)
+			$scope.StoredSearchModalService = StoredSearchModalService;
+			
+	  	  $scope.openMenu = function($mdOpenMenu, ev) {
+     
+	        $mdOpenMenu(ev);
+	      };
+		  
+		 
+
+		  $scope.showStoredSearch = function(search){
+			  
+			  
+  					StoredSearch.get({id: search._id}).$promise.then(function(ss){
+						$scope.storedSearch = ss;
+  						ObservationSearchService.reset();
+  						$scope.observationSearch = ObservationSearchService.getSearch();
+  						if (!$scope.observationSearch.where) {
+  							$scope.observationSearch.where = {};
+  						}
+  						$scope.search= JSON.parse(ss.search);
+  						convertSearchDateStrings($scope.search)
+  						$scope.search.selectedHigherTaxa = $scope.search.selectedHigherTaxa || [];
+  						$scope.search.selectedLocalities = $scope.search.selectedLocalities || [];
+  						$scope.search.associatedOrganism = $scope.search.associatedOrganism || [];
+  						$scope.search.collectors = $scope.search.collectors || [];
+  						$scope.search.determiner = $scope.search.determiner || [];
+  						$scope.search.PrimaryUser = $scope.search.PrimaryUser || [];
+  						$scope.search.selectedMonths = $scope.search.selectedMonths || [];
+						
+						/*if($scope.search.geometry){
+							$scope.leafletPolygon = new L.geoJson($scope.search.geometry);
+							$scope.drawnItems.addLayer($scope.leafletPolygon)
+						} */
+						
+  						 if($scope.search.geometry){
+							
+  							leafletData.getMap('searchformmap').then(function(map) {
+								$scope.drawnItems.clearLayers();
+								$scope.drawnItems.addData($scope.search.geometry); 
+							
+				
+  							})
+							
+							
+  						} 
+						
+  					})
+	
+		  }
+		  
+		  $scope.deleteStoredSearch = function(search){
+				StoredSearch.remove({
+					id: search._id
+				}).$promise.then(function(){
+						$scope.storedSearches = StoredSearch.query()
 				})
+		  }
+		  
+		  if($stateParams.searchid){
+		  	$scope.showStoredSearch({_id: $stateParams.searchid})
+		  }
+			function convertSearchDateStrings(search){
+				
+				if(search.fromDate && (!search.dateInterVals || !search.dateInterVals.fromDate)){
+					search.fromDate = new Date(search.fromDate)
+				} 
+				if(search.toDate){
+					search.toDate = new Date(search.toDate)
+				}
+				if(search.addedFromDate && (!search.dateInterVals || !search.dateInterVals.addedFromDate)){
+					search.addedFromDate = new Date(search.addedFromDate)
+				}
+				if(search.addedToDate){
+					search.addedToDate = new Date(search.addedToDate)
+				}
+				if(search.forumMaxAge && (!search.dateInterVals || !search.dateInterVals.forumMaxAge)){
+					search.forumMaxAge = new Date(search.forumMaxAge)
+				}
+				if(search.imageMaxAge  && (!search.dateInterVals || !search.dateInterVals.imageMaxAge)){
+					search.imageMaxAge = new Date(search.imageMaxAge)
+				}
+				
+				// if we have date intervals like 'last three days' set that according to current date
+				_.each(search.dateInterVals, function(v, k){
+					$scope.setDate(v,k)
+				})
+				
+	
 			}
 
-			$scope.$watch('selectedSearch', function(newVal, oldVal){
-				
-				if(newVal && newVal != oldVal){
-					StoredSearch.get({id: newVal}).$promise.then(function(ss){
-						ObservationSearchService.reset();
-						$scope.observationSearch = ObservationSearchService.getSearch();
-						if (!$scope.observationSearch.where) {
-							$scope.observationSearch.where = {};
-						}
-						$scope.search= JSON.parse(ss.search);
-						$scope.search.selectedHigherTaxa = $scope.search.selectedHigherTaxa || [];
-						$scope.search.selectedLocalities = $scope.search.selectedLocalities || [];
-						$scope.search.associatedOrganism = $scope.search.associatedOrganism || [];
-						$scope.search.collectors = $scope.search.collectors || [];
-						$scope.search.determiner = $scope.search.determiner || [];
-						$scope.search.PrimaryUser = $scope.search.PrimaryUser || [];
-						$scope.search.selectedMonths = $scope.search.selectedMonths || [];
-						
-						if($scope.search.geometry){
-							
-							leafletData.getMap('searchformmap').then(function(map) {
-								map.removeLayer($scope.drawnItems);
-								$scope.drawnItems = new L.geoJson($scope.search.geometry);
-								map.addLayer($scope.drawnItems);
-							})
-							
-							
-						}
-						
-					})
-				}
-			})
+		
 			
 			
 			$scope.openMenu = function($mdOpenMenu, ev) {
@@ -105,8 +153,11 @@ angular.module('svampeatlasApp')
 					$scope.resetForm();
 				}
 				$scope.setDate = function(days, model){
-					
+					if(!$scope.search.dateInterVals){
+						$scope.search.dateInterVals = {}
+					};
 					$scope.search[model] = moment().subtract(days, 'days').toDate() ;
+					$scope.search.dateInterVals[model] = days;
 				}
 				/**
 				 * Build handler to open/close a SideNav; when animation finishes
@@ -209,7 +260,7 @@ angular.module('svampeatlasApp')
 					}
 				}
 			};
-
+		//	var mapControls = {};
 			function initMap(){
 				leafletData.getMap('searchformmap').then(function(map) {
 					$scope.map = map;
@@ -244,7 +295,7 @@ angular.module('svampeatlasApp')
 					if ($scope.drawnItems.getLayers().length === 0) {
 						map.addControl(drawControl);
 					} else {
-						map.addControl(editControl);
+					//	map.addControl(editControl);
 					}
 
 
@@ -255,9 +306,10 @@ angular.module('svampeatlasApp')
 
 						// Do whatever else you need to. (save to db, add to map etc)
 							$scope.leafletPolygon = 	layer;
+							$scope.drawnItems.clearLayers();
 						$scope.drawnItems.addLayer(layer);
-						map.removeControl(drawControl);
-						map.addControl(editControl);
+					//	map.removeControl(drawControl);
+						//map.addControl(editControl);
 
 						$scope.search.geometry = layer.toGeoJSON();
 					});
@@ -273,8 +325,8 @@ angular.module('svampeatlasApp')
 
 						delete $scope.search.geometry;
 
-						map.removeControl(editControl);
-						map.addControl(drawControl);
+						//map.removeControl(editControl);
+						//map.addControl(drawControl);
 					});
 
 				})
