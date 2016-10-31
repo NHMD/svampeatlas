@@ -201,7 +201,9 @@ angular.module('svampeatlasApp')
 			'Mosser' : 'Mosses',
 			'Dyr' : 'Animals',
 			'Svampe og svampedyr': 'Fungi and mycetozoans',
-			'Sten' : 'Stone'
+			'Sten' : 'Stone',
+			'Kalender' : 'Calendar',
+			'Åbn kalender' : 'Open calendar'
 			
 		});
 

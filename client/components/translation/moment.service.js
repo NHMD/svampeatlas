@@ -2,6 +2,9 @@
 moment.locale('da');
 angular.module('svampeatlasApp').config(function($mdDateLocaleProvider) {
     // Example of a French localization.
+   
+   $mdDateLocaleProvider.firstDayOfWeek = 1;
+   /*
     $mdDateLocaleProvider.months = ['januar', 'februar', 'marts', 'april', 'maj','juni', 'juli', 'august','september','oktober', 'november', 'december']
     
 	var myShortMonths = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
@@ -30,4 +33,7 @@ angular.module('svampeatlasApp').config(function($mdDateLocaleProvider) {
     };
     $mdDateLocaleProvider.msgCalendar = 'Kalender';
     $mdDateLocaleProvider.msgOpenCalendar = 'Åbn kalender';
+	
+	*/
+	
   });

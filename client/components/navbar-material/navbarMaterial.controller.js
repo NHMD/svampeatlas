@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('NavbarMaterialCtrl', function ($scope, Auth, User, $state, $translate, $cookies, $mdBottomSheet,$mdSidenav, ssSideNav,ssSideNavSharedService,$rootScope, $mdDialog, $mdMedia) {
+  .controller('NavbarMaterialCtrl', function ($scope, $timeout, Auth, User, $state, $translate,$mdDateLocale, $cookies, $mdBottomSheet,$mdSidenav, ssSideNav,ssSideNavSharedService,$rootScope, $mdDialog, $mdMedia) {
       $scope.isLoggedIn = Auth.isLoggedIn;
       $scope.hasRole = Auth.hasRole;
       $scope.getCurrentUser = Auth.getCurrentUser;
@@ -47,11 +47,31 @@ angular.module('svampeatlasApp')
 		$scope.User = usr;
 	})
 	
-	$scope.preferred_language = $cookies.get('preferred_language') || 'dk';
+	
 
+	function setCalendarLanguage(){
+		var localeDate = moment.localeData();
+
+		$mdDateLocale.months = localeDate._months;
+		$mdDateLocale.shortMonths = localeDate._monthsShort;
+		$mdDateLocale.days = localeDate._weekdays;
+		$mdDateLocale.shortDays = localeDate._weekdaysMin;
+
+		$mdDateLocale.msgCalendar = $translate.instant('Kalender');
+		$mdDateLocale.msgOpenCalendar = $translate.instant('Åbn kalender');
+	}
+	
+	
 	
 	$scope.$watch('preferred_language', function(newval, oldval){
-		if(newval !== oldval){
+		if(newval){
+			
+			if(newval === 'dk'){
+				 moment.locale('da');
+			} else if(newval === 'en'){
+				moment.locale('en');
+			}
+			setCalendarLanguage();
 			if(Auth.isLoggedIn()){
 				
 				User.setLanguage({language: newval }).$promise.then(function(){
@@ -67,6 +87,11 @@ angular.module('svampeatlasApp')
 			
 		}
 	});
+	
+	$timeout(function(){
+		$scope.preferred_language = $cookies.get('preferred_language') || 'dk';
+	})
+	
 	
 	$scope.showLoginForm = function(ev){
 		var useFullScreen = $mdMedia('xs');
