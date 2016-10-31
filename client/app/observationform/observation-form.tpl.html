@@ -39,20 +39,20 @@
 				<md-item-template>
 				          <span class="item-title">
 							  
-						<span ng-if="item.Vernacularname_DK">
+						<span ng-if="item.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">
 				            <span ng-if="10000 > item.RankID"> {{(item.RankID === 5000)? 'Art af ':''}}{{( 5000 > item.RankID)? 'Art i ':''}} {{item.Vernacularname_DK.vernacularname_dk}} </span>
 							<span ng-if="item.RankID > 9999"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 						</span>
-						<span ng-if="!item.Vernacularname_DK">
+						<span ng-if="!item.Vernacularname_DK || $cookies.get('preferred_language') === 'en'">
 				            <span ng-if="10000 > item.RankID" class="item-emphasis"> {{item.FullName}} {{(item.RankID === 5000)? ' sp.' :''}} </span>
 							<span ng-if="item.RankID > 9999" class="item-emphasis"> {{item.FullName}} </span>
 							<span ng-if="item.RankID > 9999" class="item-author"> {{item.Author}} </span>
 						</span>
 				          </span>
-				          <span class="item-metadata" ng-if="item.DanishNames.length >0 && item.DanishNames[0]._id !== item.vernacularname_dk_id">
+				          <span class="item-metadata" ng-if="$cookies.get('preferred_language') !== 'en' && item.DanishNames.length >0 && item.DanishNames[0]._id !== item.vernacularname_dk_id">
 							   <span class="item-metastat" > = {{item.DanishNames[0].vernacularname_dk}}</span>
 						   </span>
-				          <span class="item-metadata" ng-if="item.Vernacularname_DK ">
+				          <span class="item-metadata" ng-if="item.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">
 							   
 				            <span class="item-metastat item-emphasis" ng-if="10000 > item.RankID"> {{item.FullName}} {{(item.RankID === 5000)? ' sp.' :''}}</span>
 							<span class="item-metastat item-emphasis" ng-if="item.RankID > 9999"> {{item.FullName}} </span>
