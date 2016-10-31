@@ -5,7 +5,9 @@ angular.module('svampeatlasApp')
     return $resource('/api/users/:id/:controller/:ctrlid', {
       id: '@_id'
     },
+	
     {
+
       changePassword: {
         method: 'PUT',
         params: {
@@ -34,6 +36,13 @@ angular.module('svampeatlasApp')
 		},
 		url: '/api/users/:id/roles/:roleid'
 	},
+    setPhotopermission: {
+      method: 'PUT',
+      params: {
+        id:'@_id',
+		controller:'photopermission'
+      }
+    },
     setLanguage: {
       method: 'PUT',
       params: {

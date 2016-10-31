@@ -28,6 +28,16 @@ function respondWith(res, statusCode) {
 	};
 }
 
+function handleEntityNotFound(res) {
+	return function(entity) {
+		if (!entity) {
+			res.send(404);
+			return null;
+		}
+		return entity;
+	};
+}
+
 /**
  * Get list of users
  * restriction: 'admin'
@@ -40,7 +50,8 @@ exports.index = function(req, res) {
 			'name',
 			'email',
 			'provider',
-			'Initialer'
+			'Initialer',
+			'photopermission'
 		],
 		include: [{
 			model: models.Role
@@ -125,6 +136,46 @@ exports.destroy = function(req, res) {
 		.catch(handleError(res));
 };
 
+
+/**
+ * Updates a user
+ * restriction: 'admin'
+ * Used for adding photopermission
+ */
+exports.update = function(req, res) {
+	User.find({
+		where: {
+			_id: req.params.id
+		}
+	})
+		.then(handleEntityNotFound(res))
+		.then(function(usr){
+			console.log("####found usr")
+			return usr.update(req.body)
+		})
+		.then(function(usr){
+			console.log("####updated usr")
+			return res.status(204).json(usr)
+		})
+		.
+	catch (handleError(res));
+	
+};
+
+
+exports.changePhotopermission = function(req, res, next) {
+	
+
+	return User.update({
+			photopermission: req.body.photopermission
+		}, {
+			where: {
+				_id: req.params.id
+			}
+		})
+		.then(respondWith(res, 204))
+		.catch(validationError(res));
+};
 
 
 exports.removeRole = function(req, res) {
