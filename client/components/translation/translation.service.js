@@ -195,7 +195,13 @@ angular.module('svampeatlasApp')
 			'Afvis' : 'Reject',
 			'Ombestem' : 'Redetermine',
 			'Ret bestemmelse' : 'Edit determination',
-			'Godkend' : 'Accept'
+			'Godkend' : 'Accept',
+			'Ved' : 'Wood',
+			'Plantemateriale' : 'Plant material',
+			'Mosser' : 'Mosses',
+			'Dyr' : 'Animals',
+			'Svampe og svampedyr': 'Fungi and mycetozoans',
+			'Sten' : 'Stone'
 			
 		});
 
