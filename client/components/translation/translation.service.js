@@ -191,7 +191,11 @@ angular.module('svampeatlasApp')
 			'klonet fra': 'cloned from',
 			'Mine feltture': 'My fieldtrips',
 			'Du har nu klonet' : 'You have cloned',
-			'Husk at gemme det klonede fund før du lukker dette vindue.' : 'Remember to save the cloned sighting before closing this window.'
+			'Husk at gemme det klonede fund før du lukker dette vindue.' : 'Remember to save the cloned sighting before closing this window.',
+			'Afvis' : 'Reject',
+			'Ombestem' : 'Redetermine',
+			'Ret bestemmelse' : 'Edit determination',
+			'Godkend' : 'Accept'
 			
 		});
 
