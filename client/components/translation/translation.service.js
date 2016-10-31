@@ -187,7 +187,11 @@ angular.module('svampeatlasApp')
 			'Bestemmelshjul' : 'Identification circles',
 			'I dag' : 'Today',
 			'Udenlandske fund': 'Global sightings',
-			'Svampebog' : 'Fungi book'
+			'Svampebog' : 'Fungi book',
+			'klonet fra': 'cloned from',
+			'Mine feltture': 'My fieldtrips',
+			'Du har nu klonet' : 'You have cloned',
+			'Husk at gemme det klonede fund før du lukker dette vindue.' : 'Remember to save the cloned sighting before closing this window.'
 			
 		});
 
