@@ -68,10 +68,11 @@ function removeEntity(res) {
 // Get list of taxons
 exports.index = function(req, res) {
 
-
-
+	var usrid = (req.user) ? req.user._id : undefined
 	
-	Storedsearch.findAll({where: {user_id: req.user._id}, attributes: [ '_id', 'name']})
+	
+	Storedsearch.findAll({where: {user_id: usrid}, attributes: [ '_id', 'name']})
+	.then(handleEntityNotFound(res))
 		.then(function(searches) {
 	
 			return res.status(200).json(searches)
