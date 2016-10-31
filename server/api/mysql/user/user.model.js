@@ -55,7 +55,8 @@ module.exports = function(sequelize, DataTypes) {
 		type: DataTypes.INTEGER,
 		defaultValue: 0	
 	},
-	preferred_language: DataTypes.ENUM('dk', 'en')
+	preferred_language: DataTypes.ENUM('dk', 'en'),
+	photopermission : DataTypes.BOOLEAN
 
   }, {
 

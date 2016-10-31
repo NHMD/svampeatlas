@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
   .controller('AdminCtrl', function($scope, $http, $filter, Auth, User, $modal, Role, $mdDialog, $mdMedia, $mdToast, appConstants) {
 	 
-	  
+	  $scope.User = User;
 	  
 
 	  $scope.getUserListCsv = function(){

@@ -548,7 +548,7 @@ exports.show = function(req, res) {
 				include: [{
 					model: models.User,
 					as: "Photographer",
-					attributes: ['name', 'Initialer']
+					attributes: ['name', 'Initialer', 'photopermission']
 				}]
 			}, {
 				model: models.ObservationForum,

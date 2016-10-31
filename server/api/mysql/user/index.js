@@ -28,7 +28,7 @@ router.get('/:id/countries/count',/* auth.isAuthenticated(),*/ controller.showCo
 router.get('/:id/fieldtrips', auth.isAuthenticated(), controller.showFieldTrips);
 
 
-
+router.put('/:id/photopermission', auth.hasRole('useradmin'), controller.changePhotopermission);
 
 
 router.post('/',auth.hasRole('useradmin'),  controller.create);
