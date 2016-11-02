@@ -4,6 +4,9 @@ angular.module('svampeatlasApp').config(function($mdDateLocaleProvider) {
     // Example of a French localization.
    
    $mdDateLocaleProvider.firstDayOfWeek = 1;
+   $mdDateLocaleProvider.formatDate = function(date) {
+     return (date) ? moment(date).format('L'): "";
+   };
    /*
     $mdDateLocaleProvider.months = ['januar', 'februar', 'marts', 'april', 'maj','juni', 'juli', 'august','september','oktober', 'november', 'december']
     

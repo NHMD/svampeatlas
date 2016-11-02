@@ -203,7 +203,12 @@ angular.module('svampeatlasApp')
 			'Svampe og svampedyr': 'Fungi and mycetozoans',
 			'Sten' : 'Stone',
 			'Kalender' : 'Calendar',
-			'Åbn kalender' : 'Open calendar'
+			'Åbn kalender' : 'Open calendar',
+			'Ikke kendt fra Danmark' : 'Not known from Denmark',
+			'Kommentarer til fundet' : 'Comments for the sighting',
+			'Aktuel søgning:' : 'Current search:',
+			'Gem søgning': 'Save search',
+			'Gemte søgninger' : 'Saved searches'
 			
 		});
 

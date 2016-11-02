@@ -25,12 +25,12 @@
 					   
 				   </div>
 			   
-	  <md-button ng-if="Auth.isLoggedIn()" ng-click="StoredSearchModalService.show($event, search, storedSearches)">Gem søgning</md-button>
+	  <md-button ng-if="Auth.isLoggedIn()" ng-click="StoredSearchModalService.show($event, search, storedSearches)">{{'Gem søgning' | translate}}</md-button>
 	 
 	   
        <md-menu ng-if="Auth.isLoggedIn()">
          <md-button aria-label="Open stored searches"  ng-click="openMenu($mdOpenMenu, $event)">
-           Gemte søgninger
+           {{'Gemte søgninger' | translate}}
          </md-button>
          <md-menu-content>
            <md-menu-item ng-repeat="s in storedSearches">
@@ -87,7 +87,7 @@
 							<span ng-if="item.RankID > 9999"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 						</span>
 						<span ng-if="!item.Vernacularname_DK || $cookies.get('preferred_language') === 'en'">
-				            <span ng-if="10000 > item.RankID" class="item-emphasis"> {{item.FullName}} {{(5001 > item.RankID ) ? 'sp.' : ''}}</span>
+				            <span ng-if="10000 > item.RankID" class="item-emphasis"> {{item.FullName}} {{(5001 > item.RankID ) ? 'spp.' : ''}}</span>
 							<span ng-if="item.RankID > 9999" class="item-emphasis"> {{item.FullName}} </span>
 							<span ng-if="item.RankID > 9999" class="item-author"> {{item.Author}} </span>
 						</span>
@@ -106,7 +106,7 @@
 							  <span class="item-metastat"> {{item.Author}} </span>
 						  </span>
 						 <span class="item-metadata" ng-if="item.probability === 0 && item.acceptedTaxon.attributes.PresentInDK === false && item.RankID > 9999"> 
-						  <ng-md-icon icon="error_outline" size="20"></ng-md-icon> {{'Ikke kendt fra Danmark'}}</span>
+						  <ng-md-icon icon="error_outline" size="20"></ng-md-icon> {{'Ikke kendt fra Danmark' | translate}}</span>
 				        </md-item-template>
 
 	          </md-autocomplete>
@@ -117,9 +117,10 @@
 				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
 	            </span>
 	            <span ng-if="5000 >= $chip.RankID">
-	 			   <strong ng-if="$chip.Vernacularname_DK">{{($chip.RankID === 5000)? 'Arter af ':''}}{{(5000 > $chip.RankID)? 'Arter i ':''}} {{$chip.Vernacularname_DK.vernacularname_dk}} (</strong>
+	 			   <strong ng-if="$chip.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">{{($chip.RankID === 5000)? 'Arter af ':''}}{{(5000 > $chip.RankID)? 'Arter i ':''}} {{$chip.Vernacularname_DK.vernacularname_dk}} (</strong>
 	              <strong><em>{{$chip.FullName}}</em></strong>
-				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
+				  <strong ng-if="$cookies.get('preferred_language') === 'en'"><em>spp.</em></strong>
+				  <strong ng-if="$chip.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">)</strong>
 	            </span>
 	          </md-chip-template>
 		
