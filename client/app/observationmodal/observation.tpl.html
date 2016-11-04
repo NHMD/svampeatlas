@@ -323,7 +323,7 @@ flex>
               <i class="fa fa-eye fa-2x hide-icon"></i> 
             </md-button>
 		   
-    		   <md-button ng-if="Auth.hasRole('validator') && img.Photographer.photopermission" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='addToSpeciesPage(img)'>
+    		   <md-button ng-if="(Auth.hasRole('validator') || Auth.hasRole('taxonimageadmin') )&& img.Photographer.photopermission" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='addToSpeciesPage(img)'>
               <i class="fa fa-star fa-2x hide-icon"></i> 
             </md-button>
 		  

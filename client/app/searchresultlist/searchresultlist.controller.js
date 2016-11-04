@@ -244,17 +244,17 @@ angular.module('svampeatlasApp')
 
 				} else if ($stateParams.searchterm === "today") {
 
-					search.where.observationDate = $filter('date')(moment().toDate(), "yyyy-MM-dd", '+0200')
+					search.where.observationDate = $filter('date')(moment().startOf('day').toDate(), "yyyy-MM-dd", '+0200')
 					
 				} else if ($stateParams.searchterm === "3days") {
 
 					search.where.observationDate = {
-						gt: $filter('date')(moment().subtract(3, 'days').toDate(), "yyyy-MM-dd", '+0200')
+						gt: $filter('date')(moment().startOf('day').subtract(3, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 				} else if ($stateParams.searchterm === "7days") {
 
 					search.where.observationDate = {
-						gt: $filter('date')(moment().subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
+						gt: $filter('date')(moment().startOf('day').subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 
 				} else if ($stateParams.searchterm === "foreign") {

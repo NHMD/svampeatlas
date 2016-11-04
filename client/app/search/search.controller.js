@@ -157,7 +157,7 @@ angular.module('svampeatlasApp')
 					if(!$scope.search.dateInterVals){
 						$scope.search.dateInterVals = {}
 					};
-					$scope.search[model] = moment().subtract(days, 'days').toDate() ;
+					$scope.search[model] = moment().startOf('day').subtract(days, 'days').toDate() ;
 					$scope.search.dateInterVals[model] = days;
 				}
 				/**

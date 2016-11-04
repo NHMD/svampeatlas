@@ -115,9 +115,18 @@ function hasRole(roleRequired) {
   return compose()
     .use(isAuthenticated())
     .use(function meetsRequirements(req, res, next) {
-		var hasRole = ( _.find(req.user.Roles, function(r) {
-			  return r.name === roleRequired;
-			}) !== undefined);
+		
+		var acceptedRoles = [].concat(roleRequired);
+		
+		var hasRole = false;
+		for(var i = 0; i < acceptedRoles.length; i++){
+			if ( _.find(req.user.Roles, function(r) {
+			  return r.name === acceptedRoles[i];
+			}) !== undefined) {
+				hasRole = true;
+			}
+		}
+		
       if (hasRole) {
         next();
       }

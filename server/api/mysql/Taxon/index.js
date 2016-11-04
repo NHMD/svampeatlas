@@ -43,7 +43,7 @@ router.post('/:id/synonyms',auth.hasRole('taxonomyadmin'),  controller.addSynony
 router.get('/:id/siblings', controller.showSiblings);
 
 router.get('/:id/images', imagesController.showImages);
-router.post('/:id/images',auth.hasRole('taxonomyadmin'),  imagesController.addImage);
+router.post('/:id/images',auth.hasRole(['taxonomyadmin', 'taxonimageadmin']),  imagesController.addImage);
 router.put('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  imagesController.updateImage);
 router.delete('/:id/images/:imgid',auth.hasRole('taxonomyadmin'),  imagesController.deleteImage);
 

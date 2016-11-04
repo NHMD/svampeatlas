@@ -231,7 +231,7 @@ angular.module('svampeatlasApp', [
 				id: 'Administration',
 				name: 'Administration',
 				type: 'heading',
-				requireRole: 'any',
+				requireRole: ['taxonomyadmin', 'validator'],
 				children: [{
 					id: 'TaxonBase',
 					name: 'TaxonBase',
