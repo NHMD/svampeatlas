@@ -7,6 +7,12 @@ angular.module('svampeatlasApp').config(function($mdDateLocaleProvider) {
    $mdDateLocaleProvider.formatDate = function(date) {
      return (date) ? moment(date).format('L'): "";
    };
+   
+   $mdDateLocaleProvider.parseDate = function(dateString) {
+     var m = moment(dateString, 'L', true);
+     return m.isValid() ? m.toDate() : new Date(NaN);
+   };
+   
    /*
     $mdDateLocaleProvider.months = ['januar', 'februar', 'marts', 'april', 'maj','juni', 'juli', 'august','september','oktober', 'november', 'december']
     

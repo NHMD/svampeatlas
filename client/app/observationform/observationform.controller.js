@@ -192,7 +192,8 @@ angular.module('svampeatlasApp')
 						} else {
 							$scope.users.push($scope.currentUser);
 							$scope.determiner.push($scope.currentUser);
-							that.observationDate = ObservationFormStateService.getState().observationDate || new Date();
+							//that.observationDate = ObservationFormStateService.getState().observationDate || new Date();
+							that.observationDate = ObservationFormStateService.getState().observationDate || moment().startOf('day').toDate();
 
 							if (ObservationFormStateService.getState().Locality) {
 								$scope.selectedLocality.push(ObservationFormStateService.getState().Locality);
@@ -1049,7 +1050,7 @@ $scope.showExifConfirmPanel(exif)
 
 
 				var obs = {
-					observationDate: $filter('date')(that.observationDate, "yyyy-MM-dd", '+0200'),
+					observationDate: $filter('date')(that.observationDate, "yyyy-MM-dd"),
 
 
 					substrate_id: that.selectedSubstrate,

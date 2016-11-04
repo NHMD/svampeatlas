@@ -228,24 +228,38 @@ angular.module('svampeatlasApp')
 			},
 
 			hasRole: function(role, callback) {
+				var acceptedRoles = [].concat(role);
 				if (arguments.length === 1) {
 					if (role === "any") {
 						return this.getCurrentUser() && currentUser.Roles && currentUser.Roles.length > 0;
 					} else {
-						return this.getCurrentUser() && _.find(currentUser.Roles, function(r) {
-							return r.name === role;
-						}) !== undefined;
+						
+						
+						var hasRole = false;
+						for(var i=0; i< acceptedRoles.length; i++){
+							if(_.find(currentUser.Roles, function(r) {
+							return r.name === acceptedRoles[i];
+						}) !== undefined){
+							hasRole = true;
+						}
+						}
+						return this.getCurrentUser() && hasRole;
 					}
 				}
 
 				return this.getCurrentUser(null)
 					.then(function(user) {
-						var is = (_.find(currentUser.Roles, function(r) {
-							return r.name === role;
-						}) !== undefined);
+						var hasRole = false;
+						for(var i=0; i< acceptedRoles.length; i++){
+							if(_.find(currentUser.Roles, function(r) {
+							return r.name === acceptedRoles[i];
+						}) !== undefined){
+							hasRole = true;
+						}
+						}
 
-						safeCb(callback)(is);
-						return is;
+						safeCb(callback)(hasRole);
+						return hasRole;
 					});
 			},
 
