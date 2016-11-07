@@ -88,7 +88,7 @@ angular.module('svampeatlasApp')
 				path.layer = '1991';
 				path.color = "#FFEB3B";
 				return path;
-			} else if (y > 1991 && y < 2009) {
+			} else if (y > 1990 && y < 2009) {
 
 				path.layer = '2008';
 				path.color = "#FF9800";
