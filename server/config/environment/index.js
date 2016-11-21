@@ -74,7 +74,8 @@ var all = {
 	  todayslocalities:  60 * 15,
 	  countGroupedByYear: 60 * 60 * 24 * 7,
 	  countGroupedByDecade: 60 * 60 * 24 * 7,
-	  count: 60 * 60 * 24
+	  count: 60 * 60 * 24,
+	  dataSet : 60 * 60 * 24
   }
 };
 

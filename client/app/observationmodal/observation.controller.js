@@ -217,7 +217,7 @@ angular.module('svampeatlasApp')
 						},
 						OpenTopoMap: {
 							name: 'OpenTopoMap',
-							url: 'http://tile.opentopomap.org/{z}/{x}/{y}.png',
+							url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
 							type: 'xyz',
 							layerOptions: {
 								
@@ -422,9 +422,7 @@ angular.module('svampeatlasApp')
 						$scope.changeBaseLayer("topo_25")
 
 
-					} else {
-						$scope.changeBaseLayer("WorldTopoMap")
-					}
+					} 
 					$timeout(function() {
 						map.invalidateSize();
 					});

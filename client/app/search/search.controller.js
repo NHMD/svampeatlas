@@ -18,6 +18,10 @@ angular.module('svampeatlasApp')
 			SearchService.getVegetationType().then(function(vegtypes){
 				$scope.vegetationtypes = vegtypes;
 			})
+			SearchService.getDataSet().then(function(dataSet){
+				$scope.dataSet = dataSet;
+								
+			})
 			
 			$scope.StoredSearchModalService = StoredSearchModalService;
 			
@@ -241,6 +245,8 @@ angular.module('svampeatlasApp')
 			})
 			
 			
+			
+			
 
 			
 			$scope.mapsettings = {
@@ -412,7 +418,7 @@ angular.module('svampeatlasApp')
 						delete $scope.search.fieldnumber;
 						delete $scope.search.databasenumber
 						delete $scope.search._id;
-					
+						delete $scope.search.selectedDataSet;
 						$scope.search.onlyWithImages = false;
 						delete $scope.search.imageMaxAge;
 
@@ -505,7 +511,9 @@ angular.module('svampeatlasApp')
 			$scope.search.selectedMonths = $scope.search.selectedMonths || [];
 			$scope.querySearchPlantTaxon = SearchService.querySearchPlantTaxon;
 
-
+			$scope.setAccuracy = function(){
+				if($scope.minAccuracy && maxAccuracy){}
+			}
 			$scope.setFromYear = function(year) {
 				$scope.search.fromDate = new Date(year, 0, 1);
 			}
@@ -513,8 +521,11 @@ angular.module('svampeatlasApp')
 			$scope.setToYear = function(year) {
 				$scope.search.toDate = new Date(year, 11, 31);
 			}
-			$scope.months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-			
+			//$scope.months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+			$scope.months = _.map(moment.localeData()._months, function(val, key){
+				return {id: parseInt(key+1) , name: val}
+			});
+			/*
 			$scope.toggle = function(item, list) {
 				var idx = list.indexOf(item);
 				if (idx > -1) {
@@ -526,6 +537,7 @@ angular.module('svampeatlasApp')
 			$scope.exists = function(item, list) {
 				return list && list.indexOf(item) > -1;
 			};
+			*/
 			//observationSearch.where.observationDate.$between[0]
 			$scope.$watch('search', function(newVal, oldVal) {
 
@@ -571,6 +583,14 @@ angular.module('svampeatlasApp')
 				} else {
 					delete $scope.observationSearch.where.substrate_id;
 				}
+				
+				if ($scope.search.selectedDataSet && $scope.search.selectedDataSet.length > 0) {
+					$scope.observationSearch.where.dataSource = { $in: $scope.search.selectedDataSet};
+					$scope.observationSearch.include[2].required = false;
+					
+				} else {
+					delete $scope.observationSearch.where.dataSource;
+				}
 
 
 
@@ -584,7 +604,7 @@ angular.module('svampeatlasApp')
 					};
 				} else {
 					delete $scope.observationSearch.where.locality_id;
-					$scope.search.include[2].required = ($scope.search.geometry) ? false : !$scope.search.includeForeign;
+					$scope.search.include[2].required = ($scope.search.geometry || ($scope.search.selectedDataSet && $scope.search.selectedDataSet.length ) || $scope.search.databasenumber) ? false : !$scope.search.includeForeign;
 				}
 
 
@@ -858,7 +878,23 @@ angular.module('svampeatlasApp')
 					delete $scope.observationSearch.selectedMonths
 				}
 				
-				console.log(JSON.stringify($scope.search))
+				if ($scope.search.minAccuracy && $scope.search.maxAccuracy) {
+					$scope.observationSearch.where.accuracy = {
+
+						$between: [$scope.search.minAccuracy, $scope.search.maxAccuracy]
+					}
+				} else if ($scope.search.minAccuracy) {
+					
+					$scope.observationSearch.where.accuracy =  {
+						$gte: $scope.search.minAccuracy
+
+					};
+
+				} else if ($scope.search.maxAccuracy) {
+					$scope.observationSearch.where.accuracy = {
+						$lte: $scope.search.maxAccuracy
+					}
+				}
 
 			}, true)
 		}

@@ -69,8 +69,7 @@ function removeEntity(res) {
 exports.index = function(req, res) {
 
 	var usrid = (req.user) ? req.user._id : undefined
-	console.log("####")
-	console.log(req.user)
+	
 	
 	Storedsearch.findAll({where: {user_id: usrid}, attributes: [ '_id', 'name']})
 	.then(handleEntityNotFound(res))

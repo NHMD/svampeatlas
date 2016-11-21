@@ -57,7 +57,7 @@
 		        </md-tooltip>
 		<ng-md-icon style="fill:red" ng-if="row.DeterminationView.Determination_validation === 'Afvist'" icon="block" ></ng-md-icon>
 			<ng-md-icon style="fill:wheat" ng-if="!Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
-			<ng-md-icon  ng-click="updateValidation(row)" style="fill:wheat" ng-if="Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
+			<ng-md-icon  ng-click="updateValidation(row)" style="{{(row.DeterminationView.Determination_validation === 'Valideres') ? 'fill:wheat' : 'fill:pink' }}" ng-if="Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="{{(row.DeterminationView.Determination_validation === 'Valideres') ? 'error' : 'pause_circle_filled' }}" ></ng-md-icon>
 			
 			<ng-md-icon style="fill:green" ng-if="(mdMedia('xs') || Auth.hasRole('validator') ) && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
 		</td>
