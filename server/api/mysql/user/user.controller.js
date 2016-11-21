@@ -150,11 +150,11 @@ exports.update = function(req, res) {
 	})
 		.then(handleEntityNotFound(res))
 		.then(function(usr){
-			console.log("####found usr")
+		//	console.log("####found usr")
 			return usr.update(req.body)
 		})
 		.then(function(usr){
-			console.log("####updated usr")
+		//	console.log("####updated usr")
 			return res.status(204).json(usr)
 		})
 		.

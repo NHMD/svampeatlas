@@ -1,11 +1,15 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User, Substrate, VegetationType, Area) {
+	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User, Substrate, VegetationType, Area, DataSet) {
 		
 		var substrate = Substrate.query();
 		var vegetationType = VegetationType.query();
 		var municipalities = Area.query({where: {type: 'kommune'}})
+		var dataSet = DataSet.query({cachekey : 'dataSet'});
 		return {
+			getDataSet : function(){
+				return dataSet.$promise;
+			},
 			getSubstrate : function(){
 				return substrate.$promise;
 			},

@@ -236,6 +236,7 @@ angular.module('svampeatlasApp')
 						
 						
 						var hasRole = false;
+						if(this.getCurrentUser()){
 						for(var i=0; i< acceptedRoles.length; i++){
 							if(_.find(currentUser.Roles, function(r) {
 							return r.name === acceptedRoles[i];
@@ -243,6 +244,7 @@ angular.module('svampeatlasApp')
 							hasRole = true;
 						}
 						}
+					}
 						return this.getCurrentUser() && hasRole;
 					}
 				}
@@ -250,6 +252,7 @@ angular.module('svampeatlasApp')
 				return this.getCurrentUser(null)
 					.then(function(user) {
 						var hasRole = false;
+						if(this.getCurrentUser()){
 						for(var i=0; i< acceptedRoles.length; i++){
 							if(_.find(currentUser.Roles, function(r) {
 							return r.name === acceptedRoles[i];
@@ -257,7 +260,7 @@ angular.module('svampeatlasApp')
 							hasRole = true;
 						}
 						}
-
+					}
 						safeCb(callback)(hasRole);
 						return hasRole;
 					});

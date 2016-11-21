@@ -497,3 +497,5 @@ UPDATE Observation o, Fungi f, PlantTaxon p SET o.primaryassociatedorganism_id=p
 ALTER TABLE Observation ADD COLUMN geonameId INT(11) default NULL;
 ALTER TABLE `Observation`
 ADD  FOREIGN KEY (`geonameId`) REFERENCES `GeoNames` (`geonameId`);
+
+ALTER TABLE Observation ADD INDEX  (`dataSource`);

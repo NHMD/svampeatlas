@@ -208,7 +208,12 @@ angular.module('svampeatlasApp')
 			'Kommentarer til fundet' : 'Comments for the sighting',
 			'Aktuel søgning:' : 'Current search:',
 			'Gem søgning': 'Save search',
-			'Gemte søgninger' : 'Saved searches'
+			'Gemte søgninger' : 'Saved searches',
+			'Usikkerhed større end (meter)': 'Uncertainty greater than (meters)',
+			'Usikkerhed mindre end (meter)': 'Uncertainty less than (meters)',
+			'Datakilde' : 'Data source',
+			'Koordinat' : 'Coordinate',
+			'Kommune' : 'Municipality'
 			
 		});
 

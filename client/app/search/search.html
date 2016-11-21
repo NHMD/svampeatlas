@@ -194,6 +194,7 @@
 			 	        <span translate>Kun udenlandske fund</span>
 			 	      </md-switch>
 			 	</div>
+ 			  
  			   <div layout-gt-xs="row" >
 				   <md-input-container>
 				    <label>{{'Kommune' | translate}}</label>
@@ -204,6 +205,34 @@
 			  </md-select>
 		  </md-input-container>
  			 	</div>
+				<md-divider></md-divider>
+				<label class="search-sub-header">{{'Koordinat' | translate}}</label>
+  			   <div layout-gt-xs="row">
+    				   <md-input-container class="md-block" flex-gt-sm>
+    				            <label>{{'Usikkerhed mindre end (meter)' | translate}}</label>
+    				            <input name="maxAccuracy" ng-model="search.maxAccuracy" ng-pattern="/^\d+$/" />
+ 						<div ng-messages="searchForm.maxAccuracy.$error" role="alert" >
+						              
+ 						              <div ng-message="pattern" >{{'Indtast ussikerhed i meter'}}
+ 						              </div>
+						             
+ 						            </div>
+			         
+    				          </md-input-container>
+  				   <md-input-container class="md-block" flex-gt-sm>
+  				            <label>{{'Usikkerhed større end (meter)' | translate}}</label>
+  				            <input name="minAccuracy" ng-model="search.minAccuracy" ng-pattern="/^\d+$/" />
+  							<div ng-messages="searchForm.minAccuracy.$error" role="alert" >
+							              
+  							              <div ng-message="pattern" >{{'Indtast ussikerhed i meter'}}
+  							              </div>
+							             
+  							            </div>
+				         
+  				          </md-input-container>
+ 	   				   
+  			   </div>
+				
 				<md-button ng-click="toggleSearchMapSideNav()"
 					  				            class="md-primary"  ng-show="mdMedia('xs')">
 					  				            {{'Søgning på kort' | translate}}
@@ -212,7 +241,7 @@
   		  <div  md-whiteframe="3" class="search-section" layout-padding>
 			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="date_range"></ng-md-icon> {{'Tid' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('period')" icon="refresh"></div>
 			
-			<label class="md-title md-primary">{{'Funddato' | translate}}</label>
+			<label class="search-sub-header">{{'Funddato' | translate}}</label>
 			   <div layout-gt-xs="row">
 		 	  
 	           <md-datepicker ng-model="search.fromDate" md-placeholder="{{(search.exactDate) ? ('Dato' | translate ):('Fra dato' | translate)}}">
@@ -253,17 +282,30 @@
 							            </div>
 				         
 	   				          </md-input-container>
+							  
+		   				   <md-input-container>
+		   				           <label>{{'Måneder' | translate}}</label>
+		   				           <md-select ng-model="search.selectedMonths" name="months" multiple>
+		   				             <md-option ng-repeat="month in months" value="{{month.id}}" >
+		   							  {{month.name}}
+			              
+		   				             </md-option>
+		   				           </md-select>
+					   
+		   				         </md-input-container>
 			   </div>
-			   <label class="md-body-1">{{'Måneder' | translate}}</label>
+			 
 			  
-			   <div layout-gt-xs="row">
+			 <!--  <div layout-gt-xs="row">
+				  
 				    
-			    <md-checkbox class="md-primary months" ng-repeat="month in months" ng-checked="exists(month, search.selectedMonths)" ng-click="toggle(month, search.selectedMonths)">{{month}}</md-checkbox>
-				</div>
+			    <md-checkbox class="md-primary months" ng-repeat="month in months" ng-checked="exists(month, search.selectedMonths)" ng-click="toggle(month, search.selectedMonths)">{{month}}</md-checkbox> 
+				</div>-->
+				
+			   
  			   
 			
-				<md-divider></md-divider>
-				<label class="md-title md-primary">{{'Fund indlagt' | translate}}</label>
+				<label class="search-sub-header">{{'Fund indlagt' | translate}}</label>
  			   <div layout-gt-xs="row">
 		 	  
  	           <md-datepicker ng-model="search.addedFromDate" md-placeholder="{{(search.addedExactDate) ? ('Dato' | translate ):('Fra dato' | translate)}}">
@@ -489,8 +531,8 @@
 		            <div layout-gt-xs="row">
 		   	<md-input-container class="md-block" flex-gt-xs>	
 		   	<label>Status</label> 
-		   		 <md-select aria-label="status" ng-model="search.include[0].where.Determination_validation">
-		   		           <md-option ng-value="{{['Godkendt','Valideres', 'Afventer', 'Gammelvali']}}">{{'Ikke afviste' | translate}}</md-option>        
+		   		 <md-select aria-label="status" ng-model="search.include[0].where.Determination_validation" multiple>
+		   		          <!-- <md-option ng-value="{{['Godkendt','Valideres', 'Afventer', 'Gammelvali']}}">{{'Ikke afviste' | translate}}</md-option>   -->     
 		   		   <md-option value="Godkendt">{{'Godkendte' | translate}}</md-option>
 		   		   <md-option value="Valideres">{{'Valideres' | translate}}</md-option>
 		   		   <md-option value="Afventer">{{'Afventer' | translate}}</md-option>
@@ -498,6 +540,8 @@
 		   		   <md-option value="Gammelvali">{{'Ældre fund afventer' | translate}}</md-option>
 		   		                 </md-select>
 		   						 </md-input-container>
+								 
+				  			  
 						 
 						
 		             
@@ -516,6 +560,20 @@
 		   	
 			
            </div>
+		    <div layout-gt-xs="row" ng-if="Auth.hasRole('validator')">
+  			   <md-input-container>
+  			           <label>{{'Datakilde' | translate}}</label>
+  			           <md-select name="dataSet" ng-model="search.selectedDataSet" multiple>
+		            
+  	   				             <md-option ng-repeat="ds in dataSet" ng-if="ds.dataSource" value="{{ds.dataSource}}" >
+  	   				               {{ds.dataSource}} ({{ds.count}})
+  	   				             </md-option>
+  	   							 
+
+  			           </md-select>
+	   
+  			         </md-input-container>
+			</div>
 		   <div layout-gt-xs="row">
  		 	<md-switch ng-model="search.onlyWithImages" aria-label="Kun med billeder" >
  		 	   <span translate>Kun fund med billeder</span>
