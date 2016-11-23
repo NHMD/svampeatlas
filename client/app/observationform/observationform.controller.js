@@ -1004,9 +1004,12 @@ $scope.showExifConfirmPanel(exif)
 			$scope.processassociatedOrganismImport = function() {
 				var promises = [];
 				_.each($scope.associatedOrganismImport, function(e) {
+					
+					var DKandLatinName = (e.species) ? e.species : e.genus;
+				
 					promises.push(PlantTaxon.save({
-						DKandLatinName: e.species,
-						LatinName: e.species,
+						DKandLatinName: DKandLatinName,
+						LatinName: DKandLatinName,
 						gbiftaxon_id: e.nubKey
 					}).$promise.then(function(planttaxon) {
 						$scope.associatedOrganism.push(planttaxon);
