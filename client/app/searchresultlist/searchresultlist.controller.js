@@ -111,6 +111,8 @@ angular.module('svampeatlasApp')
 							substrate: (e.Substrate) ? e.Substrate.name : "",
 							vegetationType: (e.VegetationType) ? e.VegetationType.name : "",
 							associatedTaxa: getAssociatedTaxa(e),
+							ecologyNotes: e.ecologynote,
+							notes: e.note,
 							leg: getCollectors(e),
 							det: (e.DeterminationView.Determiner) ? e.DeterminationView.Determiner.name : "",
 							URI: appConstants.baseurl +"/observations/"+e._id
