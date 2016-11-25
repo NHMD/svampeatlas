@@ -213,7 +213,11 @@ angular.module('svampeatlasApp')
 			'Usikkerhed mindre end (meter)': 'Uncertainty less than (meters)',
 			'Datakilde' : 'Data source',
 			'Koordinat' : 'Coordinate',
-			'Kommune' : 'Municipality'
+			'Kommune' : 'Municipality',
+			'Forvekslingsmulighed til' : 'Similar taxon to',
+			'Dansk' : 'Danish',
+			'Engelsk' : 'English',
+			'Gem' : 'Save'
 			
 		});
 
@@ -333,7 +337,9 @@ angular.module('svampeatlasApp')
 			'var.' : 'Varietet',
 			'Kopier link' : 'Kopiér link',
 			'Not allowed' : 'Ikke tilladt',
-			'Your request cannot be fullfilled.': 'Handlingen kan ikke fuldføres'
+			'Your request cannot be fullfilled.': 'Handlingen kan ikke fuldføres',
+			'Similar Taxa' : 'Forvekslingsmuligheder',
+			'Add similar taxon' : 'Tilføj forvekslingsmulighed'
 
 
 		});

@@ -14,6 +14,14 @@
       </h3>
       <span flex></span>
 	  <div>
+		   <md-tooltip md-direction="bottom" >{{'Add similar taxon' | translate}}</md-tooltip>
+ 	 <md-button ng-if="Auth.hasRole('taxonomyadmin')" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="SimilarTaxaModalService.show($event, taxon)" 
+ 	                  aria-label="Tilføj forveksling"
+ 	                  class="md-icon-button" >
+ 	         <ng-md-icon icon="insert_link" ></ng-md-icon>
+ 	       </md-button>
+	   </div>
+	  <div>
 	  <md-tooltip md-direction="bottom" >{{'Del' | translate}}</md-tooltip>
 	  <sharing mail-subject="'Danmarks svampeatlas: '+(taxon.Vernacularname_DK ? (taxon.Vernacularname_DK.vernacularname_dk | capitalize) +' ('+taxon.FullName+')' : taxon.FullName)" mail-body="baseUrl+'/taxon/'+taxon._id" sharing-uri="baseUrl+'/taxon/'+taxon._id"> </sharing>
   </div>
@@ -67,7 +75,7 @@
 		  </md-expansion-panel>  
 		  <div class="md-whiteframe-z3" layout-padding>
 			  <div>
-		<h3 ng-show="vernacularname_dk" class="md-display-1">{{vernacularname_dk}} </h3>
+		<h3 ng-show="taxon.Vernacularname_DK" class="md-display-1">{{taxon.Vernacularname_DK.vernacularname_dk | capitalize}} </h3>
 		<h4 class="md-subhead" ng-show="taxon.Vernacularname_DK"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h4>
 		<h3 ng-show="!taxon.Vernacularname_DK" class="md-headline"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
 		 <div class="md-caption" layout="column"> <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt navn:'): 'Syn.:'}}  <em> {{syn.FullName}}</em> {{syn.Author}}</span>
@@ -99,7 +107,14 @@
 		<div layout><span flex></span>	<a ng-href="{{taxon.attributes.MycoKeyIDDKWebLink}}" ng-if="taxon.attributes.MycoKeyIDDKWebLink" target="_BLANK">Nøgler, beskrivelser mm i MycoKey</a></div>
 			<span>
 			<p ng-if="taxon.attributes.diagnose"><strong>Beskrivelse: </strong>{{taxon.attributes.diagnose}}</p>
-		<p ng-if="taxon.attributes.forvekslingsmuligheder"><strong>Forvekslingsmuligheder: </strong>{{taxon.attributes.forvekslingsmuligheder}}</p>
+		<p ng-if="taxon.attributes.forvekslingsmuligheder"><strong>Forvekslingsmuligheder: </strong> 
+			<span ng-repeat="simTax in taxon.similarTaxa ">
+			
+			<a ng-if="simTax.Taxon2.acceptedTaxon._id === taxon._id" ng-href="/taxon/{{simTax.Taxon1.acceptedTaxon._id}}">{{(simTax.Taxon1.acceptedTaxon.Vernacularname_DK) ? (simTax.Taxon1.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) : simTax.Taxon1.acceptedTaxon.FullName}}</a>
+			<a ng-if="simTax.Taxon1.acceptedTaxon._id === taxon._id" ng-href="/taxon/{{simTax.Taxon2.acceptedTaxon._id}}">{{(simTax.Taxon2.acceptedTaxon.Vernacularname_DK) ? (simTax.Taxon2.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) : simTax.Taxon2.acceptedTaxon.FullName}}</a>{{((!$last) ? ', ' : '. ')}} 
+		</span>
+			
+			{{taxon.attributes.forvekslingsmuligheder}}</p>
 		
 	</span>
 	<div ng-if="taxon.redlistdata.length > 0">

@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog) {
+	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth) {
 
 		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
-
+		$scope.Auth = Auth;
+		$scope.SimilarTaxaModalService = SimilarTaxaModalService;
 		$scope.$state = $state;
 		$scope.baseUrl = appConstants.baseurl;
 		$scope.isModal = $stateParams.isModal;
@@ -47,11 +48,13 @@ angular.module('svampeatlasApp')
 
 
 		$scope.taxon.$promise.then(function() {
-			if ($scope.taxon.Vernacularname_DK) {
-				$scope.vernacularname_dk = capitalizeFirstLetter($scope.taxon.Vernacularname_DK.vernacularname_dk)
-			}
+
 			$scope.higherTaxa = Taxon.higherTaxa({
 				id: $scope.taxon._id
+			});
+			
+			SimilarTaxa.query({where: {$or: [{taxon1_id: $scope.taxon._id}, {taxon2_id: $scope.taxon._id}]}}).$promise.then(function(similarTaxa){
+				$scope.taxon.similarTaxa = similarTaxa;
 			})
 		})
 

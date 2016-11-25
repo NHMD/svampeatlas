@@ -499,3 +499,4 @@ ALTER TABLE `Observation`
 ADD  FOREIGN KEY (`geonameId`) REFERENCES `GeoNames` (`geonameId`);
 
 ALTER TABLE Observation ADD INDEX  (`dataSource`);
+ALTER TABLE Observation ADD INDEX  (`createdAt`);

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters', 'Observation', 'ObservationModalService',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters, Observation, ObservationModalService) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters', 'Observation', 'ObservationModalService', 'SimilarTaxaModalService', 'SimilarTaxa',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters, Observation, ObservationModalService, SimilarTaxaModalService, SimilarTaxa) {
 			$scope.$translate = $translate;
 			$scope._ = _;
 			$scope.Taxon = Taxon;
@@ -10,6 +10,7 @@ angular.module('svampeatlasApp')
 			$scope.taxonomyTags = TaxonomyTags.query();
 			$scope.moment = moment;
 			$scope.ObservationModalService = ObservationModalService;
+			$scope.SimilarTaxaModalService = SimilarTaxaModalService;
 			$scope.changeRankAndSave = function(taxon) {
 				// If the taxon was a species or genus we are changing it to superspecies and therefore deattacing from fun, otherwise we are just changing rank level
 				if (taxon.RankID === 5000 || taxon.RankID === 10000) {
@@ -214,6 +215,10 @@ angular.module('svampeatlasApp')
 				})])
 					}).$promise.then(function(latestfinding){
 						$scope.latestfinding = latestfinding[0];
+					})
+					
+					SimilarTaxa.query({where: {$or: [{taxon1_id: $scope.taxon._id}, {taxon2_id: $scope.taxon._id}]}}).$promise.then(function(similarTaxa){
+						$scope.taxon.similarTaxa = similarTaxa;
 					})
 					
 					PlutoF.SpeciesHypothesis({
@@ -686,6 +691,13 @@ angular.module('svampeatlasApp')
 						});
 					})
 			}
+			
+			$scope.deleteSimilarTaxon = function(simTax){
+				SimilarTaxa.delete({id: simTax._id}).$promise.then(function() {
+						_.remove($scope.taxon.similarTaxa, function(st) {
+							return st === simTax;
+						});
+			})}
 
 			// handles integration to DynTaxa
 			$scope.loginToDyntaxa = function() {
