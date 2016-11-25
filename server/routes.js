@@ -52,6 +52,7 @@ module.exports = function(app) {
 	app.use('/api/users', require('./api/mysql/user'));
 	app.use('/api/roles', require('./api/mysql/Role'));
 	app.use('/api/taxa', intparser.parseLimitOffset(), require('./api/mysql/Taxon'));
+	app.use('/api/similartaxa', require('./api/mysql/SimilarTaxa'));
 	app.use('/api/planttaxa', intparser.parseLimitOffset(), require('./api/mysql/PlantTaxon'));
 	app.use('/api/indexfungorum', require('./api/soap/indexfungorum'));
 	app.use('/api/mycobank', require('./api/soap/mycobank'));

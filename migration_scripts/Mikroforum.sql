@@ -78,4 +78,4 @@ UPDATE 	ObservationForum o, Users u, Mikroforum m SET o.user_id = u._id where m.
 	
 SELECT 	Bruger, count(*) FROM Mikroforum m, ObservationForum o WHERE m._id=o._id and o.user_id IS NULL GROUP BY m.Bruger;
 	
-	
+ALTER TABLE ObservationForum ADD INDEX  (`createdAt`);

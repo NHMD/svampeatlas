@@ -434,6 +434,37 @@
 			  	    <div class="panel-heading" role="tab">
 			  	      <h4 class="panel-title">
 			  	        <a bs-collapse-toggle>
+			  	          {{'Similar Taxa' | translate}} ({{taxon.similarTaxa.length}})
+			  	        </a>
+			  	      </h4>
+			  	    </div>
+			  	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			  	      <div class="panel-body">
+						  <md-button  ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="SimilarTaxaModalService.show($event, taxon)" tabindex="0" >{{'Add similar taxon' | translate}}</md-button>
+  						  <table class="table table-bordered">
+  							   <tr ng-repeat="simTax in taxon.similarTaxa "><td st-ratio="60">
+  						 <a ng-href="/taxonbase/taxon/{{(simTax.taxon1_id === taxon._id) ? simTax.taxon2_id : simTax.taxon1_id}}">{{(simTax.taxon1_id === taxon._id) ? simTax.Taxon2.FullName : simTax.Taxon1.FullName}}</a>
+  						  </td>
+					  <td st-ratio="400">
+					    						 <button class="btn btn-sm btn-danger" ng-click="deleteSimilarTaxon(simTax)"  >Delete</button>
+				  						        
+					    						  </td>
+												 
+					  </tr>
+					  </table>
+			  	        
+						<!--<ul>
+							<li ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf"><a href="/taxonbase/taxon/{{syn._id}}">{{syn.FullName}}</a></li>
+						</ul> -->
+			  	      </div>
+			  	    </div>
+			  	  </div>
+			  	  <!-- ########################################-->
+			  	  <!-- ########################################-->
+			  	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
+			  	    <div class="panel-heading" role="tab">
+			  	      <h4 class="panel-title">
+			  	        <a bs-collapse-toggle>
 			  	          {{'Nature types' | translate}} ( {{taxon.naturtyper.length}} )
 			  	        </a>
 			  	      </h4>

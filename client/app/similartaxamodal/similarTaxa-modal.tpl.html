@@ -1,0 +1,119 @@
+<md-dialog aria-label="Add similar taxon"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2 >{{'Forvekslingsmulighed til' | translate}} {{taxon1.FullName}}</h2>
+		
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <ng-md-icon icon="close"></ng-md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+       
+
+		<div layout="row" layout-margin>
+      <md-chips md-max-chips=1 ng-model="newTaxon" readonly="editMode" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
+
+        <md-autocomplete
+  	  	md-min-length="4"
+  		md-no-cache="false"
+		md-input-id="taxon-autocomplete"
+		md-select-on-match="true"
+		md-match-case-insensitive="true"
+            md-selected-item="selectedItem"
+            md-search-text="searchText"
+            md-items="item in querySearch(searchText)"
+            md-item-text="item"
+            placeholder="{{(newTaxon.length ===0) ? $translate.instant('Skriv art')  : ''}}"
+		 ng-disabled="editMode || newTaxon.length >0"
+		 md-menu-class="autocomplete-custom-template"
+		flex class="taxon-autocomplete">
+          
+		
+		<md-item-template>
+		          <span class="item-title">
+					  
+				<span ng-if="item.Vernacularname_DK">
+		            <span ng-if="10000 > item.RankID"> {{(item.RankID === 5000)? 'Art af ':''}}{{( 5000 > item.RankID)? 'Art i ':''}} {{item.Vernacularname_DK.vernacularname_dk}} </span>
+					<span ng-if="item.RankID > 9999"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+				</span>
+				<span ng-if="!item.Vernacularname_DK">
+		            <span ng-if="10000 > item.RankID" class="item-emphasis"> {{item.FullName}} {{(item.RankID === 5000)? ' sp.' :''}} </span>
+					<span ng-if="item.RankID > 9999" class="item-emphasis"> {{item.FullName}} </span>
+					<span ng-if="item.RankID > 9999" class="item-author"> {{item.Author}} </span>
+				</span>
+		          </span>
+		          <span class="item-metadata" ng-if="item.DanishNames.length >0 && item.DanishNames[0]._id !== item.vernacularname_dk_id">
+					   <span class="item-metastat" > = {{item.DanishNames[0].vernacularname_dk}}</span>
+				   </span>
+		          <span class="item-metadata" ng-if="item.Vernacularname_DK ">
+					   
+		            <span class="item-metastat item-emphasis" ng-if="10000 > item.RankID"> {{item.FullName}} {{(item.RankID === 5000)? ' sp.' :''}}</span>
+					<span class="item-metastat item-emphasis" ng-if="item.RankID > 9999"> {{item.FullName}} </span>
+		           	<span class="item-metastat" ng-if="item.RankID > 9999"> {{item.Author}} </span>
+		          </span>
+				  <span class="item-metadata" ng-if="(item._id !== item.acceptedTaxon._id) ">
+					  <span class="item-emphasis" ng-if="item._id !== item.acceptedTaxon._id">{{'Syn. til' | translate}} {{item.acceptedTaxon.FullName}}</span>
+					  <span class="item-metastat"> {{item.Author}} </span>
+				  </span>
+				 <span class="item-metadata" ng-if="item.probability === 0 && item.acceptedTaxon.attributes.PresentInDK === false && item.RankID > 9999"> 
+				  <ng-md-icon icon="error_outline" size="20"></ng-md-icon> {{'Ikke kendt fra Danmark'}}</span>
+		        </md-item-template>
+
+        </md-autocomplete>
+        <md-chip-template>
+          <span ng-if="$chip.RankID > 4999">
+		   <strong ng-if="$chip.Vernacularname_DK">{{$chip.Vernacularname_DK.vernacularname_dk | capitalize}} (</strong>
+            <strong><em>{{$chip.FullName}}</em> {{$chip.Author}}</strong>
+		  <strong ng-if="$chip.Vernacularname_DK">)</strong>
+          </span>
+          <span ng-if="5000 > $chip.RankID">
+		   <strong ng-if="$chip.Vernacularname_DK">Art af {{$chip.Vernacularname_DK.vernacularname_dk}} (</strong>
+            <strong><em>{{$chip.FullName}} sp.</em></strong>
+		  <strong ng-if="$chip.Vernacularname_DK">)</strong>
+          </span>
+        </md-chip-template>
+
+      </md-chips>
+      <md-button ng-click="saveSimilarTaxon()" style="margin-right:20px;" ng-disabled=" 1 > newTaxon.length">
+        {{'Gem' | translate}}
+      </md-button>
+   
+	      </div>
+		  <div layout="row" layout-margin>
+		    <md-switch ng-model="onlyHigherTaxa" aria-label="Højere taxa" ng-show="newTaxon.length ===0" translate>
+		        Søg i familier, ordener osv.
+		      </md-switch>
+		  </div>
+	
+	
+	<div layout="row" layout-margin>
+	  <table class="table table-bordered">
+		 <tr> <th>Forvekslingsmuligheder til {{taxon1.FullName}}:</th><th></th></tr>
+		   <tr ng-repeat="simTax in taxon1.similarTaxa "><td st-ratio="60">
+	 {{(simTax.taxon1_id === taxon1._id) ? simTax.Taxon2.FullName : simTax.Taxon1.FullName}}
+	  </td>
+  <td st-ratio="400">
+    						 <button class="btn btn-sm btn-danger" ng-click="deleteSimilarTaxon(simTax)"  >Delete</button>
+						        
+    						  </td>
+							 
+  </tr>
+  </table>
+	</div>
+	
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      
+      <span flex></span>
+      <md-button ng-click="cancel()">
+       {{'Luk' | translate}}
+      </md-button>
+     
+    </md-dialog-actions>
+  </form>
+</md-dialog>

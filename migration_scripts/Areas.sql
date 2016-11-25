@@ -11,3 +11,5 @@ geom GEOMETRY NOT NULL
 ) ENGINE = InnoDB;
 
 ALTER TABLE Areas ADD SPATIAL KEY (geom);
+
+
