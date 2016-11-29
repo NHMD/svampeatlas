@@ -107,12 +107,12 @@
 		<div layout><span flex></span>	<a ng-href="{{taxon.attributes.MycoKeyIDDKWebLink}}" ng-if="taxon.attributes.MycoKeyIDDKWebLink" target="_BLANK">Nøgler, beskrivelser mm i MycoKey</a></div>
 			<span>
 			<p ng-if="taxon.attributes.diagnose"><strong>Beskrivelse: </strong>{{taxon.attributes.diagnose}}</p>
-		<p ng-if="taxon.attributes.forvekslingsmuligheder"><strong>Forvekslingsmuligheder: </strong> 
+		<p ng-if="taxon.attributes.forvekslingsmuligheder || taxon.similarTaxa.length > 0"><strong>Forvekslingsmuligheder: </strong> 
 			<span ng-repeat="simTax in taxon.similarTaxa ">
 			
 			<a ng-if="simTax.Taxon2.acceptedTaxon._id === taxon._id" ng-href="/taxon/{{simTax.Taxon1.acceptedTaxon._id}}">{{(simTax.Taxon1.acceptedTaxon.Vernacularname_DK) ? (simTax.Taxon1.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) : simTax.Taxon1.acceptedTaxon.FullName}}</a>
 			<a ng-if="simTax.Taxon1.acceptedTaxon._id === taxon._id" ng-href="/taxon/{{simTax.Taxon2.acceptedTaxon._id}}">{{(simTax.Taxon2.acceptedTaxon.Vernacularname_DK) ? (simTax.Taxon2.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) : simTax.Taxon2.acceptedTaxon.FullName}}</a>{{((!$last) ? ', ' : '. ')}} 
-		</span>
+		</span></br>
 			
 			{{taxon.attributes.forvekslingsmuligheder}}</p>
 		
