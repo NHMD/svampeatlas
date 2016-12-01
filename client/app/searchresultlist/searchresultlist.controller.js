@@ -20,7 +20,10 @@ angular.module('svampeatlasApp')
 			}
 			
 			
-			
+			$scope.csvSeparator = ",";
+			$scope.setCsvSeparator = function(sep){
+				$scope.csvSeparator= sep;
+			}
 			var csvDeferred = $q.defer();
 			$scope.csv = csvDeferred.promise;
 			
