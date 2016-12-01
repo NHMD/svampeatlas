@@ -65,7 +65,7 @@
 							               </md-option>
 							             </md-select>
 							           </md-input-container>
-							          <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute) !== 'boolean' && attributequery.selectedAttribute !== undefined">
+							          <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute, taxonattributes) !== 'boolean' && attributequery.selectedAttribute !== undefined">
 							             <label>Operator</label>
 							             <md-select ng-model="attributequery.selectedOperator">
 							               <md-option ng-repeat="operator in operators" value="{{operator}}">
@@ -73,28 +73,92 @@
 							               </md-option>
 							             </md-select>
 							           </md-input-container>
-							           <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute) === 'text' || getAttributeType(attributequery.selectedAttribute) === 'number'">
+							           <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute, taxonattributes) === 'text' || getAttributeType(attributequery.selectedAttribute, taxonattributes) === 'number'">
 							  			<label>Query</label>
 							  			      <input ng-model="attributequery.value" type="text">
 							            </md-input-container>
-							           <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute) === 'date'">
+							           <md-input-container  ng-if="getAttributeType(attributequery.selectedAttribute, taxonattributes) === 'date'">
 							  			<label>Date</label>
-							  			      <input ng-model="attributequery.value" type="text" ng-model="selectedDate" data-container="body" data-date-format="yyyy-MM-dd" name="date" autoclose="0" bs-datepicker>
+							  			      <input ng-model="attributequery.value" type="text" data-container="body" data-date-format="yyyy-MM-dd" name="date" autoclose="0" bs-datepicker>
 							            </md-input-container>
 		
 
-							  		  <md-input-container ng-if=" getAttributeType(attributequery.selectedAttribute) === 'boolean'">
+							  		  <md-input-container ng-if=" getAttributeType(attributequery.selectedAttribute, taxonattributes) === 'boolean'">
 							  	<md-switch  ng-model="attributequery.value" aria-label="{{attributequery.selectedAttribute}} checked">
 	
 	          
 							  	        </md-switch>
 							  </md-input-container>
 
-							  		  <md-input-container ng-if="attributeQueryIsValid()">
-							  	<md-button class="md-raised md-primary" ng-click="addCondition()">Add condition</md-button>
+							  		  <md-input-container ng-if="attributeQueryIsValid(attributequery)">
+							  	<md-button class="md-raised md-primary" ng-click="addCondition(attributequery, attributeConditions, 'taxonomy_attribute_conditions')">Add condition</md-button>
 							  </md-input-container>
-							   </md-content>
+							   
 							  </div>
+							  </md-content>
+							  <!-- ############################# -->
+								  
+								  
+								  
+								
+							  	
+						      <md-chips ng-model="statisticsConditions" ng-show="statisticsConditions.length > 0" readonly="false">
+								           <md-chip-template>
+								             <strong>{{$chip.readable}}</strong>
+								           </md-chip-template>
+								         </md-chips>
+								   <md-content flex layout-padding>	
+								  <p  class="md-title taxonomy-query-section-header">{{'Add search terms on statistics' | translate}}:</p>
+
+								  <div layout layout-sm="column">
+
+	
+								          <md-input-container>
+								             <label>{{'Statistics name' | translate}}</label>
+								             <md-select ng-model="statisticsquery.selectedAttribute">
+								               <md-option ng-repeat="(key, value) in taxonStatistics" value="{{key}}">
+								                 {{key}}
+								               </md-option>
+								             </md-select>
+								           </md-input-container>
+								          <md-input-container  ng-if="getAttributeType(statisticsquery.selectedAttribute, taxonStatistics) !== 'boolean' && statisticsquery.selectedAttribute !== undefined">
+								             <label>Operator</label>
+								             <md-select ng-model="statisticsquery.selectedOperator">
+								               <md-option ng-repeat="operator in statisticsoperators" value="{{operator}}">
+								                 {{operator}}
+								               </md-option>
+								             </md-select>
+								           </md-input-container>
+								           <md-input-container  ng-if="getAttributeType(statisticsquery.selectedAttribute, taxonStatistics) === 'text' || getAttributeType(statisticsquery.selectedAttribute, taxonStatistics) === 'number'">
+								  			<label>Query</label>
+								  			      <input ng-model="statisticsquery.value" type="text">
+								            </md-input-container>
+								           <md-input-container  ng-if="getAttributeType(statisticsquery.selectedAttribute, taxonStatistics) === 'date'">
+								  			<label>Date</label>
+								  			      <input ng-model="statisticsquery.value" type="text"  data-container="body" data-date-format="yyyy-MM-dd" name="date" autoclose="0" bs-datepicker>
+								            </md-input-container>
+		
+
+								  		  <md-input-container ng-if=" getAttributeType(statisticsquery.selectedAttribute, taxonStatistics) === 'boolean'">
+								  	<md-switch  ng-model="statisticsquery.value" aria-label="{{statisticsquery.selectedAttribute}} checked">
+	
+	          
+								  	        </md-switch>
+								  </md-input-container>
+
+								  		  <md-input-container ng-if="attributeQueryIsValid(statisticsquery)">
+								  	<md-button class="md-raised md-primary" ng-click="addCondition(statisticsquery, statisticsConditions, 'taxonomy_statistics_conditions')">Add condition</md-button>
+								  </md-input-container>
+								  
+								  </div>
+								   </md-content>
+								  
+								  
+								  
+								  
+								  
+								  
+							<!-- ######################################	  -->
 							  
 							  <p  class="md-title taxonomy-query-section-header">{{'Search redlist categories' | translate}}:</p>
 						     

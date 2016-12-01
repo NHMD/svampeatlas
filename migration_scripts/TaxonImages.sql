@@ -23,5 +23,5 @@ ALTER TABLE TaxonImages ADD KEY `_id` (`_id`);
 select _id from TaxonImages where _id not in (select _id from Taxon);
 
 -- add foreign key
-ALTER TABLE TaxonImages ADD FOREIGN KEY `taxon_id` (`_id`) references Taxon(_id);
+ALTER TABLE TaxonImages ADD FOREIGN KEY `taxon_id` (`taxon_id`) references Taxon(_id);
 

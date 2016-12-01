@@ -258,6 +258,11 @@ module.exports = function(sequelize, DataTypes) {
     					foreignKey: "taxon_id" ,
     					as: "attributes"
     				});
+    		models.Taxon
+    				.hasOne(models.TaxonStatistics, {
+    					foreignKey: "taxon_id" ,
+    					as: "Statistics"
+    				});
     		
 			
 					models.Taxon.belongsToMany(models.Naturtype, {

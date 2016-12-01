@@ -11,7 +11,10 @@ $scope.ObservationFormService = ObservationFormService;
 
 
 
-
+$scope.csvSeparator = ",";
+$scope.setCsvSeparator = function(sep){
+	$scope.csvSeparator= sep;
+}
 
 
 $scope.getTaxonListCsv = function(){

@@ -11,7 +11,7 @@
 
 
 
-<table  st-persist="dkchecklist_table" class="table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed">
+<table  st-persist="dkchecklist_table" class="table" ng-class="{'table-bordered table-condensed': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed">
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
 	<thead class="show-filter">
 	
@@ -35,7 +35,7 @@
 			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
 			         <md-radio-button value="lichens">kun laver</md-radio-button>
 			       </md-radio-group> -->
-				<md-input-container class="md-block dklist" >
+				<md-input-container class="md-block th-filter-container" >
         <label>Latinsk navn</label>
 		<md-icon md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
         <input st-search="FullName"  ng-model="uiFullName" ng-model-options="{ debounce: 500 }">
@@ -47,7 +47,7 @@
 			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
 			         <md-radio-button value="lichens">kun laver</md-radio-button>
 			       </md-radio-group> -->
-				<md-input-container class="md-block dklist">
+				<md-input-container class="md-block th-filter-container">
         <label>Dansk navn</label>
         <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="uiDkName" ng-model-options="{ debounce: 500 }">
 		
@@ -94,7 +94,7 @@
 			            </md-menu-content>
 			          </md-menu></td>
 		
-		<td  data-title="{{'Art' | translate}}">
+		<td  data-title="{{'Art' | translate}}" colspan="4">
 			<a class="cursor-pointer" ng-click="$state.go('species', {id: row._id})"> 
 				<em>{{row.FullName}} </em><span ng-if="row.redlistdata && row.redlistdata.length === 1 "> 
 				({{row.redlistdata[0].status}})</span> <span ng-if="row.Vernacularname_DK"> - {{row.Vernacularname_DK.vernacularname_dk | capitalize}}  </span>

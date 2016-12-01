@@ -217,7 +217,9 @@ angular.module('svampeatlasApp')
 			'Forvekslingsmulighed til' : 'Similar taxon to',
 			'Dansk' : 'Danish',
 			'Engelsk' : 'English',
-			'Gem' : 'Save'
+			'Gem' : 'Save',
+			'Komma som separator' : 'Comma as separator',
+			'Semikolon som separator' : 'Semicolon as separator'
 			
 		});
 

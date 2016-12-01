@@ -6,31 +6,59 @@
            </md-button>
 
 <md-content flex md-scroll-y layout-padding ng-cloak>
-	   
+	<div layout="row"><md-button aria-label="Download csv" class="csv-button"  ng-csv="getTaxonListCsv" ng-csv="csv" quote-strings="true" csv-label="true" filename="svampeatlasdata.csv" field-separator="{{csvSeparator}}">
+	                <ng-md-icon icon="file_download"></ng-md-icon>Download csv
+	            </md-button>
+	 	   <md-menu  >
+	 	   			            <md-button aria-label="Open demo menu" class="md-icon-button csv-button" ng-click="$mdOpenMenu($event)">
+	 	   			               <ng-md-icon icon="settings" ></ng-md-icon>
+	 	   			            </md-button>
+	 	   			            <md-menu-content width="4">
+	 	   			              <md-menu-item >
+	 	   			                <md-button ng-click="setCsvSeparator(',')">
+	 	   			                    <div layout="row" flex>
+	 	   			                      <p flex>{{'Komma som separator' | translate}}</p>
+	 			                      <ng-md-icon ng-if="csvSeparator === ','" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+	 								  <ng-md-icon ng-if="csvSeparator === ';'" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+	 	   			                    </div>
+	 	   			                </md-button>
+	 	   			              </md-menu-item>
+	 	   			              <md-menu-item >
+	 	   			                <md-button  ng-click="setCsvSeparator(';')">
+	 	   			                    <div layout="row" flex>
+	 	   			                      <p flex>{{'Semikolon som separator'  | translate}}</p>
+	 				                      <ng-md-icon ng-if="csvSeparator === ';'" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+	 									  <ng-md-icon ng-if="csvSeparator === ','" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  
+	 	   			                    </div>
+	 	   			                </md-button>
+	 	   			              </md-menu-item>
+			          
+	 	   			            </md-menu-content>
+	 	   			          </md-menu></div>   
 			   
 	<div class="table-responsive-vertical shadow-z-1">
 
 
-<table  class="table species-table" ng-class="{'table-bordered': mdMedia('min-width: 768px')}"  st-table="displayed" st-safe-src='serverData'>
+<table  class="table species-table" ng-class="{'table-bordered table-condensed': mdMedia('min-width: 768px')}"  st-table="displayed" st-safe-src='serverData'>
 	
 	<thead>
 		
 	  		<tr ng-show="displayed && !isLoading">
-	 			<th><md-button aria-label="Download csv"  ng-csv="getTaxonListCsv" csv-label="true" filename="svampeatlasdata.csv">
-	                <ng-md-icon icon="file_download"></ng-md-icon>Download csv
-	            </md-button></th>
+	 			<th >
+			</th>
 	  			<th >
 	  			    <!--<md-radio-group ng-model="group">
 	  			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
 	  			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
 	  			         <md-radio-button value="lichens">kun laver</md-radio-button>
 	  			       </md-radio-group> -->
-	  				<md-input-container>
+	  				<md-input-container class="th-filter-container">
 	          <label translate>Latinsk navn</label>
 			  <md-icon md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
 	          <input st-search="DeterminationView.Taxon_FullName">
 	        </md-input-container>
-  				<md-input-container>
+  				<md-input-container class="th-filter-container">
           <label translate>Dansk navn</label>
 		  
           <input st-search="DeterminationView.Taxon_vernacularname_dk">
