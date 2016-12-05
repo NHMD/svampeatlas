@@ -238,6 +238,11 @@ flex>
 	  		<td class="rightalign"><strong>{{'Herbarium' | translate}}:</strong></td><td>{{obs.herbarium}}</td> 
 			
 		</tr >
+	  	<tr ng-if="obs.dataSource">
+			<td class="rightalign"><strong>{{'Datakilde' | translate}}:</strong></td><td >{{obs.dataSource}}</td>
+	  		
+			
+		</tr >
 	  	<tr >
 			<td class="rightalign"><strong>{{'Økologi-kommentarer' | translate}}:</strong></td><td colspan="3">{{obs.ecologynote}}</td>
 	  		

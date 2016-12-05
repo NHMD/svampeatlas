@@ -51,6 +51,9 @@
     <md-checkbox  ng-model="taxon.attributes.PresentInDK" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 	{{'Present in DK' | translate}}
   </md-checkbox>
+    <md-checkbox  ng-model="taxon.attributes.atlasart" ng-change="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+	{{'Atlasart' | translate}}
+  </md-checkbox>
 </div>
 			
 			
