@@ -219,7 +219,8 @@ angular.module('svampeatlasApp')
 			'Engelsk' : 'English',
 			'Gem' : 'Save',
 			'Komma som separator' : 'Comma as separator',
-			'Semikolon som separator' : 'Semicolon as separator'
+			'Semikolon som separator' : 'Semicolon as separator',
+			'Kopier kort fundreference' : 'Copy short sighting reference'
 			
 		});
 
@@ -341,7 +342,9 @@ angular.module('svampeatlasApp')
 			'Not allowed' : 'Ikke tilladt',
 			'Your request cannot be fullfilled.': 'Handlingen kan ikke fuldføres',
 			'Similar Taxa' : 'Forvekslingsmuligheder',
-			'Add similar taxon' : 'Tilføj forvekslingsmulighed'
+			'Add similar taxon' : 'Tilføj forvekslingsmulighed',
+			'Add search terms on statistics' : 'Tilføg søgetermer på statistik',
+			'Statistics name' : 'Statistik navn'
 
 
 		});
