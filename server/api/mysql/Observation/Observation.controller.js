@@ -20,6 +20,9 @@ var userTool = require("../userTool")
 var wktparse = require('wellknown');
 var moment = require('moment');
 
+var PDFdocument = require('pdfkit');
+var request = require("request");
+
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
 	return function(err) {
@@ -1056,4 +1059,246 @@ exports.deleteUserFromObs = function(req, res) {
 
 		res.status(statusCode).send(err);
 	});
+}
+
+
+exports.generateCapsule = function(req, res) {
+	
+	
+	var query = {
+		where: {
+			_id: req.params.id
+		},
+		include: [{
+				model: models.Determination,
+				as: "PrimaryDetermination",
+				include: [{
+					model: models.Taxon,
+					as: "Taxon",
+					include: [{
+						model: models.Taxon,
+						as: "acceptedTaxon",
+						include: [{
+							model: models.TaxonDKnames,
+							as: "Vernacularname_DK"
+						}]
+					}]
+				}, {
+					model: models.User,
+					as: 'User',
+					attributes: ['_id', 'email', 'Initialer', 'name']
+				}, {
+					model: models.User,
+					as: 'Validator',
+					attributes: ['_id', 'Initialer', 'name']
+				}]
+			},
+
+			{
+				model: models.User,
+				as: 'PrimaryUser',
+				attributes: ['Initialer', 'name']
+			}, {
+				model: models.Locality,
+				as: 'Locality'
+			}, {
+				model: models.GeoNames,
+				as: 'GeoNames'
+			},
+
+			{
+				model: models.ObservationImage,
+				as: 'Images',
+				include: [{
+					model: models.User,
+					as: "Photographer",
+					attributes: ['name', 'Initialer', 'photopermission']
+				}]
+			}, {
+				model: models.PlantTaxon,
+				as: 'associatedTaxa'
+			}, {
+				model: models.User,
+				as: 'users',
+				attributes: ['_id', 'email', 'Initialer', 'name']
+			}, {
+				model: models.Substrate,
+				as: 'Substrate'
+			}, {
+				model: models.VegetationType,
+				as: 'VegetationType'
+			}
+
+		]
+	};
+
+
+	Observation.find(query)
+		.then(handleEntityNotFound(res))
+		.then(function(obs){
+			
+			getPdfCapsule(req, res, obs)
+		})
+		.
+	catch(handleError(res));
+	
+	
+};
+
+function getPdfCapsule(req, res, obs){
+	
+	var doc = new PDFdocument({layout: 'landscape', size: 'A4'});
+	
+	doc.pipe(res);
+	
+	
+
+
+
+doc.rotate(180, {origin: [doc.x, doc.y]});	
+
+
+doc
+   .fontSize(14)
+	.text(obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName + " "+obs.PrimaryDetermination.Taxon.acceptedTaxon.Author, -1320, 100, {align: 'center'});
+
+if(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK){
+	doc
+	   .fontSize(14)
+		.text(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk, -1320, 115, {align: 'center'});
+	}
+
+
+
+doc
+   .fontSize(14)
+	.text('DMS-'+obs._id, -165, 70);
+doc.image('./client/assets/images/public/LogoSmallest.png', -495, 70, {height: 22})
+doc
+   .fontSize(14)
+	.text('Danmarks svampeatlas', -470, 70);
+		
+doc
+	.fontSize(8)
+	.text('Danish Fungal Atlas');
+
+doc.rotate(180);	
+if(obs.Images.length > 0){
+doc.image(config.uploaddir+obs.Images[0].name+".JPG", 70, -55, {fit: [210, 140]})	
+}
+
+if(obs.Images.length > 1){
+doc.image(config.uploaddir+obs.Images[1].name+".JPG", 280, -55, {fit: [210, 140]})	
+}
+
+// vandrette linjer
+doc.moveTo(-140, -65) 
+ .lineTo(700, -65) 
+.dash(5, {space: 10})
+ .stroke() 
+
+doc.moveTo(-140, 220) 
+ .lineTo(700, 220) 
+.dash(5, {space: 10})
+ .stroke() 
+
+// lodrette
+
+doc.moveTo(60, -150) 
+ .lineTo(60, 480) 
+.dash(5, {space: 10})
+ .stroke() 
+
+doc.moveTo(500, -150) 
+ .lineTo(500, 480) 
+.dash(5, {space: 10})
+ .stroke()
+
+doc.rotate(180);
+var locality = (obs.locality_id !== null) ? 'Denmark, '+obs.Locality.name : obs.verbatimLocality		
+doc
+	.fontSize(10)
+	.text('Locality: '+ locality, -480, -365)
+.moveDown(0.5)
+
+doc
+	.fontSize(10)
+	.text('Latitude: '+ obs.decimalLatitude+ " Longitude: "+obs.decimalLongitude+ " Accuracy: "+obs.accuracy+ " m")
+.moveDown(0.5)
+
+doc
+	
+	.text('Date: '+ obs.observationDate.getDate() + '/' + (obs.observationDate.getMonth() + 1) + '/' +  obs.observationDate.getFullYear() + ' Reported by: '+ obs.PrimaryDetermination.User.name)
+.moveDown(0.5)
+
+	var desc = "";	
+	if (obs.users.length > 0) {
+		desc += _.reduce(obs.users, function(prev, u) {
+
+			var usr = (prev !== "") ? ", " + u.name : u.name;
+
+			return prev + usr;
+		}, "")
+	} else if (obs.verbatimLeg) {
+		desc += obs.verbatimLeg;
+	};
+doc
+	.fontSize(10)
+	.text('Leg: '+ desc)
+	.moveDown(0.5)
+doc
+	
+	.text('Det: '+ obs.PrimaryDetermination.User.name)
+
+	.moveDown(0.5)
+	
+
+	var hosts = (obs.associatedTaxa.length === 1) ? "Host: ": "Hosts: ";	
+	if (obs.associatedTaxa.length > 0) {
+		hosts += _.reduce(obs.associatedTaxa, function(prev, u) {
+
+			var usr = (prev !== "") ? ", " + u.DKandLatinName : u.DKandLatinName;
+
+			return prev + usr;
+		}, "")
+		
+doc
+	
+	.text(hosts)
+
+	.moveDown(0.5)	
+	} 	
+doc
+	
+	.text("Substrate: "+ obs.Substrate.name_uk)
+
+	.moveDown(0.5)	
+doc
+	
+	.text("http://svampe.databasen.org/observations/"+obs._id,  -300, -235)
+
+
+doc.rotate(180);	
+
+request({
+    url: 'https://maps.googleapis.com/maps/api/staticmap?center='+obs.decimalLatitude+','+obs.decimalLongitude+'&zoom=10&size=415x125&maptype=roadmap&markers='+obs.decimalLatitude+','+obs.decimalLongitude+"&key=ABQIAAAAmvU52RJtOyI0zz81Y8BBoxTKSL5fUtutPPWazSqe5GsLCeoYoBTi9Ghh98xADiRWIM1h2ZY1Koe6Cg",
+    // Prevents Request from converting response to string
+    encoding: null
+
+}, function (err, response, body) {
+	
+	if(err){
+		doc.end();
+	}
+	
+    doc.image(body, 70, 90, {width: 415})
+	
+	doc.end();
+})
+
+
+
+
+	
+	
 }
