@@ -19,6 +19,11 @@ angular.module('svampeatlasApp')
 			$scope.$translate = $translate;
 			$scope.$state = $state;
 			
+			$scope.openCapsule = function(id){
+				var win = window.open("/api/observations/" + id+"/capsule");
+				win.print();
+			}
+			
 			$scope.showDeterminationsPanel = function(evt) {
 			  var position = $mdPanel.newPanelPosition()
 			      .absolute()

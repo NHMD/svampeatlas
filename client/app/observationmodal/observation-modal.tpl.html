@@ -44,6 +44,12 @@
 		                <p  flex>  {{'Kopier kort fundreference' | translate}} </p>
 					     </md-button>
 		              </md-menu-item>
+  					  <md-menu-item ng-if="Auth.isLoggedIn()">
+			  		
+  			  	    <md-button  aria-label="Udskriv kapsel" ng-click="openCapsule(obs._id)">
+  			  	           <p flex> {{'Udskriv kapsel' | translate}}</p>
+  			  	          </md-button>
+  		              </md-menu-item>
 					  <md-menu-item ng-if="Auth.isLoggedIn()">
 			  		
 			  	    <md-button  aria-label="Kopiér fund" ng-click="editRecord(true)">

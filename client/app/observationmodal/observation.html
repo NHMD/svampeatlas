@@ -39,18 +39,7 @@
   	            </md-menu-content>
   	          </md-menu>-->
   		</div>
-		<span ng-if="Auth.isLoggedIn()"><md-tooltip md-direction="bottom" >{{'Klon fund' | translate}}</md-tooltip>
-	    <md-button class="md-icon-button" aria-label="Kopiér fund" ng-click="editRecord(true)">
-	            <ng-md-icon icon="my_library_books" ></ng-md-icon>
-	          </md-button></span>
-		<div class="clipboard-copy" data-clipboard-text="{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK ? (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) +', ' : ''}}{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}, {{obs.Locality ? obs.Locality.name +', ': ''}}{{!obs.Locality && obs.verbatimLocality ? obs.verbatimLocality+', ' : ''}}{{'lat: '+obs.decimalLatitude.toFixed(7) +' lon: '+obs.decimalLongitude.toFixed(7)+', '}}{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}, Leg: {{obs.users | getUserNamesAsList}}, Det: {{obs.PrimaryDetermination.User ? obs.PrimaryDetermination.User.name : ''}}{{obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator ? obs.PrimaryDetermination.verbatimdeterminator : ''}}, DMS-{{obs._id}}">
-<md-tooltip md-direction="bottom" >{{'Kopier funddata til udklipsholder' | translate}}</md-tooltip>
- <md-button class="md-icon-button"
-                  aria-label="Kopiér funddata til udklipsholder"
-                   >
-         <ng-md-icon icon="content_copy" ></ng-md-icon>
-       </md-button>	
-   </div>
+		
    <span><md-tooltip md-direction="bottom" >{{'Ret fund' | translate}}</md-tooltip>
 	 <md-button ng-click="editRecord()" ng-if="obs.primaryuser_id === Auth.getCurrentUser()._id || Auth.hasRole('validator')"
 	                  aria-label="Ret fund"
@@ -58,6 +47,43 @@
 	         <ng-md-icon icon="edit" ></ng-md-icon>
 	       </md-button>
 	   </span>
+	  <md-menu md-position-mode="target-right target" >
+	            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+	               <ng-md-icon icon="more_vert" ></ng-md-icon>
+	            </md-button>
+	            <md-menu-content width="4" >
+	              <md-menu-item  >
+							
+					
+					 <md-button 
+					                  aria-label="Kopiér funddata til udklipsholder"
+					                   >
+					       <p class="clipboard-copy" data-clipboard-text="{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK ? (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) +', ' : ''}}{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}, {{obs.Locality ? obs.Locality.name +', ': ''}}{{!obs.Locality && obs.verbatimLocality ? obs.verbatimLocality+', ' : ''}}{{'lat: '+obs.decimalLatitude.toFixed(7) +' lon: '+obs.decimalLongitude.toFixed(7)+', '}}{{(obs.observationDateAccuracy === 'day') ? (obs.observationDate | date : 'dd/MM/yyyy') : getDate(obs.observationDate, obs.observationDateAccuracy)}}, Leg: {{obs.users | getUserNamesAsList}}, Det: {{obs.PrimaryDetermination.User ? obs.PrimaryDetermination.User.name : ''}}{{obs.PrimaryDetermination.User === null  && obs.PrimaryDetermination.verbatimdeterminator ? obs.PrimaryDetermination.verbatimdeterminator : ''}}, DMS-{{obs._id}}" flex> {{'Kopier funddata til udklipsholder' | translate}}</p>
+					       </md-button>	
+					
+	              </md-menu-item>
+				 
+	              <md-menu-item class="clipboard-copy" data-clipboard-text="{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName.split(' ').join('-')}}-DMS-{{obs._id}}">
+				 <md-button 
+				                  aria-label="Kopiér kort fund reference"
+				                   >
+	                <p  flex>  {{'Kopier kort fundreference' | translate}} </p>
+				     </md-button>
+	              </md-menu-item>
+				  <md-menu-item ng-if="Auth.isLoggedIn()">
+		  		
+		  	    <md-button  aria-label="Udskriv kapsel" ng-click="openCapsule(obs._id)">
+		  	           <p flex> {{'Udskriv kapsel' | translate}}</p>
+		  	          </md-button>
+	              </md-menu-item>
+				  <md-menu-item ng-if="Auth.isLoggedIn()">
+		  		
+		  	    <md-button  aria-label="Kopiér fund" ng-click="editRecord(true)">
+		  	           <p flex> {{'Klon fund' | translate}}</p>
+		  	          </md-button>
+	              </md-menu-item>
+	            </md-menu-content>
+	          </md-menu>
       </div>
     </md-toolbar>
       

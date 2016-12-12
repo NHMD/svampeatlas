@@ -26,6 +26,8 @@ router.get('/:id', auth.appendUser(), nocache.noCache(), controller.show);
 router.get('/:id/forum', forumController.showForumForObs);
 router.post('/:id/forum', auth.isAuthenticated(), forumController.addCommentToObs);
 
+router.get('/:id/capsule', controller.generateCapsule);
+
 
 router.post('/:id/determinations', auth.isAuthenticated(), determinationController.addDeterminationToObs); 
 
