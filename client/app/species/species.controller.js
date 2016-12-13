@@ -72,13 +72,15 @@ angular.module('svampeatlasApp')
 			});
 			$scope.loadTiles($scope.tileOffset, $scope.tileLimit);
 		})
-
+		
+		$scope.tiles = [];
+		
 		$scope.loadTiles = function(offset, limit) {
 
-			$scope.tileOffset = offset;
+			
 			$scope.tileLimit = limit;
 
-			$scope.tiles = Observation.query({
+			 Observation.query({
 				offset: $scope.tileOffset,
 				order: 'observationDate DESC',
 				limit: $scope.tileLimit,
@@ -119,6 +121,8 @@ angular.module('svampeatlasApp')
 
 			}, function(result, headers) {
 				$scope.tileCount = headers('count');
+				$scope.tileOffset = $scope.tileOffset + $scope.tileLimit;
+				$scope.tiles = $scope.tiles.concat(result);
 			})
 
 		}
@@ -131,9 +135,11 @@ angular.module('svampeatlasApp')
 			$scope.loaded[img] = true;
 
 		};
-		$scope.imageHasFailed = function(img) {
+		$scope.imageHasFailed = function(img, obs) {
 			$scope.failed[img] = true;
-
+			_.remove($scope.tiles, function(currentObject) {
+			    return currentObject._id === obs._id;
+			});
 		};
 		$scope.getImageUrl = function(tile) {
 

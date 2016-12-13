@@ -221,7 +221,8 @@ angular.module('svampeatlasApp')
 			'Komma som separator' : 'Comma as separator',
 			'Semikolon som separator' : 'Semicolon as separator',
 			'Kopier kort fundreference' : 'Copy short sighting reference',
-			'Udskriv kapsel' : 'Print capsule'
+			'Udskriv kapsel' : 'Print capsule',
+			'Vis flere' : 'Show more'
 			
 		});
 
