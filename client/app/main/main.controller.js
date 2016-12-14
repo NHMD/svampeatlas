@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth, $location) {
+  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth, $location, preloader) {
 	 
 	//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 	  $scope.Auth = Auth;
@@ -26,6 +26,16 @@ angular.module('svampeatlasApp')
 		  $scope.showLogin();
 	
 	  }
+	  
+	  
+	$scope.getBackgroundStyle = function(tile){
+		
+		var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
+		
+
+		
+	    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
+	}
 	  
 	  
 	  $scope.openMenu = function($mdOpenMenu, ev) {
@@ -174,20 +184,7 @@ angular.module('svampeatlasApp')
 		});
 	}
 	$scope.getLatestLocalities();
-	$scope.loaded = {};
-	$scope.failed = {};
-	$scope.imageHasLoaded = function(img){
-		$scope.loaded[img] = true;
-		
-	};
-	$scope.imageHasFailed = function(img){
-		$scope.failed[img] = true;
-		
-	};
-	$scope.getImageUrl = function(tile){
-		
-		return appConstants.imageurl+tile.Images[0].name +".JPG";		
-	}
+
 	
 	
 	
@@ -210,7 +207,8 @@ angular.module('svampeatlasApp')
 		nocount: true,
 		order: 'observationDate DESC',
 		limit: 50,
-		cachekey: 'latestredlisted',
+	//	cachekey: 'latestredlisted',
+		where : {observationDate : {lt: '2015-11-01'}},
 		include: JSON.stringify(
 			[
 				JSON.stringify({
@@ -247,6 +245,8 @@ angular.module('svampeatlasApp')
 		$scope.tiles = _.filter(observations, function(u) {
 			return u.Images.length > 0;
 		});
+		
+		preloader.preloadImages( $scope.tiles);
 	})
 
 	

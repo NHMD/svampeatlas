@@ -217,123 +217,122 @@ angular.module('svampeatlasApp')
 		$scope.decades = [];
 		$scope.decadesWeighted = [];
 		var search = ObservationSearchService.getNewSearch();
-
-		search.include[0].where = {
-			Taxon_id: $stateParams.id,
-			Determination_validation: 'Godkendt'
-		};
-		search.include[2].required = true;
-
-		search.include.splice(3, 4);
-		search.include.push({
-			model: "PlantTaxon",
-			as: "PrimaryAssociatedOrganism"
-		})
-		var queryinclude = _.map(_.filter(search.include, function(e) {
-			return e.model !== 'GeoNames'
-		}), function(n) {
-			return JSON.stringify(n);
+	
+		$scope.taxon = Taxon.getAcceptedTaxon({
+			id: $stateParams.id || 10000
 		});
+		
+		
+		$scope.taxon.$promise.then(function(){
+			
+			search.include[0].where = {
+				Taxon_Path: {like: $scope.taxon.Path+"%"},
+				Determination_validation: 'Godkendt'
+			};
+			
+			search.include[2].required = true;
+
+			search.include.splice(3, 4);
+			search.include.push({
+				model: "PlantTaxon",
+				as: "PrimaryAssociatedOrganism"
+			})
+			var queryinclude = _.map(_.filter(search.include, function(e) {
+				return e.model !== 'GeoNames'
+			}), function(n) {
+				return JSON.stringify(n);
+			});
 
 
-		Observation.query({
-			where: {},
-			include: JSON.stringify(queryinclude)
-		}, function(result, headers) {
+			Observation.query({
+				where: {},
+				include: JSON.stringify(queryinclude)
+			}, function(result, headers) {
 
-			$scope.observations = result;
-			$scope.$parent.count = headers('count');
-			$scope.mapsettings.paths = {};
-			var hostsMap = {};
-			var decadesMap = {};
-			for (var i = 0; i < result.length; i++) {
-				$scope.mapsettings.paths[result[i]._id] = getPath(result[i]);
+				$scope.observations = result;
+				$scope.$parent.count = headers('count');
+				$scope.mapsettings.paths = {};
+				var hostsMap = {};
+				var decadesMap = {};
+				for (var i = 0; i < result.length; i++) {
+					$scope.mapsettings.paths[result[i]._id] = getPath(result[i]);
 
-				var mth = parseInt(result[i].observationDate.split("-")[1], 10);
+					var mth = parseInt(result[i].observationDate.split("-")[1], 10);
 
-				if (mth > 0) {
-					$scope.months[mth - 1][1]++;
+					if (mth > 0) {
+						$scope.months[mth - 1][1]++;
+					}
+
+					if (result[i].PrimaryAssociatedOrganism) {
+						if (hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName]) {
+							hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName]++;
+						} else {
+							hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName] = 1;
+						}
+					};
+
+					var dec = (Math.floor(result[i].observationDate.split("-")[0] / 10)) * 10;
+					if (dec > 0) {
+						if (decadesMap[dec]) {
+							decadesMap[dec]++;
+						} else {
+							decadesMap[dec] = 1;
+						}
+					}
+
+				};
+	
+				/*
+				for (var key in decadesMap){
+					if (decadesMap.hasOwnProperty(key)) {
+					$scope.decades.push([key+"-"+(parseInt(key)+9), decadesMap[key]]);
 				}
+				};
+				 */
+				ObservationCountService.getCount().then(function(globalDecades) {
+					for (var i = 0; i < globalDecades.length; i++) {
+						if (decadesMap.hasOwnProperty(globalDecades[i].decade)) {
+							$scope.decadesWeighted.push([globalDecades[i].decade.toString() + "-" + (globalDecades[i].decade + 9).toString(), (parseInt(decadesMap[globalDecades[i].decade]) / parseInt(globalDecades[i].count)) * 100000])
+						}
 
-				if (result[i].PrimaryAssociatedOrganism) {
-					if (hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName]) {
-						hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName]++;
-					} else {
-						hostsMap[result[i].PrimaryAssociatedOrganism.DKandLatinName] = 1;
+					}
+				})
+
+				for (var key in hostsMap) {
+					if (hostsMap.hasOwnProperty(key)) {
+						$scope.hosts.push([key, hostsMap[key]]);
 					}
 				};
 
-				var dec = (Math.floor(result[i].observationDate.split("-")[0] / 10)) * 10;
-				if (dec > 0) {
-					if (decadesMap[dec]) {
-						decadesMap[dec]++;
-					} else {
-						decadesMap[dec] = 1;
-					}
-				}
+				$scope.hosts.sort(function(a, b) {
+						return b[1] - a[1];
+					})
+					/*
+					$scope.decades.sort(function(a, b){
+						return  b[0] - a[0];
+					}) */
+				$scope.hosts = $scope.hosts.slice(0, 10);
+				//$scope.decades = $scope.decades.slice(0, 11);
+				$scope.monthChartOptions.series = [{
+					name: "Antal fund",
+					data: $scope.months
+				}];
 
-			};
+				$scope.hostChartOptions.series = [{
+					name: "Antal fund",
+					data: $scope.hosts
+				}];
+
+				$scope.decadeChartOptions.series = [{
+					name: "Antal fund pr 100.000",
+					data: $scope.decadesWeighted
+				}];
 
 
-			
-			/*
-			for (var key in decadesMap){
-				if (decadesMap.hasOwnProperty(key)) {
-				$scope.decades.push([key+"-"+(parseInt(key)+9), decadesMap[key]]);
-			}
-			};
-			 */
-			ObservationCountService.getCount().then(function(globalDecades) {
-				for (var i = 0; i < globalDecades.length; i++) {
-					if (decadesMap.hasOwnProperty(globalDecades[i].decade)) {
-						$scope.decadesWeighted.push([globalDecades[i].decade.toString() + "-" + (globalDecades[i].decade + 9).toString(), (parseInt(decadesMap[globalDecades[i].decade]) / parseInt(globalDecades[i].count)) * 100000])
-					}
-
-				}
 			})
-
-			for (var key in hostsMap) {
-				if (hostsMap.hasOwnProperty(key)) {
-					$scope.hosts.push([key, hostsMap[key]]);
-				}
-			};
-
-			$scope.hosts.sort(function(a, b) {
-					return b[1] - a[1];
-				})
-				/*
-				$scope.decades.sort(function(a, b){
-					return  b[0] - a[0];
-				}) */
-			$scope.hosts = $scope.hosts.slice(0, 10);
-			//$scope.decades = $scope.decades.slice(0, 11);
-			$scope.monthChartOptions.series = [{
-				name: "Antal fund",
-				data: $scope.months
-			}];
-
-			$scope.hostChartOptions.series = [{
-				name: "Antal fund",
-				data: $scope.hosts
-			}];
-
-			$scope.decadeChartOptions.series = [{
-				name: "Antal fund pr 100.000",
-				data: $scope.decadesWeighted
-			}];
-
-
 		})
-
 		
-
-
-
-
-
-
-
-
+		
 
 
 	})

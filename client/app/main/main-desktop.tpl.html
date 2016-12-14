@@ -16,13 +16,17 @@
 <md-grid-tile ng-repeat="tile in tiles | limitTo : 12"
                  
                   md-colspan-sm="1"
-                  ng-class="tile.background" >
-		<div class="progress-container" flex layout-fill layout="center center">
+                  
+			   ng-if="!tile.imageLoadError"
+			   ng-style="getBackgroundStyle(tile)"
+			   ng-click="ObservationModalService.show($event, tile)"
+				  >
+		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.imageLoadSuccess">
 			<div flex="33"></div>
-			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ng-show="loaded[tile.Images[0].name] !== true"></md-progress-circular> 
+			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
 			<div flex="33"></div>
 		</div>
-      <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> 
+    <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
       <md-grid-tile-footer class="img-footer"><em>{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
   <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{tile.Locality.name}}<br>
   {{tile.PrimaryUser.name}}</span>

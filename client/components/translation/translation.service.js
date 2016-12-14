@@ -222,7 +222,8 @@ angular.module('svampeatlasApp')
 			'Semikolon som separator' : 'Semicolon as separator',
 			'Kopier kort fundreference' : 'Copy short sighting reference',
 			'Udskriv kapsel' : 'Print capsule',
-			'Vis flere' : 'Show more'
+			'Vis flere' : 'Show more',
+			'Galleri' : 'Gallery'
 			
 		});
 
