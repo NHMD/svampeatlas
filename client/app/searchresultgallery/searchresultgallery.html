@@ -1,35 +1,38 @@
-<!--<div ng-include="'components/navbar/navbar.html'"></div> -->
-<!--<div ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'"></div>-->
+
 <md-toolbar class="searchtabs" ng-controller="SearchTabsCtrl" ng-include="'app/searchtabs/searchtabs.html'" > </md-toolbar>
 	
-   <md-button class="md-fab md-warn md-fab-bottom-right" aria-label="Tilføj observation" ng-click="ObservationFormService.show($event)" ng-show="Auth.isLoggedIn() && $stateParams.searchterm && $stateParams.searchterm === 'mine'">
-               <ng-md-icon icon="add"></ng-md-icon>
-           </md-button>
+
 		   
    
 <md-content flex md-scroll-y layout-padding ng-cloak>
 
 	 <md-grid-list
 	         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
-	         md-row-height="1:1"
+	        md-row-height="1:1"  md-row-height-gt-sm="3:2"
 	         md-gutter="12px" md-gutter-gt-sm="8px" flex>
 
 	 <md-grid-tile ng-repeat="tile in displayed"
                  
 	                   md-colspan-sm="1"
-	                   ng-class="tile.background" >
-	 		<div class="progress-container" flex layout-fill layout="center center">
+					   ng-if="!tile.imageLoadError"
+					   ng-style="getBackgroundStyle(tile)"
+					   ng-click="ObservationModalService.show($event, tile)"
+					   
+					   >
+	 		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.imageLoadSuccess">
 	 			<div flex="33"></div>
-	 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ng-show="loaded[tile.Images[0].name] !== true"></md-progress-circular> 
+	 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
 	 			<div flex="33"></div>
 	 		</div>
-	       <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}"  imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name, tile)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> 
+				<!--<div layout-fill ng-style="{'background-image':  'url({{getImageUrl(tile)}})', 'background-size': 'cover'}"></div> -->
+	       <!--<img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}"  imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name, tile)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
 	       <md-grid-tile-footer class="img-footer"><em>{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
 	   <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{tile.Locality.name}}<br>
 	   {{tile.PrimaryUser.name}}</span>
 	   </md-grid-tile-footer>
 	   </md-grid-tile>
 	   </md-grid-list>
+	   
 	   <div layout-row layout-padding>
 		   <md-button ng-if="totalCount > offset" ng-click="loadTiles(limit, offset)" layout-fill>{{'Vis flere' | translate}}</md-button>
 	   </div>

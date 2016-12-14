@@ -23,6 +23,10 @@ module.exports = {
 		ApplicationIdentifier: 'Svampeatlas',
 		Password: 'VAtEpVdLDFZd%HdaumA4aWsSDaP+tM'
 	},
+	gbif: {
+		UserName: 'danish_mycological_society',
+		Password: '1BtOrHXmYQGQk63T'
+	},
 	// MongoDB connection options
 	mongo: {
 		uri: process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME || 'mongodb://localhost/app'

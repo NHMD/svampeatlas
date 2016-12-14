@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchGalleryCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants',
-		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants) {
+	.controller('SearchGalleryCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants','preloader',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, preloader) {
 
 			$scope.moment = moment;
 			$scope.Auth = Auth;
@@ -16,24 +16,29 @@ angular.module('svampeatlasApp')
 			$scope.displayed = [];
 			// Only use table state for correct pagination when a row update has occurred - otherwise delete state 
 
-			$scope.loaded = {};
-			$scope.failed = {};
-			$scope.imageHasLoaded = function(img) {
-				$scope.loaded[img] = true;
 
-			};
-			$scope.imageHasFailed = function(img, obs) {
-				$scope.failed[img] = true;
-				_.remove($scope.displayed, function(currentObject) {
-				    return currentObject._id === obs._id;
-				});
-			};
 			
-			$scope.getImageUrl = function(tile) {
-
-				return appConstants.imageurl + tile.Images[0].name + ".JPG";
+	/*		$scope.getImageUrl = function(tile) {
+				var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
+				
+				
+				return preload(url).then(function(url){
+					return url;
+				})
+				
+				
+				//return appConstants.imageurl + tile.Images[0].name + ".JPG";
+			} */
+			
+		
+			$scope.getBackgroundStyle = function(tile){
+				
+				var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
+				
+		  
+				
+			    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
 			}
-			
 
 
 			
@@ -155,12 +160,21 @@ angular.module('svampeatlasApp')
 					}
 				
 
-
 					Observation.query(query, function(result, headers) {
 
 						$scope.totalCount = headers('count');
 
 						$scope.displayed = $scope.displayed.concat(result);
+						
+						preloader.preloadImages(result).then(
+							function(missingImages){
+								$scope.isLoading = false;
+								// returns an array of _id´s of failed images. May ne posted to server to flag missing images
+								console.log(missingImages)
+							}
+						)
+						
+						
 						$scope.isLoading = false;
 						$scope.offset = offset +limit;
 					}, function(err) {
