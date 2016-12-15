@@ -11,6 +11,7 @@ angular.module('svampeatlasApp')
 $scope.showFieldTripSearch = function(row, view){
 	ObservationSearchService.reset();
 	var search = ObservationSearchService.getSearch();
+	search.wasInitiatedOutsideSearchForm = true;
 	search.where = {observationDate : row.observationDate, primaryuser_id: Auth.getCurrentUser()._id};
 	
 	if(row.inDK === 1){
@@ -26,7 +27,12 @@ $scope.showFieldTripSearch = function(row, view){
 		$state.go('search-list')
 	} else if(view === 'map'){
 		$state.go('search-map')
+	} else if(view === 'gallery'){
+		$state.go('search-gallery')
 	}
+	
+	
+	
 }
 
 $scope.addObservationToFieldTrip = function(ev, row){
