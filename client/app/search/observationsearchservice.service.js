@@ -50,7 +50,6 @@ angular.module('svampeatlasApp')
 			uistate: {selectedMonths: []},
 			
 				
-			
 			getSearch: function() {
 				return this.search ;
 				

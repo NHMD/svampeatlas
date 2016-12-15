@@ -399,6 +399,7 @@ angular.module('svampeatlasApp')
 					limit: limit,
 					activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,
 					recentlyCommented: ObservationSearchService.getSearch().recentlyCommented,
+					validationStatusUpdatedSince: ObservationSearchService.getSearch().validationStatusUpdatedSince,
 					selectedMonths: ObservationSearchService.getSearch().selectedMonths,
 					where: ObservationSearchService.getSearch().where || {},
 					include: JSON.stringify($scope.queryinclude)

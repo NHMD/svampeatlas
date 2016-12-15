@@ -14,7 +14,16 @@
 		<leaflet id="observationformmap" width="100%" height="400" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers"  controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
  <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}}</md-subheader>
   <md-subheader class="md-no-sticky" ng-if="precision">{{'Præcision' | translate}}: {{precision}} m</md-subheader>
-	 
+			  <div layout-margin layout="row" ng-if="showLatLngFields">
+				  <md-input-container class="md-block" flex-gt-sm>
+				              <label>{{'Latitude' | translate}}</label>
+				              <input type="number" ng-model="ctrl.inputposition.lat" >
+				            </md-input-container>
+		  				  <md-input-container class="md-block" flex-gt-sm>
+		  				              <label>{{'Longitude' | translate}}</label>
+		  				              <input type="number" ng-model="ctrl.inputposition.lng">
+		  				            </md-input-container>
+			  </div>	 
 	 
 	 
 	

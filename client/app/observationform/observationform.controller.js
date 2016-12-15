@@ -49,6 +49,14 @@ angular.module('svampeatlasApp')
 			$scope.toggelExtendedAssociatedOrganismSearch = function() {
 				$scope.extendedAssociatedOrganismSearch = !$scope.extendedAssociatedOrganismSearch;
 			}
+			
+			$scope.showLatLngFields = ObservationFormStateService.getState().showLatLngFields || false;
+			$scope.toggleLatLngInput = function() {
+				$scope.showLatLngFields = !$scope.showLatLngFields;
+			}
+			
+			
+			
 			$scope.extendedHostRank = 'SPECIES'
 
 			$scope.resetForm = function() {
@@ -177,6 +185,12 @@ angular.module('svampeatlasApp')
 								layer: 'position'
 
 							}
+							
+							that.inputposition = { 
+								lat: obs.decimalLatitude,
+								lng: obs.decimalLongitude,
+								layer: 'position'
+							};
 
 							$scope.mapsettings.center = {
 								lat: obs.decimalLatitude,
@@ -248,7 +262,12 @@ angular.module('svampeatlasApp')
 					$timeout(function() {
 						map.invalidateSize();
 					});
-
+					$scope.$watch('mapsettings.markers.position', function(newval){
+						$timeout(function() {
+							map.invalidateSize();
+						});
+						
+					})
 					map.on('click', function(e) {
 
 
@@ -261,7 +280,10 @@ angular.module('svampeatlasApp')
 
 						}
 
-
+						that.inputposition = { 
+							lat:e.latlng.lat,
+							lng: e.latlng.lng
+						};
 						$scope.mapsettings.center.lat = e.latlng.lat;
 						$scope.mapsettings.center.lng = e.latlng.lng;
 
@@ -296,7 +318,35 @@ angular.module('svampeatlasApp')
 			})
 
 			// End timeout
+			this.inputposition = {};
+			$scope.$watch(angular.bind(this, function() {
+				return this.inputposition; // `this` IS the `this` above!!
+			}), function(newVal, oldVal) {
+				
+				if(newVal.lat && newVal.lng){
+					$scope.mapsettings.markers.position = {
+						lat: newVal.lat,
+						lng: newVal.lng,
+						layer: 'position'
 
+					}
+
+					$scope.mapsettings.center = {
+						lat: newVal.lat,
+						lng: newVal.lng,
+						zoom: 14
+					}
+					
+					if ($scope.showLocalitiesOnMap || $scope.useNearestLocalityOnClick) {
+						$scope.setNearbyLocalities();
+					}
+					
+					$scope.precision = 50
+				}
+				
+
+			}, true);
+			
 			$scope.getForeignLocality = function(position){
 				$http({
 					method: 'GET',
@@ -380,7 +430,7 @@ angular.module('svampeatlasApp')
 				paths: {},
 				drawControl: true,
 				markers: {
-
+					
 				},
 				layers: {
 					overlays: {
@@ -455,7 +505,7 @@ angular.module('svampeatlasApp')
 				}
 			};
 
-
+			
 
 			leafletData.getMap('observationformmap').then(function(map) {
 				leafletData.getLayers().then(function(layers) {

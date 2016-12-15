@@ -76,7 +76,7 @@ exports.index = function(req, res) {
 		where: {}
 	};
 
-	
+
 
 	if (req.query.where) {
 		_.merge(query.where, JSON.parse(req.query.where));
@@ -110,11 +110,11 @@ exports.index = function(req, res) {
 			console.log(n.where)
 			return n;
 		});
-		
-	
+
+
 	}
 
-	
+
 	Determination.findAndCount(query)
 		.then(function(taxon) {
 			res.set('count', taxon.count);
@@ -127,8 +127,8 @@ exports.index = function(req, res) {
 			return res.status(200).json(taxon.rows)
 		})
 		.
-	catch (handleError(res));
-	
+	catch(handleError(res));
+
 };
 
 
@@ -136,32 +136,30 @@ exports.index = function(req, res) {
 // Get a single taxon
 exports.show = function(req, res) {
 	Determination.find({
-		where: {
-			_id: req.params.id
-		},
-		 include: [{
-		model: models.Taxon,
-		as: "Taxon",
-		include: [{
-		model: models.Taxon,
-		as: "acceptedTaxon",
+			where: {
+				_id: req.params.id
+			},
 			include: [{
-				model: models.TaxonDKnames,
-				as: "Vernacularname_DK"
+				model: models.Taxon,
+				as: "Taxon",
+				include: [{
+					model: models.Taxon,
+					as: "acceptedTaxon",
+					include: [{
+						model: models.TaxonDKnames,
+						as: "Vernacularname_DK"
+					}]
+				}]
+			}, {
+				model: models.User,
+				as: 'User',
+				attributes: ['email', 'Initialer', 'name']
 			}]
-		}]
-	},
-    {
-   				model: models.User,
-   				as: 'User',
-   				attributes: ['email', 'Initialer', 'name']
-   			}
-]
-	})
+		})
 		.then(handleEntityNotFound(res))
 		.then(responseWithResult(res))
 		.
-	catch (handleError(res));
+	catch(handleError(res));
 };
 
 
@@ -172,40 +170,42 @@ exports.create = function(req, res) {
 
 };
 
-exports.updateValidation = (req, res)=> {
-	
-	
+exports.updateValidation = (req, res) => {
+
+
 	Determination.find({
 		where: {
 			_id: req.params.id
 		}
-	}).then(function(determination){
+	}).then(function(determination) {
 		determination.validation = req.body.validation;
 		determination.validator_id = req.user._id;
-		return determination.save({fields: ['validation', 'validator_id']})
-	}).then(function(determination){
+		return determination.save({
+			fields: ['validation', 'validator_id']
+		})
+	}).then(function(determination) {
 		return res.status(204).json(determination)
 	})
 }
 
-exports.addDeterminationToObs = (req, res)=> {
+exports.addDeterminationToObs = (req, res) => {
 	var userIsValidator = userTool.hasRole(req.user, 'validator');
 	var determination = req.body;
 	determination.observation_id = req.params.id;
 	determination.user_id = (determination.user_id) ? determination.user_id : req.user._id;
-	
-	
-	 console.log(determination)
-	 models.sequelize.transaction(function(t) {
 
-		return models.Observation.find({
+
+	console.log(determination)
+	models.sequelize.transaction(function(t) {
+
+			return models.Observation.find({
 					where: {
 						_id: req.params.id
 					}
 				}, {
 					transaction: t
 				})
-				.then((obs)=>{
+				.then((obs) => {
 					return [models.Taxon.find({
 						where: {
 							_id: determination.taxon_id
@@ -223,7 +223,7 @@ exports.addDeterminationToObs = (req, res)=> {
 						transaction: t
 					}), obs]
 				})
-				.spread((taxon, obs)=>{
+				.spread((taxon, obs) => {
 
 					if (!obs) {
 						res.send(404);
@@ -233,79 +233,82 @@ exports.addDeterminationToObs = (req, res)=> {
 
 						throw "Forbidden"
 					}
-					if(userIsValidator){
+					if (userIsValidator) {
 						determination.validation = "Godkendt";
 					} else {
 						determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Valideres';
 					};
-					return Determination
-			.create(determination, {
-				transaction: t
-			})
-				}).then((det)=> {
-				
-				return [models.Observation.update({
-					primarydetermination_id: det._id
-				}, {
-					where: {
-						_id: req.params.id
-					} ,
-					transaction: t
+
+					determination.createdByUser = req.user._id;
+
+
+					return Determination.create(determination, {
+						transaction: t
+					})
+				}).then((det) => {
+
+					return [models.Observation.update({
+						primarydetermination_id: det._id
+					}, {
+						where: {
+							_id: req.params.id
+						},
+						transaction: t
+					}), det]
+				})
+
+		})
+		.spread((updated, det) => {
+
+			return models.DeterminationView.find({
+				where: {
+					Determination_id: det._id
 				}
-				), det]
 			})
 
-	})
-	.spread((updated, det)=>{
-		
-		return models.DeterminationView.find({where: {Determination_id: det._id}})
-		
-	})
-	.then((det)=> {
-		return res.status(200).json(det);
-	})
+		})
+		.then((det) => {
+			return res.status(200).json(det);
+		})
 		.
-	catch((err)=> {
+	catch((err) => {
 		var statusCode = (err === 'Forbidden') ? 403 : 500;
 		console.log(err);
 
 		res.status(statusCode).send(err);
-	});
-	;
+	});;
 }
 
 
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
 	Determination.find({
-		where: {
-			_id: req.params.id
-		}
-	})
+			where: {
+				_id: req.params.id
+			}
+		})
 		.then(handleEntityNotFound(res))
-		.then(function(det){
+		.then(function(det) {
 			return det.update(req.body)
 		})
-		.then(function(det){
+		.then(function(det) {
 			return res.status(204).json(det)
 		})
 		.
-	catch (handleError(res));
-	
+	catch(handleError(res));
+
 };
 
 
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
 	Determination.find({
-		where: {
-			_id: req.params.id
-		}
-	})
+			where: {
+				_id: req.params.id
+			}
+		})
 		.then(handleEntityNotFound(res))
 		.then(removeEntity(res))
 		.
-	catch (handleError(res));
+	catch(handleError(res));
 };
-
-

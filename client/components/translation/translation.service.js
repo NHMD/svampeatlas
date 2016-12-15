@@ -223,7 +223,9 @@ angular.module('svampeatlasApp')
 			'Kopier kort fundreference' : 'Copy short sighting reference',
 			'Udskriv kapsel' : 'Print capsule',
 			'Vis flere' : 'Show more',
-			'Galleri' : 'Gallery'
+			'Galleri' : 'Gallery',
+			'Mit galleri' : 'My gallery',
+			'Vis inputfelter til Lat/Lon'  : 'Show input fields for Lat/Lng'
 			
 		});
 

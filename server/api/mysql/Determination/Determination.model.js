@@ -64,6 +64,10 @@ module.exports = function(sequelize, DataTypes) {
    	type: DataTypes.INTEGER,
    	allowNull: true,
    },
+   createdByUser: {
+   	type: DataTypes.INTEGER,
+   	allowNull: true,
+   },
    
    verbatimdeterminator: {
    	type: DataTypes.STRING,
