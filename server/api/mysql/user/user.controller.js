@@ -505,3 +505,27 @@ exports.showFieldTrips = function(req, res) {
 
 
 };
+
+
+exports.showRecentlyChangedObservations = function(req, res) {
+	//SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country
+	
+	var sql = 'SELECT o._id from Observation o JOIN Determination d on o.primarydetermination_id = d._id WHERE o.primaryuser_id = :userid AND ((d.validator_id IS NOT NULL AND d.validator_id <> :userid AND d.updatedAt > :fromdate) OR (d.createdByUser IS NOT NULL AND d.createdByUser <> :userid AND d.createdAt > :fromdate) )';
+
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			userid: req.params.id,
+			fromdate: req.query.since
+			
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result);
+	}).catch(handleError(res));
+
+
+};

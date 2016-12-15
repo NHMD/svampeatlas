@@ -92,7 +92,20 @@ angular.module('svampeatlasApp', [
 					},
 					requireLogin: true
 
-				}, {
+				}, 
+				{
+									id: 'search_my_gallery',
+									name: 'Mit galleri',
+									state: 'search-gallery',
+									type: 'link',
+									icon: 'view_comfy',
+									params: {
+										searchterm: 'mine'
+									},
+									requireLogin: true
+
+								},
+				{
 					id: 'fieldtrips',
 					name: 'Mine feltture',
 					state: 'fieldtrips',

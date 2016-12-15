@@ -21,13 +21,22 @@ angular.module('svampeatlasApp')
 
 	
 	$scope.activitySince = 3;
-	
+	$scope.validationUpdatedSince = 3;
 	$scope.$watch('activitySince', function(newval, oldval){
 		
 		if(newval && newval !== oldval){
 			getRecentActivity($scope.dashboardUserID )
 		}
 	})
+	
+	$scope.$watch('validationUpdatedSince', function(newval, oldval){
+		
+		if(newval && newval !== oldval){
+			validationRecentlyUpdated($scope.dashboardUserID )
+		}
+	})
+	
+	
 	
 	function getRecentActivity(userid){
 		var search = ObservationSearchService.getNewSearch();
@@ -52,6 +61,35 @@ angular.module('svampeatlasApp')
 		$scope.recentActivitySearch = search;
 		Observation.query(query, function(result, headers) {
 			$scope.activytyCount = result.length;
+			
+		})
+		//$state.go('search-list')
+		
+	}
+	
+	function validationRecentlyUpdated(userid){
+		var search = ObservationSearchService.getNewSearch();
+		search.wasInitiatedOutsideSearchForm = true;
+		search.where = {primaryuser_id : userid};
+		var d = moment().subtract($scope.validationUpdatedSince, 'days').toDate()
+		
+		search.include[2].required = false;
+		//search.include[6].required = true;
+		search.validationStatusUpdatedSince = $filter('date')(d, "yyyy-MM-dd", '+0200')
+		var queryinclude = _.map(search.include, function(n) {
+			return JSON.stringify(n);
+		});
+		
+		var query = {
+			
+			where: search.where || {},
+			include: JSON.stringify(queryinclude),
+			validationStatusUpdatedSince: search.validationStatusUpdatedSince
+		};
+		
+		$scope.validationStatusUpdatedSinceSearch = search;
+		Observation.query(query, function(result, headers) {
+			$scope.validationStatusUpdatedSinceCount = result.length;
 			
 		})
 		//$state.go('search-list')
@@ -96,6 +134,7 @@ angular.module('svampeatlasApp')
 	function initialize(){
 	getFirstFindings(thisYear);
 	getRecentActivity($scope.dashboardUserID );
+	validationRecentlyUpdated($scope.dashboardUserID );
 	
 	User.getSpeciesCount({id: $scope.dashboardUserID, group: 'countryName, year'})
 	.$promise.then(function(res){
@@ -225,7 +264,14 @@ angular.module('svampeatlasApp')
 			ObservationSearchService.reset();
 			ObservationSearchService.search = $scope.recentActivitySearch;
 			$state.go('search-list')
+		} else if(searchType === 'validationStatusUpdatedSince'){
+			ObservationSearchService.reset();
+			ObservationSearchService.search = $scope.validationStatusUpdatedSinceSearch;
+			$state.go('search-list')
 		}
+		
+		
+		
 		
 		
 		

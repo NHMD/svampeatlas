@@ -213,13 +213,17 @@ exports.index = function(req, res) {
 		]
 	}
 	var activeThreadsPromise;
+	
 	if (req.user && Boolean(req.query.activeThreadsOnly)) {
 
 		activeThreadsPromise = activeThreads(req.user)
 	} else if (req.user && req.query.recentlyCommented) {
 
 		activeThreadsPromise = recentlyCommented(req.user, req.query.recentlyCommented)
-	} else {
+	} else if (req.user && req.query.validationStatusUpdatedSince) {
+
+		activeThreadsPromise = validationStatusUpdatedSince(req.user, req.query.validationStatusUpdatedSince)
+	}	else {
 		activeThreadsPromise = Promise.resolve(false)
 	}
 	console.log(query);
@@ -475,6 +479,27 @@ function recentlyCommented(user, since) {
 	})
 }
 
+function validationStatusUpdatedSince(user, since) {
+
+	var sql = 'SELECT o._id from Observation o JOIN Determination d on o.primarydetermination_id = d._id WHERE o.primaryuser_id = :userid AND ((d.validator_id IS NOT NULL AND d.validator_id <> :userid AND d.updatedAt > :fromdate) OR (d.createdByUser IS NOT NULL AND d.createdByUser <> :userid AND d.createdAt > :fromdate) )';
+
+	return models.sequelize.query(
+		sql, {
+			replacements: {
+				userid: user._id,
+				fromdate: since
+			},
+			type: models.sequelize.QueryTypes.SELECT
+		}
+	).then(function(observationids) {
+
+		return _.map(observationids, function(o) {
+			return o._id
+		})
+
+	})
+}
+
 
 // Get a single observation
 exports.show = function(req, res) {
@@ -643,6 +668,7 @@ exports.create = function(req, res) {
 
 					determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Valideres';
 					determination.observation_id = obs._id;
+					determination.createdByUser = req.user._id;
 					return [models.Determination.create(determination, {
 						transaction: t
 					}), obs]
@@ -1173,7 +1199,7 @@ if(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK){
 doc
    .fontSize(14)
 	.text('DMS-'+obs._id, -165, 70);
-doc.image('./client/assets/images/public/LogoSmallest.png', -495, 70, {height: 22})
+doc.image(config.staticImagePath+'LogoSmallest.png', -495, 70, {height: 22})
 doc
    .fontSize(14)
 	.text('Danmarks svampeatlas', -470, 70);

@@ -26,7 +26,7 @@
 			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
 			               <ng-md-icon icon="more_vert" ></ng-md-icon>
 			            </md-button>
-			            <md-menu-content width="4" >
+			            <md-menu-content width="6" >
 			              <md-menu-item >
 			                <md-button ng-click="resetForm()">
 			                    <div layout="row" flex>
@@ -43,6 +43,25 @@
 			                    </div>
 			                </md-button>
 			              </md-menu-item>
+						  <md-menu-item >
+			                <md-button ng-click="toggleNearestLocalityOnClick()">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Brug nærmeste lokalitet ved klik'  | translate}}</p>
+			                      <ng-md-icon ng-if="useNearestLocalityOnClick" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  <ng-md-icon ng-if="!useNearestLocalityOnClick" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+			              <md-menu-item ng-if="$mdMedia('gt-xs')">
+			                <md-button ng-click="toggleLatLngInput()" >
+			                    <div layout="row" flex>
+			                      <p flex>{{'Vis inputfelter til Lat/Lon'  | translate}}</p>
+			                      <ng-md-icon ng-if="showLatLngFields" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  <ng-md-icon ng-if="!showLatLngFields" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
+
 			              <md-menu-item >
 			                <md-button ng-click="toggelExtendedAssociatedOrganismSearch()">
 			                    <div layout="row" flex>

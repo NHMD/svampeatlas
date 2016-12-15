@@ -207,8 +207,7 @@ angular.module('svampeatlasApp')
 		nocount: true,
 		order: 'observationDate DESC',
 		limit: 50,
-	//	cachekey: 'latestredlisted',
-		where : {observationDate : {lt: '2015-11-01'}},
+		cachekey: 'latestredlisted',
 		include: JSON.stringify(
 			[
 				JSON.stringify({

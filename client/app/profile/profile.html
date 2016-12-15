@@ -64,6 +64,21 @@
 	   
        
  		      </md-grid-tile>
+			  
+			      <md-grid-tile class="md-whiteframe-4dp " md-colspan="3" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('xs') && currentUser._id === dashboardUserID">
+				  <div layout-fill layout-margin>
+				  <ng-md-icon icon="thumb_up" ></ng-md-icon>
+			   <div layout layout-align="center center"> <md-button ng-click="gotoSearchResult('validationStatusUpdatedSince')"><span class="md-caption">{{'Du har' | translate}} {{validationStatusUpdatedSinceCount}} {{'fund' | translate}} <br>{{'som er valideret eller ombestemt seneste' | translate}}</span></md-button>
+   				</div>
+			   <md-radio-group ng-model="$parent.$parent.$parent.validationUpdatedSince" layout="row" layout-align="center center">
+			         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
+			         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
+			         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
+			       </md-radio-group>
+			    
+			  </div>
+        
+			      </md-grid-tile>
 		  
 		      <md-grid-tile class="md-whiteframe-4dp " >
 			  <div layout-fill layout-margin>
@@ -93,20 +108,38 @@
 		  
 		  
 		  
-		      <md-grid-tile class="md-whiteframe-4dp " md-colspan="4" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('sm') && currentUser._id === dashboardUserID">
-			  <div layout-fill layout-margin>
-			  <ng-md-icon icon="forum" ></ng-md-icon>
-		   <div layout layout-align="center center"> <md-button ng-click="gotoSearchResult('recentactivity')"><p >{{'Du har' | translate}} {{activytyCount}} {{'fund' | translate}} {{'med nye kommentarer seneste' | translate}}</p></md-button> 
-		   
-		   <md-radio-group ng-model="$parent.$parent.$parent.activitySince">
-		         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
-		         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
-		         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
-		       </md-radio-group>
-		   </div>
-		  </div>
+      <md-grid-tile class="md-whiteframe-4dp " md-colspan="4" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('sm') && currentUser._id === dashboardUserID">
+	  <div layout-fill layout-margin>
+	  <ng-md-icon icon="forum" ></ng-md-icon>
+   <div layout layout-align="center center"> 
+	   <md-button ng-click="gotoSearchResult('recentactivity')"><span class="md-caption">{{'Du har' | translate}} {{activytyCount}} {{'fund' | translate}} <br>{{'med nye kommentarer seneste' | translate}}</span></md-button> </div>
+	   
+	   <md-radio-group ng-model="$parent.$parent.$parent.activitySince" layout="row" layout-align="center center">
+	         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
+	         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
+	         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
+	       </md-radio-group>
+  </div>
+  
+ 
+ 
+      </md-grid-tile>
+			  
+			      <md-grid-tile class="md-whiteframe-4dp " md-colspan="3" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('sm') && currentUser._id === dashboardUserID">
+				  <div layout-fill layout-margin>
+				  <ng-md-icon icon="thumb_up" ></ng-md-icon>
+			   <div layout layout-align="center center"> <md-button ng-click="gotoSearchResult('validationStatusUpdatedSince')"><span class="md-caption">{{'Du har' | translate}} {{validationStatusUpdatedSinceCount}} {{'fund' | translate}} <br>{{'som er valideret eller ombestemt seneste' | translate}}</span></md-button>
+   				</div>
+			   <md-radio-group ng-model="$parent.$parent.$parent.validationUpdatedSince" layout="row" layout-align="center center">
+			         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
+			         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
+			         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
+			       </md-radio-group>
+			    
+			  </div>
         
-		      </md-grid-tile>
+			      </md-grid-tile>
+			  
 		  
 		      <md-grid-tile class="md-whiteframe-4dp " >
 			  <div layout-fill layout-margin>
@@ -142,20 +175,37 @@
 		  
 		  
 		  
-      <md-grid-tile class="md-whiteframe-4dp " md-colspan="4" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('gt-sm') && currentUser._id === dashboardUserID">
+      <md-grid-tile class="md-whiteframe-4dp " md-colspan="3" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('gt-sm') && currentUser._id === dashboardUserID">
 	  <div layout-fill layout-margin>
 	  <ng-md-icon icon="forum" ></ng-md-icon>
-   <div layout layout-align="center center"> <md-button ng-click="gotoSearchResult('recentactivity')"><p >{{'Du har' | translate}} {{activytyCount}} {{'fund' | translate}} {{'med nye kommentarer seneste' | translate}}</p></md-button>
-   
-   <md-radio-group ng-model="$parent.$parent.$parent.activitySince">
-         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
-         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
-         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
-       </md-radio-group>
-    </div>
+   <div layout layout-align="center center"> 
+	   <md-button ng-click="gotoSearchResult('recentactivity')"><span class="md-caption">{{'Du har' | translate}} {{activytyCount}} {{'fund' | translate}} {{'med nye kommentarer seneste' | translate}}</span></md-button> </div>
+	   
+	   <md-radio-group ng-model="$parent.$parent.$parent.activitySince" layout="row" layout-align="center center">
+	         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
+	         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
+	         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
+	       </md-radio-group>
   </div>
-        
+  
+ 
+ 
       </md-grid-tile>
+	  
+			      <md-grid-tile class="md-whiteframe-4dp " md-colspan="3" md-colspan-sm="3" md-colspan-xs="1" ng-if="$mdMedia('gt-sm') && currentUser._id === dashboardUserID">
+				  <div layout-fill layout-margin>
+				  <ng-md-icon icon="thumb_up" ></ng-md-icon>
+			   <div layout layout-align="center center"> <md-button ng-click="gotoSearchResult('validationStatusUpdatedSince')"><span class="md-caption">{{'Du har' | translate}} {{validationStatusUpdatedSinceCount}} {{'fund' | translate}} {{'som er valideret eller ombestemt seneste' | translate}}</span></md-button>
+   				</div>
+			   <md-radio-group ng-model="$parent.$parent.$parent.validationUpdatedSince" layout="row" layout-align="center center">
+			         <md-radio-button value="1">1 {{'dage' | translate}}</md-radio-button>
+			         <md-radio-button value="3">3 {{'dage' | translate}}</md-radio-button>
+			         <md-radio-button value="10">10 {{'dage' | translate}}</md-radio-button>
+			       </md-radio-group>
+			    
+			  </div>
+        
+			      </md-grid-tile>
 	      
 	   
 	      <md-grid-tile class="md-whiteframe-4dp list-tile"

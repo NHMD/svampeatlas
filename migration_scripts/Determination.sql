@@ -243,3 +243,6 @@ INSERT INTO Determination (
 
 
 UPDATE Determination d, Observation o SET o.primarydetermination_id = d._id WHERE d.observation_id = o._id;
+ALTER TABLE Determination add column createdByUser INT(11);
+
+ALTER TABLE Determination ADD CONSTRAINT fk_createdbyuser_id FOREIGN KEY (createdByUser) REFERENCES Users(_id);

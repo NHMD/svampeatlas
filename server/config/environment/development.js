@@ -38,6 +38,7 @@ module.exports = {
 		Password: 'VAtEpVdLDFZd%HdaumA4aWsSDaP+tM'
 	},
 	uploaddir: '../uploads/',
+	staticImagePath: './client/assets/images/public/',
 	seedDB: false
 };
 

@@ -13,9 +13,9 @@
 
 <table  st-persist="dkchecklist_table" class="table" ng-class="{'table-bordered table-condensed': mdMedia('min-width: 768px')}"  st-pipe="callServer" st-table="displayed">
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
-	<thead class="show-filter">
+	<thead >
 	
-		<tr ng-show="displayed">
+		<tr ng-show="displayed" class="show-filter">
 			<th st-ratio="5"> 
 				
 			    <label for="mySelect">Index:</label>

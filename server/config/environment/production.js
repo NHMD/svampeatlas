@@ -50,6 +50,7 @@ module.exports = {
 	},
 	
 	uploaddir: '/home/atlas/uploads/',
+	staticImagePath: '/home/atlas/dist/client/assets/images/public/'
 	/*
   sequelize: {
 	  uri: 'mysql://',

@@ -47,6 +47,15 @@
 			                    </div>
 			                </md-button>
 			              </md-menu-item>
+			              <md-menu-item ng-if="$mdMedia('gt-xs')">
+			                <md-button ng-click="toggleLatLngInput()">
+			                    <div layout="row" flex>
+			                      <p flex>{{'Vis inputfelter til Lat/Lon'  | translate}}</p>
+			                      <ng-md-icon ng-if="showLatLngFields" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  <ng-md-icon ng-if="!showLatLngFields" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+			                    </div>
+			                </md-button>
+			              </md-menu-item>
 			              <md-menu-item >
 			                <md-button ng-click="toggelExtendedAssociatedOrganismSearch()">
 			                    <div layout="row" flex>
