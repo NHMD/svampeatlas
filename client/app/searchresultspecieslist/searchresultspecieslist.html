@@ -35,7 +35,21 @@
 	 	   			              </md-menu-item>
 			          
 	 	   			            </md-menu-content>
-	 	   			          </md-menu></div>   
+	 	   			          </md-menu> 
+							  <span flex></span>
+			   		 	<div ng-if="storedSearch && mdMedia('gt-xs')">
+			   		 		
+							<h4 ><span >{{'Aktuel søgning:' | translate}}</span> {{storedSearch.name}} <span ng-if="Auth.getCurrentUser()._id !== storedSearch.User._id"> - {{'oprettet af' | translate}} {{storedSearch.User.name}}</span><sharing mail-subject="'Søgeresultat fra Danmarks Svampeatlas: '+storedSearch.name " mail-body="baseUrl+'/search/'+storedSearch._id+'/result/specieslist/'" sharing-uri="baseUrl+'/search/'+storedSearch._id+'/result/specieslist/'"> </sharing></h4>
+			   		 	</div>
+			   		   
+						  </div>   
+						
+  						  <div ng-if="storedSearch && mdMedia('xs')">
+  	 			   		 	<span >{{'Aktuel søgning:' | translate}} </span>
+  	 			   		   <h4 >{{storedSearch.name}} <span ng-if="Auth.getCurrentUser()._id !== storedSearch.User._id"> - {{'oprettet af' | translate}} {{storedSearch.User.name}}</span><sharing mail-subject="'Søgeresultat fra Danmarks Svampeatlas: '+storedSearch.name " mail-body="baseUrl+'/search/'+storedSearch._id+'/result/specieslist/'" sharing-uri="baseUrl+'/search/'+storedSearch._id+'/result/specieslist/'" > </sharing></h4>
+  						  </div>
+							
+						 
 			   
 	<div class="table-responsive-vertical shadow-z-1">
 

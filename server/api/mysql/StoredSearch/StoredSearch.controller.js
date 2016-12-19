@@ -71,7 +71,7 @@ exports.index = function(req, res) {
 	var usrid = (req.user) ? req.user._id : undefined
 	
 	
-	Storedsearch.findAll({where: {user_id: usrid}, attributes: [ '_id', 'name']})
+	Storedsearch.findAll({where: {user_id: usrid}, attributes: [ '_id', 'name', ], include: [{model: models.User, as: 'User', attributes: ['_id', 'name']}]})
 	.then(handleEntityNotFound(res))
 		.then(function(searches) {
 	

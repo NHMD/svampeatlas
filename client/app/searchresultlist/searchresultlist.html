@@ -8,6 +8,9 @@
 		   
    
 <md-content flex md-scroll-y layout-padding ng-cloak>
+		 	<span ng-if="storedSearch && mdMedia('xs')">{{'Aktuel søgning:' | translate}} </span>
+		   <h4 ng-if="storedSearch"><span ng-if="mdMedia('gt-xs')">{{'Aktuel søgning:' | translate}}</span> {{storedSearch.name}} <span ng-if="Auth.getCurrentUser()._id !== storedSearch.User._id"> - {{'oprettet af' | translate}} {{storedSearch.User.name}}</span><sharing mail-subject="'Søgeresultat fra Danmarks Svampeatlas: '+storedSearch.name " mail-body="baseUrl+'/search/'+storedSearch._id+'/result/list/'" sharing-uri="baseUrl+'/search/'+storedSearch._id+'/result/list/'"> </sharing></h4>
+
 	  <div flex layout="row" ng-if="mdMedia('xs')"><span flex></span><p>{{fromRecord +"-"+toRecord}} {{'af' | translate}} {{totalCount}}</p></div> 
 			   
 	<div class="table-responsive-vertical shadow-z-1">

@@ -25,7 +25,7 @@
 					   
 				   </div>
 			   
-	  <md-button ng-if="Auth.isLoggedIn()" ng-click="StoredSearchModalService.show($event, search, storedSearches)">{{'Gem søgning' | translate}}</md-button>
+	  <md-button ng-if="Auth.isLoggedIn()" ng-click="StoredSearchModalService.show($event, search, storedSearches, showStoredSearch)">{{'Gem søgning' | translate}}</md-button>
 	 
 	   
        <md-menu ng-if="Auth.isLoggedIn()">
@@ -61,9 +61,10 @@
 			  
 			  </div>
 			   		<div layout-gt-xs="row">
-	        <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
+	        <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap md-require-match="false" class="md-block" flex-gt-xs>
 
 	          <md-autocomplete
+			  md-delay = "500"
 	    	  	md-min-length="4"
 	    		md-no-cache="false"
 				md-input-id="taxon-autocomplete"
@@ -111,6 +112,8 @@
 
 	          </md-autocomplete>
 	          <md-chip-template>
+			  <span ng-if="!$chip._id"><strong>{{$chip}}</strong></span>
+			  <span ng-if="$chip._id">
 	            <span ng-if="$chip.RankID > 5000">
 	 			   <strong ng-if="$chip.Vernacularname_DK">{{$chip.Vernacularname_DK.vernacularname_dk | capitalize}} (</strong>
 	              <strong><em>{{$chip.FullName}}</em> {{$chip.Author}}</strong>
@@ -122,6 +125,7 @@
 				  <strong ng-if="$cookies.get('preferred_language') === 'en'"><em>spp.</em></strong>
 				  <strong ng-if="$chip.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">)</strong>
 	            </span>
+				</span>
 	          </md-chip-template>
 		
 	        </md-chips>

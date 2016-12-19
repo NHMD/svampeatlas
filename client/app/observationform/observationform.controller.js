@@ -170,7 +170,7 @@ angular.module('svampeatlasApp')
 							that.observationDate = new Date(obs.observationDate);
 							that.ecologynote = obs.ecologynote;
 
-							$scope.precision = obs.accuracy;
+							that.precision = obs.accuracy;
 
 							that.fieldnumber = obs.fieldnumber;
 							that.herbarium = obs.herbarium;
@@ -271,7 +271,7 @@ angular.module('svampeatlasApp')
 					map.on('click', function(e) {
 
 
-						$scope.precision = $scope.getMarkerPrecision(map.getZoom());
+						that.precision = $scope.getMarkerPrecision(map.getZoom());
 
 						$scope.mapsettings.markers.position = {
 							lat: e.latlng.lat,
@@ -318,7 +318,7 @@ angular.module('svampeatlasApp')
 			})
 
 			// End timeout
-			this.inputposition = {};
+			this.inputposition = { };
 			$scope.$watch(angular.bind(this, function() {
 				return this.inputposition; // `this` IS the `this` above!!
 			}), function(newVal, oldVal) {
@@ -331,17 +331,29 @@ angular.module('svampeatlasApp')
 
 					}
 
-					$scope.mapsettings.center = {
-						lat: newVal.lat,
-						lng: newVal.lng,
-						zoom: 14
+					$scope.mapsettings.center.lat = newVal.lat;
+					$scope.mapsettings.center.lng = newVal.lng;
+
+
+
+
+					if ($scope.mapsettings.center.zoom < 10) {
+						$scope.mapsettings.center.zoom = 10
+					} else if ($scope.mapsettings.center.zoom >= 10 && $scope.mapsettings.center.zoom < 14) {
+						$scope.mapsettings.center.zoom++;
 					}
-					
+				
 					if ($scope.showLocalitiesOnMap || $scope.useNearestLocalityOnClick) {
 						$scope.setNearbyLocalities();
 					}
-					
-					$scope.precision = 50
+					/*
+					leafletData.getMap('observationformmap').then(function(map) {
+
+						$timeout(function() {
+							map.invalidateSize();
+						});
+					});
+					*/
 				}
 				
 
@@ -804,7 +816,7 @@ angular.module('svampeatlasApp')
 							zoom: 14
 						}
 
-						$scope.precision = position.coords.accuracy;
+						that.precision = position.coords.accuracy;
 
 						if (!GeoJsonUtils.inDK($scope.mapsettings.markers.position)) {
 							$http({
@@ -965,7 +977,7 @@ angular.module('svampeatlasApp')
 				$scope.mapsettings.center.lat = parseFloat(latLon[0]);
 				$scope.mapsettings.center.lng = parseFloat(latLon[1]);
 				$scope.mapsettings.center.zoom = 16;
-				$scope.precision = 15;
+				that.precision = 15;
 				if(exif.GPSDateStamp){
 					var splitted =	exif.GPSDateStamp.split(":");
 					
@@ -1110,7 +1122,7 @@ $scope.showExifConfirmPanel(exif)
 					vegetationtype_id: that.selectedVegetationType,
 					ecologynote: that.ecologynote,
 
-					accuracy: $scope.precision,
+					accuracy: that.precision,
 					fieldnumber: that.fieldnumber,
 					herbarium: that.herbarium,
 					note: that.note,
