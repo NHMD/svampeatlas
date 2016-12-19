@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants',
-		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants) {
+	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants', 'StoredSearch',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, StoredSearch) {
 
 			$scope.moment = moment;
 			$scope.Auth = Auth;
@@ -13,7 +13,7 @@ angular.module('svampeatlasApp')
 			$scope.ObservationFormService = ObservationFormService;
 			$scope.$stateParams = $stateParams;
 			
-			
+			$scope.baseUrl =appConstants.baseurl;
 			// Only use table state for correct pagination when a row update has occurred - otherwise delete state 
 			if (!ObservationStateService.updated){
 				localStorage.removeItem('search_result_list_table');
@@ -281,7 +281,52 @@ angular.module('svampeatlasApp')
 
 				};
 
+			} ;
+			
+			var storedSearchDeferred = $q.defer();
+			if(ObservationSearchService.storedSearch){
+				$state.transitionTo('search-list', {searchid: ObservationSearchService.storedSearch._id}, {
+				    location: true,
+				    inherit: true,
+				    relative: $state.$current,
+				    notify: false
+				})
+				
+				$scope.storedSearch = ObservationSearchService.storedSearch;
 			}
+			if($stateParams.searchid){
+				console.log($stateParams.searchid)
+				
+				StoredSearch.get({id: $stateParams.searchid}).$promise.then(function(ss){
+					
+					
+					ObservationSearchService.reset();
+					$scope.search = ObservationSearchService.getSearch();
+					var storedSearch  = JSON.parse(ss.search);
+					if (!$scope.search.where) {
+						$scope.search.where = {};
+					}
+
+					ObservationSearchService.convertSearchDateStrings(storedSearch)
+					ObservationSearchService.uiSearchToDBquery(storedSearch, $scope.search)
+					storedSearchDeferred.resolve();
+					$scope.storedSearch = ss;
+					ObservationSearchService.storedSearch = ss;
+					
+				})
+				
+				
+			} else {
+				$scope.search = ObservationSearchService.getSearch();
+				if (_.isEmpty($scope.search)) {
+					$state.go('search')
+				};
+				
+				storedSearchDeferred.resolve();
+				
+			}
+			
+			
 			$scope.getCreatedAt = function(createdAt) {
 				var lang = "da";
 				if ($cookies.get('preferred_language') === "en") {
@@ -307,11 +352,9 @@ angular.module('svampeatlasApp')
 
 			}
 
-			$scope.search = ObservationSearchService.getSearch();
+			
 
-			if (_.isEmpty($scope.search)) {
-				$state.go('search')
-			};
+			
 			// if we came directly from the map view, remove images and forum from include
 			/*
 			$scope.search.include = $scope.search.include.slice(0, 5);
@@ -334,11 +377,13 @@ angular.module('svampeatlasApp')
 
 			});
 			*/
-
-			$scope.queryinclude = _.map($scope.search.include, function(n) {
-				return JSON.stringify(n);
-			});
-
+			storedSearchDeferred.promise.then(function(){
+				$scope.queryinclude = _.map($scope.search.include, function(n) {
+					return JSON.stringify(n);
+				});
+				
+			})
+			
 
 
 
@@ -452,43 +497,46 @@ angular.module('svampeatlasApp')
 
 				}
 
+storedSearchDeferred.promise.then(function(){
+	Observation.query(query, function(result, headers) {
 
-				Observation.query(query, function(result, headers) {
+		$scope.totalCount = headers('count');
 
-					$scope.totalCount = headers('count');
+		var numPages = Math.ceil(parseInt(headers('count')) / limit);
+		tableState.pagination.numberOfPages = numPages; //set the number of pages so the pagination can update
+		tableState.pagination.totalItemCount = parseInt(headers('count'));
 
-					var numPages = Math.ceil(parseInt(headers('count')) / limit);
-					tableState.pagination.numberOfPages = numPages; //set the number of pages so the pagination can update
-					tableState.pagination.totalItemCount = parseInt(headers('count'));
+		$scope.paginationPages = (tableState.pagination.numberOfPages < 5) ? tableState.pagination.numberOfPages : 5;
 
-					$scope.paginationPages = (tableState.pagination.numberOfPages < 5) ? tableState.pagination.numberOfPages : 5;
+		$scope.fromRecord = offset + 1;
 
-					$scope.fromRecord = offset + 1;
+		$scope.toRecord = (tableState.pagination.totalItemCount < (offset + limit)) ? tableState.pagination.totalItemCount : (offset + limit);
 
-					$scope.toRecord = (tableState.pagination.totalItemCount < (offset + limit)) ? tableState.pagination.totalItemCount : (offset + limit);
+		$scope.displayed = result;
+		$scope.isLoading = false;
+		var clipboard = new Clipboard('.clipboard-copy');
+		clipboard.on('success', function(e) {
+			e.clearSelection();
 
-					$scope.displayed = result;
-					$scope.isLoading = false;
-					var clipboard = new Clipboard('.clipboard-copy');
-					clipboard.on('success', function(e) {
-						e.clearSelection();
+			showTooltip(e.trigger, 'Copied!');
+		});
+		clipboard.on('error', function(e) {
 
-						showTooltip(e.trigger, 'Copied!');
-					});
-					clipboard.on('error', function(e) {
+			showTooltip(e.trigger, fallbackMessage(e.action));
+		});
+	}, function(err) {
+		console.log(err, status)
 
-						showTooltip(e.trigger, fallbackMessage(e.action));
-					});
-				}, function(err) {
-					console.log(err, status)
-
-					if (err.status === 504) {
-						ErrorHandlingService.handle504();
-					}
-					if (err.status === 500) {
-						ErrorHandlingService.handle500();
-					}
-				});
+		if (err.status === 504) {
+			ErrorHandlingService.handle504();
+		}
+		if (err.status === 500) {
+			ErrorHandlingService.handle500();
+		}
+	});
+	
+})
+				
 
 			};
 

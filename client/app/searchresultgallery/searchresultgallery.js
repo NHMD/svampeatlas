@@ -7,9 +7,10 @@ angular.module('svampeatlasApp')
 		  params: {
 		      locality_id: null,
 			  date: null,
-			  taxon_id: null
+			  taxon_id: null,
+			  searchid : {value: null, squash: true}
 		    },
-        url: '/search/result/gallery/:searchterm?',
+        url: '/search/:searchid/result/gallery/:searchterm?',
         templateUrl: 'app/searchresultgallery/searchresultgallery.html',
         controller: 'SearchGalleryCtrl'
       });

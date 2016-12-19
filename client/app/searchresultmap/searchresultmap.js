@@ -6,9 +6,10 @@ angular.module('svampeatlasApp')
       .state('search-map', {
 		  params: {
 		      
-			  taxon_id: null
+			  taxon_id: null,
+			  searchid : {value: null, squash: true}
 		    },
-        url: '/search/result/map',
+        url: '/search/:searchid/result/map',
         templateUrl: 'app/searchresultmap/searchresultmap.html',
         controller: 'SearchResultMapCtrl'
       });

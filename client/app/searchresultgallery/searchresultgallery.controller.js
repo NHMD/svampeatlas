@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchGalleryCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants','preloader',
-		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, preloader) {
+	.controller('SearchGalleryCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants','preloader','StoredSearch',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, preloader, StoredSearch) {
 
 			$scope.moment = moment;
 			$scope.Auth = Auth;
@@ -13,6 +13,8 @@ angular.module('svampeatlasApp')
 			$scope.ObservationFormService = ObservationFormService;
 			$scope.$stateParams = $stateParams;
 			$scope.mdMedia = $mdMedia;
+			$scope.baseUrl = appConstants.baseurl;
+			
 			$scope.displayed = [];
 			// Only use table state for correct pagination when a row update has occurred - otherwise delete state 
 
@@ -93,7 +95,50 @@ angular.module('svampeatlasApp')
 				};
 
 			}
+			
+			if(ObservationSearchService.storedSearch){
+				$state.transitionTo('search-gallery', {searchid: ObservationSearchService.storedSearch._id}, {
+				    location: true,
+				    inherit: true,
+				    relative: $state.$current,
+				    notify: false
+				})
+				$scope.storedSearch = ObservationSearchService.storedSearch;
+			}
+			var storedSearchDeferred = $q.defer();
+			if($stateParams.searchid){
+				console.log($stateParams.searchid)
+				
+				StoredSearch.get({id: $stateParams.searchid}).$promise.then(function(ss){
+					
+					
+					ObservationSearchService.reset();
+					var search = ObservationSearchService.getSearch();
+					var storedSearch  = JSON.parse(ss.search);
+					if (!search.where) {
+						search.where = {};
+					}
 
+					ObservationSearchService.convertSearchDateStrings(storedSearch)
+					ObservationSearchService.uiSearchToDBquery(storedSearch,search)
+					
+					storedSearchDeferred.resolve();
+					$scope.storedSearch = ss;
+					ObservationSearchService.storedSearch = ss;
+					
+				})
+				
+				
+			} else {
+				$scope.search = ObservationSearchService.getSearch();
+
+				if (_.isEmpty($scope.search)) {
+					$state.go('search')
+				};
+				
+				storedSearchDeferred.resolve();
+				
+			}
 
 			$scope.getDate = function(observationDate, observationDateAccuracy) {
 
@@ -113,15 +158,8 @@ angular.module('svampeatlasApp')
 			}
 
 			//$scope.search = ObservationSearchService.getSearch();
-			$scope.search = angular.copy(ObservationSearchService.getSearch());
-			if (_.isEmpty($scope.search)) {
-				$state.go('search')
-			};
-			$scope.search.include[5].required = true;
-
-			$scope.queryinclude = _.map($scope.search.include, function(n) {
-				return JSON.stringify(n);
-			});
+			
+			
 				
 				$scope.isLoading = true;
 
@@ -135,7 +173,7 @@ angular.module('svampeatlasApp')
 				];
 
 
-				var geometry = ObservationSearchService.getSearch().geometry;
+				
 				
 				$scope.limit = 24;
 				$scope.offset = 0;
@@ -154,7 +192,7 @@ angular.module('svampeatlasApp')
 						where: $scope.search.where || {},
 						include: JSON.stringify($scope.queryinclude)
 					};
-
+					var geometry = $scope.search.geometry;
 					if (geometry) {
 						query.geometry = geometry;
 					}
@@ -189,7 +227,16 @@ angular.module('svampeatlasApp')
 					});
 				}
 				
-				$scope.loadTiles($scope.limit, $scope.offset);
+				storedSearchDeferred.promise.then(function(){
+					$scope.search = angular.copy(ObservationSearchService.getSearch());
+					$scope.search.include[5].required = true;
+
+					$scope.queryinclude = _.map($scope.search.include, function(n) {
+						return JSON.stringify(n);
+					});
+					$scope.loadTiles($scope.limit, $scope.offset);
+					
+				})
 
 			
 

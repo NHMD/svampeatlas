@@ -225,7 +225,8 @@ angular.module('svampeatlasApp')
 			'Vis flere' : 'Show more',
 			'Galleri' : 'Gallery',
 			'Mit galleri' : 'My gallery',
-			'Vis inputfelter til Lat/Lon'  : 'Show input fields for Lat/Lng'
+			'Vis inputfelter til Lat/Lon'  : 'Show input fields for Lat/Lng',
+			'som er valideret eller ombestemt seneste' : 'validated or re-determined since'
 			
 		});
 

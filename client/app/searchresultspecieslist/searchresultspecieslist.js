@@ -7,9 +7,10 @@ angular.module('svampeatlasApp')
 		  params: {
 		      where: null,
 			  determinationViewWhere: null,
-			  geometry: null
+			  geometry: null,
+			  searchid : {value: null, squash: true}
 		    },
-        url: '/search/result/specieslist/:searchterm?',
+        url: '/search/:searchid/result/specieslist/:searchterm?',
         templateUrl: 'app/searchresultspecieslist/searchresultspecieslist.html',
         controller: 'SearchSpeciesListCtrl'
       });

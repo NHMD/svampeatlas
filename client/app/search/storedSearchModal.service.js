@@ -1,15 +1,16 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('StoredSearchModalService', function($mdDialog, appConstants, $mdMedia) {
+	.factory('StoredSearchModalService', function($mdDialog, appConstants, $mdMedia, Auth) {
 
 		return {
-			show: function(ev, search, storedSearches) {
+			show: function(ev, search, storedSearches, showStoredSearchFN) {
 				$mdDialog.show({
 					locals: {
 						search: search,
-						storedSearches : storedSearches
+						storedSearches : storedSearches,
+						showStoredSearchFN : showStoredSearchFN
 					},
-					controller: ['$scope',  '$mdDialog', '$translate','StoredSearch',
+					controller: ['$scope',  '$mdDialog', '$translate','StoredSearch', 
 						function($scope,  $mdDialog, $translate, StoredSearch) {
 							$scope.$translate = $translate;
 							$scope.storedSearches = storedSearches;
@@ -30,7 +31,9 @@ angular.module('svampeatlasApp')
 										search: JSON.stringify(search),
 										name: $scope.name
 									}).$promise.then(function(res){
+										res.User = Auth.getCurrentUser();
 										storedSearches.push(res)
+										showStoredSearchFN(res)
 										$mdDialog.hide()
 									}).catch(function(err){
 										alert(err)
@@ -40,6 +43,9 @@ angular.module('svampeatlasApp')
 						id: that.selectedSearch
 					}, {search: JSON.stringify(search)}).$promise.then(function(res){
 										$mdDialog.hide()
+							res.User = Auth.getCurrentUser();
+							showStoredSearchFN(res)
+						
 									}).catch(function(err){
 										alert(err)
 									})

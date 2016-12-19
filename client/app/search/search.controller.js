@@ -43,7 +43,7 @@ angular.module('svampeatlasApp')
   							$scope.observationSearch.where = {};
   						}
   						$scope.search= JSON.parse(ss.search);
-  						convertSearchDateStrings($scope.search)
+  						ObservationSearchService.convertSearchDateStrings($scope.search)
   						$scope.search.selectedHigherTaxa = $scope.search.selectedHigherTaxa || [];
   						$scope.search.selectedLocalities = $scope.search.selectedLocalities || [];
   						$scope.search.associatedOrganism = $scope.search.associatedOrganism || [];
@@ -68,6 +68,11 @@ angular.module('svampeatlasApp')
 							
 							
   						} 
+						ObservationSearchService.uiSearchToDBquery($scope.search, $scope.observationSearch)
+						// flag that the search is stored to set the seacrh id as path param. This is postponed 100 millisec so it is not deleted by the watch on $scope.search
+						$timeout(function(){
+							ObservationSearchService.storedSearch = search;
+						}, 100)
 						
   					})
 	
@@ -84,34 +89,7 @@ angular.module('svampeatlasApp')
 		  if($stateParams.searchid){
 		  	$scope.showStoredSearch({_id: $stateParams.searchid})
 		  }
-			function convertSearchDateStrings(search){
-				
-				if(search.fromDate && (!search.dateInterVals || !search.dateInterVals.fromDate)){
-					search.fromDate = new Date(search.fromDate)
-				} 
-				if(search.toDate){
-					search.toDate = new Date(search.toDate)
-				}
-				if(search.addedFromDate && (!search.dateInterVals || !search.dateInterVals.addedFromDate)){
-					search.addedFromDate = new Date(search.addedFromDate)
-				}
-				if(search.addedToDate){
-					search.addedToDate = new Date(search.addedToDate)
-				}
-				if(search.forumMaxAge && (!search.dateInterVals || !search.dateInterVals.forumMaxAge)){
-					search.forumMaxAge = new Date(search.forumMaxAge)
-				}
-				if(search.imageMaxAge  && (!search.dateInterVals || !search.dateInterVals.imageMaxAge)){
-					search.imageMaxAge = new Date(search.imageMaxAge)
-				}
-				
-				// if we have date intervals like 'last three days' set that according to current date
-				_.each(search.dateInterVals, function(v, k){
-					$scope.setDate(v,k)
-				})
-				
-	
-			}
+
 
 		
 			
@@ -157,13 +135,7 @@ angular.module('svampeatlasApp')
 				if(ObservationSearchService.getSearch().wasInitiatedOutsideSearchForm)	{
 					$scope.resetForm();
 				}
-				$scope.setDate = function(days, model){
-					if(!$scope.search.dateInterVals){
-						$scope.search.dateInterVals = {}
-					};
-					$scope.search[model] = moment().startOf('day').subtract(days, 'days').toDate() ;
-					$scope.search.dateInterVals[model] = days;
-				}
+	
 				/**
 				 * Build handler to open/close a SideNav; when animation finishes
 				 * report completion in console
@@ -501,7 +473,7 @@ angular.module('svampeatlasApp')
 				dk: 'nedbryder på træ',
 				key: 'saprobe_on_wood'
 			}]
-			$scope.strategies = ['mycorrhizal', 'lichenized', 'parasite', 'saprobe', 'on_lichens', 'on_wood']
+			$scope.strategies =  ObservationSearchService.strategies; //['mycorrhizal', 'lichenized', 'parasite', 'saprobe', 'on_lichens', 'on_wood']
 			$scope.search.selectedHigherTaxa = $scope.search.selectedHigherTaxa || [];
 			$scope.search.selectedLocalities = $scope.search.selectedLocalities || [];
 			$scope.search.associatedOrganism = $scope.search.associatedOrganism || [];
@@ -540,361 +512,9 @@ angular.module('svampeatlasApp')
 			*/
 			//observationSearch.where.observationDate.$between[0]
 			$scope.$watch('search', function(newVal, oldVal) {
-
-
-				if (newVal.livsstrategi) {
-
-					_.each($scope.strategies, function(n) {
-						delete $scope.search.include[0].where[n]
-					})
-
-					switch (newVal.livsstrategi) {
-						case "mycorrhizal":
-							$scope.search.include[0].where.mycorrhizal = 1;
-							break;
-						case "lichenized":
-							$scope.search.include[0].where.lichenized = 1;
-							break;
-						case "not_lichenized":
-							$scope.search.include[0].where.lichenized = 0;
-							break;
-						case "parasite_on_lichens":
-							$scope.search.include[0].where.parasite = 1;
-							$scope.search.include[0].where.on_lichens = 1;
-							break;
-						case "saprobe_on_wood":
-							$scope.search.include[0].where.saprobe = 1;
-							$scope.search.include[0].where.on_wood = 1;
-							break;
-
-
-					}
-
-				}
-
-				if ($scope.search.selectedVegetationType && $scope.search.selectedVegetationType.length > 0) {
-					$scope.observationSearch.where.vegetationtype_id = { $in: $scope.search.selectedVegetationType};
-				} else {
-					delete $scope.observationSearch.where.vegetationtype_id;
-				}
-
-				if ($scope.search.selectedSubstrate && $scope.search.selectedSubstrate.length > 0) {
-					$scope.observationSearch.where.substrate_id = { $in: $scope.search.selectedSubstrate};
-				} else {
-					delete $scope.observationSearch.where.substrate_id;
-				}
-				
-				if ($scope.search.selectedDataSet && $scope.search.selectedDataSet.length > 0) {
-					$scope.observationSearch.where.dataSource = { $in: $scope.search.selectedDataSet};
-					$scope.observationSearch.include[2].required = false;
-					
-				} else {
-					delete $scope.observationSearch.where.dataSource;
-				}
-
-
-
-
-
-
-				if ($scope.search.onlyForeign) {
-					$scope.search.include[2].required = false;
-					$scope.observationSearch.where.locality_id = {
-						$eq: null
-					};
-				} else {
-					delete $scope.observationSearch.where.locality_id;
-					$scope.search.include[2].required = ($scope.search.geometry || ($scope.search.selectedDataSet && $scope.search.selectedDataSet.length ) || $scope.search.databasenumber) ? false : !$scope.search.includeForeign;
-				}
-
-
-
-				if ($scope.search.selectedHigherTaxa.length > 0) {
-					$scope.search.include[0].where.$or = _.map($scope.search.selectedHigherTaxa, function(tx) {
-
-						// its a taxon resource
-						var path = (tx.acceptedTaxon === null) ? tx.Path : tx.acceptedTaxon.Path;
-						return {
-							Taxon_path: {
-								like: path + "%"
-							}
-						}
-
-					})
-				} else {
-					delete $scope.search.include[0].where.$or;
-				}
-
-
-				if ($scope.search.selectedLocalities.length > 0) {
-					$scope.search.include[2].where.$or = _.map($scope.search.selectedLocalities, function(loc) {
-						return (loc.name && loc._id) ? {
-							_id: loc._id
-						} : {
-							name: {
-								like: loc + "%"
-							}
-						}
-					})
-				} else {
-					delete $scope.search.include[2].where.$or;
-				}
-
-				/*
-				if ($scope.search.PrimaryUser.length > 0) {
-					$scope.observationSearch.where.primaryuser_id = { $in: _.map($scope.search.PrimaryUser, function(u){ return u._id})} 
-				} else {
-					delete $scope.observationSearch.where.primaryuser_id;
-				
-				}
-				*/
-
-				if ($scope.search.PrimaryUser.length > 0) {
-
-					$scope.search.include[1].where = {
-						_id: {
-							$in: _.map($scope.search.PrimaryUser, function(u) {
-								return u._id
-							})
-						} //$scope.search.PrimaryUser[0]._id
-					}
-					$scope.search.include[1].required = true;
-
-				} else {
-
-					$scope.search.include[1].where = {}
-					$scope.search.include[1].required = false;
-				}
-
-
-				if ($scope.search.collectors.length > 0) {
-					if ($scope.search.collectors[0]._id !== undefined) {
-						$scope.search.include[4].where = {
-							user_id: {
-								$in: _.map($scope.search.collectors, function(u) {
-									return u._id
-								})
-							} //$scope.search.collectors[0]._id
-						}
-
-						$scope.search.include[4].required = true;
-					} else {
-						$scope.observationSearch.where.verbatimLeg = {
-							like: $scope.search.collectors[0] + "%"
-						}
-					}
-
-				} else {
-					$scope.search.include[4].where = {};
-					$scope.search.include[4].required = false;
-					delete $scope.observationSearch.where.verbatimLeg;
-				}
-
-
-				if ($scope.search.determiner.length > 0) {
-
-					$scope.search.include[0].where.Determination_user_id = {
-							$in: _.map($scope.search.determiner, function(u) {
-								return u._id
-							})
-						} //$scope.search.determiner[0]._id
-
-
-				} else {
-					delete $scope.search.include[0].where.Determination_user_id;
-
-				}
-
-
-
-
-				/*
-				if ($scope.search.include[0].where.Taxon_redlist_status === "ALL") {
-					$scope.search.include[0].where.Taxon_redlist_status = ['RE', 'CR', 'EN', 'VU', 'NT']
-				}
-				*/
-				// clean empty strings from where clauses
-				for (var i = 0; i < $scope.search.include.length; i++) {
-					_.each($scope.search.include[i].where, function(val, key) {
-						if (val === "") {
-							delete $scope.search.include[i].where[key];
-						}
-					})
-				}
-
-
-
-
-				$scope.observationSearch.include = $scope.search.include;
-
-
-				if ($scope.search.associatedOrganism.length > 0) {
-					$scope.observationSearch.where.primaryassociatedorganism_id = {
-						$in: _.map($scope.search.associatedOrganism, function(org) {
-							return org._id
-						})
-					}
-
-
-				} else {
-					delete $scope.observationSearch.where.primaryassociatedorganism_id;
-				}
-
-				if ($scope.search.forumMaxAge !== undefined) {
-					$scope.search.onlyWithForum = true;
-					var formattedDate = $filter('date')($scope.search.forumMaxAge, "yyyy-MM-dd", '+0200');
-					$scope.observationSearch.include[6].where.createdAt = {
-							$gte: formattedDate
-						}
-					
-
-				} else {
-					delete $scope.observationSearch.include[6].where.createdAt;
-				}
-				
-				if($scope.search.forumComment){
-					$scope.observationSearch.include[6].where.content = {like: "%"+$scope.search.forumComment+"%"}
-					$scope.search.onlyWithForum = true;
-				} else {
-					delete $scope.observationSearch.include[6].where.content;
-				}
-				
-				
-
-				if ($scope.search.onlyWithForum) {
-					$scope.observationSearch.include[6].required = true;
-				} else {
-					$scope.observationSearch.include[6].required = false;
-				}
-
-				if ($scope.search.imageMaxAge !== undefined) {
-					$scope.search.onlyWithImages = true;
-					var formattedDate = $filter('date')($scope.search.imageMaxAge, "yyyy-MM-dd", '+0200');
-					$scope.observationSearch.include[5].where.createdAt = {
-							$gte: formattedDate
-						}
-					
-
-				} else {
-					delete $scope.observationSearch.include[5].where.createdAt;
-				}
-
-				if ($scope.search.onlyWithImages) {
-					$scope.observationSearch.include[5].required = true;
-				} else {
-					$scope.observationSearch.include[5].required = false;
-				}
-
-				if ($scope.search.onlyMyObservations) {
-					$scope.observationSearch.where.primaryuser_id = Auth.getCurrentUser()._id
-				}
-
-				if ($scope.search.notMyObservations) {
-					$scope.observationSearch.where.primaryuser_id = {
-						$ne: Auth.getCurrentUser()._id
-					}
-				}
-				if (!$scope.search.onlyMyObservations && !$scope.search.notMyObservations) {
-					delete $scope.observationSearch.where.primaryuser_id;
-				}
-
-				if ($scope.search.databasenumber) {
-					
-					var splitted = $scope.search.databasenumber.split("-");
-					var dbnr = (splitted.length > 0) ? splitted[splitted.length -1] : $scope.search.databasenumber;
-					$scope.observationSearch.where._id = dbnr;
-					$scope.observationSearch.include[2].required = false;
-					delete $scope.observationSearch.include[0].where.Determination_validation;
-
-				} else {
-					delete $scope.observationSearch.where._id;
-					$scope.observationSearch.include[0].where.Determination_validation = $scope.search.include[0].where.Determination_validation;
-				}
-				if ($scope.search.fieldnumber) {
-					$scope.observationSearch.where.fieldnumber = {
-						$like: "%" + $scope.search.fieldnumber + "%"
-					};
-				} else {
-					delete $scope.observationSearch.where.fieldnumber;
-				}
-				if ($scope.search.fromDate && $scope.search.toDate) {
-					$scope.observationSearch.where.observationDate = {
-
-						$between: [$filter('date')($scope.search.fromDate, "yyyy-MM-dd", '+0200'), $filter('date')($scope.search.toDate, "yyyy-MM-dd", '+0200')]
-					}
-				} else if ($scope.search.fromDate) {
-					var formattedDate = $filter('date')($scope.search.fromDate, "yyyy-MM-dd", '+0200');
-					$scope.observationSearch.where.observationDate = ($scope.search.exactDate) ? formattedDate : {
-						$gte: formattedDate
-
-					};
-
-				} else if ($scope.search.toDate) {
-					$scope.observationSearch.where.observationDate = {
-						$lte: $filter('date')($scope.search.toDate, "yyyy-MM-dd", '+0200')
-					}
-				}
-				
-				if ($scope.search.addedFromDate && $scope.search.addedToDate) {
-					$scope.observationSearch.where.createdAt = {
-
-						$between: [$filter('date')($scope.search.addedFromDate, "yyyy-MM-dd", '+0200'), $filter('date')($scope.search.addedToDate, "yyyy-MM-dd", '+0200')]
-					}
-				} else if ($scope.search.addedFromDate) {
-					var formattedDate = $filter('date')($scope.search.addedFromDate, "yyyy-MM-dd", '+0200');
-					$scope.observationSearch.where.createdAt = ($scope.search.addedExactDate) ? formattedDate : {
-						$gte: formattedDate
-
-					};
-
-				} else if ($scope.search.addedToDate) {
-					$scope.observationSearch.where.createdAt = {
-						$lte: $filter('date')($scope.search.addedToDate, "yyyy-MM-dd", '+0200')
-					}
-				}
-				
-				
-				if ($scope.search.geometry) {
-					$scope.observationSearch.geometry = $scope.search.geometry;
-				} else {
-					delete $scope.observationSearch.geometry;
-				}
-					/*
-				if ($scope.search.municipalityid) {
-					$scope.observationSearch.municipalityid = $scope.search.municipalityid;
-				} else {
-					delete $scope.observationSearch.municipalityid;
-				}
-				*/
-				if ($scope.search.activeThreadsOnly) {
-					$scope.observationSearch.activeThreadsOnly = $scope.search.activeThreadsOnly;
-				} else {
-					delete $scope.observationSearch.activeThreadsOnly;
-				}
-
-				if ($scope.search.selectedMonths.length > 0) {
-					$scope.observationSearch.selectedMonths = $scope.search.selectedMonths;
-				} else {
-					delete $scope.observationSearch.selectedMonths
-				}
-				
-				if ($scope.search.minAccuracy && $scope.search.maxAccuracy) {
-					$scope.observationSearch.where.accuracy = {
-
-						$between: [$scope.search.minAccuracy, $scope.search.maxAccuracy]
-					}
-				} else if ($scope.search.minAccuracy) {
-					
-					$scope.observationSearch.where.accuracy =  {
-						$gte: $scope.search.minAccuracy
-
-					};
-
-				} else if ($scope.search.maxAccuracy) {
-					$scope.observationSearch.where.accuracy = {
-						$lte: $scope.search.maxAccuracy
-					}
-				}
+				 // if there is a search id delete it (will be set after 100 millisec when a stored search is selected or created)
+				delete ObservationSearchService.storedSearch;
+				ObservationSearchService.uiSearchToDBquery(newVal, $scope.observationSearch)
 
 			}, true)
 		}

@@ -11,8 +11,8 @@
 			 <md-button id="position-button" class="md-fab md-warn md-fab-bottom-right" aria-label="Brug position" ng-click="useLocation()" >
 			 		                  <ng-md-icon icon="gps_fixed"></ng-md-icon>
 			 		              </md-button>
-		 <md-subheader class="md-no-sticky" ng-if="selectedLocality.length === 1 || (precision && !foreignLocality )">{{selectedLocality[0].name}} <span ng-if="precision">{{'Præcision' | translate}}: {{precision}} m</span></md-subheader>
-	   	 <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}} <span ng-if="precision">{{'Præcision' | translate}}: {{precision}} m</span></md-subheader>
+		 <md-subheader class="md-no-sticky" ng-if="selectedLocality.length === 1 || (ctrl.precision && !foreignLocality )">{{selectedLocality[0].name}} <span ng-if="ctrl.precision">{{'Præcision' | translate}}: {{ctrl.precision}} m</span></md-subheader>
+	   	 <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}} <span ng-if="ctrl.precision">{{'Præcision' | translate}}: {{ctrl.precision}} m</span></md-subheader>
 	   	 
 		   	 <leaflet id="observationformmap" width="100%" height="400" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers"  controls="mapsettings.controls" layers="mapsettings.layers"> </leaflet>
 	 		 <md-subheader class="md-no-sticky" ng-if="geoLocationStatusMessage" ng-bind-html="geoLocationStatusMessage"></md-subheader>

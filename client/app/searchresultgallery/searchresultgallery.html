@@ -5,7 +5,8 @@
 		   
    
 <md-content flex md-scroll-y layout-padding ng-cloak>
-
+		 	<span ng-if="storedSearch && mdMedia('xs')">{{'Aktuel søgning:' | translate}} </span>
+		   <h4 ng-if="storedSearch"><span ng-if="mdMedia('gt-xs')">{{'Aktuel søgning:' | translate}}</span> {{storedSearch.name}} <span ng-if="Auth.getCurrentUser()._id !== storedSearch.User._id"> - {{'oprettet af' | translate}} {{storedSearch.User.name}}</span><sharing mail-subject="'Søgeresultat fra Danmarks Svampeatlas: '+storedSearch.name " mail-body="baseUrl+'/search/'+storedSearch._id+'/result/gallery/'" sharing-uri="baseUrl+'/search/'+storedSearch._id+'/result/gallery/'"> </sharing></h4>
 	 <md-grid-list
 	         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
 	        md-row-height="1:1"  md-row-height-gt-sm="3:2"
