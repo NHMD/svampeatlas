@@ -22,6 +22,8 @@ var moment = require('moment');
 
 var PDFdocument = require('pdfkit');
 var request = require("request");
+var requestPromise = require("request-promise");
+
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -1301,11 +1303,45 @@ doc
 	.moveDown(0.5)	
 doc
 	
-	.text("http://svampe.databasen.org/observations/"+obs._id,  -300, -235)
+	.text("http://svampe.databasen.org/observations/"+obs._id,  -480, -235)
 
 
-doc.rotate(180);	
+	
 
+requestPromise({
+    url: 'https://maps.googleapis.com/maps/api/staticmap?center='+obs.decimalLatitude+','+obs.decimalLongitude+'&zoom=10&size=415x125&maptype=roadmap&markers='+obs.decimalLatitude+','+obs.decimalLongitude+"&key="+config.google.maps.apikey,
+    // Prevents Request from converting response to string
+    encoding: null
+
+})
+.then(function(body){
+	//console.log(response);
+	doc.rotate(180);
+    doc.image(body, 70, 90, {width: 415})
+	
+return	requestPromise({
+	    url: 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://svampe.databasen.org/observations/'+obs._id,
+	    // Prevents Request from converting response to string
+	    encoding: null
+
+	})
+})
+.then(function(body){
+	doc.rotate(180);
+    doc.image(body, -120, -280, {width: 50})
+	
+	doc.end();
+})
+.catch(function(err){
+	console.log(err)
+	doc.end();
+})
+
+
+
+
+
+/*
 request({
     url: 'https://maps.googleapis.com/maps/api/staticmap?center='+obs.decimalLatitude+','+obs.decimalLongitude+'&zoom=10&size=415x125&maptype=roadmap&markers='+obs.decimalLatitude+','+obs.decimalLongitude+"&key=ABQIAAAAmvU52RJtOyI0zz81Y8BBoxTKSL5fUtutPPWazSqe5GsLCeoYoBTi9Ghh98xADiRWIM1h2ZY1Koe6Cg",
     // Prevents Request from converting response to string
@@ -1320,8 +1356,9 @@ request({
     doc.image(body, 70, 90, {width: 415})
 	
 	doc.end();
-})
+}) */
 
+//
 
 
 

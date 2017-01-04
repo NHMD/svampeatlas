@@ -98,7 +98,7 @@ angular.module('svampeatlasApp')
 				}
 			}
 			
-			if(ObservationSearchService.storedSearch && ObservationSearchService.storedSearch._id){
+			if(ObservationSearchService.storedSearch && ObservationSearchService.storedSearch._id && !$stateParams.searchterm){
 				$state.transitionTo('search-specieslist', {searchid: ObservationSearchService.storedSearch._id}, {
 				    location: true,
 				    inherit: true,

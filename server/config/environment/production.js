@@ -23,6 +23,7 @@ module.exports = {
 		ApplicationIdentifier: 'Svampeatlas',
 		Password: 'VAtEpVdLDFZd%HdaumA4aWsSDaP+tM'
 	},
+	// 'Basic ZGFuaXNoX215Y29sb2dpY2FsX3NvY2lldHk6MUJ0T3JIWG1ZUUdRazYzVA=='
 	gbif: {
 		UserName: 'danish_mycological_society',
 		Password: '1BtOrHXmYQGQk63T'

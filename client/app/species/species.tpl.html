@@ -1,20 +1,25 @@
 
 <md-grid-list
         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
-        md-row-height="1:1"
+       md-row-height="1:1"  md-row-height-gt-sm="3:2"
         md-gutter="12px" md-gutter-gt-sm="8px" flex>
 
-<md-grid-tile ng-repeat="tile in tiles "
+	 <md-grid-tile ng-repeat="tile in tiles"
                  
-                  md-colspan-sm="1"
-                  ng-class="tile.background" >
-		<div class="progress-container" flex layout-fill layout="center center">
-			<div flex="33"></div>
-			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ng-show="loaded[tile.Images[0].name] !== true"></md-progress-circular> 
-			<div flex="33"></div>
-		</div>
-      <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name, tile)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> 
-      <md-grid-tile-footer class="img-footer"><em>{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
+	                   md-colspan-sm="1"
+					   ng-if="!tile.imageLoadError"
+					   ng-style="getBackgroundStyle(tile)"
+					   ng-click="ObservationModalService.show($event, tile)"
+					   
+					   >
+	 		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.imageLoadSuccess">
+	 			<div flex="33"></div>
+	 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
+	 			<div flex="33"></div>
+	 		</div>
+      <md-grid-tile-footer class="img-footer footer-full-width" >
+	  <span ng-if="tile.Images.length > 1" class="footer-img-count">{{tile.Images.length}} {{'billeder' | translate}}</span>
+	  <em>{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
   <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{tile.Locality.name}}<br>
   {{tile.PrimaryUser.name}}</span>
   </md-grid-tile-footer>

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth) {
+	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth, preloader) {
 
 		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 		$scope.Auth = Auth;
@@ -14,7 +14,17 @@ angular.module('svampeatlasApp')
 		}
 
 		$scope.ObservationModalService = ObservationModalService;
-
+		
+		$scope.getBackgroundStyle = function(tile){
+			
+			var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
+			
+	  
+			
+		    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
+		}
+		
+		
 		var capitalizeFirstLetter = function(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		}
@@ -120,6 +130,13 @@ angular.module('svampeatlasApp')
 				)
 
 			}, function(result, headers) {
+				
+				preloader.preloadImages(result).then(
+					function(missingImages){
+						$scope.isLoading = false;
+						// returns an array of _id´s of failed images. May ne posted to server to flag missing images
+					}
+				)
 				$scope.tileCount = headers('count');
 				$scope.tileOffset = $scope.tileOffset + $scope.tileLimit;
 				$scope.tiles = $scope.tiles.concat(result);
@@ -129,18 +146,7 @@ angular.module('svampeatlasApp')
 
 
 
-		$scope.loaded = {};
-		$scope.failed = {};
-		$scope.imageHasLoaded = function(img) {
-			$scope.loaded[img] = true;
-
-		};
-		$scope.imageHasFailed = function(img, obs) {
-			$scope.failed[img] = true;
-			_.remove($scope.tiles, function(currentObject) {
-			    return currentObject._id === obs._id;
-			});
-		};
+	
 		$scope.getImageUrl = function(tile) {
 
 			return appConstants.imageurl + tile.Images[0].name + ".JPG";

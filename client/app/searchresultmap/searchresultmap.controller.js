@@ -26,7 +26,7 @@ angular.module('svampeatlasApp')
 						},
 						OpenTopoMap: {
 							name: 'OpenTopoMap',
-							url: 'http://tile.opentopomap.org/{z}/{x}/{y}.png',
+							url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
 							type: 'xyz',
 							layerOptions: {
 
@@ -112,7 +112,7 @@ angular.module('svampeatlasApp')
 							};
 			}
 			
-			if(ObservationSearchService.storedSearch && ObservationSearchService.storedSearch._id){
+			if(ObservationSearchService.storedSearch && ObservationSearchService.storedSearch._id && !$stateParams.searchterm){
 				$state.transitionTo('search-map', {searchid: ObservationSearchService.storedSearch._id}, {
 				    location: true,
 				    inherit: true,

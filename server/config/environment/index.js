@@ -53,6 +53,9 @@ var all = {
 	api: {
 		browserkey:'AIzaSyBU_64f_OX0zKQTYDegHXUi6FlCX7CtdYQ',
 		serverkey: 'AIzaSyCP19OgflFb39o1JagLMRgpy1b9dGUt9qM'
+	},
+	maps : {
+		apikey: 'ABQIAAAAmvU52RJtOyI0zz81Y8BBoxTKSL5fUtutPPWazSqe5GsLCeoYoBTi9Ghh98xADiRWIM1h2ZY1Koe6Cg'
 	}
   },
   geonames: 'svampeatlas',
