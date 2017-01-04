@@ -26,3 +26,13 @@ md-expansion-panel-header.md-stick .md-expansion-panel-header-container {
     }
 
 }
+
+md-grid-tile-footer.footer-full-width > figcaption {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 100%;
+}
+
+span.footer-img-count {
+	float: right;
+}

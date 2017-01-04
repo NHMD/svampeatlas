@@ -406,8 +406,9 @@ angular.module('svampeatlasApp', [
 
 	});
 
-	$rootScope.$on('$stateChangeSuccess', function(event, next) {
+	$rootScope.$on('$stateChangeSuccess', function(event, next, nextParams, prev, prevParams) {
 		$rootScope.title = next.title;
+		$rootScope.previousState = prev;
 		//	$rootScope.ogDescription = next.ogDescription;
 		//	$rootScope.ogUrl = next.url;
 

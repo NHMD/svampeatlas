@@ -284,7 +284,7 @@ angular.module('svampeatlasApp')
 			} ;
 			
 			var storedSearchDeferred = $q.defer();
-			if(ObservationSearchService.storedSearch){
+			if(ObservationSearchService.storedSearch && !$stateParams.searchterm){
 				$state.transitionTo('search-list', {searchid: ObservationSearchService.storedSearch._id}, {
 				    location: true,
 				    inherit: true,

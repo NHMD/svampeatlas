@@ -1,10 +1,21 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.factory('ObservationSearchService', function(Taxon, $filter, Auth) {
+	.factory('ObservationSearchService', function(Taxon, $filter, Auth, $rootScope, $stateParams) {
+	
+		$rootScope.$on('$stateChangeStart', function(event, next, nextParams, prev, prevParams) {
+			
+			
+			if(prev.name.indexOf('search') < 0 || $stateParams.searchterm || ($stateParams.locality_id && $stateParams.date) || $stateParams.taxon_id) {
+				delete instance.storedSearch;
+			}
+			//	$rootScope.ogDescription = next.ogDescription;
+			//	$rootScope.ogUrl = next.url;
 
-
-		return {
+		});
+		
+		
+		var instance = {
 
 
 			search: {
@@ -579,8 +590,10 @@ angular.module('svampeatlasApp')
 
 			}
 
-		}
-
+		};
+		
+		
+		return instance;
 
 
 	});

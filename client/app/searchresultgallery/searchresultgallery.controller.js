@@ -96,7 +96,7 @@ angular.module('svampeatlasApp')
 
 			}
 			
-			if(ObservationSearchService.storedSearch){
+			if(ObservationSearchService.storedSearch && !$stateParams.searchterm){
 				$state.transitionTo('search-gallery', {searchid: ObservationSearchService.storedSearch._id}, {
 				    location: true,
 				    inherit: true,
@@ -208,7 +208,6 @@ angular.module('svampeatlasApp')
 							function(missingImages){
 								$scope.isLoading = false;
 								// returns an array of _id´s of failed images. May ne posted to server to flag missing images
-								console.log(missingImages)
 							}
 						)
 						
