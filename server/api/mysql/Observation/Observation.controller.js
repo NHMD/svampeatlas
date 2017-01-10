@@ -556,7 +556,13 @@ exports.show = function(req, res) {
 					model: models.User,
 					as: 'Validator',
 					attributes: ['_id', 'Initialer', 'name']
-				}]
+				},
+				{
+									model: models.DeterminationVote,
+									as: 'Votes'
+								},
+			
+			]
 
 			},
 

@@ -78,7 +78,7 @@
 	</tr>
 	</thead>
 	<tbody ng-show="displayed.length > 0">
-	<tr ng-repeat="row in displayed" id="{{row._id}}" st-select-row="row">
+	<tr ng-repeat="row in displayed" id="{{row._id}}" st-select-row="row" >
 		<td data-title=""><ng-md-icon icon="more_horiz" ng-click="ObservationModalService.show($event, row)"></ng-md-icon> 
 			<ng-md-icon icon="edit" ng-if="currentUser._id === row.primaryuser_id" ng-click="ObservationFormService.show($event, row)"></ng-md-icon> </td>
 		<td data-title="Status"><md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">
@@ -96,7 +96,7 @@
 		<td ng-if="$stateParams.searchterm && ($stateParams.searchterm === 'mine' || $stateParams.searchterm === 'today' || $stateParams.searchterm === '3days')" data-title="{{'Indlagt' | translate}}">{{(moment(row.createdAt).isSame(moment(), 'day')) ? getCreatedAt(row.createdAt) : (row.createdAt | date : 'dd/MM/yyyy')}}</td>
 		<td data-title="{{'Dato' | translate}}" >{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>
 		
-		<td data-title="{{'Art' | translate}}"><a ng-href='/taxon/{{row.DeterminationView.Taxon_id}}'><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></a></td>
+		<td data-title="{{'Art' | translate}}"><a ng-click="$event.stopPropagation();" ng-href='/taxon/{{row.DeterminationView.Taxon_id}}'><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></a></td>
 		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk | capitalize}}</td>	
 		<td data-title="{{'Lokalitet' | translate}}"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
 		

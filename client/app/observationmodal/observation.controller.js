@@ -397,6 +397,23 @@ angular.module('svampeatlasApp')
 				}
 
 				$scope.forum = obs.Forum
+				
+				
+				// Check currentusers vote status on determinations:
+				
+				for(var i=0; i < obs.Determinations.length; i++){
+					
+					for(var j=0; j< obs.Determinations[i].Votes.length; j++){
+						if(obs.Determinations[i].Votes[j].user_id === $scope.User._id){
+							if(obs.Determinations[i].Votes[j].score > 0){
+								obs.Determinations[i].vote = "up"
+							} else if(obs.Determinations[i].Votes[j].score < 0){
+								obs.Determinations[i].vote = "down"
+							}
+							
+						}
+					}
+				}
 
 				$scope.mapsettings.paths.circle = {
 					type: "circle",
@@ -421,6 +438,8 @@ angular.module('svampeatlasApp')
 					lng: obs.decimalLongitude,
 					draggable: false
 				}
+				
+				
 				leafletData.getMap('observationdetailmap').then(function(map) {
 					if (obs.Locality) {
 
@@ -454,6 +473,32 @@ angular.module('svampeatlasApp')
 				$mdDialog.cancel();
 			};
 
-
+			$scope.vote = function($event, det, upOrDown){
+				
+				// if the vote is already there delete it (its another click in same direction to remove it)
+				
+				
+						
+				//$($event.target).closest('ng-md-icon').addClass("green-thumb");
+				Determination.addVote({
+						id: det._id
+					}, {
+						upOrDown: (det.vote === upOrDown) ? 'zero' : upOrDown
+					})
+					.$promise.then(function(res) {
+						if(det.vote === upOrDown){
+							delete det.vote;
+						} else {
+							det.vote = upOrDown;
+						}
+						det.score = res.newDeterminationScore
+					})
+					.catch(function(err) {
+						
+						ErrorHandlingService.handle500();
+					})
+				
+				
+			}
 		}
 	])
