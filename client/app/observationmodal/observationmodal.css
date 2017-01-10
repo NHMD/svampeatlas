@@ -62,3 +62,23 @@
    .row-updated {
 	   background-color: grey;
    }
+   
+   div.md-list-item-text > h3.primary-determination {
+	   font-weight: 500 !important;
+   }
+   md-list md-list-item > md-icon.green-check {
+   	color: #64DD17 ;
+   }
+   
+   h3.vote-count {
+	   margin-top: 0px;
+	    margin-bottom: 0px;
+   }
+   
+   ng-md-icon.green-thumb {
+   	color: #64DD17 ;
+   }
+   
+   ng-md-icon.red-thumb {
+   	color: #D50000 ;
+   }

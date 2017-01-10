@@ -16,6 +16,13 @@ angular.module('svampeatlasApp')
 					id: '@_id'
 				},
 				url: '/api/determinations/:id/validation'
+			},
+			'addVote': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/determinations/:id/votes'
 			}
 			
 		});
