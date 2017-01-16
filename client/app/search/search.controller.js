@@ -9,6 +9,9 @@ angular.module('svampeatlasApp')
 			$scope.$cookies = $cookies;
 			$scope.mdMedia = $mdMedia;
 			$scope.$translate = $translate;
+			$scope.setDate = function(days, model) {
+				ObservationSearchService.setDate(days, model, $scope.search);
+			};
 			$scope.toggleSearchMapSideNav = buildToggler('searchmapsidenav');
 			
 			SearchService.getSubstrate().then(function(substrates){
