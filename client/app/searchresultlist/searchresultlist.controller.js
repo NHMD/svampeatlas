@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants', 'StoredSearch',
-		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, StoredSearch) {
+	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService',  '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants', 'StoredSearch',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService,  $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, StoredSearch) {
 
 			$scope.moment = moment;
 			$scope.Auth = Auth;
@@ -14,10 +14,7 @@ angular.module('svampeatlasApp')
 			$scope.$stateParams = $stateParams;
 			
 			$scope.baseUrl =appConstants.baseurl;
-			// Only use table state for correct pagination when a row update has occurred - otherwise delete state 
-			if (!ObservationStateService.updated){
-				localStorage.removeItem('search_result_list_table');
-			}
+	
 			
 			
 			$scope.csvSeparator = ",";
@@ -143,54 +140,7 @@ angular.module('svampeatlasApp')
 
 			
 
-			$scope.$on('dialogRemoved', function(ev, obs) {
 
-
-				//	$('#'+obs._id).addClass('row-updated');
-
-				if (ObservationStateService.updated) {
-					delete ObservationStateService.updated;
-					var singleObsSearch = ObservationSearchService.getNewSearch();
-					singleObsSearch.where = {
-						_id: obs._id
-					};
-					singleObsSearch.include[2].required = false;
-					var include = _.map(singleObsSearch.include, function(n) {
-						return JSON.stringify(n);
-					});
-
-					Observation.query({
-						where: {
-							_id: obs._id
-						},
-						include: JSON.stringify(include)
-					}, function(result, headers) {
-
-						var index = _.indexOf($scope.displayed, _.find($scope.displayed, {
-							_id: obs._id
-						}));
-
-
-
-						$scope.displayed[index] = result[0];
-						$scope.displayed[index].isSelected = true;
-
-						$timeout(function() {
-							$('md-content').animate({
-								scrollTop: $(".st-selected").offset().top - 100
-							}, 300);
-
-							$timeout(function() {
-								delete $scope.displayed[index].isSelected;
-							}, 3000)
-						}, 0)
-
-
-
-					})
-				} 
-
-			});
 
 
 
@@ -217,7 +167,37 @@ angular.module('svampeatlasApp')
 
 			$scope.$on('observation_updated', function(ev, obs) {
 
-				ObservationStateService.updated = true;
+				
+					
+					var singleObsSearch = ObservationSearchService.getNewSearch();
+					singleObsSearch.where = {
+						_id: obs._id
+					};
+					singleObsSearch.include[2].required = false;
+					var include = _.map(singleObsSearch.include, function(n) {
+						return JSON.stringify(n);
+					});
+
+					Observation.query({
+						where: {
+							_id: obs._id
+						},
+						include: JSON.stringify(include)
+					}, function(result, headers) {
+
+						var index = _.indexOf($scope.displayed, _.find($scope.displayed, {
+							_id: obs._id
+						}));
+
+
+
+						$scope.displayed[index] = result[0];
+						$scope.displayed[index].isSelected = true;
+
+
+
+					})
+				
 			});
 
 

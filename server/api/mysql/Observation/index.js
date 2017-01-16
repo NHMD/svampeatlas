@@ -31,6 +31,8 @@ router.get('/:id/capsule', controller.generateCapsule);
 
 router.post('/:id/determinations', auth.isAuthenticated(), determinationController.addDeterminationToObs); 
 
+router.put('/:id/primarydetermination', auth.hasRole('validator'), controller.updatePrimaryDetermination); 
+
 
 router.post('/:id/images', [upload.array('file'), auth.isAuthenticated(), auth.appendUser(), imageController.addImagesToObs]); 
 

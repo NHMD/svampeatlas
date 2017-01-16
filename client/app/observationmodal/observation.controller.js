@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope','$window', 'Auth', 'ErrorHandlingService', '$mdPanel','$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService','$cookies', 'ObservationImage', 'Taxon',
-		function($scope, $rootScope,$window, Auth, ErrorHandlingService,$mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon) {
 			var that = this;
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
@@ -18,45 +18,13 @@ angular.module('svampeatlasApp')
 			};
 			$scope.$translate = $translate;
 			$scope.$state = $state;
-			
-			$scope.openCapsule = function(id){
-				var win = window.open("/api/observations/" + id+"/capsule");
+
+			$scope.openCapsule = function(id) {
+				var win = window.open("/api/observations/" + id + "/capsule");
 				win.print();
 			}
-			
-			$scope.showDeterminationsPanel = function(evt) {
-			  var position = $mdPanel.newPanelPosition()
-			      .absolute()
-			      .center();
-				 
-			  var config = {
-			    attachTo: angular.element(document.body),
-			    controller: 'DeterminationPanelCtrl',
-				locals: {
-					obs: $scope.obs
-				},
-			    controllerAs: 'ctrl',
-			    disableParentScroll: true,
-			    templateUrl: 'app/observationmodal/determination-panel.tpl.html',
-			    hasBackdrop: true,
-			    panelClass: 'demo-dialog-example',
-			    position: position,
-			    trapFocus: true,
-			    zIndex: 150,
-			    clickOutsideToClose: true,
-			    escapeToClose: true,
-			    focusOnOpen: true,
-				animation:   $mdPanel.newPanelAnimation()
-				  .openFrom('#determinations-btn')
-				  .closeTo('#determinations-btn')
-				  .withAnimation($mdPanel.animation.SCALE)
-			  };
-			  
-			  
-			  
-			  $mdPanel.open(config);
-			};
-			
+
+
 			$scope.toggleHide = function(img, hide) {
 
 				img.hide = hide;
@@ -69,21 +37,21 @@ angular.module('svampeatlasApp')
 
 				})
 			}
-		
-			
-			
+
+
+
 			$scope.addToSpeciesPage = function(img) {
-				
+
 				var taxonImage = {
 					taxon_id: $scope.obs.PrimaryDetermination.Taxon.acceptedTaxon._id,
-					collectionNumber: "DMS-"+$scope.obs._id,
-					uri: appConstants.baseurl+"/uploads/"+img.name+".JPG",
-					thumburi: appConstants.baseurl+"/uploads/"+img.name+".JPG",
+					collectionNumber: "DMS-" + $scope.obs._id,
+					uri: appConstants.baseurl + "/uploads/" + img.name + ".JPG",
+					thumburi: appConstants.baseurl + "/uploads/" + img.name + ".JPG",
 					photographer: img.Photographer.name,
 					country: ($scope.obs.Locality) ? "Denmark" : $scope.obs.GeoNames.countryName
-					
+
 				}
-				
+
 				Taxon.addImage({
 					id: $scope.obs.PrimaryDetermination.Taxon.acceptedTaxon._id
 				}, taxonImage).$promise.then(function(image) {
@@ -92,19 +60,21 @@ angular.module('svampeatlasApp')
 					$state.go($state.$current, null, {
 						reload: true
 					})
-					
+
 
 				})
 
 			}
-			
-			
-			$scope.showUser= function(id){
+
+
+			$scope.showUser = function(id) {
 				$mdDialog.cancel();
-				$state.go('userstats', {userid: id});
+				$state.go('userstats', {
+					userid: id
+				});
 			}
 
-			
+
 			$scope.editRecord = function(asDuplicate) {
 				$mdDialog.hide($scope.obs).then(function(obs) {
 					ObservationFormService.show(null, obs, asDuplicate)
@@ -134,7 +104,7 @@ angular.module('svampeatlasApp')
 
 				//var displayedId = obs.PrimaryUser.Initialer + ((obs.observationDateAccuracy !== 'invalid') ? (obs.observationDate.split('-')[0]) : '') + '-' + obs._id;
 				var displayedId = 'DMS-' + obs._id;
-				
+
 				var confirm = $mdDialog.confirm()
 					.title($translate.instant('Vil du slette') + ' ' + displayedId + '?')
 					.textContent($translate.instant('Fundet og alle tilhørende data vil blive permanent slettet fra databasen.'))
@@ -171,6 +141,8 @@ angular.module('svampeatlasApp')
 			}
 
 			var sender = ($stateParams.observationid) ? 'ObservationPage' : 'ObservationModalService';
+
+
 			$scope.showDeterminationDialog = function($event, obs) {
 				DeterminationModalService.show($event, obs, sender);
 			}
@@ -189,7 +161,7 @@ angular.module('svampeatlasApp')
 					.$promise.then(function(comment) {
 						$scope.forum.push(comment);
 						delete that.newComment;
-						
+
 						that.sendingComment = false;
 
 
@@ -225,20 +197,20 @@ angular.module('svampeatlasApp')
 							url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
 							type: 'xyz',
 							layerOptions: {
-								
+
 								attribution: 'Tiles &copy; opentopomap.org'
 							}
 
 						},
 						mapbox_outdoors: {
 							name: 'Mapbox Outdoors',
-							url: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/256/{z}/{x}/{y}?access_token='+MapBox.getTicket(),
+							url: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/256/{z}/{x}/{y}?access_token=' + MapBox.getTicket(),
 							type: 'xyz'
 
 						},
 						mapbox_satelite: {
 							name: 'Mapbox Satelite',
-							url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token='+MapBox.getTicket(),
+							url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token=' + MapBox.getTicket(),
 							type: 'xyz'
 
 						},
@@ -376,18 +348,16 @@ angular.module('svampeatlasApp')
 
 
 			var obsid = ($stateParams.observationid) ? $stateParams.observationid : ObservationStateService.get()._id;
-			$scope.obs = Observation.get({
+
+
+
+
+			Observation.get({
 				id: obsid
-			});
+			}).$promise.then(initObservation);
 
-			$rootScope.$on('observation_updated', function(evt, obs) {
-				if (obs._id === $scope.obs._id) {
-					$state.reload();
-				}
-			});
-
-			$scope.obs.$promise.then(function(obs) {
-
+			function initObservation(obs) {
+				$scope.obs = obs;
 				$scope.userIsFinder = function(usr) {
 					var found = false;
 					for (var i = 0; i < $scope.obs.users.length; i++) {
@@ -397,20 +367,20 @@ angular.module('svampeatlasApp')
 				}
 
 				$scope.forum = obs.Forum
-				
-				
+
+
 				// Check currentusers vote status on determinations:
-				
-				for(var i=0; i < obs.Determinations.length; i++){
-					
-					for(var j=0; j< obs.Determinations[i].Votes.length; j++){
-						if(obs.Determinations[i].Votes[j].user_id === $scope.User._id){
-							if(obs.Determinations[i].Votes[j].score > 0){
+
+				for (var i = 0; i < obs.Determinations.length; i++) {
+
+					for (var j = 0; j < obs.Determinations[i].Votes.length; j++) {
+						if (obs.Determinations[i].Votes[j].user_id === $scope.User._id) {
+							if (obs.Determinations[i].Votes[j].score > 0) {
 								obs.Determinations[i].vote = "up"
-							} else if(obs.Determinations[i].Votes[j].score < 0){
+							} else if (obs.Determinations[i].Votes[j].score < 0) {
 								obs.Determinations[i].vote = "down"
 							}
-							
+
 						}
 					}
 				}
@@ -438,15 +408,15 @@ angular.module('svampeatlasApp')
 					lng: obs.decimalLongitude,
 					draggable: false
 				}
-				
-				
+
+
 				leafletData.getMap('observationdetailmap').then(function(map) {
 					if (obs.Locality) {
 
 						$scope.changeBaseLayer("topo_25")
 
 
-					} 
+					}
 					$timeout(function() {
 						map.invalidateSize();
 					});
@@ -454,7 +424,14 @@ angular.module('svampeatlasApp')
 
 				})
 
-			})
+			};
+			$rootScope.$on('observation_updated', function(evt, obs) {
+				if (obs._id === $scope.obs._id) {
+					$scope.obs = Observation.get({
+						id: obs._id
+					}).$promise.then(initObservation)
+				}
+			});
 
 			$scope.imageurl = appConstants.imageurl;
 			$scope.baseUrl = appConstants.baseurl;
@@ -473,12 +450,12 @@ angular.module('svampeatlasApp')
 				$mdDialog.cancel();
 			};
 
-			$scope.vote = function($event, det, upOrDown){
-				
+			$scope.vote = function($event, det, upOrDown) {
+
 				// if the vote is already there delete it (its another click in same direction to remove it)
-				
-				
-						
+
+
+
 				//$($event.target).closest('ng-md-icon').addClass("green-thumb");
 				Determination.addVote({
 						id: det._id
@@ -486,7 +463,7 @@ angular.module('svampeatlasApp')
 						upOrDown: (det.vote === upOrDown) ? 'zero' : upOrDown
 					})
 					.$promise.then(function(res) {
-						if(det.vote === upOrDown){
+						if (det.vote === upOrDown) {
 							delete det.vote;
 						} else {
 							det.vote = upOrDown;
@@ -494,11 +471,11 @@ angular.module('svampeatlasApp')
 						det.score = res.newDeterminationScore
 					})
 					.catch(function(err) {
-						
+
 						ErrorHandlingService.handle500();
 					})
-				
-				
+
+
 			}
 		}
 	])

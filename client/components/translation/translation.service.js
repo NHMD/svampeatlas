@@ -227,7 +227,24 @@ angular.module('svampeatlasApp')
 			'Mit galleri' : 'My gallery',
 			'Vis inputfelter til Lat/Lon'  : 'Show input fields for Lat/Lng',
 			'som er valideret eller ombestemt seneste' : 'validated or re-determined since',
-			'oprettet af' : 'created by'
+			'oprettet af' : 'created by',
+			'regn.' : 'Kingdom',
+			'phyl.' : 'Phylum',
+			'subphyl.' : 'Subphylum',
+			'class.' : 'Class',
+			'subclass.' : 'Subclass',
+			'ord.' : 'Order',
+			'fam.' : 'Family',
+			'gen.' : 'Genus',
+			'sp.' : 'Species',
+			'var.' : 'Variety',
+			'Det er helt sikkert denne' : 'It is certainly this',
+			'Det er sandsynligvis denne' : 'It is most likely this',
+			'Det er muligvis denne' : 'It may be this',
+			'Bestemmelser' : 'Determinations',
+			'Foreslå bestemmelse' : 'Propose determination',
+			'Hvor sikker er du?' : 'How certain are you?',
+			'Luk': 'Close'
 			
 		});
 

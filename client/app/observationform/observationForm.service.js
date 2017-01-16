@@ -19,9 +19,10 @@ angular.module('svampeatlasApp')
 						fullscreen: true,
 						onRemoving: function(element, removePromise){
 							ObservationStateService.reset();
+							/*
 							removePromise.then(function(){
 								$rootScope.$broadcast('dialogRemoved', row)
-							})
+							}) */
 						}
 					})
 

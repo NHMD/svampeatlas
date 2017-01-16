@@ -1,0 +1,96 @@
+		  <md-expansion-panel md-component-id="determinationsPanel" class="determination-panel">
+
+		    <md-expansion-panel-collapsed>
+		      <div class="md-title">{{'Kommentarer' | translate}} ({{forum.length}})</div>
+		      <div class="md-summary"></div>
+		      <md-expansion-panel-icon></md-expansion-panel-icon>
+		    </md-expansion-panel-collapsed>
+
+
+		    <md-expansion-panel-expanded>
+
+		      <md-expansion-panel-header ng-click="$panel.collapse()">
+		        <div class="md-title">{{'Kommentarer' | translate}} ({{forum.length}})</div>
+		         <div class="md-summary"></div>
+		        <md-expansion-panel-icon ></md-expansion-panel-icon>
+		      </md-expansion-panel-header>
+
+		      <md-expansion-panel-content>
+		        
+						   	     <md-list>
+		  		
+						   	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in forum">
+		   
+						  		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
+	   
+						   	         <div class="md-list-item-text">
+						  				 <div layout-gt-xs="row" flex>
+						   	           <h3><span ng-show="elm.user_id !== null">{{elm.User.name}}</span></h3>
+									   <span ng-if="$mdMedia('gt-xs')" layout-fill flex></span>
+						  			   <p >{{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</p>
+						  		   </div>
+						  			   <p>{{elm.content}}</p>
+ 	           
+          
+						   	         </div>
+ 	        
+			 
+						  			   <md-divider class="forum-divider" ng-if="!$last"></md-divider>                        
+						   	       </md-list-item>
+						 	       <md-list-item class="md-3-line md-long-text comment-field" ng-if="isLoggedIn()">
+		   
+								   <user-avatar class="useravatar md-avatar" user="User" ></user-avatar> 
+	   
+						 	         <div class="md-list-item-text">
+				
+											 <div layout="row" layout-align="center end"
+
+				flex>
+									   <form layout-fill>
+									   <md-input-container class="md-block">
+									             <label>{{'Skriv kommentar' | translate}}</label>
+									             <textarea ng-model="ctrl.newComment"  rows="5" md-select-on-focus ng-disabled="ctrl.sendingComment"></textarea>
+									           </md-input-container>
+					   
+										   </form>
+										   <md-button class="comment-submit" ng-show="ctrl.newComment" ng-click="postComment()" ng-disabled="ctrl.sendingComment">{{'Send' | translate}}</md-button>
+							   	        </div>
+	  				
+          
+						 	         </div>
+                
+						 	       </md-list-item>
+						   	     </md-list>
+	
+		      </md-expansion-panel-content>
+
+		      <md-expansion-panel-footer>
+		        <div flex></div>
+		        <md-button  ng-click="$panel.collapse()">{{'Luk' | translate}}</md-button>
+		      </md-expansion-panel-footer>
+
+		    </md-expansion-panel-expanded>
+
+		  </md-expansion-panel>  
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
