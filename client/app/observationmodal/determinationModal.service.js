@@ -1,78 +1,99 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('DeterminationModalService', function($mdDialog, appConstants) {
+	.factory('DeterminationModalService', function($mdPanel, appConstants, $mdMedia) {
 
 		return {
 			show: function(ev, obs, sender, editMode) {
-				$mdDialog.show({
-					locals: {
-						obs: obs
-					},
-					controller: ['$scope', '$rootScope', '$mdDialog', 'Observation', 'Determination', 'obs', 'ObservationModalService', 'ObservationFormService', '$translate', 'SearchService', '$state',
-						function($scope, $rootScope, $mdDialog, Observation, Determination, obs, ObservationModalService, ObservationFormService, $translate, SearchService, $state) {
-							$scope.$translate = $translate;
+				
+				
+	
+				
+  			  var config = {
+  			    attachTo: angular.element(document.body),
 
-							$scope.querySearch = function(query) {
-								return SearchService.querySearchTaxon(query, $scope.onlyHigherTaxa)
-							}
-							$scope.editMode = editMode;
-							$scope.obs = obs;
-							$scope.newTaxon = [];
-							//	$scope.determination = {confidence : 'sikker'};
-							$scope.determiner = [];
-							if ($scope.editMode === true) {
-								$scope.newTaxon.push(obs.PrimaryDetermination.Taxon)
-								$scope.determiner.push(obs.PrimaryDetermination.User)
-								$scope.determination = obs.PrimaryDetermination;
+  				locals: {
+  					obs: obs
+  				},
+  			    controllerAs: 'ctrl',
+  			    disableParentScroll: true,
+  			    templateUrl: 'app/observationmodal/determination-panel.tpl.html',
+  			    hasBackdrop: true,
+  			    panelClass: 'demo-dialog-example',
+				/*
+  			    position: $mdPanel.newPanelPosition()
+		      .center(),
+				*/
+  			  //  trapFocus: true,
+  			    zIndex: 85,
+  			    clickOutsideToClose: true,
+  			    escapeToClose: true,
+  			    focusOnOpen: true,
+				fullscreen: $mdMedia('xs'),
+				/*
+  				animation:   $mdPanel.newPanelAnimation()
+  				  .openFrom(ev.currentTarget)
+  				  .closeTo(ev.currentTarget)
+  				  .withAnimation($mdPanel.animation.SCALE),
+				*/
+  			    controller: ['$rootScope','mdPanelRef'	,'obs',	'$cookies' ,'$translate', 'SearchService', 'Determination', 'Observation', 'Auth',function ($rootScope, mdPanelRef, obs, $cookies, $translate, SearchService, Determination, Observation, Auth) {
+			  var that = this;
+			  this.Auth = Auth
+			  this.editMode = editMode;
+			  this._mdPanelRef = mdPanelRef;
+			  this.obs = obs;
+			  this.moment = moment;
+			  
+			this.$translate = $translate;
+			this.newTaxon = [];
+			this.determiner = [];
+			
+			if (that.editMode === true) {
+				that.newTaxon.push(that.obs.PrimaryDetermination.Taxon)
+				that.determiner.push(that.obs.PrimaryDetermination.User)
+				that.determination = that.obs.PrimaryDetermination;
 
-							} else {
-								$scope.determination = {
-									confidence: 'sikker'
-								};
-							}
-
-
-							$scope.querySearchUser = SearchService.querySearchUser;
-
-							$scope.cancel = function() {
-								$mdDialog.hide()
-									.then(reopenObs);
-							};
-
+			} else {
+				that.determination = {
+					
+				};
+			}
+			
+			
+			
+			this.querySearchUser = SearchService.querySearchUser;
+			this.querySearch = function(query) {
+				return SearchService.querySearchTaxon(query, that.onlyHigherTaxa)
+			}
+			  
+			  
+  			
+			this.closeDialog = function() {
+			 mdPanelRef.close().then(function() {
+			    angular.element(document.querySelector(ev.currentTarget)).focus();
+			    mdPanelRef.destroy();
+			  });
+			};
+			
+			
 							function updateOrCreate() {
-								if ($scope.editMode) {
+								if (that.editMode) {
 									return Determination.update({
-										id: $scope.determination._id
-									}, $scope.determination).$promise
+										id: that.determination._id
+									}, that.determination).$promise
 								} else {
 									return Observation.addDetermination({
-										id: $scope.obs._id
-									}, $scope.determination).$promise
+										id: that.obs._id
+									}, that.determination).$promise
 								}
 							}
 
-							function reopenObs() {
-								if (sender === 'ObservationModalService') {
-									ObservationModalService.show(null, $scope.obs)
-								}
-								if (sender === 'ObservationFormService') {
-									ObservationFormService.show(null, $scope.obs)
-								}
-								if (sender === 'ObservationPage') {
-									$state.go('observations', {
-										observationid: obs._id
-									}, {
-										reload: true
-									})
-								}
-								$rootScope.$broadcast('observation_updated', obs);
-							}
 
 
-							$scope.reopenObs = function() {
-								$scope.determination.taxon_id = $scope.newTaxon[0]._id;
-								if ($scope.determiner.length > 0) {
-									$scope.determination.user_id = $scope.determiner[0]._id;
+
+							that.saveDetermination = function() {
+								that.determination.taxon_id = that.newTaxon[0]._id;
+								if (that.determiner.length > 0) {
+									that.determination.user_id = that.determiner[0]._id;
 								}
 
 
@@ -80,20 +101,23 @@ angular.module('svampeatlasApp')
 
 								updateOrCreate()
 									.then(function(DeterminationView) {
-										$scope.obs.DeterminationView = DeterminationView;
-										return $mdDialog.hide()
+										that.obs.DeterminationView = DeterminationView;
+										return mdPanelRef.close()
 									})
-									.then(reopenObs);
+									.then(function(){
+									   $rootScope.$broadcast('observation_updated', obs);
+									    mdPanelRef.destroy();
+									});
 
 							};
-						}
-					],
-					templateUrl: 'app/observationmodal/determination-modal.tpl.html',
-					parent: angular.element(document.body),
-					targetEvent: ev,
-					clickOutsideToClose: true,
-					fullscreen: true
-				})
+			
+			
+			
+			}],
+  			  };
+			  
+			  $mdPanel.open(config);
+					
 			}
 		}
 

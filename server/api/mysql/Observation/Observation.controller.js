@@ -853,7 +853,62 @@ exports.update = function(req, res) {
 };
 
 
+exports.updatePrimaryDetermination = (req, res) => {
+	
+	return models.Observation.find({
+		where: {
+			_id: req.params.id
+		}, include: [{
+				model: models.Determination,
+				as: 'Determinations',
+				include: [{
+					model: models.Taxon,
+					as: "Taxon",
+					include: [{
+						model: models.Taxon,
+						as: "acceptedTaxon",
+						include: [{
+							model: models.TaxonDKnames,
+							as: "Vernacularname_DK"
+						}]
+					}]
+				}, {
+					model: models.User,
+					as: 'User',
+					attributes: ['_id', 'email', 'Initialer', 'name']
+				}, {
+					model: models.User,
+					as: 'Validator',
+					attributes: ['_id', 'Initialer', 'name']
+				},
+				{
+									model: models.DeterminationVote,
+									as: 'Votes'
+								},
+			
+			]
 
+			}]
+	}).then((obs)=>{
+		
+		var newDetermination = _.find(obs.Determinations, (det)=>{
+			return det._id === req.body._id;
+		})
+		if(!newDetermination) {
+			throw "Not found"
+		} else {
+			return obs.setPrimaryDetermination(newDetermination)
+		}
+	}).then((obs)=>{
+		res.send(204);
+	}).
+	catch(function(err) {
+		var statusCode = (err === "Not found") ? 404 : 500;
+		console.log(err);
+
+		res.status(statusCode).send(err);
+	});
+}
 
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {

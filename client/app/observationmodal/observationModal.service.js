@@ -21,9 +21,10 @@ angular.module('svampeatlasApp')
 						fullscreen: true,
 						onRemoving: function(element, removePromise){
 							ObservationStateService.reset();
+							/*
 							removePromise.then(function(){
 								$rootScope.$broadcast('dialogRemoved', referencedDataRow)
-							})
+							}) */
 						}
 					})
 
@@ -40,6 +41,11 @@ angular.module('svampeatlasApp')
 .filter('capitalize', function() {
     return function(input) {
       return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+    }
+})
+.filter('lowercaseAll', function() {
+    return function(input) {
+      return (!!input) ? input.charAt(0).toLowerCase() + input.substr(1).toLowerCase() : '';
     }
 })
 .filter('getUserNamesAsList', function() {

@@ -1,32 +1,160 @@
 <div role="dialog" aria-label="Other determinations" layout="column" layout-align="center center">
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <h2 translate>Bestemmelser</h2>
-    </div>
-  </md-toolbar>
+ <md-toolbar>
+   <div class="md-toolbar-tools">
+     <h2 ng-if="!editMode">Foreslå bestemmelse til DMS-{{ctrl.obs._id}}</h2>
+	<h2 ng-if="editMode">Ret bestemmelse af DMS-{{ctrl.obs._id}}</h2>
+     <span flex></span>
+     <md-button class="md-icon-button" ng-click="ctrl.closeDialog()">
+       <ng-md-icon icon="close"></ng-md-icon>
+     </md-button>
+   </div>
+ </md-toolbar>
 
-  <div class="demo-dialog-content">
-	<md-list flex>
-	        
-	        <md-list-item class="md-3-line" ng-repeat="det in ctrl.obs.Determinations | orderBy:'createdAt' : true" ng-click="null">
-	          <md-icon md-font-icon="fa fa-tag fa-2x" class="material-icons md-light md-48 md-primary" ></md-icon>
-	          <div class="md-list-item-text" layout="column">
-	            <h3>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === ctrl.obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
-	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
-	            <p>Status: {{ det.validation }} </p>
-				<p>{{(det.Validator) ? ('Status senest ændret af '+ det.Validator.name+' ('+det.Validator.Initialer+')'):"" }}</p>
-	          </div>
-			  
-			  
-			  <md-divider ></md-divider>
-	        </md-list-item>
-	        
-		</md-list>
+      <div class="demo-dialog-content">
+        <h2></h2>
+		<div layout="row" layout-margin>
+      <md-chips md-max-chips=1 ng-model="ctrl.newTaxon" readonly="ctrl.editMode" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
+
+        <md-autocomplete
+  	  	md-min-length="4"
+  		md-no-cache="false"
+		md-input-id="taxon-autocomplete"
+		md-delay="500"
+		md-select-on-match="true"
+		md-match-case-insensitive="true"
+            md-selected-item="selectedItem"
+            md-search-text="searchText"
+            md-items="item in ctrl.querySearch(searchText)"
+            md-item-text="item"
+            placeholder="{{(ctrl.newTaxon.length ===0) ? ctrl.$translate.instant('Skriv art')  : ''}}"
+		 ng-disabled="ctrl.editMode || ctrl.newTaxon.length >0"
+		 md-menu-class="autocomplete-custom-template"
+		flex class="taxon-autocomplete">
+          
+		
+		<md-item-template>
+		          <span class="item-title">
+					  
+				<span ng-if="item.Vernacularname_DK">
+		            <span ng-if="10000 > item.RankID"> {{(item.RankID === 5000)? 'Art af ':''}}{{( 5000 > item.RankID)? 'Art i ':''}} {{item.Vernacularname_DK.vernacularname_dk}} </span>
+					<span ng-if="item.RankID > 9999"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+				</span>
+				<span ng-if="!item.Vernacularname_DK">
+		            <span ng-if="10000 > item.RankID" class="item-emphasis"> {{item.FullName}} {{(item.RankID === 5000)? ' sp.' :''}} </span>
+					<span ng-if="item.RankID > 9999" class="item-emphasis"> {{item.FullName}} </span>
+					<span ng-if="item.RankID > 9999" class="item-author"> {{item.Author}} </span>
+				</span>
+		          </span>
+		          <span class="item-metadata" ng-if="item.DanishNames.length >0 && item.DanishNames[0]._id !== item.vernacularname_dk_id">
+					   <span class="item-metastat" > = {{item.DanishNames[0].vernacularname_dk}}</span>
+				   </span>
+		          <span class="item-metadata" ng-if="item.Vernacularname_DK ">
+					   
+		            <span class="item-metastat item-emphasis" ng-if="10000 > item.RankID"> {{item.FullName}} {{(item.RankID === 5000)? ' sp.' :''}}</span>
+					<span class="item-metastat item-emphasis" ng-if="item.RankID > 9999"> {{item.FullName}} </span>
+		           	<span class="item-metastat" ng-if="item.RankID > 9999"> {{item.Author}} </span>
+		          </span>
+				  <span class="item-metadata" ng-if="(item._id !== item.acceptedTaxon._id) ">
+					  <span class="item-emphasis" ng-if="item._id !== item.acceptedTaxon._id">{{'Syn. til' | translate}} {{item.acceptedTaxon.FullName}}</span>
+					  <span class="item-metastat"> {{item.Author}} </span>
+				  </span>
+				 <span class="item-metadata" ng-if="item.probability === 0 && item.acceptedTaxon.attributes.PresentInDK === false && item.RankID > 9999"> 
+				  <ng-md-icon icon="error_outline" size="20"></ng-md-icon> {{'Ikke kendt fra Danmark' | translate}}</span>
+		        </md-item-template>
+
+        </md-autocomplete>
+        <md-chip-template>
+          <span ng-if="$chip.RankID > 4999">
+		   <strong ng-if="$chip.Vernacularname_DK">{{$chip.Vernacularname_DK.vernacularname_dk | capitalize}} (</strong>
+            <strong><em>{{$chip.FullName}}</em> {{$chip.Author}}</strong>
+		  <strong ng-if="$chip.Vernacularname_DK">)</strong>
+          </span>
+          <span ng-if="5000 > $chip.RankID">
+		   <strong ng-if="$chip.Vernacularname_DK">Art af {{$chip.Vernacularname_DK.vernacularname_dk}} (</strong>
+            <strong><em>{{$chip.FullName}} sp.</em></strong>
+		  <strong ng-if="$chip.Vernacularname_DK">)</strong>
+          </span>
+        </md-chip-template>
+
+      </md-chips>
+	      </div>
+		  <div layout="row" layout-margin>
+ 		 	   
+	   <md-switch ng-model="ctrl.onlyHigherTaxa" aria-label="Højere taxa" ng-show="ctrl.newTaxon.length ===0">
+	       {{'Søg i familier, ordener osv.' | translate}}
+	     </md-switch>
+	 </div> 
+	 <div  layout-padding layout-margin>
+		 <md-input-container layout-fill>
+		        <label>{{'Hvor sikker er du?' | translate}}</label>
+		        <md-select ng-model="ctrl.determination.confidence" ng-disabled="ctrl.newTaxon.length ===0">
+		          <md-option value="sikker" >
+		            {{'Det er helt sikkert denne' | translate}} {{ctrl.newTaxon[0].RankName | translate | lowercaseAll}}
+		          </md-option>
+		          <md-option value="sandsynlig">
+		            {{'Det er sandsynligvis denne' | translate}} {{ctrl.newTaxon[0].RankName | translate | lowercaseAll}}
+		          </md-option>
+		          <md-option value="mulig">
+		            {{'Det er muligvis denne' | translate}} {{ctrl.newTaxon[0].RankName | translate | lowercaseAll}}
+		          </md-option>
+		        </md-select>
+		      </md-input-container>
+
+		
+			  </div>
+   <div layout-margin layout="row" ng-if="ctrl.Auth.hasRole('validator')">
+	  <md-chips md-max-chips=1  ng-model="ctrl.determiner" md-autocomplete-snap md-require-match="true" class="md-block"  flex-gt-xs>
+
+	    <md-autocomplete
+		
+		
+	        md-selected-item="selectedItem"
+	        md-search-text="searchText"
+	        md-items="item in ctrl.querySearchUser(searchText)"
+	        md-item-text="item.name"
+	        placeholder="{{'Evt anden bestemmer' | translate }}"
+			ng-disabled="determiner.length >0"
+			>
+	      <span md-highlight-text="searchText">{{item.name}} ({{item.Initialer}})</span>
+	    </md-autocomplete>
+	    <md-chip-template>
+	      <span>
+	        <strong>{{$chip.name}} ({{$chip.Initialer}})</strong>
+
+	      </span>
+	    </md-chip-template>
+
+	  </md-chips>
+
+   	
   </div>
+	 <div layout="row" layout-padding layout-margin>
+		 <md-input-container class="md-block" layout-fill>
+		           <label>Note til bestemmelsen</label>
+		           <textarea ng-model="ctrl.determination.notes"  rows="5" md-select-on-focus></textarea>
+		         </md-input-container>
+	 </div>
+
+      </div>
 
   <div layout="row" class="demo-dialog-button">
     <md-button md-autofocus flex class="md-primary" ng-click="ctrl.closeDialog()" translate>
-      Luk
+      {{'Fortryd' | translate}}
+    </md-button>
+    <md-button ng-click="ctrl.saveDetermination()" style="margin-right:20px;" ng-disabled="1 > newTaxon.length">
+      {{'Gem' | translate}}
     </md-button>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+ 

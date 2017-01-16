@@ -42,21 +42,24 @@
      box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2),
          0 13px 19px 2px rgba(0, 0, 0, 0.14),
          0 5px 24px 4px rgba(0, 0, 0, 0.12);
-     width: 500px;
+	 	width: 50%;
+	 	height: 600px;
+
+	 	position: absolute;
+	 	top:0;
+	 	bottom: 0;
+	 	left: 0;
+	 	right: 0;
+	
+	 	margin: auto;
    }
 
    .demo-dialog-content {
      padding: 0 15px;
      width: 100%;
 	 background-color: white;
+	 
    }
-   
-   .demo-dialog-button {
-     padding: 0 15px;
-     width: 100%;
-	 background-color: white;
-   }
-
 
 
    .row-updated {
@@ -66,7 +69,7 @@
    div.md-list-item-text > h3.primary-determination {
 	   font-weight: 500 !important;
    }
-   md-list md-list-item > md-icon.green-check {
+   .green-check {
    	color: #64DD17 ;
    }
    
@@ -82,3 +85,39 @@
    ng-md-icon.red-thumb {
    	color: #D50000 ;
    }
+   
+   md-card-content > md-list > div.md-subheader {
+	   background-color: #fff !important;
+   }
+   
+   .detemination-icon-container > md-icon {
+	   margin-right: 6px;
+	   margin-top: 24px;
+   
+   }
+   
+   .detemination-icon-container > md-menu > button.md-icon-button{
+	  
+	   margin-top: 14px;
+   
+   }
+      
+   @media screen and (max-width: 599px) {
+
+	   .md-list-item-text {
+		   margin-left: 0px;
+	   }
+	   .determination-panel {
+		   margin: 0px;
+	   }
+   }
+   @media screen and (min-width: 600px) {
+	   .determination-panel {
+		   margin: 8px;
+	   }
+   }
+   
+.vote-btn {
+	min-width: 40px;
+}
+  
