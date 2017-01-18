@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel) {
 			var that = this;
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
@@ -18,7 +18,7 @@ angular.module('svampeatlasApp')
 			};
 			$scope.$translate = $translate;
 			$scope.$state = $state;
-
+			
 			$scope.openCapsule = function(id) {
 				var win = window.open("/api/observations/" + id + "/capsule");
 				win.print();
@@ -138,6 +138,17 @@ angular.module('svampeatlasApp')
 
 						ErrorHandlingService.handle500();
 					})
+			}
+			
+			$scope.setPrimaryDetermination = function(det){
+				return Observation.setPrimaryDetermination({
+														id: $scope.obs._id
+													}, det).$promise.then(function(){
+														$rootScope.$broadcast('observation_updated', $scope.obs);
+													}).catch(function(err){
+														ErrorHandlingService.handle500();
+														
+													})
 			}
 
 			var sender = ($stateParams.observationid) ? 'ObservationPage' : 'ObservationModalService';
@@ -366,7 +377,8 @@ angular.module('svampeatlasApp')
 					return found;
 				}
 
-				$scope.forum = obs.Forum
+				$scope.forum = obs.Forum;
+				$mdExpansionPanel().waitFor('commentsPanel').then(function (instance) { instance.expand();});
 
 
 				// Check currentusers vote status on determinations:
@@ -479,3 +491,4 @@ angular.module('svampeatlasApp')
 			}
 		}
 	])
+

@@ -228,36 +228,47 @@ exports.addDeterminationToObs = (req, res) => {
 					if (!obs) {
 						res.send(404);
 					};
-
+					
+					return [getUserBaseImpact(determination.user_id, taxon), taxon, obs]
+					
+					}).spread((baseScore, taxon, obs) => {
+					
+					/* Now anybody can add determinations to any observation ???
+					
 					if (req.user._id !== obs.primaryuser_id && !userIsValidator) {
 
 						throw "Forbidden"
-					}
+					} */
+					
+					// TODO: allow validators to submit determinations that is not autovalidated
 					if (userIsValidator) {
 						determination.validation = "Godkendt";
 					} else {
-						determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Valideres';
-					};
+						// If it is the reporters own record and valideringskrav === 0, auto validate, otherwise set to  'Valideres'
+						determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0 && determination.user_id === req.user._id) ? 'Godkendt' : 'Valideres';
+					} 
 
 					determination.createdByUser = req.user._id;
-
-
-					return Determination.create(determination, {
+					determination.score = baseScore;
+					determination.baseScore = baseScore;
+					
+					return [Determination.create(determination, {
 						transaction: t
-					})
-				}).then((det) => {
-
-					return [models.Observation.update({
+					}), obs]
+				}).spread((det, obs) => {
+					var update = (userIsValidator || obs.primaryuser_id === req.user._id) ? models.Observation.update({
 						primarydetermination_id: det._id
 					}, {
 						where: {
 							_id: req.params.id
 						},
 						transaction: t
-					}), det]
+					}) : false;
+					return [update, det]
 				})
 
 		})
+		
 		.spread((updated, det) => {
 
 			return models.DeterminationView.find({
@@ -276,8 +287,17 @@ exports.addDeterminationToObs = (req, res) => {
 		console.log(err);
 
 		res.status(statusCode).send(err);
-	});;
+	});
 }
+
+
+function getUserBaseImpact(user_id, taxon){
+	
+
+	// When testing return a already resolved promise with value 1. This can be extended to DB queries and calculations
+	return Promise.resolve(1);
+}
+
 
 
 // Updates an existing taxon in the DB.
