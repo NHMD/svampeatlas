@@ -42,6 +42,11 @@ module.exports = function(sequelize, DataTypes) {
    	type: DataTypes.ENUM('sikker','sandsynlig','mulig'),
    	allowNull: true
    },
+   baseScore: {
+   	type: DataTypes.INTEGER,
+   	allowNull: false,
+	   defaultValue: 0   
+   },
    score: {
    	type: DataTypes.INTEGER,
    	allowNull: false,

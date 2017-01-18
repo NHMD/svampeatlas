@@ -860,6 +860,29 @@ exports.updatePrimaryDetermination = (req, res) => {
 			_id: req.params.id
 		}, include: [{
 				model: models.Determination,
+				as: "PrimaryDetermination",
+				include: [{
+					model: models.Taxon,
+					as: "Taxon",
+					include: [{
+						model: models.Taxon,
+						as: "acceptedTaxon",
+						include: [{
+							model: models.TaxonDKnames,
+							as: "Vernacularname_DK"
+						}]
+					}]
+				}, {
+					model: models.User,
+					as: 'User',
+					attributes: ['_id', 'email', 'Initialer', 'name']
+				}, {
+					model: models.User,
+					as: 'Validator',
+					attributes: ['_id', 'Initialer', 'name']
+				}]
+			},{
+				model: models.Determination,
 				as: 'Determinations',
 				include: [{
 					model: models.Taxon,
@@ -894,12 +917,22 @@ exports.updatePrimaryDetermination = (req, res) => {
 		var newDetermination = _.find(obs.Determinations, (det)=>{
 			return det._id === req.body._id;
 		})
+		var oldDetermination = obs.PrimaryDetermination;
 		if(!newDetermination) {
 			throw "Not found"
 		} else {
-			return obs.setPrimaryDetermination(newDetermination)
+			return [obs.setPrimaryDetermination(newDetermination), newDetermination, oldDetermination]
 		}
-	}).then((obs)=>{
+	})
+	.spread((obs, newDetermination, oldDetermination)=>{
+	
+			var desc = "New determination_id: "+newDetermination._id +"; new taxon: "+newDetermination.Taxon.acceptedTaxon.FullName+"; old determination_id: "+oldDetermination._id+"; old taxon "+oldDetermination.Taxon.acceptedTaxon.FullName
+			
+			return  models.ObservationLog.create({eventname: "New primary determination", oldvalues: JSON.stringify({"primarydetermination_id": oldDetermination._id}), description: desc, user_id: req.user._id, observation_id: req.params.id})
+		
+	})
+	
+	.then(()=>{
 		res.send(204);
 	}).
 	catch(function(err) {

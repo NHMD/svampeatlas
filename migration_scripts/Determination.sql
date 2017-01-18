@@ -246,3 +246,20 @@ UPDATE Determination d, Observation o SET o.primarydetermination_id = d._id WHER
 ALTER TABLE Determination add column createdByUser INT(11);
 
 ALTER TABLE Determination ADD CONSTRAINT fk_createdbyuser_id FOREIGN KEY (createdByUser) REFERENCES Users(_id);
+ALTER TABLE Determination add column baseScore INT(11) DEFAULT 0;
+
+
+SELECT o.primaryuser_id, observation_id,taxon_id, COUNT(*) c FROM Determination d, Observation o WHERE d.observation_id=o._id GROUP BY observation_id,taxon_id HAVING c > 1;
+
+
+-- remove duplicate determinations:
+DELETE FROM Determination WHERE _id IN (SELECT _id FROM (SELECT  d1._id, o.primarydetermination_id
+FROM    Determination d1, Observation o
+WHERE d1.observation_id= o._id AND EXISTS
+        (
+        SELECT  1
+        FROM    Determination d2
+        WHERE   d1.observation_id = d2.observation_id AND d1.taxon_id = d2.taxon_id LIMIT 1, 1
+        )) a WHERE a._id <> a.primarydetermination_id);
+-- Add unique constraint on taxon, observation in determinations 
+ALTER TABLE Determination add UNIQUE (observation_id, taxon_id);

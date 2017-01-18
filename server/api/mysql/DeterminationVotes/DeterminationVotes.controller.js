@@ -184,6 +184,10 @@ exports.addVoteToDetermination= (req, res) => {
 
 models.Determination.find({where:{_id: req.params.id}})
 	.then(function(det){
+		
+		if(det.user_id === req.user._id){
+			throw "Forbidden"
+		}
 		vote.observation_id= det.observation_id;
 		
 		return [getUserImpact(req.user, det), det];
@@ -214,13 +218,20 @@ models.Determination.find({where:{_id: req.params.id}})
 
 	})
 	.spread(function(vote,det, sum) {
+		// extend to use det.baseScore
 		det.score = sum;
 		return [det.save(), {vote: vote, newDeterminationScore: sum}];
 	})
     .spread(function(determinationSavePromise, result){
     	return res.status(201).json(result)
     })
-    .catch(handleError(res));	
+		.
+	catch((err) => {
+		var statusCode = (err === 'Forbidden') ? 403 : 500;
+		console.log(err);
+
+		res.status(statusCode).send(err);
+	});	
 }
 
 function getUserImpact(user, determination){
@@ -229,6 +240,8 @@ function getUserImpact(user, determination){
 	// When testing return a already resolved promise with value 1. This can be extended to DB queries and calculations
 	return Promise.resolve(1);
 }
+
+exports.getUserImpact = getUserImpact;
 
 // Creates a new taxon in the DB.
 exports.create = function(req, res) {

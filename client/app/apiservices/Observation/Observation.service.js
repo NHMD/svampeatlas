@@ -37,6 +37,13 @@ angular.module('svampeatlasApp')
 				},
 				url: '/api/observations/:id/determinations'
 			},
+			'setPrimaryDetermination': {
+				method: 'PUT',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/:id/primarydetermination'
+			},
 			'addUser': {
 				method: 'POST',
 				params: {
