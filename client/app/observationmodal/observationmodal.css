@@ -120,4 +120,8 @@
 .vote-btn {
 	min-width: 40px;
 }
+
+.determination-error-toast {
+	margin-top: 60px;
+}
   

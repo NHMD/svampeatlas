@@ -22,7 +22,13 @@ angular.module('svampeatlasApp')
 				params: {
 					id: '@_id'
 				},
-				url: '/api/determinations/:id/votes'
+				url: '/api/determinations/:id/votes',
+				interceptor: {
+				        response: function(response) {
+				          response.resource.$httpHeaders = response.headers;
+				          return response.resource;
+				        }
+				      }
 			}
 			
 		});
