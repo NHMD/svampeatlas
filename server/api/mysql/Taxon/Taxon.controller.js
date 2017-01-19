@@ -1173,7 +1173,7 @@ exports.setCurrentDkName = function(req, res) {
 			.then(function(taxon) {
 				
 				
-				var newname = req.body.vernacularname_dk;
+				var newname = (req.body.vernacularname_dk) ? req.body.vernacularname_dk : "null";
 				
 				var oldname = (taxon.Vernacularname_DK) ? taxon.Vernacularname_DK.vernacularname_dk : undefined;
 				
@@ -1181,7 +1181,7 @@ exports.setCurrentDkName = function(req, res) {
 				
 				//var oldname = taxon.Vernacularname_DK.vernacularname_dk.toString();
 				//var newname = req.body;
-				taxon.vernacularname_dk_id = req.body._id;
+				taxon.vernacularname_dk_id = (req.body._id) ? req.body._id : null;
 					
 
 					

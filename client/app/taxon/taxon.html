@@ -527,7 +527,7 @@
   						  </td>
 					  <td st-ratio="400">
 					    						<button class="btn btn-sm btn-danger" ng-disabled="newDkNameIsInProgress" ng-click="setCurrentDkName(name)" ng-if="name._id !== taxon.Vernacularname_DK._id" >Set as current</button> <button class="btn btn-sm btn-danger" ng-disabled="newDkNameIsInProgress" ng-click="deleteDkName(name)" ng-if="name._id !== taxon.Vernacularname_DK._id" >Delete</button>
-				  						        <md-checkbox type="checkbox" ng-if="name._id === taxon.Vernacularname_DK._id" ng-checked="true" ng-disabled="true">
+				  						        <md-checkbox type="checkbox" ng-if="name._id === taxon.Vernacularname_DK._id" ng-checked="true" ng-click="setCurrentDkName(null)">
 				  						        Current use
 				  						      </md-checkbox>
 					    						  </td>
