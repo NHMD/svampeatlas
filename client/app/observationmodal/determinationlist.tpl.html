@@ -13,13 +13,13 @@
 
 		    <md-expansion-panel-expanded>
 
-		      <md-expansion-panel-header ng-click="$panel.collapse()">
+		      <md-expansion-panel-header  ng-click="$panel.collapse()">
 		        <div class="md-title">{{'Bestemmelser' | translate}} ({{obs.Determinations.length}})</div>
 		         <div class="md-summary"></div>
 		        <md-expansion-panel-icon ></md-expansion-panel-icon>
 		      </md-expansion-panel-header>
 
-		      <md-expansion-panel-content flex>
+		      <md-expansion-panel-content id="determination-list-container" flex>
 		        
 					 <md-button layout-fill class="md-primary" ng-click="showDeterminationDialog($event, obs)"><ng-md-icon icon="add"></ng-md-icon> {{'Foreslå bestemmelse' | translate}}</md-button>
 
