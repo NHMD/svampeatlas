@@ -186,7 +186,7 @@ models.Determination.find({where:{_id: req.params.id}})
 	.then(function(det){
 		
 		if(det.user_id === req.user._id){
-			throw "Forbidden"
+			throw new Error("Forbidden");
 		}
 		vote.observation_id= det.observation_id;
 		
@@ -227,10 +227,10 @@ models.Determination.find({where:{_id: req.params.id}})
     })
 		.
 	catch((err) => {
-		var statusCode = (err === 'Forbidden') ? 403 : 500;
+		var statusCode = (err.message === 'Forbidden') ? 403 : 500;
 		console.log(err);
 
-		res.status(statusCode).send(err);
+		res.status(statusCode).send(err.message);
 	});	
 }
 

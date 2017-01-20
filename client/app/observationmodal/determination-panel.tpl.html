@@ -1,7 +1,7 @@
 <div role="dialog" aria-label="Other determinations" layout="column" layout-align="center center">
  <md-toolbar>
    <div class="md-toolbar-tools">
-     <h2 ng-if="!editMode">Foreslå bestemmelse til DMS-{{ctrl.obs._id}}</h2>
+     <h2 ng-if="!editMode">{{'Foreslå bestemmelse til' | translate}} DMS-{{ctrl.obs._id}}</h2>
 	<h2 ng-if="editMode">Ret bestemmelse af DMS-{{ctrl.obs._id}}</h2>
      <span flex></span>
      <md-button class="md-icon-button" ng-click="ctrl.closeDialog()">
@@ -10,7 +10,7 @@
    </div>
  </md-toolbar>
 
-      <div class="demo-dialog-content">
+      <div id="determination-panel-content" class="demo-dialog-content">
         <h2></h2>
 		<div layout="row" layout-margin>
       <md-chips md-max-chips=1 ng-model="ctrl.newTaxon" readonly="ctrl.editMode" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
@@ -130,7 +130,7 @@
   </div>
 	 <div layout="row" layout-padding layout-margin>
 		 <md-input-container class="md-block" layout-fill>
-		           <label>Note til bestemmelsen</label>
+		           <label>{{'Note til bestemmelsen' | translate}}</label>
 		           <textarea ng-model="ctrl.determination.notes"  rows="5" md-select-on-focus></textarea>
 		         </md-input-container>
 	 </div>

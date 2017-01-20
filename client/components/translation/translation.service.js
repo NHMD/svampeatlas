@@ -244,7 +244,12 @@ angular.module('svampeatlasApp')
 			'Bestemmelser' : 'Determinations',
 			'Foreslå bestemmelse' : 'Propose determination',
 			'Hvor sikker er du?' : 'How certain are you?',
-			'Luk': 'Close'
+			'Luk': 'Close',
+			'er allerede blevet foreslået.' : 'has already been proposed',
+			'Denne' : 'This',
+			'Foreslå bestemmelse til' : 'Propose determination of',
+			'Note til bestemmelsen' : 'Notes about this determination',
+			'Du kan ikke stemme på dine egne bestemmelser' : 'You cannot rate your own determinations'
 			
 		});
 
