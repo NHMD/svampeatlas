@@ -26,8 +26,8 @@
 			   Download csv
 			   <md-progress-linear ng-show="csvInProgress" ></md-progress-linear>
            </md-button>
-	   <md-menu  >
-	   			            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+	   <md-menu ng-if="10001 > totalCount" >
+	   			            <md-button  aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
 	   			               <ng-md-icon icon="settings" ></ng-md-icon>
 	   			            </md-button>
 	   			            <md-menu-content width="4" >

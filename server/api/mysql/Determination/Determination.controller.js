@@ -237,7 +237,7 @@ exports.addDeterminationToObs = (req, res) => {
 					
 					if (req.user._id !== obs.primaryuser_id && !userIsValidator) {
 
-						throw "Forbidden"
+						throw new Error("Forbidden")
 					} */
 					
 					// TODO: allow validators to submit determinations that is not autovalidated
@@ -283,10 +283,10 @@ exports.addDeterminationToObs = (req, res) => {
 		})
 		.
 	catch((err) => {
-		var statusCode = (err === 'Forbidden') ? 403 : 500;
+		var statusCode = (err.message === 'Forbidden') ? 403 : 500;
 		console.log(err);
 
-		res.status(statusCode).send(err);
+		res.status(statusCode).send(err.message);
 	});
 }
 

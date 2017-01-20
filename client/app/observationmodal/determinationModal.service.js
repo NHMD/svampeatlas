@@ -1,6 +1,6 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('DeterminationModalService', function($mdPanel, appConstants, $mdMedia) {
+	.factory('DeterminationModalService', function($mdPanel, appConstants, $mdMedia, $mdToast, $translate, ErrorHandlingService, $filter) {
 
 		return {
 			show: function(ev, obs, sender, editMode) {
@@ -107,6 +107,22 @@ angular.module('svampeatlasApp')
 									.then(function(){
 									   $rootScope.$broadcast('observation_updated', obs);
 									    mdPanelRef.destroy();
+									})
+									.catch(function(err){
+										
+										if(err.data.name === "SequelizeUniqueConstraintError"){
+											$mdToast.show(
+												$mdToast.simple()
+												.textContent($translate.instant("Denne") +" "+$filter('lowercaseAll')($translate.instant(that.newTaxon[0].RankName))+" "+$translate.instant("er allerede blevet foreslået."))
+												.position("right")
+												.parent(document.querySelectorAll('#determination-panel-content'))
+												.hideDelay(3000)
+											);
+										} else {
+											ErrorHandlingService.handle500();
+										}
+										
+										
 									});
 
 							};

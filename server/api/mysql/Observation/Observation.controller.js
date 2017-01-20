@@ -761,7 +761,7 @@ exports.update = function(req, res) {
 
 				if (req.user._id !== obs.primaryuser_id && !userIsValidator) {
 
-					throw "Forbidden"
+					throw new Error("Forbidden")
 				}
 
 				if (obs.decimalLatitude !== req.body.decimalLatitude || obs.decimalLongitude !== req.body.decimalLongitude) {
@@ -844,10 +844,10 @@ exports.update = function(req, res) {
 		})
 		.
 	catch(function(err) {
-		var statusCode = (err === 'Forbidden') ? 403 : 500;
+		var statusCode = (err.message === 'Forbidden') ? 403 : 500;
 		console.log(err);
 
-		res.status(statusCode).send(err);
+		res.status(statusCode).send(err.message);
 	});
 
 };
@@ -919,7 +919,7 @@ exports.updatePrimaryDetermination = (req, res) => {
 		})
 		var oldDetermination = obs.PrimaryDetermination;
 		if(!newDetermination) {
-			throw "Not found"
+			throw new Error("Not found");
 		} else {
 			return [obs.setPrimaryDetermination(newDetermination), newDetermination, oldDetermination]
 		}
@@ -994,7 +994,7 @@ exports.destroy = function(req, res) {
 					if (!obs) {
 						res.send(404);
 					} else if(!userIsValidator && !(req.user._id === obs.primaryuser_id && obs.createdAt > moment().subtract(2, 'days'))){
-						throw "Forbidden"
+						throw new Error("Forbidden");
 					}
 					var serializedObs = JSON.stringify(obs);
 					
@@ -1052,10 +1052,10 @@ exports.destroy = function(req, res) {
 		})
 		.
 		catch(function(err) {
-			var statusCode = (err === 'Forbidden') ? 403 : 500;
+			var statusCode = (err.message === 'Forbidden') ? 403 : 500;
 			console.log(err);
 		
-			res.status(statusCode).send(err);
+			res.status(statusCode).send(err.message);
 		});
 
 
@@ -1111,10 +1111,10 @@ exports.addUserToObs = function(req, res) {
 		.then(function(obs) {
 
 			if (!obs) {
-				throw "Not found"
+				throw new Error("Not found")
 			}
 			if (req.user._id !== req.body._id) {
-				throw 'Forbidden'
+				throw new Error('Forbidden');
 			} else {
 				return models.ObservationUser.upsert({
 					observation_id: req.params.id,
@@ -1128,7 +1128,7 @@ exports.addUserToObs = function(req, res) {
 		.
 	catch(function(err) {
 		var statusCode;
-		if (err === 'Forbidden') {
+		if (err.message === 'Forbidden') {
 			statusCode = 403;
 		} else if (err === "Not found") {
 			statusCode = 404;
@@ -1137,7 +1137,7 @@ exports.addUserToObs = function(req, res) {
 		}
 		console.log(err);
 
-		res.status(statusCode).send(err);
+		res.status(statusCode).send(err.message);
 	});
 }
 
@@ -1150,11 +1150,11 @@ exports.deleteUserFromObs = function(req, res) {
 		})
 		.then(function(obs) {
 			if (!obs) {
-				throw "Not found"
+				throw new Error("Not found");
 			}
 			if (parseInt(req.user._id) !== parseInt(req.params.userid)) {
 				console.log('req.user._id ' + req.user._id + ' req.params ' + JSON.stringify(req.params))
-				throw 'Forbidden'
+				throw new Error('Forbidden');
 			} else {
 				return models.ObservationUser.destroy({
 					where: {
@@ -1170,7 +1170,7 @@ exports.deleteUserFromObs = function(req, res) {
 		.
 	catch(function(err) {
 		var statusCode;
-		if (err === 'Forbidden') {
+		if (err.message === 'Forbidden') {
 			statusCode = 403;
 		} else if (err === "Not found") {
 			statusCode = 404;
@@ -1179,7 +1179,7 @@ exports.deleteUserFromObs = function(req, res) {
 		}
 		console.log(err);
 
-		res.status(statusCode).send(err);
+		res.status(statusCode).send(err.message);
 	});
 }
 

@@ -487,9 +487,9 @@ angular.module('svampeatlasApp')
 							$mdToast.show(
 								$mdToast.simple()
 								.textContent($translate.instant("Du kan ikke stemme på dine egne bestemmelser"))
-								.position("right")
-								.toastClass("determination-error-toast")
-								.parent(document.querySelectorAll('#determination-panel-container'))
+								.position("top right")
+								
+								.parent($event.currentTarget.parentElement.parentElement.parentElement)
 								.hideDelay(3000)
 							);
 							
