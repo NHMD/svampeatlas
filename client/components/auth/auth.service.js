@@ -20,9 +20,20 @@ angular.module('svampeatlasApp')
 	    }
 	}, 5000)
 	*/
+			
+			function mapRoles(usr){
+							if(usr.Roles && usr.Roles.length > 0){
+								usr.roles_ = {};
+								for(var i = 0; i< usr.Roles.length; i++){
+									usr.roles_[usr.Roles[i].name] = true;
+								}
+							}
+				
+						}	;
 
 		if ($cookies.get('token')) {
 			currentUser = User.get();
+			currentUser.$promise.then(mapRoles)
 		}
 
 		return {
@@ -48,7 +59,7 @@ angular.module('svampeatlasApp')
 						});
 
 						currentUser = User.get();
-
+						currentUser.$promise.then(mapRoles);
 						safeCb(callback)();
 						$rootScope.$broadcast('logged_in', currentUser);
 						return res.data;
@@ -61,6 +72,7 @@ angular.module('svampeatlasApp')
 			
 			refreshUser: function(){
 				currentUser = User.get();
+				currentUser.$promise.then(mapRoles);
 				return currentUser.$promise;
 			},
 
@@ -74,7 +86,7 @@ angular.module('svampeatlasApp')
 						});
 
 						currentUser = User.get();
-
+						currentUser.$promise.then(mapRoles);
 						safeCb(callback)();
 						$rootScope.$broadcast('logged_in', currentUser);
 						return res.data;
@@ -227,11 +239,27 @@ angular.module('svampeatlasApp')
 					});
 			},
 
-			hasRole: function(role, callback) {
+			hasRole: function(role) {
+				
+				if(!currentUser) {
+					return false;
+				} else if(role === "any"){
+					return currentUser.roles_ !== undefined;
+				} else {
+					var acceptedRoles = [].concat(role);
+					for(var i=0; i< acceptedRoles.length; i++){
+						if(currentUser.roles_[acceptedRoles[i]] === true){
+							return true;
+							break;
+						}
+						return false;
+					}
+				}
+				/*
 				var acceptedRoles = [].concat(role);
 				if (arguments.length === 1) {
 					if (role === "any") {
-						return this.getCurrentUser() && currentUser.Roles && currentUser.Roles.length > 0;
+						return currentUser.Roles && currentUser.Roles.length > 0;
 					} else {
 						
 						
@@ -245,7 +273,7 @@ angular.module('svampeatlasApp')
 						}
 						}
 					}
-						return this.getCurrentUser() && hasRole;
+						return hasRole;
 					}
 				}
 
@@ -264,6 +292,7 @@ angular.module('svampeatlasApp')
 						safeCb(callback)(hasRole);
 						return hasRole;
 					});
+					*/
 			},
 
 			/**
