@@ -37,7 +37,7 @@ angular
 		template: '<div ng-class="size===\'large\' ? \'generic-avatar-large\' : \'generic-avatar-small\'">'+
 		'<a class="thumb spacer animated fadeIn" ng-class="size===\'large\' ? \'color-large\' : \'color-small\'" style="background-color:{{GenericAvatar.Background}}"></a>'+
 		'<p ng-class="size===\'large\' ? \'name-large\' : \'name-small\'">{{GenericAvatar.Initials}}</p>' +
-		'<a ng-class="size===\'large\' ? \'img-large\' : \'img-small\'" data-ng-if="ImageAvailable" style="background-image:url(http://graph.facebook.com/{{User.facebook}}/picture?width=200&height=200)"></a>' +
+		'<a ng-class="size===\'large\' ? \'img-large\' : \'img-small\'" data-ng-if="ImageAvailable" style="background-image:url(https://graph.facebook.com/{{User.facebook}}/picture?width=200&height=200)"></a>' +
 		'</div>',
 		controller: controller
 	};
