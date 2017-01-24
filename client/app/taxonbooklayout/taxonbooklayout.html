@@ -168,7 +168,7 @@
 				<h3><em>{{taxon.FullName}}</em> <span ng-show="taxon.Vernacularname_DK">- {{taxon.Vernacularname_DK.vernacularname_dk}}</span></h3>
 		      <carousel disable-ng-animate interval="">
 		        <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
-		          <img ng-src="{{slide.uri}}" style="margin:auto;">
+		          <img ng-src="{{slide.uri | httpToHttps}}" style="margin:auto;">
 		          <div class="carousel-caption">
 
 		            &copy; {{slide.photographer}}, {{slide.collectionNumber}}
