@@ -156,3 +156,8 @@ angular.module('svampeatlasApp')
 
 
 	})
+	.filter('httpToHttps', function() {
+	    return function(url) {
+	      return url = url.replace(/^http:\/\//i, 'https://');;
+	    }
+	})
