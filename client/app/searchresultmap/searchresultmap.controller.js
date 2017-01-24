@@ -21,12 +21,14 @@ angular.module('svampeatlasApp')
 					baselayers: {
 						osm: {
 							name: $translate.instant('Kort'),
-							url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+							url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 							type: 'xyz'
 						},
 						OpenTopoMap: {
 							name: 'OpenTopoMap',
-							url: 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+
+							url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+
 							type: 'xyz',
 							layerOptions: {
 
@@ -59,7 +61,7 @@ angular.module('svampeatlasApp')
 							name: "DK 4cm kort",
 							type: 'wms',
 							visible: true,
-							url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+							url: "https://kortforsyningen.kms.dk/topo_skaermkort",
 							layerOptions: {
 								layers: "topo25_klassisk",
 								servicename: "topo25",
@@ -78,7 +80,7 @@ angular.module('svampeatlasApp')
 							name: "DK luftfoto",
 							type: 'wms',
 							visible: true,
-							url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+							url: "https://kortforsyningen.kms.dk/topo_skaermkort",
 							layerOptions: {
 								layers: "orto_foraar",
 								servicename: "orto_foraar",
