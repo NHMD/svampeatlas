@@ -4,7 +4,7 @@ angular.module('svampeatlasApp')
   .controller('NewsCtrl',['$scope','$http', '$mdMedia', '$mdDialog',  function ($scope, $http, $mdMedia, $mdDialog) {
    
 	  $scope.mdMedia = $mdMedia;
- 	  $http.jsonp('http://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=json-in-script&callback=JSON_CALLBACK')
+ 	  $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=json-in-script&callback=JSON_CALLBACK')
 	      .success(function(data){
 	          $scope.news = data.feed.entry;
 	      });

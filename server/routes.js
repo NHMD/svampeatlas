@@ -88,11 +88,11 @@ module.exports = function(app) {
 		}];
 
 		res.render('index.ejs', {
-			url: 'http://svampe.databasen.org/',
+			url: 'https://svampe.databasen.org/',
 			type: 'website',
 			title: 'Danmarks officielle database for svampefund',
 			description: 'Danmarks officielle database for svampefund. Du kan indlægge, søge og diskutere fund. Du kan også få eksperthjælp til bestemmelse af svampe.',
-			image: 'http://svampe.databasen.org/assets/images/public/mycena_crop.jpg',
+			image: 'https://svampe.databasen.org/assets/images/public/mycena_crop.jpg',
 			imgProps: imgProps
 		})
 
@@ -135,7 +135,7 @@ module.exports = function(app) {
 			if (images[0].count > 0) {
 				desc += " " + user.name.split(" ")[0] + " har " + images[0].count + " billeder i svampeatlas."
 			}
-			var img = 'http://svampe.databasen.org/assets/images/public/mycena_crop.jpg';
+			var img = 'https://svampe.databasen.org/assets/images/public/mycena_crop.jpg';
 			var imgProps = [{
 				name: "og:image:width",
 				value: "350"
@@ -145,12 +145,12 @@ module.exports = function(app) {
 			}];
 
 			if (user.facebook) {
-				img = 'http://graph.facebook.com/' + user.facebook + '/picture?width=350&height=350';
+				img = 'https://graph.facebook.com/' + user.facebook + '/picture?width=350&height=350';
 
 
 			}
 			res.render('index.ejs', {
-				url: 'http://svampe.databasen.org/userprofile/' + req.params.id,
+				url: 'https://svampe.databasen.org/userprofile/' + req.params.id,
 				type: 'profile',
 				title: 'Profil for ' + user.name + " på Danmarks svampetalas",
 				description: desc,
@@ -216,7 +216,7 @@ module.exports = function(app) {
 			} else if (obs.GeoNames) {
 				loc = obs.GeoNames.name + ", " + obs.GeoNames.adminName1 + ", " + obs.GeoNames.countryName
 			};
-			var img = (obs.Images.length > 0) ? 'http://svampe.databasen.org/uploads/' + obs.Images[0].name + '.JPG' : 'http://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png';
+			var img = (obs.Images.length > 0) ? 'https://svampe.databasen.org/uploads/' + obs.Images[0].name + '.JPG' : 'https://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png';
 
 			var desc = (obs.users.length > 1) ? "Findere: " : "Finder: ";
 
@@ -243,7 +243,7 @@ module.exports = function(app) {
 				desc += " " + tx + " er rødlistet i kategori " + obs.DeterminationView.Taxon_redlist_status + "."
 			}
 			res.render('index.ejs', {
-				url: 'http://svampe.databasen.org/observations/' + req.params.id,
+				url: 'https://svampe.databasen.org/observations/' + req.params.id,
 				type: 'article',
 				title: taxon + ", " + date + ", " + loc,
 				description: desc,
@@ -320,7 +320,7 @@ module.exports = function(app) {
 
 					return prev + tx;
 				}, "")
-				var img = (taxon.images.length > 0) ? taxon.images[0].uri : 'http://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png';
+				var img = (taxon.images.length > 0) ? taxon.images[0].uri : 'https://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png';
 				var txn = (taxon.Vernacularname_DK) ? capitalizeFirstLetter(taxon.Vernacularname_DK.vernacularname_dk) + " (" + taxon.FullName + ")" : taxon.FullName;
 				var desc = ""
 
@@ -354,7 +354,7 @@ module.exports = function(app) {
 				desc += " Klassifikation: " + higherTaxa;
 
 				res.render('index.ejs', {
-					url: 'http://svampe.databasen.org/taxon/' + req.params.id,
+					url: 'https://svampe.databasen.org/taxon/' + req.params.id,
 					type: 'article',
 					title: txn,
 					description: desc,
