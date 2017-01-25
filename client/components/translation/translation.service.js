@@ -249,7 +249,9 @@ angular.module('svampeatlasApp')
 			'Denne' : 'This',
 			'Foreslå bestemmelse til' : 'Propose determination of',
 			'Note til bestemmelsen' : 'Notes about this determination',
-			'Du kan ikke stemme på dine egne bestemmelser' : 'You cannot rate your own determinations'
+			'Du kan ikke stemme på dine egne bestemmelser' : 'You cannot rate your own determinations',
+			'Vælg billeder': 'Choose images',
+			'Gem fund' : 'Save sighting'
 			
 		});
 

@@ -1,16 +1,19 @@
  <div md-dynamic-height md-border-bottom  layout="row" layout-align="center start" flex>
-	
-    <md-card flex="60" ng-include="'app/observationform/observation-form.tpl.html'">
+	<div flex="60">
+    <md-card  ng-include="'app/observationform/observation-form.tpl.html'">
 
 
         
 	
  	    
-      </md-card-content>
+     
      
     </md-card>
-	<div flex="40" layout-padding>
-		
+	<div ng-include="'app/observationmodal/determinationlist.tpl.html'" flex></div>
+	<div ng-include="'app/observationmodal/commentlist.tpl.html'"></div>
+</div>
+	<div flex="40" >
+		 <md-card>
 		<leaflet id="observationformmap" width="100%" height="400" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers"  controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
  <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}}</md-subheader>
  <md-subheader class="md-no-sticky" ng-if="ctrl.precision && !showLatLngFields">{{'Præcision' | translate}}: {{ctrl.precision}} m</md-subheader>
@@ -33,35 +36,50 @@
 				  				            </md-input-container>
 			  </div>	 
 	 
-	 
-	
-
-	 
-   				      <div flex layout-margin ngf-drop="" ng-model="ctrl.files" ngf-keep="'distinct'" class="drop-box"
+	 </md-card>
+	  <md-card>
+	  <div layout-margin>
+ <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-capture="'camera'" ngf-resize="{width: 1200, height: 800, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ng-click="$parent.$parent.showProcessingImageStatus()"
+                  aria-label="Tilføj billeder"
+                  class="md-icon-button" >
+         <ng-md-icon icon="camera_alt" ></ng-md-icon> {{'Vælg billeder' | translate}}
+       </md-button>
+   </div>
+	 <div style="text-align: center">{{'eller' | translate}}</div>
+   				      <div flex layout-margin  ngf-drop="" ng-model="ctrl.files" ngf-keep="'distinct'" class="drop-box"
      ngf-drag-over-class="'dragover'" ngf-multiple="true"   ngf-pattern="'image/jpeg'"
      ngf-resize="{width: 1200, height: 800, quality: .9,  restoreExif: true}"
 	 ngf-fix-orientation="true" ngf-hide-on-drop-not-available="true"
   
-     >{{'Træk billeder hertil' | translate}}</div>
+     ><h3 class="md-title">{{'Træk billeder hertil' | translate}}</h3>
+ 	<ng-md-icon icon="camera_alt" size="64" style="margin-left: -24px"></ng-md-icon>
+ </div>
 	 <md-card-content layout="column">
  	<!--<div layout-padding ng-repeat="file in files" ng-if="files.length > 0">
 		<img ngf-src="file"  ngf-resize="{width: 200, height: 200}" >
 	</div> -->
-	
-	<md-card ng-repeat="file in ctrl.files" ng-if="ctrl.files.length > 0">
-	<md-card-header layout="row" layout-align="end start" class="img-preview" flex="nogrow">
+
+<md-grid-list
+         md-cols-xs="1" md-cols-sm="2" md-cols-md="2" md-cols-gt-md="2"
+        md-row-height="1:1"  md-row-height-gt-sm="3:2"
+        md-gutter="12px" md-gutter-gt-sm="8px">
+
+<md-grid-tile ng-repeat="file in ctrl.files"
+                 
+                  md-colspan-sm="1"
+            ngf-background="file"
+			   ng-style="{'background-size': 'cover'}"
+			 
+				  >
 		
-		  
-        <md-button class="md-icon-button" aria-label="Remove" >
-          <ng-md-icon icon="close" ng-click="removeImageFromUpload(file)"></ng-md-icon>
-        </md-button> 
-	</md-card-header>
+    <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
+	<div class="md-gridtile-delete-upper-right"><md-button ng-click="removeImageFromUpload(file)"><ng-md-icon icon="clear"></ng-md-icon></md-button></div>
+      <md-grid-tile-footer  >{{file.name}}
+  </md-grid-tile-footer>
+  </md-grid-tile>
+  </md-grid-list>	
 	
-	<md-card-content layout-align="center center">
-	 <img ngf-src="file"  ngf-resize="{width: 300, height: 200}" >
-	 </md-card-content>
-	 
-	</md-card>
+
 	
    
 	
@@ -74,22 +92,22 @@
    <md-grid-list
          md-cols="1" 
          md-row-height="4:3"
-         md-gutter="8px" md-gutter-gt-sm="4px" >
-     <md-grid-tile ng-repeat="img in obs.Images" >
-       <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" ng-click="openImage(img)">
-   	       <md-grid-tile-footer class="obs-form-image">
-   		   <md-button ng-if="Auth.hasRole('validator') && !img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, true)'>
-             <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
-           </md-button>
-   		   <md-button ng-if="Auth.hasRole('validator') && img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, false)'>
-             <i class="fa fa-eye fa-2x hide-icon"></i> 
-           </md-button>
+         md-gutter="12px" md-gutter-gt-sm="8px" >
+   
+     <md-grid-tile ng-repeat="img in obs.Images" 
+     md-colspan-sm="1"
+   ng-if="!img.imageLoadError"
+   ng-style="getBackgroundStyle(img)"
+  	 ng-click="openImage(img)"
+	 >
+      <!-- <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" ng-click="openImage(img)">-->
+   	       
 		   
-   		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || ( Auth.getCurrentUser()._id === img.user_id && moment(img.createdAt) > moment().subtract(1, 'weeks') )" ng-click='deleteImg(img)'>
-             <ng-md-icon icon="close"></ng-md-icon> 
-           </md-button>
-		
-   	   </md-grid-tile-footer>
+	   	<div class="md-gridtile-hide-upper-left" ng-if="Auth.hasRole('validator')"><md-button ng-click="toggleHide(img, !img.hide); $event.stopPropagation();"><md-icon ng-if="!img.hide" md-font-icon="fa fa-eye-slash fa-2x"  ></md-icon ><md-icon ng-if="img.hide" md-font-icon="fa fa-eye fa-2x" ></md-icon ></md-button></div>
+		   
+		   <div class="md-gridtile-delete-upper-right"><md-button aria-label="Delete" ng-if="Auth.hasRole('validator') || ( currentUser._id === img.user_id && moment(img.createdAt) > moment().subtract(1, 'weeks') )" ng-click='deleteImg(img); $event.stopPropagation();'><ng-md-icon icon="clear"></ng-md-icon></md-button></div>
+		   
+
      </md-grid-tile>
    </md-grid-list>
 	 </md-card-content>
@@ -98,7 +116,7 @@
 		   <md-progress-circular md-mode="indeterminate" ng-show="loaded[img.name] !== true && failed[img.name] !== true"></md-progress-circular>
 	     <img   style="margin: auto; max-width: 100%; height:inherit;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
 	 </div> -->
-
+</md-card>
 </div>
  
  
