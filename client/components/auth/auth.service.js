@@ -241,7 +241,7 @@ angular.module('svampeatlasApp')
 
 			hasRole: function(role) {
 				
-				if(!currentUser) {
+				if(!currentUser || !currentUser.roles_) {
 					return false;
 				} else if(role === "any"){
 					return currentUser.roles_ !== undefined;

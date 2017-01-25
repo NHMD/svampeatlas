@@ -2,10 +2,10 @@
 .drop-box {
     background: #F8F8F8;
     border: 5px dashed #DDD;
-   	height: 80px;
+   	height: 120px;
     text-align: center;
-    padding: 50px 10px;
-
+	border-radius: 25px;
+	color: rgb(96,125,139);
 }
 
 .img-preview {
@@ -92,6 +92,61 @@ md-tabs.observationform-tabs .md-tab {
 	
 }
 
+
+.md-gridtile-delete-upper-right {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    height: 48px;
+    color: #fff;
+    
+    overflow: hidden;
+    position: absolute;
+    
+    right: 0;
+	top: 0;
+}
+
+.md-gridtile-hide-upper-left {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    height: 48px;
+    color: #fff;
+    
+    overflow: hidden;
+    position: absolute;
+    
+    left: 0;
+	top: 0;
+}
+
+div.md-gridtile-delete-upper-right > button {
+	min-width: 0;
+}
+div.md-gridtile-hide-upper-left  > button {
+	min-width: 0;
+}
+
+div.md-gridtile-hide-upper-left  > button > md-icon {
+	color: #fff;
+}
+
+  
 
 
 

@@ -34,6 +34,15 @@ angular.module('svampeatlasApp')
 			$scope.Auth = Auth;
 			$scope.moment = moment;
 			
+			$scope.getBackgroundStyle = function(img){
+		
+				var url = appConstants.imageurl + img.name + ".JPG";
+		
+
+		
+			    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
+			}
+			
 			$scope.useNearestLocalityOnClick = ObservationFormStateService.getState().useNearestLocalityOnClick || false;
 			$scope.toggleNearestLocalityOnClick = function() {
 				$scope.useNearestLocalityOnClick = !$scope.useNearestLocalityOnClick;
@@ -1092,7 +1101,7 @@ $scope.showExifConfirmPanel(exif)
 				}).$promise.then(function() {
 
 					_.remove($scope.obs.Images, function(e) {
-						return e._id = img._id;
+						return e._id === img._id;
 					})
 
 					$scope.showSimpleToast($translate.instant('Foto slettet'))
