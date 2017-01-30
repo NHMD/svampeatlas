@@ -79,9 +79,13 @@ angular.module('svampeatlasApp')
 					nocount: true,
 					activeThreadsOnly: csvsearch.activeThreadsOnly,
 					recentlyCommented: csvsearch.recentlyCommented,
-					selectedMonths: csvsearch.selectedMonths,
+					
 					where: csvsearch.where || {},
 					include: JSON.stringify(csvqueryinclude)
+				};
+				
+				if (csvsearch.selectedMonths)   {
+					q.selectedMonths = csvsearch.selectedMonths.toString();
 				};
 
 				if (geometry) {
@@ -425,11 +429,13 @@ angular.module('svampeatlasApp')
 					activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,
 					recentlyCommented: ObservationSearchService.getSearch().recentlyCommented,
 					validationStatusUpdatedSince: ObservationSearchService.getSearch().validationStatusUpdatedSince,
-					selectedMonths: ObservationSearchService.getSearch().selectedMonths,
 					where: ObservationSearchService.getSearch().where || {},
 					include: JSON.stringify($scope.queryinclude)
 				};
-
+				
+				if (ObservationSearchService.getSearch().selectedMonths)   {
+					query.selectedMonths = ObservationSearchService.getSearch().selectedMonths.toString();
+				};
 				if (geometry) {
 					query.geometry = geometry;
 				}
