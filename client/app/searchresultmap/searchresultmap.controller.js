@@ -252,9 +252,14 @@ angular.module('svampeatlasApp')
 
 					where: $scope.search.where || {},
 					activeThreadsOnly: ObservationSearchService.getSearch().activeThreadsOnly,
-					selectedMonths: ObservationSearchService.getSearch().selectedMonths,
+					
 					include: $scope.queryinclude
 				};
+				
+				if (ObservationSearchService.getSearch().selectedMonths)   {
+					query.selectedMonths = ObservationSearchService.getSearch().selectedMonths.toString();
+				};
+				
 				query.offset = $scope.offset ;
 				query.limit = 1000 ;
 				
