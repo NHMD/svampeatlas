@@ -294,8 +294,7 @@ exports.indexSpeciesList = function(req, res) {
 	}
 
 	var query = {
-		offset: parseInt(req.query.offset),
-		limit: parseInt(req.query.limit),
+		
 		where: {},
 		attributes: [
 			[models.sequelize.fn('count', models.sequelize.fn('distinct', models.sequelize.col('Observation._id'))), 'observationCount'], 'primaryuser_id', 'locality_id'
@@ -313,10 +312,30 @@ exports.indexSpeciesList = function(req, res) {
 		}
 	}
 
+	if (req.query.geometry || req.query.selectedMonths || query.where.createdAt) {
+
+		query.where.$and = [];
+	}
 	if (req.query.geometry) {
-		query.where = {
-			$and: models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom'))
-		}
+		query.where.$and.push(models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom')));
+	}
+	
+	/*
+	if (req.query.municipalityid) {
+	
+		query.where.$and.push(models.sequelize.fn('ST_Contains', models.sequelize.literal("(SELECT geom FROM Areas WHERE _id="+req.query.municipalityid+")"), models.sequelize.col('Observation.geom')));
+	}
+	*/
+
+	if (req.query.selectedMonths) {
+		query.where.$and.push(models.sequelize.literal('MONTH(observationDate) IN (' + req.query.selectedMonths.toString() + ')'));
+	}
+
+
+	if (query.where.createdAt && !query.where.createdAt.$between && !query.where.createdAt.$lte && !query.where.createdAt.$gte) {
+		//query.where.createdAt = models.sequelize.fn('DATE', models.sequelize.col('createdAt'));
+		query.where.$and.push(models.sequelize.literal("DATE(Observation.createdAt) = '" + query.where.createdAt.toString() + "'"));
+		delete query.where.createdAt;
 	}
 
 	if (req.query.where) {

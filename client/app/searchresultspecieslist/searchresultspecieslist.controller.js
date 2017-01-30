@@ -22,7 +22,7 @@ angular.module('svampeatlasApp')
 
 
 
-				var mapped = _.map($scope.displayed, function(e) {
+				var mapped = _.map($scope.serverData, function(e) {
 					return {
 
 
@@ -171,11 +171,12 @@ storedSearchDeferred.promise.then(function(){
 	var query = {
 
 		activeThreadsOnly: $scope.search.activeThreadsOnly,
-		selectedMonths: $scope.search.selectedMonths,
 		where: $scope.search.where || {},
 		include: JSON.stringify($scope.queryinclude)
 	};
-
+	if ($scope.search.selectedMonths)   {
+		query.selectedMonths = $scope.search.selectedMonths.toString();
+	};
 	if (geometry) {
 		query.geometry = geometry;
 	}

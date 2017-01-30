@@ -188,10 +188,15 @@ angular.module('svampeatlasApp')
 						limit: limit,
 						activeThreadsOnly: $scope.search.activeThreadsOnly,
 						recentlyCommented: $scope.search.recentlyCommented,
-						selectedMonths: $scope.search.selectedMonths,
+						
 						where: $scope.search.where || {},
 						include: JSON.stringify($scope.queryinclude)
 					};
+					
+					if ($scope.search.selectedMonths)   {
+						query.selectedMonths = $scope.search.selectedMonths.toString();
+					};
+					
 					var geometry = $scope.search.geometry;
 					if (geometry) {
 						query.geometry = geometry;
