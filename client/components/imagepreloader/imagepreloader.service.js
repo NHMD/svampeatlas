@@ -6,14 +6,15 @@ angular.module('svampeatlasApp')
 			function( $q, $rootScope, appConstants ) {
 
 				// I manage the preloading of image objects. Accepts an array of image URLs.
-				function Preloader( imageLocations ) {
+				function Preloader( observations ) {
 
 					// I am the image SRC values to preload.
-					this.imageLocations = imageLocations;
+					this.observations = observations;
 
 					// As the images load, we'll need to keep track of the load/error
 					// counts when announing the progress on the loading.
-					this.imageCount = this.imageLocations.length;
+					// if theres only one observation, we should load all images from that single obs.
+					this.imageCount = (this.observations.length > 1) ? this.observations.length : this.observations[0].Images.length;
 					this.loadCount = 0;
 					this.errorCount = 0;
 					this.missingImages = [];
@@ -43,13 +44,14 @@ angular.module('svampeatlasApp')
 
 				// I reload the given images [Array] and return a promise. The promise
 				// will be resolved with the array of image locations.
-				Preloader.preloadImages = function( imageLocations ) {
+				Preloader.preloadImages = function( observations ) {
 
-					var preloader = new Preloader( imageLocations );
+					var preloader = new Preloader( observations );
 
 					return( preloader.load() );
 
 				};
+				
 
 
 				// ---
@@ -106,9 +108,17 @@ angular.module('svampeatlasApp')
 
 						
 						var that = this;
-						_.each(this.imageLocations, function(i){
-							that.loadImageLocation(i)
-						})	
+						
+						if(this.observations.length > 1){
+							_.each(this.observations, function(obs){
+								that.loadimage(obs.Images[0])
+							})
+						} else {
+							_.each(this.observations[0].Images, function(img){
+								that.loadimage(img)
+							})
+						}
+							
 
 						
 
@@ -124,28 +134,28 @@ angular.module('svampeatlasApp')
 
 
 					// I handle the load-failure of the given image location.
-					handleImageError: function handleImageError( imageLocation ) {
+					handleImageError: function handleImageError( imgref ) {
 
 						this.errorCount++;
 						
-						imageLocation.imageLoadError = true;
-						this.missingImages.push(imageLocation.Images[0]._id)
-						//this.failed[imageLocation._id] = true;
+						imgref.imageLoadError = true;
+						this.missingImages.push(imgref._id)
+						//this.failed[observation._id] = true;
 						//this.state = this.states.REJECTED;
 						
-						//this.deferred.reject( imageLocation );
+						//this.deferred.reject( observation );
 						this.continueOrResolve()
 
 					},
 
 
 					// I handle the load-success of the given image location.
-					handleImageLoad: function handleImageLoad( imageLocation ) {
+					handleImageLoad: function handleImageLoad( imgref ) {
 
 						this.loadCount++;
 
 
-						imageLocation.imageLoadSuccess = true;
+						imgref.imageLoadSuccess = true;
 						// Notify the progress of the overall deferred. This is different
 						// than Resolving the deferred - you can call notify many times
 						// before the ultimate resolution (or rejection) of the deferred.
@@ -173,7 +183,7 @@ angular.module('svampeatlasApp')
 					// events back into the preloader instance.
 					// --
 					// NOTE: The load/error events trigger a $digest.
-					loadImageLocation: function loadImageLocation( imageLocation ) {
+					loadimage: function loadimage( imgref ) {
 
 						var preloader = this;
 
@@ -184,13 +194,14 @@ angular.module('svampeatlasApp')
 						var image = $( new Image() )
 							.load(
 								function( event ) {
-
+									imgref.width = this.width;
+									imgref.height = this.height;
 									// Since the load event is asynchronous, we have to
 									// tell AngularJS that something changed.
 									$rootScope.$apply(
 										function() {
 
-											preloader.handleImageLoad( imageLocation );
+											preloader.handleImageLoad( imgref );
 
 											// Clean up object reference to help with the
 											// garbage collection in the closure.
@@ -209,7 +220,7 @@ angular.module('svampeatlasApp')
 									$rootScope.$apply(
 										function() {
 
-											preloader.handleImageError( imageLocation );
+											preloader.handleImageError( imgref );
 
 											// Clean up object reference to help with the
 											// garbage collection in the closure.
@@ -220,7 +231,7 @@ angular.module('svampeatlasApp')
 
 								}
 							)
-							.prop( "src", appConstants.imageurl + imageLocation.Images[0].name + ".JPG" )
+							.prop( "src", appConstants.imageurl + imgref.name + ".JPG" )
 						;
 
 					}

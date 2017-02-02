@@ -147,7 +147,11 @@ div.md-gridtile-hide-upper-left  > button > md-icon {
 }
 
   
-
+.demo-dialog-button, .demo-dialog-content {
+    padding: 0 15px;
+    width: 100%;
+    background-color: #fff;
+}
 
 
 

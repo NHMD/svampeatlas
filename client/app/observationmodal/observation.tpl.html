@@ -120,15 +120,39 @@
 	        </md-tab>
 	        <md-tab label="Billeder ({{obs.Images.length}})">
 	          <md-content class="md-padding">
-		      <md-grid-list
-		            md-cols="1" 
-		            md-row-height-gt-md="1:1" md-row-height="4:3"
-		            md-gutter="8px" md-gutter-gt-sm="4px" >
-		        <md-grid-tile ng-repeat="img in obs.Images" >
-		          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
-         
-		        </md-grid-tile>
-		      </md-grid-list>
+		     <md-grid-list
+		           md-cols="1" 
+		           md-row-height="4:3"
+		           md-gutter="12px" md-gutter-gt-sm="8px" >
+   
+		       <md-grid-tile ng-repeat="img in obs.Images" 
+		       md-colspan-sm="1" md-rowspan="{{(img.height > img.width) ? 2: 1}}"
+		     ng-if="!img.imageLoadError"
+		     ng-style="getBackgroundStyle(img)"
+		    	 ng-click="openImage(img)"
+		  	 >
+		        <!-- <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" ng-click="openImage(img)">-->
+   	       
+		   
+		  	   	<div class="md-gridtile-hide-upper-left" ng-if="Auth.hasRole('validator')">
+			
+					<md-button ng-click="toggleHide(img, !img.hide); $event.stopPropagation();"><md-icon ng-if="!img.hide" md-font-icon="fa fa-eye-slash fa-2x"  ></md-icon ><md-icon ng-if="img.hide" md-font-icon="fa fa-eye fa-2x" ></md-icon ></md-button></div>
+		   
+		  		   <div class="md-gridtile-delete-upper-right" ng-if="(Auth.hasRole('validator') || Auth.hasRole('taxonimageadmin') )&& img.Photographer.photopermission" >
+			   
+		       		   <md-button  ng-click='addToSpeciesPage(img) ; $event.stopPropagation();'>
+		                 <ng-md-icon icon="star"></ng-md-icon>
+		               </md-button>
+			   
+			   
+			   
+		   
+		   
+				   </div>
+		   
+
+		       </md-grid-tile>
+		     </md-grid-list>
 	          </md-content>
 	        </md-tab>
 	      </md-tabs>
@@ -221,13 +245,13 @@
  	   <div ng-include="'app/observationmodal/commentlist.tpl.html'"> </div> 
 </div>
 	
+<md-card flex="40">	
 	
-	 <div flex="40" layout-padding>
 	 <leaflet id="observationdetailmap" width="100%" height="250px" paths="mapsettings.paths" center="mapsettings.center" markers="mapsettings.markers" controls="mapsettings.controls" layers="mapsettings.layers"></leaflet>
 	  <md-subheader class="md-no-sticky">{{'Præcision' | translate}}: {{obs.accuracy}} m</md-subheader>
 	 
 	 
-     <md-grid-list
+ <!--    <md-grid-list
            md-cols="1" 
            md-row-height-gt-md="1:1" md-row-height="4:3"
            md-gutter="8px" md-gutter-gt-sm="4px" >
@@ -248,12 +272,50 @@
 		
     	   </md-grid-tile-footer> 
        </md-grid-tile>
+     </md-grid-list> -->
+	 
+     <md-grid-list
+           md-cols="1" 
+           md-row-height="4:3"
+           md-gutter="12px" md-gutter-gt-sm="8px" >
+   
+       <md-grid-tile ng-repeat="img in obs.Images" 
+       md-colspan-sm="1" md-rowspan="{{(img.height > img.width) ? 2: 1}}"
+     ng-if="!img.imageLoadError"
+     ng-style="getBackgroundStyle(img)"
+    	 ng-click="openImage(img)"
+  	 >
+        <!-- <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" ng-click="openImage(img)">-->
+   	       
+		   
+  	   	<div class="md-gridtile-hide-upper-left" ng-if="Auth.hasRole('validator')">
+			
+			<md-button ng-click="toggleHide(img, !img.hide); $event.stopPropagation();"><md-icon ng-if="!img.hide" md-font-icon="fa fa-eye-slash fa-2x"  ></md-icon ><md-icon ng-if="img.hide" md-font-icon="fa fa-eye fa-2x" ></md-icon ></md-button></div>
+		   
+  		   <div class="md-gridtile-delete-upper-right" ng-if="(Auth.hasRole('validator') || Auth.hasRole('taxonimageadmin') )&& img.Photographer.photopermission" >
+			   
+       		   <md-button  ng-click='addToSpeciesPage(img) ; $event.stopPropagation();'>
+                 <ng-md-icon icon="star"></ng-md-icon>
+               </md-button>
+			   
+			   
+			   
+		   
+		   
+		   </div>
+		   
+
+       </md-grid-tile>
      </md-grid-list>
+	 
+	 
+	 
+	 
 	 
 	  <!-- <div layout layout-margin ng-repeat="img in obs.Images">
 		  
 		   <md-progress-circular md-mode="indeterminate" ng-show="loaded[img.name] !== true && failed[img.name] !== true"></md-progress-circular>
 	     <img   style="margin: auto; max-width: 100%; height:inherit;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
 	 </div> -->
- </div>
+ </md-card>
  </div>
