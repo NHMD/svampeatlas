@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader) {
 			var that = this;
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
@@ -23,7 +23,15 @@ angular.module('svampeatlasApp')
 				var win = window.open("/api/observations/" + id + "/capsule");
 				win.print();
 			}
+			
+			$scope.getBackgroundStyle = function(img){
+		
+				var url = appConstants.imageurl + img.name + ".JPG";
+		
 
+		
+			    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
+			}
 
 			$scope.toggleHide = function(img, hide) {
 
@@ -370,6 +378,10 @@ angular.module('svampeatlasApp')
 
 			function initObservation(obs) {
 				$scope.obs = obs;
+				if(obs.Images && obs.Images.length >0){
+					preloader.preloadImages( [obs], obs.Images.length);
+					
+				}
 				$scope.userIsFinder = function(usr) {
 					var found = false;
 					for (var i = 0; i < $scope.obs.users.length; i++) {

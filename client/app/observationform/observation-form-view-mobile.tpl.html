@@ -22,42 +22,46 @@
 	        <md-tab label="Billeder ({{(obs) ? obs.Images.length + ctrl.files.length : ctrl.files.length}})" ng-if="ctrl.files.length > 0 || obs.Images.length > 0">
 	          <md-content class="md-padding" md-scroll-y layout-fill flex>
 			  
-		 	<md-card ng-repeat="file in ctrl.files" >
-		 	<md-card-header layout="row" layout-align="end start" class="img-preview" flex="nogrow">
+	<md-grid-list
+	         md-cols-xs="1" md-cols-sm="2" md-cols-md="2" md-cols-gt-md="2"
+	        md-row-height="1:1"  md-row-height-gt-sm="3:2"
+	        md-gutter="12px" md-gutter-gt-sm="8px">
+
+	<md-grid-tile ng-repeat="file in ctrl.files"
+                 
+	                  md-colspan-sm="1"
+	            ngf-background="file"
+				   ng-style="{'background-size': 'cover'}"
+			 
+					  >
 		
-		  
-		         <md-button class="md-icon-button" aria-label="Remove" >
-		           <ng-md-icon icon="close" ng-click="$parent.removeImageFromUpload(file)"></ng-md-icon>
-		         </md-button> 
-		 	</md-card-header>
-	
-		 	<md-card-content layout-align="center center">
-		 	 <img ngf-src="file"  ngf-resize="{width: 300, height: 300}" >
-		 	 </md-card-content>
-	 
-		 	</md-card>
+	    <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
+		<div class="md-gridtile-delete-upper-right"><md-button ng-click="removeImageFromUpload(file)"><ng-md-icon icon="clear"></ng-md-icon></md-button></div>
+	      <md-grid-tile-footer  >{{file.name}}
+	  </md-grid-tile-footer>
+	  </md-grid-tile>
+	  </md-grid-list>
 			
-	      <md-grid-list
-	            md-cols="1" 
-	            md-row-height-gt-md="1:1" md-row-height="4:3"
-	            md-gutter="8px" md-gutter-gt-sm="4px" >
-	        <md-grid-tile ng-repeat="img in obs.Images" >
-	          <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" >
-	       <md-grid-tile-footer class="obs-form-image">
-   		   <md-button ng-if="Auth.hasRole('validator') && !img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, true)'>
-             <i class="fa fa-eye-slash fa-2x hide-icon"></i> 
-           </md-button>
-   		   <md-button ng-if="Auth.hasRole('validator') && img.hide" class="md-fab md-mini md-warn" aria-label="Hide"  ng-click='toggleHide(img, false)'>
-             <i class="fa fa-eye fa-2x hide-icon"></i> 
-           </md-button>
+   <md-grid-list
+         md-cols="1" 
+         md-row-height="4:3"
+         md-gutter="12px" md-gutter-gt-sm="8px" >
+   
+     <md-grid-tile ng-repeat="img in obs.Images" 
+     md-colspan-sm="1" md-rowspan="{{(img.height > img.width) ? 2: 1}}"
+   ng-if="!img.imageLoadError"
+   ng-style="getBackgroundStyle(img)"
+	 >
+      <!-- <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" ng-click="openImage(img)">-->
+   	       
 		   
-   		   <md-button class="md-fab md-mini md-warn" aria-label="Delete" ng-if="Auth.hasRole('validator') || ( Auth.getCurrentUser()._id === img.user_id && moment(img.createdAt) > moment().subtract(1, 'weeks') )" ng-click='deleteImg(img)'>
-             <ng-md-icon icon="close"></ng-md-icon> 
-           </md-button>
-		
-	   </md-grid-tile-footer>
-	        </md-grid-tile>
-	      </md-grid-list>
+	   	<div class="md-gridtile-hide-upper-left" ng-if="Auth.hasRole('validator')"><md-button ng-click="toggleHide(img, !img.hide); $event.stopPropagation();"><md-icon ng-if="!img.hide" md-font-icon="fa fa-eye-slash fa-2x"  ></md-icon ><md-icon ng-if="img.hide" md-font-icon="fa fa-eye fa-2x" ></md-icon ></md-button></div>
+		   
+		   <div class="md-gridtile-delete-upper-right"><md-button aria-label="Delete" ng-if="Auth.hasRole('validator') || ( currentUser._id === img.user_id && moment(img.createdAt) > moment().subtract(1, 'weeks') )" ng-click='deleteImg(img); $event.stopPropagation();'><ng-md-icon icon="clear"></ng-md-icon></md-button></div>
+		   
+
+     </md-grid-tile>
+   </md-grid-list>
 			
 	          </md-content>
 			 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies',
-		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, $mdSidenav, ssSideNav, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies) {
+	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader',
+		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, $mdSidenav, ssSideNav, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader) {
 			var row = ObservationStateService.get();
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
@@ -165,7 +165,10 @@ angular.module('svampeatlasApp')
 						// edit mode
 						if (obs) {
 							$scope.obs = obs;
-
+							if(obs.Images && obs.Images.length >0){
+								preloader.preloadImages( [obs], obs.Images.length);
+					
+							};
 							if (obs.Locality) {
 								$scope.selectedLocality.push(obs.Locality);
 							};
@@ -963,7 +966,7 @@ angular.module('svampeatlasApp')
 		
   			this.use = function() {
   			 mdPanelRef.close().then(function() {
-  			    angular.element(document.querySelector('#determinations-btn')).focus();
+  			    
   			    mdPanelRef.destroy();
 				var latLon = GeoJsonUtils.exifGpsDataToLatLong(exif.GPSLatitude, exif.GPSLongitude)
 				$scope.mapsettings.markers.position = {
@@ -972,7 +975,11 @@ angular.module('svampeatlasApp')
 					layer: 'position'
 
 				}
-				
+				that.inputposition = { 
+					lat: parseFloat(latLon[0]),
+					lng: parseFloat(latLon[1]),
+					layer: 'position'
+				};
 				
 				
 				if (!GeoJsonUtils.inDK($scope.mapsettings.markers.position)) {

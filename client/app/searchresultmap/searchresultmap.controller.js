@@ -15,7 +15,10 @@ angular.module('svampeatlasApp')
 					lng: 11.5,
 					zoom: zoom
 				},
-				drawControl: true,
+				//drawControl: true,
+				controls: {
+				                    scale: true
+				                },
 				markers: {},
 				layers: {
 					baselayers: {
