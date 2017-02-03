@@ -68,13 +68,13 @@
  	          </md-button>
 			  </md-menu-item>
 			  <md-menu-item>
- 	         <md-button aria-label="add determination"  ng-click="showDeterminationDialog($event, obs)">
+ 	         <md-button aria-label="add determination"  ng-click="ctrl.DeterminationModalService.show($event, obs, 'validatorbutton', false)">
  			  
  	            <ng-md-icon icon="undo"></ng-md-icon> {{"Ombestem" | translate}}
  	          </md-button> 
 			  </md-menu-item>
 			  <md-menu-item>
-  	         <md-button aria-label="add determination"  ng-click="showDeterminationEditDialog($event, obs)">
+  	         <md-button aria-label="Edit determination"  ng-click="ctrl.DeterminationModalService.show($event, obs, 'validatorbutton', true)">
   			  
   	            <ng-md-icon icon="edit"></ng-md-icon> {{"Ret bestemmelse" | translate}}
   	          </md-button>

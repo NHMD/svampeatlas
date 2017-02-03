@@ -4,6 +4,7 @@ angular.module('svampeatlasApp')
 	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader',
 		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader) {
 			var that = this;
+			this.DeterminationModalService = DeterminationModalService;
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
 			$scope.openSideNav = function() {
@@ -159,15 +160,7 @@ angular.module('svampeatlasApp')
 													})
 			}
 
-			var sender = ($stateParams.observationid) ? 'ObservationPage' : 'ObservationModalService';
-
-
-			$scope.showDeterminationDialog = function($event, obs) {
-				DeterminationModalService.show($event, obs, sender);
-			}
-			$scope.showDeterminationEditDialog = function($event, obs) {
-				DeterminationModalService.show($event, obs, sender, true);
-			}
+			
 
 
 			$scope.postComment = function() {
@@ -178,7 +171,7 @@ angular.module('svampeatlasApp')
 						content: that.newComment
 					})
 					.$promise.then(function(comment) {
-						$scope.forum.push(comment);
+						$scope.obs.Forum.push(comment);
 						delete that.newComment;
 
 						that.sendingComment = false;
@@ -390,7 +383,7 @@ angular.module('svampeatlasApp')
 					return found;
 				}
 
-				$scope.forum = obs.Forum;
+				
 				$mdExpansionPanel().waitFor('commentsPanel').then(function (instance) { instance.expand();});
 
 

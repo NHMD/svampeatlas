@@ -207,11 +207,12 @@ angular.module('svampeatlasApp')
 
 						$scope.totalCount = headers('count');
 
-						$scope.displayed = $scope.displayed.concat(result);
+						
 						
 						preloader.preloadImages(result).then(
 							function(missingImages){
 								$scope.isLoading = false;
+								$scope.displayed = $scope.displayed.concat(result);
 								// returns an array of _id´s of failed images. May ne posted to server to flag missing images
 							}
 						)

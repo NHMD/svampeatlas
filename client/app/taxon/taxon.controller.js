@@ -322,7 +322,7 @@ angular.module('svampeatlasApp')
 					})
 				});
 				
-			$scope.mycokeyCharacters = MycokeyCharacters.query()
+				$scope.mycokeyCharacters = MycokeyCharacters.query();
 				$scope.mycokeyGroups = MycokeyCharacters.getGroups();	
 				$scope.mycokeyMap = {}; 
 				$q.all([$scope.taxon.$promise, $scope.natureTypes.$promise, $scope.taxonomyTags.$promise, $scope.mycokeyCharacters.$promise, $scope.mycokeyGroups.$promise]).then(function() {
@@ -394,6 +394,7 @@ angular.module('svampeatlasApp')
 				if(newVal && newVal._id && (newVal !== oldVal)){
 					Taxon.getMycoKeyCharacters({id: newVal._id}).$promise.then(function(characters){
 						$scope.suggestedImportCharacters = characters;
+						
 					})
 				} else {
 					delete $scope.suggestedImportCharacters;
@@ -444,14 +445,30 @@ angular.module('svampeatlasApp')
 					$scope.attachFunRecord();
 					$scope.taxon.Children = [];
 					$scope.calculateParentRanksForSlider([]);
-
+					
+					
 					$state.go('taxonlayout-taxon', {
 						id: taxon._id
 					}, {
 						inherit: false,
 						notify: false
 					});
+					
+					$scope.mycokeyCharacters = MycokeyCharacters.query();
+					$scope.mycokeyGroups = MycokeyCharacters.getGroups();	
+					$scope.mycokeyMap = {}; 
+					
+					$scope.selectedMycoKeyImportTaxon = $scope.taxon.Parent;
+					return 	$q.all([$scope.mycokeyCharacters.$promise, $scope.mycokeyGroups.$promise])	
 
+
+				}).then(function(){
+					
+					_.each($scope.mycokeyCharacters, function(c){
+						$scope.mycokeyMap[c.CharacterID] = c;
+					})
+					
+					$scope.mycokeyImportModal.show();
 				})
 					.
 				catch (function(err) {
@@ -881,7 +898,7 @@ angular.module('svampeatlasApp')
 
 			}
 
-			$scope.activePanel = 1;
+			$scope.activePanel = 0;
 
 
 

@@ -66,6 +66,11 @@ md-list-item > img {
 	z-index: 1 !important;
 }
 
+.leaflet-bottom {
+	z-index: 1 !important;
+}
+
+
 #frontpagemap {
 	min-width: 500px;
 }

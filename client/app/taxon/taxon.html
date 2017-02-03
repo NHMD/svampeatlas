@@ -121,7 +121,7 @@
 				
 				<div class="panel-group" role="tablist" aria-multiselectable="true" ng-model="activePanel"  bs-collapse>
 		    	  <!-- ########################################-->
-		    	  <div class="panel panel-default">
+		    	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
 		    	    <div class="panel-heading" role="tab">
 		    	      <h4 class="panel-title">
 		    	        <a bs-collapse-toggle>
@@ -199,7 +199,7 @@
 			    	  </div>
 			    	  <!-- ########################################-->
 			    	  <!-- ########################################-->
-			    	  <div class="panel panel-default" >
+			    	  <div class="panel panel-default" ng-if="taxon._id !== undefined">
 			    	    <div class="panel-heading" role="tab">
 			    	      <h4 class="panel-title">
 			    	        <a bs-collapse-toggle>

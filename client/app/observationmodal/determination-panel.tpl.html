@@ -77,6 +77,9 @@
         </md-chip-template>
 
       </md-chips>
+	 <md-switch ng-if="ctrl.Auth.hasRole('validator')" ng-model="ctrl.determination.validation" aria-label="validation" ng-true-value="'Godkendt'" ng-false-value="'Valideres'" >
+	     {{'Godkendt' | translate}}
+	   </md-switch>
 	      </div>
 		  <div layout="row" layout-margin>
  		 	   
@@ -137,11 +140,13 @@
 
       </div>
 
-  <div layout="row" class="demo-dialog-button">
-    <md-button md-autofocus flex class="md-primary" ng-click="ctrl.closeDialog()" translate>
+  <div class="demo-dialog-button" layout="row">
+	  
+	  <span flex></span>
+    <md-button   class="md-primary" style="margin-right:20px;" ng-click="ctrl.closeDialog()" >
       {{'Fortryd' | translate}}
     </md-button>
-    <md-button ng-click="ctrl.saveDetermination()" style="margin-right:20px;" ng-disabled="1 > newTaxon.length">
+    <md-button ng-click="ctrl.saveDetermination()" class="md-primary" style="margin-right:20px;" ng-disabled="1 > newTaxon.length">
       {{'Gem' | translate}}
     </md-button>
   </div>

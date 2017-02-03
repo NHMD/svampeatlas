@@ -56,6 +56,8 @@ angular.module('svampeatlasApp')
 				that.determination = {
 					
 				};
+				
+				that.determination.validation = (sender === 'validatorbutton') ? "Godkendt" : "Valideres";
 			}
 			
 			
@@ -69,7 +71,7 @@ angular.module('svampeatlasApp')
   			
 			this.closeDialog = function() {
 			 mdPanelRef.close().then(function() {
-			    angular.element(document.querySelector(ev.currentTarget)).focus();
+			    //angular.element(document.querySelector(ev.currentTarget)).focus();
 			    mdPanelRef.destroy();
 			  });
 			};

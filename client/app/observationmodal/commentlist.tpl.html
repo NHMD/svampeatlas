@@ -1,7 +1,7 @@
 		  <md-expansion-panel md-component-id="commentsPanel" class="determination-panel">
 
 		    <md-expansion-panel-collapsed>
-		      <div class="md-title">{{'Kommentarer' | translate}} ({{forum.length}})</div>
+		      <div class="md-title">{{'Kommentarer' | translate}} ({{obs.Forum.length}})</div>
 		      <div class="md-summary"></div>
 		      <md-expansion-panel-icon></md-expansion-panel-icon>
 		    </md-expansion-panel-collapsed>
@@ -10,7 +10,7 @@
 		    <md-expansion-panel-expanded>
 
 		      <md-expansion-panel-header ng-click="$panel.collapse()">
-		        <div class="md-title">{{'Kommentarer' | translate}} ({{forum.length}})</div>
+		        <div class="md-title">{{'Kommentarer' | translate}} ({{obs.Forum.length}})</div>
 		         <div class="md-summary"></div>
 		        <md-expansion-panel-icon ></md-expansion-panel-icon>
 		      </md-expansion-panel-header>
@@ -19,7 +19,7 @@
 		        
 						   	     <md-list>
 		  		
-						   	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in forum">
+						   	       <md-list-item class="md-3-line md-long-text" ng-repeat="elm in obs.Forum">
 		   
 						  		   <user-avatar class="useravatar md-avatar" user="elm.User" ></user-avatar> 
 	   
@@ -37,7 +37,7 @@
 			 
 						  			   <md-divider class="forum-divider" ng-if="!$last"></md-divider>                        
 						   	       </md-list-item>
-						 	       <md-list-item class="md-3-line md-long-text comment-field" ng-if="isLoggedIn()">
+						 	       <md-list-item class="md-3-line md-long-text comment-field" ng-if="User">
 		   
 								   <user-avatar class="useravatar md-avatar" user="User" ></user-avatar> 
 	   
