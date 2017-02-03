@@ -9,8 +9,8 @@
      
      
     </md-card>
-	<div ng-include="'app/observationmodal/determinationlist.tpl.html'" flex></div>
-	<div ng-include="'app/observationmodal/commentlist.tpl.html'"></div>
+	<div ng-if="obs && obs._id" ng-include="'app/observationmodal/determinationlist.tpl.html'" flex></div>
+	<div ng-if="obs && obs._id" ng-include="'app/observationmodal/commentlist.tpl.html'"></div>
 </div>
 	<div flex="40" >
 		 <md-card>
@@ -50,7 +50,6 @@
      ngf-drag-over-class="'dragover'" ngf-multiple="true"   ngf-pattern="'image/jpeg'"
      ngf-resize="{width: 1200, height: 800, quality: .9,  restoreExif: true}"
 	 ngf-fix-orientation="true" ngf-hide-on-drop-not-available="true"
-  
      ><h3 class="md-title">{{'Træk billeder hertil' | translate}}</h3>
  	<ng-md-icon icon="camera_alt" size="64" style="margin-left: -24px"></ng-md-icon>
  </div>

@@ -17,12 +17,12 @@
 	 <md-grid-tile ng-repeat="tile in displayed"
                  
 	                   md-colspan-sm="1"
-					   ng-if="!tile.imageLoadError"
+					   ng-if="!tile.Images[0].imageLoadError"
 					   ng-style="getBackgroundStyle(tile)"
 					   ng-click="ObservationModalService.show($event, tile)"
 					   
 					   >
-	 		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.imageLoadSuccess">
+	 		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
 	 			<div flex="33"></div>
 	 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
 	 			<div flex="33"></div>

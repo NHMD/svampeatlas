@@ -241,7 +241,7 @@ exports.addDeterminationToObs = (req, res) => {
 					} */
 					
 					// TODO: allow validators to submit determinations that is not autovalidated
-					if (userIsValidator) {
+					if (userIsValidator && determination.validation === "Godkendt") {
 						determination.validation = "Godkendt";
 					} else {
 						// If it is the reporters own record and valideringskrav === 0, auto validate, otherwise set to  'Valideres'

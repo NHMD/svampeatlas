@@ -722,3 +722,10 @@ p.pagination-text {
 .cursor-pointer {
 	cursor: pointer;
 }
+
+button.table-button {
+	margin: 0px;
+    min-height: 20px;
+    min-width: 30px;
+	line-height: 0px;
+}

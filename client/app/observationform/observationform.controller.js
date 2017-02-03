@@ -20,6 +20,7 @@ angular.module('svampeatlasApp')
 			};
 
 			var that = this;
+			this.DeterminationModalService = DeterminationModalService;
 			$scope.$translate = $translate;
 			$scope.imageurl = appConstants.imageurl;
 			$scope.maxDate = new Date();
@@ -30,7 +31,7 @@ angular.module('svampeatlasApp')
 			$scope.associatedOrganismImport = [];
 			$scope.determiner = [];
 			$scope.users = [];
-			$scope.currentUser = Auth.getCurrentUser();
+			$scope.currentUser = $scope.User = Auth.getCurrentUser();
 			$scope.Auth = Auth;
 			$scope.moment = moment;
 			
@@ -147,12 +148,7 @@ angular.module('svampeatlasApp')
 					})
 			}
 
-			$scope.showDeterminationDialog = function($event, obs) {
-				DeterminationModalService.show($event, obs, 'ObservationFormService');
-			}
-			$scope.showDeterminationEditDialog = function($event, obs) {
-				DeterminationModalService.show($event, obs, 'ObservationFormService', true);
-			}
+			
 
 
 			// wrap initial load of obs in timeout to increase speed
