@@ -280,6 +280,7 @@ exports.me = function(req, res, next) {
 			],
 			include: [{
 				model: models.Role
+				
 			}]
 		})
 		.then(function(user) { // don't ever give out the password or salt

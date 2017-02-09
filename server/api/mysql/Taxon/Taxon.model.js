@@ -156,6 +156,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
     },
 	*/
+    morphogroup_id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+    },
     parent_id: {
       type: DataTypes.INTEGER(11),
       allowNull: true,

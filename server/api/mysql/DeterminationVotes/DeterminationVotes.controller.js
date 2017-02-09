@@ -14,6 +14,7 @@ var _ = require('lodash');
 var models = require('../')
 var DeterminationVote = models.DeterminationVote;
 var Promise = require("bluebird");
+var determinationController = require('../Determination/Determination.controller');
 
 var nestedQueryParser = require("../nestedQueryParser")
 
@@ -182,7 +183,7 @@ exports.addVoteToDetermination= (req, res) => {
 	vote.determination_id = req.params.id;
 	vote.user_id = req.user._id;
 
-models.Determination.find({where:{_id: req.params.id}})
+models.Determination.find({where:{_id: req.params.id}, include:[{model:models.Taxon, as: 'Taxon', include: [{model: models.Taxon, as: "acceptedTaxon"}]}]})
 	.then(function(det){
 		
 		if(det.user_id === req.user._id){
@@ -190,12 +191,12 @@ models.Determination.find({where:{_id: req.params.id}})
 		}
 		vote.observation_id= det.observation_id;
 		
-		return [getUserImpact(req.user, det), det];
+		return [determinationController.getUserBaseImpact(req.user._id, det.Taxon),  det];
 		
 		
 		
 	})
-	.spread(function(userImpact, det){
+	.spread(function(userImpact,  det){
 		
 		if(vote.upOrDown === 'up'){
 			vote.score = parseInt(userImpact);
@@ -213,14 +214,14 @@ models.Determination.find({where:{_id: req.params.id}})
 	.spread(function(vote, det){
 		
 		
-		return [DeterminationVote.find({where: {determination_id: det._id, user_id: vote.user_id}}), det ,models.DeterminationVote.sum('score', { where: { determination_id: det._id } })]; 
+		return [DeterminationVote.find({where: {determination_id: det._id, user_id: vote.user_id}}), det ,models.DeterminationVote.sum('score', { where: { determination_id: det._id } }), determinationController.getTaxonWeight(det.Taxon)]; 
 		
 
 	})
-	.spread(function(vote,det, sum) {
+	.spread(function(vote,det, sum, taxonWeight) {
 		// extend to use det.baseScore
-		det.score = sum;
-		return [det.save(), {vote: vote, newDeterminationScore: sum}];
+		det.score = determinationController.getDeterminationScore(sum+det.baseScore, taxonWeight);
+		return [det.save(), {vote: vote, newDeterminationScore: det.score}];
 	})
     .spread(function(determinationSavePromise, result){
     	return res.status(201).json(result)
