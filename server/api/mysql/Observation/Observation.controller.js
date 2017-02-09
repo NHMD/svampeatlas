@@ -578,7 +578,8 @@ exports.show = function(req, res) {
 				},
 				{
 									model: models.DeterminationVote,
-									as: 'Votes'
+									as: 'Votes',
+									attributes: ['_id', 'createdAt']
 								},
 			
 			]
