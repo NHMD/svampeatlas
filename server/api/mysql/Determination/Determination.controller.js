@@ -203,6 +203,72 @@ exports.create = function(req, res) {
 
 };
 
+// t is the transaction that this determination should be created under
+
+function createDetermination(obs, determination, user, t) {
+
+	var userIsValidator = userTool.hasRole(user, 'validator');
+	
+	return Promise.all([models.Taxon.find({
+		where: {
+			_id: determination.taxon_id
+		},
+		include: [{
+			model: models.Taxon,
+			as: "acceptedTaxon",
+			include: [{
+				model: models.TaxonAttributes,
+				as: "attributes",
+				fields: ['validation']
+			},{
+				model: models.TaxonStatistics,
+				as: "Statistics"
+			}]
+		}]
+	}, {
+		transaction: t
+	}), obs])
+	.spread((taxon, obs) => {
+
+		
+		return [getUserBaseImpact(determination.user_id, taxon),getTaxonWeight(taxon, obs, t), taxon, obs]
+		
+		}).spread((baseScore, taxonWeight, taxon, obs) => {
+		
+		
+		console.log("### baseScore: "+baseScore)
+		console.log("### taxonWeight: "+taxonWeight)
+			
+		
+		
+			if (userIsValidator && determination.validation === "Godkendt") {
+			determination.validation = "Godkendt";
+		} else {
+			// If it is the reporters own record and valideringskrav === 0, auto validate, otherwise set to  'Valideres'
+		//	determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0 && determination.user_id === req.user._id) ? 'Godkendt' : 'Valideres';
+		determination.validation = 'Valideres';
+		} 
+
+		determination.createdByUser = user._id;
+		// if it was a newly created observation
+		if(!determination.observation_id) {
+			determination.observation_id = obs._id;
+		};
+		
+		determination.score = getDeterminationScore(baseScore, taxonWeight);
+		determination.baseScore = baseScore;
+		
+		return [Determination.create(determination, {
+			transaction: t
+		}), obs]
+	})
+
+
+
+};
+
+exports.createDetermination = createDetermination;
+
 exports.updateValidation = (req, res) => {
 
 
@@ -226,10 +292,9 @@ exports.addDeterminationToObs = (req, res) => {
 	var determination = req.body;
 	determination.observation_id = req.params.id;
 	determination.user_id = (determination.user_id) ? determination.user_id : req.user._id;
+	
 
-
-	console.log(determination)
-	models.sequelize.transaction(function(t) {
+	return models.sequelize.transaction(function(t) {
 
 			return models.Observation.find({
 					where: {
@@ -239,64 +304,7 @@ exports.addDeterminationToObs = (req, res) => {
 					transaction: t
 				})
 				.then((obs) => {
-					return [models.Taxon.find({
-						where: {
-							_id: determination.taxon_id
-						},
-						include: [{
-							model: models.Taxon,
-							as: "acceptedTaxon",
-							include: [{
-								model: models.TaxonAttributes,
-								as: "attributes",
-								fields: ['validation']
-							},{
-								model: models.TaxonStatistics,
-								as: "Statistics"
-							}]
-						}]
-					}, {
-						transaction: t
-					}), obs]
-				})
-				.spread((taxon, obs) => {
-
-					if (!obs) {
-						res.send(404);
-					};
-					
-					return [getUserBaseImpact(determination.user_id, taxon),getTaxonWeight(taxon, obs), taxon, obs]
-					
-					}).spread((baseScore, taxonWeight, taxon, obs) => {
-					
-					
-					console.log("### baseScore: "+baseScore)
-					console.log("### taxonWeight: "+taxonWeight)
-						
-						
-					/* Now anybody can add determinations to any observation ???
-					
-					if (req.user._id !== obs.primaryuser_id && !userIsValidator) {
-
-						throw new Error("Forbidden")
-					} */
-					
-					// TODO: allow validators to submit determinations that is not autovalidated
-					if (userIsValidator && determination.validation === "Godkendt") {
-						determination.validation = "Godkendt";
-					} else {
-						// If it is the reporters own record and valideringskrav === 0, auto validate, otherwise set to  'Valideres'
-					//	determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0 && determination.user_id === req.user._id) ? 'Godkendt' : 'Valideres';
-					determination.validation = 'Valideres';
-					} 
-
-					determination.createdByUser = req.user._id;
-					determination.score = getDeterminationScore(baseScore, taxonWeight);
-					determination.baseScore = baseScore;
-					
-					return [Determination.create(determination, {
-						transaction: t
-					}), obs]
+					return createDetermination(obs, determination, req.user, t);
 				}).spread((det, obs) => {
 					var update = (userIsValidator || obs.primaryuser_id === req.user._id) ? models.Observation.update({
 						primarydetermination_id: det._id
@@ -334,9 +342,17 @@ exports.addDeterminationToObs = (req, res) => {
 
 
 
-function getDeterminationScore(usrscore, taxonweight){
+function getDeterminationScore(usrscore, taxonweight, absScore){
 	
-	return Math.ceil(usrscore / (usrscore + taxonweight) *100)
+	if(absScore){
+		console.log("using absscore")
+		return Math.ceil((usrscore / (absScore + taxonweight)) *100)
+		
+	} else {
+		console.log("using regular")
+		return Math.ceil((usrscore / (usrscore + taxonweight)) *100)
+	}
+	
 }
 
 exports.getDeterminationScore = getDeterminationScore;
@@ -382,7 +398,7 @@ exports.getUserBaseImpact = getUserBaseImpact;
 
 
 
-function getTaxonWeight(taxon, obs){
+function getTaxonWeight(taxon, obs, t){
 	
 	// Observation included here to calculations based on phaenology
 	
@@ -398,7 +414,7 @@ function getTaxonWeight(taxon, obs){
 			
 			},
 			type: models.sequelize.QueryTypes.SELECT
-		}), getDistanceToClosetsAcceptedObservation(obs, taxon), getPhaenologyFactor(obs, taxon), previousRecordsThisMonth(obs, taxon)])
+		}), getDistanceToClosetsAcceptedObservation(obs, taxon, t), getPhaenologyFactor(obs, taxon), previousRecordsThisMonth(obs, taxon, t)])
 		
 		.spread(function(taxonCalculation, closestDistance, phaenologyFactor, prevRecordsThisMonth){
 			console.log("#### Using Taxon weight: "+taxonCalculation[0].TaxonWeight)
@@ -426,7 +442,7 @@ function getTaxonWeight(taxon, obs){
 				console.log("#### Adding penalty for distance: "+DISTANCE_PENALTY_VALUE)
 			}
 			
-			if(prevRecordsThisMonth === 0 && taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT){
+			if(prevRecordsThisMonth === 0 && (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT)){
 				taxonWeight += PHAENOLOGY_PENALTY_VALUE;
 				console.log("#### Adding penalty for phaenology: "+PHAENOLOGY_PENALTY_VALUE)
 			}
@@ -440,7 +456,7 @@ exports.getTaxonWeight = getTaxonWeight;
 
 
 
-function getDistanceToClosetsAcceptedObservation(obs, taxon){
+function getDistanceToClosetsAcceptedObservation(obs, taxon, t){
 	var sql = `SELECT p._id, z._id, 
            p.distance_unit
                     * DEGREES(ACOS(COS(RADIANS(p.latpoint))
@@ -470,6 +486,7 @@ function getDistanceToClosetsAcceptedObservation(obs, taxon){
 				radius : SEARCH_CLOSEST_RADIUS
 			
    			},
+			transaction: t,
    			type: models.sequelize.QueryTypes.SELECT
    		})
    		.then(function(result){
@@ -482,7 +499,7 @@ function getDistanceToClosetsAcceptedObservation(obs, taxon){
 exports.getDistanceToClosetsAcceptedObservation = getDistanceToClosetsAcceptedObservation;
 
 
-function previousRecordsThisMonth(obs, taxon){
+function previousRecordsThisMonth(obs, taxon, t){
 	
 	
 	var sql = `SELECT COUNT(*) as count FROM Observation o JOIN Observation o2 JOIN Determination d JOIN Taxon t 
@@ -496,10 +513,11 @@ function previousRecordsThisMonth(obs, taxon){
 				accepted_score: ACCEPTED_SCORE
 			
    			},
+			transaction: t,
    			type: models.sequelize.QueryTypes.SELECT
    		})
    		.then(function(result){
-			console.log(" ######### previousRecordsThisMonth completed")
+		
 			var count = (result.length > 0) ? result[0].count : 0;
 			
 			return count;
@@ -509,8 +527,9 @@ function previousRecordsThisMonth(obs, taxon){
 }
 
 function getPhaenologyFactor(obs, taxon){
-	console.log(" ######### getPhaenologyFactor completed")
+		
 	if(taxon.acceptedTaxon.Statistics.accepted_count < PHAENOLOGY_MIN_ACCEPTED_COUNT){
+		
 		return Promise.resolve(1);
 	} else {
 	
@@ -521,7 +540,6 @@ function getPhaenologyFactor(obs, taxon){
    	return models.sequelize.query(sql, {
    			replacements: {
    				taxon_id: taxon.acceptedTaxon._id,
-				observation_id: obs._id,
 				accepted_score: ACCEPTED_SCORE
 			
    			},

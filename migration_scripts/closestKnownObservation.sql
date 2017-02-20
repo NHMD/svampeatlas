@@ -22,10 +22,55 @@
 	 
 	 
 	 
-	 SELECT COUNT(*), MONTH(observationDate)  FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= 10252 AND (d.validation="Godkendt" OR d.score > 99) GROUP BY MONTH(observationDate);
+	 SELECT COUNT(*), MONTH(observationDate)  FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= 10252 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate);
 	 
 	 
 
 
-
+	 select AVG(a.count) FROM (SELECT COUNT(*) as count, MONTH(observationDate)  
+	 FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id 
+	 AND t.accepted_id= 10252 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate)) a;
+	 
+	 
+	 65783
+	 
+	 
+	 SELECT COUNT(*), MONTH(observationDate)  FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= 65783 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate);
+	 
+	 select AVG(a.count) FROM (SELECT COUNT(*) as count, MONTH(observationDate)  
+	 FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id 
+	 AND t.accepted_id= 65783 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate)) a;
+	 
+	 
+	 14062
+	 
+	 
+	 SELECT COUNT(*), MONTH(observationDate)  FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= 14062 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate);
+	 
+	 select AVG(a.count) FROM (SELECT COUNT(*) as count, MONTH(observationDate)  
+	 FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id 
+	 AND t.accepted_id= 14062 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate)) a;
+	 
+	 
+	 12681
+	 SELECT COUNT(*), MONTH(observationDate)  FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= 12681 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate);
+	 
+	 select AVG(a.count) FROM (SELECT COUNT(*) as count, MONTH(observationDate)  
+	 FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id 
+	 AND t.accepted_id= 12681 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate)) a;
+	 
+	 
+	 
+	 
+	 17041
+	 
+	 SELECT COUNT(*), MONTH(observationDate)  FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= 17041 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate);
+	 
+	 select AVG(a.count) FROM (SELECT COUNT(*) as count, MONTH(observationDate)  
+	 FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id 
+	 AND t.accepted_id= 17041 AND (d.validation="Godkendt" OR d.score > 99) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate)) a;
+	 
+	 ------------
+	 SELECT COUNT(*) as count, MONTH(o.observationDate) FROM (Observation o JOIN Determination d JOIN Taxon t 
+	 	ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= 10000 AND (d.validation="Godkendt" OR d.score > 99) ) LEFT JOIN Observation o2 ON MONTH(o.observationDate) = MONTH(o2.observationDate) AND o2._id = 9170283 GROUP BY MONTH(o.observationDate);
 	 

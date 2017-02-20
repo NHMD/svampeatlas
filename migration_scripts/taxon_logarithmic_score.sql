@@ -30,3 +30,4 @@ select t.FullName, CEIL(CEIL((LOG10((SELECT MAX(accepted_count) +1.2 FROM TaxonS
 FROM (Taxon t JOIN TaxonAttributes a ON t._id= a.taxon_id AND a.PresentInDK = 1) LEFT JOIN TaxonStatistics ts  ON  ts.taxon_id = t._id WHERE ts.accepted_count > 500;
 
 
+
