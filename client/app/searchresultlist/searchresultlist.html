@@ -83,15 +83,17 @@
 	<md-button class="table-button" ng-if="currentUser._id === row.primaryuser_id" ng-click="ObservationFormService.show($event, row)">		<ng-md-icon icon="edit" ></ng-md-icon> </md-button>
 		</div>
 		</td>
-		<td data-title="Status"><md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">
+		<td data-title="Status"><md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt' &&  AcceptedDeterminationScore >= row.DeterminationView.Determination_score ">
           {{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}
         </md-tooltip>
 		<md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px')  && row.DeterminationView.Determination_validation === 'Afvist'" >
 		          {{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}
 		        </md-tooltip>
 		<ng-md-icon style="fill:red" ng-if="row.DeterminationView.Determination_validation === 'Afvist'" icon="block" ></ng-md-icon>
-			<ng-md-icon style="fill:wheat" ng-if="!Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
-			<ng-md-icon  ng-click="updateValidation(row)" style="{{(row.DeterminationView.Determination_validation === 'Valideres') ? 'fill:wheat' : 'fill:pink' }}" ng-if="Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="{{(row.DeterminationView.Determination_validation === 'Valideres') ? 'error' : 'pause_circle_filled' }}" ></ng-md-icon>
+			<ng-md-icon style="fill:wheat" ng-if="!Auth.hasRole('validator') && AcceptedDeterminationScore >= row.DeterminationView.Determination_score  && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
+			<ng-md-icon  ng-click="updateValidation(row)" style="{{(row.DeterminationView.Determination_validation === 'Valideres') ? 'fill:wheat' : 'fill:pink' }}" ng-if="Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="{{(row.DeterminationView.Determination_validation === 'Valideres') ? 'error' : 'pause_circle_filled' }}" ></ng-md-icon> 
+			
+			
 			
 			<ng-md-icon style="fill:green" ng-if="(mdMedia('xs') || Auth.hasRole('validator') ) && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
 		</td>

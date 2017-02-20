@@ -14,6 +14,7 @@ var config = require('../../../config/environment');
 var models = require('../')
 var Observation = models.Observation;
 var Promise = require("bluebird");
+var determinationController = require('../Determination/Determination.controller');
 
 var nestedQueryParser = require("../nestedQueryParser")
 var userTool = require("../userTool")
@@ -674,32 +675,7 @@ exports.create = function(req, res) {
 				}).then(function(obs) {
 
 
-
-					return [models.Taxon.find({
-						where: {
-							_id: determination.taxon_id
-						},
-						include: [{
-							model: models.Taxon,
-							as: "acceptedTaxon",
-							include: [{
-								model: models.TaxonAttributes,
-								as: "attributes",
-								fields: ['validation']
-							}]
-						}]
-					}, {
-						transaction: t
-					}), obs]
-				})
-				.spread(function(taxon, obs) {
-
-					determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0) ? 'Godkendt' : 'Valideres';
-					determination.observation_id = obs._id;
-					determination.createdByUser = req.user._id;
-					return [models.Determination.create(determination, {
-						transaction: t
-					}), obs]
+					return determinationController.createDetermination(obs, determination, req.user, t);
 
 				})
 				.spread(function(det, obs) {
