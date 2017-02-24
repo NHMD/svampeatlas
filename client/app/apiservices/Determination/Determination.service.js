@@ -29,6 +29,20 @@ angular.module('svampeatlasApp')
 				          return response.resource;
 				        }
 				      }
+			},
+			'removeVote': {
+				method: 'DELETE',
+				params: {
+					id: '@_id',
+					userid: 'userid'
+				},
+				url: '/api/determinations/:id/votes/:userid',
+				interceptor: {
+				        response: function(response) {
+				          response.resource.$httpHeaders = response.headers;
+				          return response.resource;
+				        }
+				      }
 			}
 			
 		});

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService) {
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
 			$scope.mdSidenav = $mdSidenav;
@@ -140,8 +140,22 @@ angular.module('svampeatlasApp')
 					}).$promise
 					.then(function(determination) {
 						$scope.obs.PrimaryDetermination.validation = determination.validation;
+						
 						var txt = (determination.validation === "Afventer") ? "Bestemmelse afventer" : ("Fundet er " + determination.validation);
 						$scope.showSimpleToast(txt)
+						return Observation.getDeterminations({id: $scope.obs._id})
+						/*
+						for(var i=0; i< $scope.obs.Determinations.length; i++){
+							if($scope.obs.Determinations[i]._id === $scope.obs.PrimaryDetermination._id){
+								$scope.obs.Determinations[i].validation = determination.validation;
+							}
+						}
+						*/
+						
+					})
+					.then(function(determinations) {
+						$scope.obs.Determinations = determinations;
+						
 					})
 					.catch(function(err) {
 
@@ -393,9 +407,9 @@ angular.module('svampeatlasApp')
 
 					for (var j = 0; j < obs.Determinations[i].Votes.length; j++) {
 						if (obs.Determinations[i].Votes[j].user_id === $scope.User._id) {
-							if (obs.Determinations[i].Votes[j].score > 0) {
+							if (parseInt(obs.Determinations[i].Votes[j].score) > 0) {
 								obs.Determinations[i].vote = "up"
-							} else if (obs.Determinations[i].Votes[j].score < 0) {
+							} else if (parseInt(obs.Determinations[i].Votes[j].score) < 0) {
 								obs.Determinations[i].vote = "down"
 							}
 
@@ -469,45 +483,7 @@ angular.module('svampeatlasApp')
 			};
 
 			$scope.vote = function($event, det, upOrDown) {
-
-				// if the vote is already there delete it (its another click in same direction to remove it)
-
-
-
-				//$($event.target).closest('ng-md-icon').addClass("green-thumb");
-				Determination.addVote({
-						id: det._id
-					}, {
-						upOrDown: (det.vote === upOrDown) ? 'zero' : upOrDown
-					})
-					.$promise.then(function(res) {
-						if (det.vote === upOrDown) {
-							delete det.vote;
-						} else {
-							det.vote = upOrDown;
-						}
-						det.score = res.newDeterminationScore
-					})
-					.catch(function(err) {
-						if(err.status === 403){
-							$mdToast.show(
-								$mdToast.simple()
-								.textContent($translate.instant("Du kan ikke stemme på dine egne bestemmelser"))
-								.position("top right")
-								
-								.parent($event.currentTarget.parentElement.parentElement.parentElement)
-								.hideDelay(3000)
-							);
-							
-							
-							
-						} else {
-							ErrorHandlingService.handle500();
-						}
-						
-					})
-
-
+				VotingService.vote($event, $scope.obs, det, upOrDown)
 			}
 		}
 	])

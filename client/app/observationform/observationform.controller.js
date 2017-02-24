@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader',
-		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, $mdSidenav, ssSideNav, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader) {
+	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService',
+		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, $mdSidenav, ssSideNav, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService) {
 			var row = ObservationStateService.get();
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
 			$scope.$cookies = $cookies;
+			$scope.vote = VotingService.vote;
 			$scope.openSideNav = function() {
 
 				$scope.menu.userHasForceClosed = false;
