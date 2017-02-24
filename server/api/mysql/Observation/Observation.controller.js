@@ -580,7 +580,7 @@ exports.show = function(req, res) {
 				{
 									model: models.DeterminationVote,
 									as: 'Votes',
-									attributes: ['_id', 'createdAt']
+									attributes: ['_id','user_id', 'createdAt',  'score']
 								},
 			
 			]

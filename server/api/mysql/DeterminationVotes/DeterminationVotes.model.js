@@ -39,7 +39,13 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 			defaultValue: 1
-		}
+		},
+		isDownVote: {
+		    type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ['score']),
+		    get: function() {
+		      return this.get('score') < 0
+		    }
+		  }
 	}, {
 		tableName: 'DeterminationVotes',
 		//	timestamps: false,

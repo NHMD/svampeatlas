@@ -30,6 +30,14 @@ angular.module('svampeatlasApp')
 				},
 				url: '/api/observations/:id/forum'
 			},
+			'getDeterminations': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/:id/determinations',
+				isArray: true
+			},
 			'addDetermination': {
 				method: 'POST',
 				params: {

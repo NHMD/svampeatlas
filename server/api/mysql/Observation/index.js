@@ -25,9 +25,9 @@ router.get('/:id', auth.appendUser(), nocache.noCache(), controller.show);
 
 router.get('/:id/forum', forumController.showForumForObs);
 router.post('/:id/forum', auth.isAuthenticated(), forumController.addCommentToObs);
-
 router.get('/:id/capsule', controller.generateCapsule);
 
+router.get('/:id/determinations', determinationController.getDeterminationsForObservation);
 
 router.post('/:id/determinations', auth.isAuthenticated(), determinationController.addDeterminationToObs); 
 
@@ -42,7 +42,6 @@ router.delete('/:id/users/:userid', auth.isAuthenticated(), controller.deleteUse
 
 router.get('/recent/localities', /*redisClient.use(), */ localityController.localititesWithRecentFindings);
 
-// using taxonomyadmin while testing
 router.post('/', auth.isAuthenticated(), controller.create);
 router.put('/:id', auth.isAuthenticated(),  controller.update);
 //router.patch('/:id', auth.hasRole('taxonomyadmin'),  controller.update);
