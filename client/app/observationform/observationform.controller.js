@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService',
-		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, $mdSidenav, ssSideNav, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService) {
+	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService','ValidatorToolsService',
+		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, $mdSidenav, ssSideNav, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService) {
 			var row = ObservationStateService.get();
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
@@ -35,6 +35,16 @@ angular.module('svampeatlasApp')
 			$scope.currentUser = $scope.User = Auth.getCurrentUser();
 			$scope.Auth = Auth;
 			$scope.moment = moment;
+			
+			
+			
+			$rootScope.$on('observation_updated', function(evt, obs) {
+				if ($scope.obs && obs._id === $scope.obs._id) {
+					$scope.obs = Observation.get({
+						id: obs._id
+					}).$promise.then(initObservation)
+				}
+			});
 			
 			$scope.getBackgroundStyle = function(img){
 		
@@ -131,27 +141,20 @@ angular.module('svampeatlasApp')
 				);
 			};
 
-			$scope.updateValidation = function(validation) {
-
-				Determination.updateValidation({
-						id: $scope.obs.PrimaryDetermination._id
-					}, {
-						validation: validation
-					}).$promise
-					.then(function(determination) {
-						$scope.obs.PrimaryDetermination.validation = determination.validation;
-						var txt = (determination.validation === "Afventer") ? "Bestemmelse afventer" : ("Fundet er " + determination.validation);
-						$scope.showSimpleToast(txt)
-					})
-					.catch(function(err) {
-
-						ErrorHandlingService.handle500();
-					})
-			}
+			$scope.updateValidation = ValidatorToolsService.updateValidation;
+			
+			$scope.setPrimaryDetermination = ValidatorToolsService.setPrimaryDetermination;
 
 			
 
-
+			function initObservation(){
+				
+				$scope.newTaxon = [];
+				$scope.selectedLocality = [];
+				$scope.associatedOrganism = (ObservationFormStateService.getState().ecology) ? ObservationFormStateService.getState().ecology.associatedOrganism : [];
+				$scope.associatedOrganismImport = [];
+				$scope.determiner = [];
+				$scope.users = [];
 			// wrap initial load of obs in timeout to increase speed
 			$timeout(function() {
 
@@ -325,7 +328,9 @@ angular.module('svampeatlasApp')
 
 
 			})
-
+		}
+		
+		initObservation();
 			// End timeout
 			this.inputposition = { };
 			$scope.$watch(angular.bind(this, function() {

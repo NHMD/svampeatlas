@@ -1007,14 +1007,19 @@ exports.destroy = function(req, res) {
 
 					obs.primarydetermination_id = null;
 				
-					return obs.save({
+					return [obs.save({
 							transaction: t
-						});
+						}), models.DeterminationVote.destroy({
+						where: {
+							observation_id: req.params.id
+						},
+						transaction: t
+					})];
 						
 					
 
 				})
-				.then(function(obs) {
+				.spread(function(obs) {
 
 
 					var q = {
@@ -1029,6 +1034,7 @@ exports.destroy = function(req, res) {
 						models.ObservationImage.destroy(q),
 						models.ObservationPlantTaxon.destroy(q),
 						models.ObservationUser.destroy(q)
+						
 					]
 
 				}).then(function() {

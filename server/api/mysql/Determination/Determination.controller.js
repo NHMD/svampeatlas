@@ -675,8 +675,8 @@ function swapPrimaryDeterminationIfNeeded(observation_id) {
 					return o.score;
 				});
 				console.log("###### new primary= "+newPrimaryDetermination._id)
-				obs.setPrimaryDetermination(newPrimaryDetermination);
-				return obs.save();
+			return	obs.setPrimaryDetermination(newPrimaryDetermination);
+			//	return obs.save();
 			}
 		})
 		
