@@ -1,0 +1,92 @@
+<div class="modal" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="$hide()">×</button>
+			<h4 class="modal-title">{{user_.name}}</h4></div>
+			
+			
+			
+				<div class="modal-body">
+					
+		  		<!--		   <md-input-container>
+		  				    <label>{{'Set max and min impact on Morphogroup' | translate}}</label>
+		   			 	  <md-select ng-change="selectMorphoGroup(selectedMorphoGroup)" ng-model="selectedMorphoGroup">
+		  	             <md-option ng-repeat="morphogroup in morphoGroups" value="{{morphogroup._id}}" >
+		  	               {{morphogroup.name_dk}}
+		  	             </md-option>
+		  			  </md-select>
+		  		  </md-input-container> -->
+					<div layout-gt-xs="row">
+					
+					<label>Set max and min impact on Morphogroup:
+					    <select class="form-control" ng-change="selectMorphoGroup(selectedMorphoGroup._id)" ng-model="selectedMorphoGroup" ng-options="morphogroup.name_dk for morphogroup in morphoGroups ">
+							{{morphogroup.name_dk}}
+					    </select>
+					  </label> 
+					  
+					 <span flex></span> <label> Calculated impact: {{currentMorphogroup.impact}}</label>
+				  </div>
+					
+					<!--<button type="button" class="btn btn-default" ng-model="selectedRole" data-html="1" bs-options="role.name for role in roles | filter:filterAlreadyAddedRoles" placeholder="Choose role" bs-select>
+					  Action <span class="caret"></span>
+					</button>-->
+						
+					    <md-slider-container ng-show="selectedMorphoGroup">
+					      <span>Min </span>
+					      <md-slider flex min="1" max="100" ng-model="currentMorphogroup.min_impact" aria-label="min" id="min-slider">
+					      </md-slider>
+					      <md-input-container>
+					        <input flex type="number" ng-model="currentMorphogroup.min_impact" aria-label="min" aria-controls="min-slider">
+					      </md-input-container>
+					    </md-slider-container>
+
+					    <md-slider-container ng-show="selectedMorphoGroup">
+					      <span>Max </span>
+					      <md-slider flex ng-model="currentMorphogroup.max_impact" min="1" max="100" aria-label="max" id="max-slider" class="md-accent">
+					      </md-slider>
+					      <md-input-container>
+					        <input flex type="number" ng-model="currentMorphogroup.max_impact" aria-label="max" aria-controls="max-slider">
+					      </md-input-container>
+					    </md-slider-container>
+						
+						
+					<!--	<form name="impactForm">
+	   			   <div layout-gt-xs="row">
+	     				   <md-input-container class="md-block" flex-gt-sm>
+	     				            <label>{{'Minimum impact' | translate}}</label>
+	     				            <input name="minImpact" type="number" min="1" max="100" ng-model="minImpact" />
+	  						<div ng-messages="$parent.impactForm.minImpact.$error" role="alert" >
+						              
+	  						          <span class="error" ng-show="$parent.impactForm.minImpact.$error">    {{'Tallet skal være mellem 1 og 100'}}</span>
+						             
+	  						            </div>
+			         
+	     				          </md-input-container>
+    				   <md-input-container class="md-block" flex-gt-sm>
+    				            <label>{{'Maximum impact' | translate}}</label>
+    				            <input name="maxImpact" type="number" min="1" max="100" ng-model="maxImpact" />
+ 						<div ng-messages="impactForm.maxImpact.$error" role="alert" >
+					          <span class="error" ng-show="impactForm.minImpact.$error">    {{'Tallet skal være mellem 1 og 100'}}</span>
+				             
+					            </div>
+ 						              
+				             
+ 						            </div>
+	         
+    				          </md-input-container>
+ 	   				   
+	   			   </div>
+			   </form> -->
+					<button type="button" ng-show="currentMorphogroup" class="btn btn-default" ng-click="saveUserMorphoGroupImpact(currentMorphogroup)">Save settings</button>
+					
+				
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> 
+				</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>

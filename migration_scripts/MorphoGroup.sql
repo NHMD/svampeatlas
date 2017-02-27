@@ -19,6 +19,27 @@ FOREIGN KEY (user_id) REFERENCES Users(_id),
 FOREIGN KEY (morphogroup_id) REFERENCES MorphoGroup(_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
+
+
+CREATE TABLE IF NOT EXISTS `UserMorphoGroupImpact` (
+  `user_id` int(11) NOT NULL,
+  `updatedByUser` int(11) DEFAULT NULL,
+  `morphogroup_id` int(11) NOT NULL,
+  `impact` int(5) DEFAULT '1',
+  `min_impact` int(5) DEFAULT '1',
+  `max_impact` int(5) DEFAULT '100',
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (user_id, morphogroup_id),
+  FOREIGN KEY (user_id) REFERENCES Users(_id),
+  FOREIGN KEY (updatedByUser) REFERENCES Users(_id),
+  FOREIGN KEY (morphogroup_id) REFERENCES MorphoGroup(_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
 ALTER TABLE Taxon ADD COLUMN morphogroup_id INT(11);
 ALTER TABLE Taxon ADD CONSTRAINT fk_morphogroup_id FOREIGN KEY (morphogroup_id) REFERENCES MorphoGroup(_id);
 

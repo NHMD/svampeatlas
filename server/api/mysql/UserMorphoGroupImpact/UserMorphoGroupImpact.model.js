@@ -10,6 +10,21 @@ module.exports = function(sequelize, DataTypes) {
 			references: "User",
 			referencesKey: "_id"
     },
+    updatedByUser: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+			references: "User",
+			referencesKey: "_id"
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     morphogroup_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -19,8 +34,13 @@ module.exports = function(sequelize, DataTypes) {
     impact: {
       type: DataTypes.INTEGER,
       allowNull: false,
+		defaultValue: 1
     },
-    base_impact: {
+    min_impact: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    max_impact: {
       type: DataTypes.INTEGER,
       allowNull: false
     },

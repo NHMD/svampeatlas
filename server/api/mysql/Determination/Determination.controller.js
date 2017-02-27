@@ -417,8 +417,6 @@ exports.getDeterminationScore = getDeterminationScore;
 function getUserBaseImpact(user_id, taxon) {
 
 
-	// When testing return a already resolved promise with value 1. This can be extended to DB queries and calculations
-	//	return Promise.resolve(1);
 
 	var usrPromise = models.User.find({
 		where: {
@@ -474,11 +472,29 @@ function getUserBaseImpact(user_id, taxon) {
 
 	return Promise.all([usrPromise, usrMaxScoreInGroupPromise, usrAcceptedCountForTaxonPromise])
 		.spread(function(usr, usrMaxScoreInGroup, usrAcceptedCountForTaxon) {
+			
+			var usrRelativeScore;
+			
+			if(!usr){
+				// tghe user has no score in this group.
+				usrRelativeScore = 1;
+			} else {
+				
 			// We return the userscore + 5 pr accepted record, but no more than 100
-			var usrRelativeScore = Math.min(100, (Math.ceil(usr.MorphoGroup[0].UserMorphoGroupImpact.impact / usrMaxScoreInGroup * 100) + (usrAcceptedCountForTaxon * ACCEPTED_OBSERVATION_BONUS)))
+			usrRelativeScore = Math.min(100, (Math.ceil(usr.MorphoGroup[0].UserMorphoGroupImpact.impact / usrMaxScoreInGroup * 100) + (usrAcceptedCountForTaxon * ACCEPTED_OBSERVATION_BONUS)))
+			
+			// If a user has a minimum-impact, i.e. a trusted specialist	
+			if(usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact > usrRelativeScore){
+				usrRelativeScore = Math.min(100,usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact);
+			}
+			// If a user has a maximum-impact, i.e. someone who is not considered skillfull in the current morphogroup
+			if(usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact < usrRelativeScore){
+				usrRelativeScore = Math.min(100,usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact);
+			}	
+				
 			console.log("usrAcceptedCountForTaxon " + usrAcceptedCountForTaxon)
 			console.log("usrRelativeScore " + usrRelativeScore)
-
+		}
 			return usrRelativeScore;
 		})
 
@@ -649,7 +665,7 @@ function getPhaenologyFactor(obs, taxon) {
 
 exports.getPhaenologyFactor = getPhaenologyFactor;
 
-function swapPrimaryDeterminationIfNeeded(observation_id) {
+function swapPrimaryDeterminationIfNeeded(observation_id, t) {
 
 //return models.sequelize.transaction(function(t){
 	return models.Observation.find({
@@ -664,7 +680,8 @@ function swapPrimaryDeterminationIfNeeded(observation_id) {
 				model: models.Determination,
 				as: 'Determinations'
 
-			}]
+			}],
+			transaction: t
 		})
 		.then(function(obs) {
 
@@ -675,7 +692,7 @@ function swapPrimaryDeterminationIfNeeded(observation_id) {
 					return o.score;
 				});
 				console.log("###### new primary= "+newPrimaryDetermination._id)
-			return	obs.setPrimaryDetermination(newPrimaryDetermination);
+			return	obs.setPrimaryDetermination(newPrimaryDetermination, {transaction: t});
 			//	return obs.save();
 			}
 		})
