@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService) {
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
 			$scope.mdSidenav = $mdSidenav;
@@ -131,48 +131,9 @@ angular.module('svampeatlasApp')
 				});
 			};
 
-			$scope.updateValidation = function(validation) {
-
-				Determination.updateValidation({
-						id: $scope.obs.PrimaryDetermination._id
-					}, {
-						validation: validation
-					}).$promise
-					.then(function(determination) {
-						$scope.obs.PrimaryDetermination.validation = determination.validation;
-						
-						var txt = (determination.validation === "Afventer") ? "Bestemmelse afventer" : ("Fundet er " + determination.validation);
-						$scope.showSimpleToast(txt)
-						return Observation.getDeterminations({id: $scope.obs._id})
-						/*
-						for(var i=0; i< $scope.obs.Determinations.length; i++){
-							if($scope.obs.Determinations[i]._id === $scope.obs.PrimaryDetermination._id){
-								$scope.obs.Determinations[i].validation = determination.validation;
-							}
-						}
-						*/
-						
-					})
-					.then(function(determinations) {
-						$scope.obs.Determinations = determinations;
-						
-					})
-					.catch(function(err) {
-
-						ErrorHandlingService.handle500();
-					})
-			}
+			$scope.updateValidation = ValidatorToolsService.updateValidation;
 			
-			$scope.setPrimaryDetermination = function(det){
-				return Observation.setPrimaryDetermination({
-														id: $scope.obs._id
-													}, det).$promise.then(function(){
-														$rootScope.$broadcast('observation_updated', $scope.obs);
-													}).catch(function(err){
-														ErrorHandlingService.handle500();
-														
-													})
-			}
+			$scope.setPrimaryDetermination = ValidatorToolsService.setPrimaryDetermination;
 
 			
 
@@ -376,7 +337,18 @@ angular.module('svampeatlasApp')
 
 			var obsid = ($stateParams.observationid) ? $stateParams.observationid : ObservationStateService.get()._id;
 
-
+			$scope.userIsFinder = function(usr) {
+				if($scope.obs && $scope.obs.users)
+				{var found = false;
+				for (var i = 0; i < $scope.obs.users.length; i++) {
+					if (usr._id === $scope.obs.users[i]._id) found = true;
+				};
+				return found;}
+				else {
+					return false
+				}
+			}
+			
 
 
 			Observation.get({
@@ -389,14 +361,7 @@ angular.module('svampeatlasApp')
 					preloader.preloadImages( [obs], obs.Images.length);
 					
 				}
-				$scope.userIsFinder = function(usr) {
-					var found = false;
-					for (var i = 0; i < $scope.obs.users.length; i++) {
-						if (usr._id === $scope.obs.users[i]._id) found = true;
-					};
-					return found;
-				}
-
+				
 				
 				$mdExpansionPanel().waitFor('commentsPanel').then(function (instance) { instance.expand();});
 

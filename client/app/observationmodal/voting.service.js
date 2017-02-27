@@ -1,6 +1,6 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('VotingService', function(Determination,$mdToast, ErrorHandlingService, $translate, Auth ) {
+	.factory('VotingService', function(Determination,$mdToast, ErrorHandlingService, $translate, Auth, $rootScope ) {
 		
 		
 var user = Auth.getCurrentUser();
@@ -16,6 +16,8 @@ var user = Auth.getCurrentUser();
 				
 				observation.primarydetermination_id = newPrimaryDeterminationId;
 				observation.PrimaryDetermination = newPrimaryDetermination;
+				
+				$rootScope.$broadcast('observation_updated', observation);
 			  }
 			
           }

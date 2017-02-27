@@ -96,6 +96,8 @@
 			
 			
 			<ng-md-icon style="fill:green" ng-if="(mdMedia('xs') || Auth.hasRole('validator') ) && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
+			
+			{{(row.DeterminationView.Determination_validation !== 'Godkendt') ? row.DeterminationView.Determination_score: ''}}
 		</td>
 		<td ng-if="$stateParams.searchterm && ($stateParams.searchterm === 'mine' || $stateParams.searchterm === 'today' || $stateParams.searchterm === '3days')" data-title="{{'Indlagt' | translate}}">{{(moment(row.createdAt).isSame(moment(), 'day')) ? getCreatedAt(row.createdAt) : (row.createdAt | date : 'dd/MM/yyyy')}}</td>
 		<td data-title="{{'Dato' | translate}}" >{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>

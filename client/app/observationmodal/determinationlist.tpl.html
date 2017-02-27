@@ -45,9 +45,9 @@
 				
 	          </div>
 			
-			  <div layout="column" layout-align="center center" class="md-secondary"><md-button ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
+			  <div layout="column" layout-align="center center" class="md-secondary"><md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
 				  <h3 class="vote-count">{{det.score}}</h3>
-			  <md-button ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button>
+			  <md-button aria-label="downvote" ng-if="Auth.hasRole('validator')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
 			  </div>
 
 			  <md-divider ></md-divider>
@@ -62,7 +62,7 @@
 		 
 		 </md-icon>
 		 <md-button ng-if="det._id !== obs.primarydetermination_id && Auth.hasRole('validator')" class="md-icon-button"
-		                ng-click="setPrimaryDetermination(det)">
+		                ng-click="setPrimaryDetermination(det, obs)">
 			   		 <md-tooltip md-direction="right">
 			   		          {{'Anvend bestemmelse' | translate}}
 			   		        </md-tooltip>
@@ -80,9 +80,9 @@
 				
 	          </div>
 			
-			  <div layout="column" layout-align="center center" class="md-secondary"><md-button ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
+			  <div layout="column" layout-align="center center" class="md-secondary"><md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
 				  <h3 class="vote-count">{{det.score}}</h3>
-			  <md-button ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button>
+		  <md-button aria-label="downvote" ng-if="Auth.hasRole('validator')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
 			  </div>
 
 			  <md-divider ></md-divider>

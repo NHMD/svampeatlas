@@ -50,19 +50,19 @@
 	        <md-menu-content width="3">
 			
 			<md-menu-item  ng-if="obs.PrimaryDetermination.validation !== 'Godkendt'">
- 	          <md-button aria-label="accept"  ng-if="obs.PrimaryDetermination.validation !== 'Godkendt'" ng-click="updateValidation('Godkendt')">
+ 	          <md-button aria-label="accept"  ng-if="obs.PrimaryDetermination.validation !== 'Godkendt'" ng-click="updateValidation('Godkendt', obs)">
  			  <md-tooltip md-direction="left" ></md-tooltip>
  	            <ng-md-icon icon="thumb_up"></ng-md-icon> {{"Godkend" | translate}}
  	          </md-button>
 		  </md-menu-item>
 		  <md-menu-item ng-if="obs.PrimaryDetermination.validation !== 'Afventer'">
- 	          <md-button aria-label="reject"  ng-if="obs.PrimaryDetermination.validation !== 'Afventer'" ng-click="updateValidation('Afventer')">
+ 	          <md-button aria-label="reject"  ng-if="obs.PrimaryDetermination.validation !== 'Afventer'" ng-click="updateValidation('Afventer', obs)">
  			   
  	           <ng-md-icon icon="pause"></ng-md-icon> {{"Afventer" | translate}}
  	          </md-button>
 			  </md-menu-item>
 			  <md-menu-item ng-if="obs.PrimaryDetermination.validation !== 'Afvist'">
- 	          <md-button aria-label="reject"  ng-if="obs.PrimaryDetermination.validation !== 'Afvist'" ng-click="updateValidation('Afvist')">
+ 	          <md-button aria-label="reject"  ng-if="obs.PrimaryDetermination.validation !== 'Afvist'" ng-click="updateValidation('Afvist', obs)">
  			   
  	           <ng-md-icon icon="thumb_down"></ng-md-icon> {{"Afvis" | translate}}
  	          </md-button>
