@@ -184,68 +184,66 @@ exports.addVoteToDetermination = (req, res) => {
 	vote.determination_id = req.params.id;
 	vote.user_id = req.user._id;
 	
-	return models.Determination.find({
-		where: {
-			_id: req.params.id
-		},
-		include: [{
-			model: models.Observation,
-			as: "Observation"
-		}, {
-			model: models.Taxon,
-			as: 'Taxon',
-			include: [{
-				model: models.Taxon,
-				as: "acceptedTaxon",
-				include: [{
-					model: models.TaxonStatistics,
-					as: "Statistics"
-				}]
-			}]
-		}]
-	})
 
-	.then(function(det) {
-
-			if (det.user_id === req.user._id) {
-				throw new Error("Forbidden");
-			}
-			vote.observation_id = det.observation_id;
-
-			return [determinationController.getUserBaseImpact(req.user._id, det.Taxon), det];
-
-
-
-		})
-		.spread(function(userImpact, det) {
-
-			if (vote.upOrDown === 'up') {
-				vote.score = parseInt(userImpact);
-			}
-			if (vote.upOrDown === 'down') {
-				vote.score = (0 - parseInt(userImpact));
-			}
-
-			if (vote.upOrDown === 'zero') {
-				vote.score = 0;
-			}
-
-			return [DeterminationVote.create(vote), det];
-		})
-			
-	.spread(function(vote, det) {
 // Calculation of determination score is wrapped in a transaction
 
 	return models.sequelize.transaction(function(t) {
 			
-				
+		return models.Determination.find({
+			where: {
+				_id: req.params.id
+			},
+			include: [{
+				model: models.Observation,
+				as: "Observation"
+			}, {
+				model: models.Taxon,
+				as: 'Taxon',
+				include: [{
+					model: models.Taxon,
+					as: "acceptedTaxon",
+					include: [{
+						model: models.TaxonStatistics,
+						as: "Statistics"
+					}]
+				}]
+			}],
+			transaction: t
+		})
+
+		.then(function(det) {
+
+				if (det.user_id === req.user._id) {
+					throw new Error("Forbidden");
+				}
+				vote.observation_id = det.observation_id;
+
+				return [determinationController.getUserBaseImpact(req.user._id, det.Taxon), det];
+
+
+
+			})
+			.spread(function(userImpact, det) {
+
+				if (vote.upOrDown === 'up') {
+					vote.score = parseInt(userImpact);
+				}
+				if (vote.upOrDown === 'down') {
+					vote.score = (0 - parseInt(userImpact));
+				}
+
+
+				return [DeterminationVote.create(vote, {transaction: t}), det];
+			})
+			
+		.spread(function(vote, det) {		
 
 
 					return Promise.all([vote, det, calculateSumAndAbsSum(det, t),
 						determinationController.getTaxonWeight(det.Taxon, det.Observation, t)
 					])
 
-
+})
 				
 				.spread(function(vote, det, SumAndAbsSum, taxonWeight) {
 
@@ -263,18 +261,19 @@ exports.addVoteToDetermination = (req, res) => {
 				})
 				.spread(function(det,  result) {
 					
-					return [determinationController.swapPrimaryDeterminationIfNeeded(det.observation_id), result]
+					return [determinationController.swapPrimaryDeterminationIfNeeded(det.observation_id, t), result]
 					
 				})
+				.spread(function(obs, result) {
+					result.newPrimaryDeterminationId = obs.primarydetermination_id
+					return result
+				})
 				
-		})
+		
 		// Calculation of determination score is wrapped in a transaction
 		// Transaction commits here (Sequelize managed transaction)
 		})
-		.spread(function(obs, result) {
-			result.newPrimaryDeterminationId = obs.primarydetermination_id
-			return result
-		})
+		
 		.then(function(result) {
 			return res.status(201).json(result)
 		})
@@ -331,18 +330,19 @@ exports.deleteVoteFromDetermination = function(req, res){
 	
 	var determination_id = req.params.id;
 	
-	return models.DeterminationVote.destroy({
-		where: {
-			determination_id: req.params.id,
-			
-			user_id: req.user._id
-		}
-	})
-	.then(function(){
+
 		// Calculation of determination score is wrapped in a transaction
 		
 		return models.sequelize.transaction(function(t) {
+			return models.DeterminationVote.destroy({
+				where: {
+					determination_id: req.params.id,
 			
+					user_id: req.user._id
+				},
+				transaction: t
+			})
+			.then(function(){
 						return models.Determination.find({
 					where: {
 						_id: req.params.id
@@ -363,6 +363,8 @@ exports.deleteVoteFromDetermination = function(req, res){
 						}]
 					}],
 					transaction: t
+				})
+				
 				})
 
 					.then(function(det) {
@@ -397,19 +399,20 @@ exports.deleteVoteFromDetermination = function(req, res){
 					})
 					.spread(function(det,  result) {
 						
-						return [determinationController.swapPrimaryDeterminationIfNeeded(det.observation_id), result]
+						return [determinationController.swapPrimaryDeterminationIfNeeded(det.observation_id, t), result]
 						
 					})
+					.spread(function(obs, result) {
+						result.newPrimaryDeterminationId = obs.primarydetermination_id
+						return result
+					})
 					
-			})
+			
 			// Transaction commits here (Sequelize managed transaction)
 	
 	})
 	
-	.spread(function(obs, result) {
-		result.newPrimaryDeterminationId = obs.primarydetermination_id
-		return result
-	})
+	
 
 		.then(function(result) {
 			

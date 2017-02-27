@@ -17,6 +17,11 @@ router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.put('/me/language', auth.isAuthenticated(), controller.changeLanguage);
 router.put('/me/email', auth.isAuthenticated(), controller.changeEmail);
 router.get('/:id',/* auth.isAuthenticated(),*/ controller.show);
+router.get('/:id/morphogroups', auth.hasRole('validator'), controller.showUserMorphoGroups);
+router.get('/:id/morphogroups/:morphogroupid', auth.hasRole('validator'), controller.showUserMorphoGroup);
+router.put('/:id/morphogroups/:morphogroupid', auth.hasRole('validator'), controller.updateUserMorphoGroup);
+
+
 router.get('/:id/firstfindings/:year',/* auth.isAuthenticated(),*/ controller.showFirstFindings);
 router.get('/:id/observations/taxonomy/:rankid',/* auth.isAuthenticated(),*/ controller.showObservationCountAsHigherTaxonomy);
 router.get('/:id/observations/count',/* auth.isAuthenticated(),*/ controller.showObservationCount);

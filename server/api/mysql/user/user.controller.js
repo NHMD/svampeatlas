@@ -92,7 +92,7 @@ exports.create = function(req, res, next) {
         expiresInMinutes: 60 * 5
       });
 		*/
-			res.json(user);
+		return	res.json(user);
 		})
 		.catch(validationError(res));
 };
@@ -103,7 +103,7 @@ exports.create = function(req, res, next) {
 exports.show = function(req, res, next) {
 	var userId = req.params.id;
 
-	User.find({
+	return User.find({
 			where: {
 				_id: userId
 			},
@@ -115,12 +115,92 @@ exports.show = function(req, res, next) {
 			if (!user) {
 				return res.send(404);
 			}
-			res.json(user.profile);
+			return res.json(user.profile);
 		})
 		.catch(function(err) {
 			return next(err);
 		});
 };
+
+
+exports.showUserMorphoGroups = function(req, res, next) {
+	var userId = req.params.id;
+
+	User.find({
+			where: {
+				_id: userId
+			},
+			include: [{
+			model: models.MorphoGroup,
+			as: 'MorphoGroup',
+			}]
+		})
+		.then(function(user) {
+			if (!user) {
+				return res.send(404);
+			}
+			res.status(200).json(user.MorphoGroup);
+		})
+		.catch(function(err) {
+			return next(err);
+		});
+};
+
+exports.showUserMorphoGroup = function(req, res, next) {
+	var userId = req.params.id;
+var morphogroupId = req.params.morphogroupid;
+	User.find({
+			where: {
+				_id: userId
+			},
+			include: [{
+			model: models.MorphoGroup,
+			as: 'MorphoGroup',
+	
+				where: {
+					_id: morphogroupId
+				}	
+			}]
+		})
+		.then(function(user) {
+			if (!user) {
+				return res.send(404);
+			}
+			res.status(200).json(user.MorphoGroup[0]);
+		})
+		.catch(function(err) {
+			return next(err);
+		});
+};
+
+exports.updateUserMorphoGroup = function(req, res, next) {
+	var userId = req.params.id;
+var morphogroupId = req.params.morphogroupid;
+
+
+var userMorphoGroupImpact = req.body;
+	return models.UserMorphoGroupImpact.find({where: {user_id: userId, morphogroup_id: morphogroupId}}).then(function(usrmorphogroup){
+		
+		if(usrmorphogroup){
+			usrmorphogroup.max_impact = req.body.max_impact;
+			usrmorphogroup.min_impact = req.body.min_impact;
+			usrmorphogroup.updatedByUser = req.user._id;
+		
+			return usrmorphogroup.save()
+		} else {
+			return models.UserMorphoGroupImpact.create({user_id: userId, morphogroup_id: morphogroupId, updatedByUser:req.user._id, max_impact : req.body.max_impact,  min_impact : req.body.min_impact})
+		}
+		
+		
+	})
+	.then(function(){
+		return res.sendStatus(201)
+	})
+	.catch(function(err) {
+		return next(err);
+	});
+	
+}
 
 /**
  * Deletes a user

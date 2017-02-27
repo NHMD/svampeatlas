@@ -122,7 +122,31 @@ angular.module('svampeatlasApp')
 		},
 		url: '/api/users/:id/fieldtrips',
 		isArray: true
-    }
+    },
+    getMorphoGroup: {
+      method: 'GET',
+		params: {
+			id: '@_id',
+			morphogroupid: '@_morphogroupid'
+		},
+		url: '/api/users/:id/morphogroups/:morphogroupid'
+    },
+    updateMorphoGroup: {
+      method: 'PUT',
+		params: {
+			id: '@_id',
+			morphogroupid: '@_morphogroupid'
+		},
+		url: '/api/users/:id/morphogroups/:morphogroupid'
+    },
+    getMorphoGroups: {
+      method: 'GET',
+		params: {
+			id: '@_id'
+		},
+		url: '/api/users/:id/morphogroups',
+		isArray: true
+    },
 	  });
   });
 
