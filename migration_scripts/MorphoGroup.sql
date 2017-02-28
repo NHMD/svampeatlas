@@ -22,6 +22,7 @@ FOREIGN KEY (morphogroup_id) REFERENCES MorphoGroup(_id)
 
 
 CREATE TABLE IF NOT EXISTS `UserMorphoGroupImpact` (
+`_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `updatedByUser` int(11) DEFAULT NULL,
   `morphogroup_id` int(11) NOT NULL,
@@ -29,13 +30,18 @@ CREATE TABLE IF NOT EXISTS `UserMorphoGroupImpact` (
   `min_impact` int(5) DEFAULT '1',
   `max_impact` int(5) DEFAULT '100',
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` datetime DEFAULT NULL,
-  PRIMARY KEY (user_id, morphogroup_id),
-  FOREIGN KEY (user_id) REFERENCES Users(_id),
-  FOREIGN KEY (updatedByUser) REFERENCES Users(_id),
-  FOREIGN KEY (morphogroup_id) REFERENCES MorphoGroup(_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `updatedAt` datetime DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=944 DEFAULT CHARSET=utf8;
 
+ALTER TABLE `UserMorphoGroupImpact`
+ ADD PRIMARY KEY (`_id`), ADD UNIQUE KEY `user_id` (`user_id`,`morphogroup_id`), ADD KEY `morphogroup_id` (`morphogroup_id`);
+
+ ALTER TABLE `UserMorphoGroupImpact`
+ MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT
+
+ ALTER TABLE `UserMorphoGroupImpact`
+ ADD CONSTRAINT `usermorphogroupimpact_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`_id`),
+ ADD CONSTRAINT `usermorphogroupimpact_ibfk_2` FOREIGN KEY (`morphogroup_id`) REFERENCES `MorphoGroup` (`_id`);
 
 
 

@@ -184,7 +184,7 @@ exports.addVoteToDetermination = (req, res) => {
 	vote.determination_id = req.params.id;
 	vote.user_id = req.user._id;
 	
-
+	var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'VOTE ADDED'};
 // Calculation of determination score is wrapped in a transaction
 
 	return models.sequelize.transaction(function(t) {
@@ -218,7 +218,7 @@ exports.addVoteToDetermination = (req, res) => {
 				}
 				vote.observation_id = det.observation_id;
 
-				return [determinationController.getUserBaseImpact(req.user._id, det.Taxon), det];
+				return [determinationController.getUserBaseImpact(req.user._id, det.Taxon, logObject), det];
 
 
 
@@ -246,12 +246,18 @@ exports.addVoteToDetermination = (req, res) => {
 })
 				
 				.spread(function(vote, det, SumAndAbsSum, taxonWeight) {
-
+					
+					logObject.Determination = {};
+					
+					logObject.Determination.initialScore = det.baseScore;
+					logObject.Determination.sumOfVotes = SumAndAbsSum.sum;
+					logObject.Determination.absoluteSumOfVotes = SumAndAbsSum.absSum;
 		
 					// the ABS sum is used in the calculation to ensure correctness if theres negative votes
 					
 						// extend to use det.baseScore
 					det.score = determinationController.getDeterminationScore(SumAndAbsSum.sum + det.baseScore, taxonWeight, SumAndAbsSum.absSum + det.baseScore);
+					logObject.Determination.newCalculatedScore = det.score;
 					return [det.save({
 						transaction: t
 					}),  {
@@ -261,11 +267,15 @@ exports.addVoteToDetermination = (req, res) => {
 				})
 				.spread(function(det,  result) {
 					
-					return [determinationController.swapPrimaryDeterminationIfNeeded(det.observation_id, t), result]
+					return [determinationController.swapPrimaryDeterminationIfNeeded(det.observation_id, t, logObject), result, det]
 					
 				})
-				.spread(function(obs, result) {
+				.spread(function(obs, result, det) {
 					result.newPrimaryDeterminationId = obs.primarydetermination_id
+					return [result, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: obs._id, logObject: JSON.stringify(logObject)}, {transaction: t})]
+				})
+				.spread(function(result, determinationLogSavePromise) {
+					
 					return result
 				})
 				
@@ -330,7 +340,7 @@ exports.deleteVoteFromDetermination = function(req, res){
 	
 	var determination_id = req.params.id;
 	
-
+	var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'VOTE DELETED'};
 		// Calculation of determination score is wrapped in a transaction
 		
 		return models.sequelize.transaction(function(t) {
@@ -371,12 +381,18 @@ exports.deleteVoteFromDetermination = function(req, res){
 
 
 						return [det,  calculateSumAndAbsSum(det, t),
-							determinationController.getTaxonWeight(det.Taxon, det.Observation, t)
+							determinationController.getTaxonWeight(det.Taxon, det.Observation, t, logObject)
 						];
 
 
 					})
 					.spread(function(det,  SumAndAbsSum, taxonWeight) {
+						
+						logObject.Determination = {};
+						
+						logObject.Determination.initialScore = det.baseScore;
+						logObject.Determination.sumOfVotes = SumAndAbsSum.sum;
+						logObject.Determination.absoluteSumOfVotes = SumAndAbsSum.absSum;
 
 						/*
 						console.log("######### absSumCalc "+JSON.stringify(absSumCalc))
@@ -389,6 +405,8 @@ exports.deleteVoteFromDetermination = function(req, res){
 							// extend to use det.baseScore
 						det.score = determinationController.getDeterminationScore(SumAndAbsSum.sum + det.baseScore, taxonWeight, SumAndAbsSum.absSum + det.baseScore);
 						console.log("####### score: "+det.score)
+						logObject.Determination.newCalculatedScore = det.score;
+						
 						return [det.save({
 							transaction: t
 						}),
@@ -399,11 +417,15 @@ exports.deleteVoteFromDetermination = function(req, res){
 					})
 					.spread(function(det,  result) {
 						
-						return [determinationController.swapPrimaryDeterminationIfNeeded(det.observation_id, t), result]
+						return [determinationController.swapPrimaryDeterminationIfNeeded(det.observation_id, t, logObject), result, det]
 						
 					})
-					.spread(function(obs, result) {
+					.spread(function(obs, result, det) {
 						result.newPrimaryDeterminationId = obs.primarydetermination_id
+						return [result, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: obs._id, logObject: JSON.stringify(logObject)}, {transaction: t})]
+					})
+					.spread(function(result, determinationLogSavePromise) {
+					
 						return result
 					})
 					

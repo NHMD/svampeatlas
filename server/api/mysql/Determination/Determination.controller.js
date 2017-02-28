@@ -241,10 +241,10 @@ exports.create = function(req, res) {
 
 // t is the transaction that this determination should be created under
 
-function createDetermination(obs, determination, user, t) {
+function createDetermination(obs, determination, user, t, logObject) {
 
 	var userIsValidator = userTool.hasRole(user, 'validator');
-
+	logObject.User.userIsValidator = userIsValidator;
 	return Promise.all([models.Taxon.find({
 			where: {
 				_id: determination.taxon_id
@@ -267,7 +267,7 @@ function createDetermination(obs, determination, user, t) {
 		.spread((taxon, obs) => {
 
 
-			return [getUserBaseImpact(determination.user_id, taxon), getTaxonWeight(taxon, obs, t), taxon, obs]
+			return [getUserBaseImpact(determination.user_id, taxon, logObject), getTaxonWeight(taxon, obs, t, logObject), taxon, obs]
 
 		}).spread((baseScore, taxonWeight, taxon, obs) => {
 
@@ -275,13 +275,15 @@ function createDetermination(obs, determination, user, t) {
 			console.log("### baseScore: " + baseScore)
 			console.log("### taxonWeight: " + taxonWeight)
 
-
+			logObject.Determination = {};
+		
+			logObject.Determination.initialScore = baseScore;
 
 			if (userIsValidator && determination.validation === "Godkendt") {
 				determination.validation = "Godkendt";
+				logObject.Determination.votingSystemOverRuledByValidator = true;
 			} else {
-				// If it is the reporters own record and valideringskrav === 0, auto validate, otherwise set to  'Valideres'
-				//	determination.validation = (taxon.acceptedTaxon.attributes.valideringskrav === 0 && determination.user_id === req.user._id) ? 'Godkendt' : 'Valideres';
+				
 				determination.validation = 'Valideres';
 			}
 
@@ -307,6 +309,8 @@ exports.createDetermination = createDetermination;
 
 exports.updateValidation = (req, res) => {
 
+var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'VALIDATION STATUS CHANGED BY VALIDATOR'};
+
 return models.sequelize.transaction(function(t) {
  return	Determination.find({
 		where: {
@@ -314,6 +318,8 @@ return models.sequelize.transaction(function(t) {
 		},
 		transaction: t
 	}).then(function(determination) {
+		
+		logObject.Determination = { oldValidationStatus: determination.validation, newValidationStatus: req.body.validation, };
 		determination.validation = req.body.validation;
 		determination.validator_id = req.user._id;
 		return determination.save({
@@ -322,6 +328,8 @@ return models.sequelize.transaction(function(t) {
 		})
 	})
 	.then(function(determination) {
+		
+		
 		
 		var updatePromise = (req.body.validation === "Godkendt") ? Determination.update({validation: 'Valideres'}, {where: {
 			observation_id: determination.observation_id,
@@ -334,6 +342,14 @@ return models.sequelize.transaction(function(t) {
 		})
 		.spread(function(determination, updatePromise) {
 			return determination;
+		})
+		.then((det) => {
+			
+			return [det, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: det.observation_id, logObject: JSON.stringify(logObject)}, {transaction: t})]
+		})
+		.spread(function(det, determinationLogSavePromise) {
+			
+			return det
 		})
 	})
 	
@@ -348,6 +364,8 @@ exports.addDeterminationToObs = (req, res) => {
 	determination.observation_id = req.params.id;
 	determination.user_id = (determination.user_id) ? determination.user_id : req.user._id;
 
+	var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'NEW DETERMINATION ADDED'};
+
 
 	return models.sequelize.transaction(function(t) {
 
@@ -359,7 +377,7 @@ exports.addDeterminationToObs = (req, res) => {
 				transaction: t
 			})
 			.then((obs) => {
-				return createDetermination(obs, determination, req.user, t);
+				return createDetermination(obs, determination, req.user, t, logObject);
 			}).spread((det, obs) => {
 				var update = (userIsValidator && determination.validation === "Godkendt") ? models.Observation.update({
 					primarydetermination_id: det._id
@@ -368,14 +386,24 @@ exports.addDeterminationToObs = (req, res) => {
 						_id: req.params.id
 					},
 					transaction: t
-				}) : swapPrimaryDeterminationIfNeeded(obs._id, t);
-				return [update, det]
+				}) : swapPrimaryDeterminationIfNeeded(obs._id, t, logObject);
+				return [update, det, obs]
+			})
+			.spread((updated, det, obs) => {
+				
+				return [det, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: obs._id, logObject: JSON.stringify(logObject)}, {transaction: t})]
+			})
+			.spread(function(det, determinationLogSavePromise) {
+				
+				return det
 			})
 
 	})
 
-	.spread((updated, det) => {
+	.then(( det) => {
 
+		
+		
 			return models.DeterminationView.find({
 				where: {
 					Determination_id: det._id
@@ -414,9 +442,9 @@ exports.getDeterminationScore = getDeterminationScore;
 /* gives the users impact in a morphogroup with bonus for earlier accepted records. Return a promise  
  */
 
-function getUserBaseImpact(user_id, taxon) {
+function getUserBaseImpact(user_id, taxon, logObject) {
 
-
+	
 
 	var usrPromise = models.User.find({
 		where: {
@@ -475,11 +503,22 @@ function getUserBaseImpact(user_id, taxon) {
 			
 			var usrRelativeScore;
 			
+			
+			
 			if(!usr){
-				// tghe user has no score in this group.
+				// the user has no score in this group.
 				usrRelativeScore = 1;
+				logObject.User.remarks = "The user has no base score in this group."
 			} else {
+				if(!logObject.Taxon){
+					logObject.Taxon = {morphoGroupName : usr.MorphoGroup[0].name_dk};
+				}
 				
+				logObject.userMaxScoreInMorphoGroup = usrMaxScoreInGroup;
+				logObject.User.morphoGroupImpact = usr.MorphoGroup[0].UserMorphoGroupImpact.impact;
+				logObject.User.acceptedCountForTaxon = usrAcceptedCountForTaxon;
+				logObject.User.min_impact = usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact;
+				logObject.User.max_impact = usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact;
 			// We return the userscore + 5 pr accepted record, but no more than 100
 			usrRelativeScore = Math.min(100, (Math.ceil(usr.MorphoGroup[0].UserMorphoGroupImpact.impact / usrMaxScoreInGroup * 100) + (usrAcceptedCountForTaxon * ACCEPTED_OBSERVATION_BONUS)))
 			
@@ -503,11 +542,54 @@ function getUserBaseImpact(user_id, taxon) {
 exports.getUserBaseImpact = getUserBaseImpact;
 
 
+function addConstantsToLogObject(logObject){
+	
+	logObject.constants = {};
+	
+	logObject.constants.ACCEPTED_SCORE = ACCEPTED_SCORE;
+	// a bonus for each accepted determination of the current accepted taxon - will be added to the users score
+	logObject.constants.ACCEPTED_OBSERVATION_BONUS = ACCEPTED_OBSERVATION_BONUS;
+
+	// we will only take phaenology into account if we have more than 20 records of a taxon
+	logObject.constants.PHAENOLOGY_MIN_ACCEPTED_COUNT = PHAENOLOGY_MIN_ACCEPTED_COUNT;
+	// In order to get a bonus for phaenololgy the taxon must not be recorded in more than 9 months
+	logObject.constants.MAX_NUMBER_OF_MONTHS_FOR_PHAENOLOGY_FACTOR = MAX_NUMBER_OF_MONTHS_FOR_PHAENOLOGY_FACTOR;
+	// And the taxon weight should be less than 25
+	logObject.constants.MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR = MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR;
+	// if so the taxon weight will be halfed
+	logObject.constants.PHAENOLOGY_BONUS_FACTOR = PHAENOLOGY_BONUS_FACTOR;
+
+	logObject.constants.PHAENOLOGY_PENALTY_VALUE = PHAENOLOGY_PENALTY_VALUE;
+
+	// if there exists records within a short distance, we will half the taxon penalty
+	logObject.constants.SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR = SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
+	// the short distance in km
+	logObject.constants.SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE = SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE;
+	// the radius to search for known observations
+	logObject.constants.SEARCH_CLOSEST_RADIUS = SEARCH_CLOSEST_RADIUS;
+	// on the other hand, if more than 500 records exists and the observation is more than 25 km from the closest known we add 25 to the penalty
+	logObject.constants.DISTANCE_PENALTY_MIN_ACCEPTED_COUNT = DISTANCE_PENALTY_MIN_ACCEPTED_COUNT;
+	logObject.constants.FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE = FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE;
+	logObject.constants.DISTANCE_PENALTY_VALUE = DISTANCE_PENALTY_VALUE;
+
+	logObject.constants.MAX_TAXON_WEIGHT = MAX_TAXON_WEIGHT;
+	
+	
+}
 
 
+function getTaxonWeight(taxon, obs, t, logObject) {
 
-function getTaxonWeight(taxon, obs, t) {
-
+	if(!logObject){
+		logObject = {};
+	};
+	
+	if(!logObject.Taxon){
+		logObject.Taxon = { _id : taxon.acceptedTaxon._id, FullName: taxon.acceptedTaxon.FullName};
+	} else {
+		_.merge(logObject.Taxon, { _id : taxon.acceptedTaxon._id, FullName: taxon.acceptedTaxon.FullName});
+	}
+	
 	// Observation included here to calculations based on phaenology
 
 	var scoreSql = `select t.FullName, CEIL(CEIL((LOG10((SELECT MAX(accepted_count) +1.2 FROM TaxonStatistics)) - LOG10((if((ts.accepted_count IS NULL),0, ts.accepted_count)
@@ -526,8 +608,14 @@ function getTaxonWeight(taxon, obs, t) {
 
 	.spread(function(taxonCalculation, closestDistance, phaenologyFactor, prevRecordsThisMonth) {
 		console.log("#### Using Taxon weight: " + taxonCalculation[0].TaxonWeight)
-
-
+		
+		logObject.Taxon.taxon_accepted_count = taxon.acceptedTaxon.Statistics.accepted_count;
+		logObject.Taxon.taxonWeight = taxonCalculation[0].TaxonWeight;
+		logObject.Taxon.closestDistance = Math.round(closestDistance * 100) / 100;
+		logObject.Taxon.phaenologyFactor = phaenologyFactor;
+		logObject.Taxon.morphogroup_id = taxon.acceptedTaxon.morphogroup_id;
+		
+		addConstantsToLogObject(logObject)
 		var factor = 1;
 		if (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT) {
 			if (prevRecordsThisMonth > 0 && taxonCalculation[0].TaxonWeight < MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR) {
@@ -537,6 +625,8 @@ function getTaxonWeight(taxon, obs, t) {
 
 
 		};
+		
+		
 		if (closestDistance < SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE) {
 			factor = factor * SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
 			console.log("#### Using short distance factor: " + SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR)
@@ -554,8 +644,10 @@ function getTaxonWeight(taxon, obs, t) {
 			taxonWeight += PHAENOLOGY_PENALTY_VALUE;
 			console.log("#### Adding penalty for phaenology: " + PHAENOLOGY_PENALTY_VALUE)
 		}
-
+		logObject.Taxon.calculatedTaxonWeight = taxonWeight;
 		console.log("####### Calculated taxon weight = " + taxonWeight)
+		console.log("####### logObject:");
+		console.log(JSON.stringify(logObject));
 		return Math.min(MAX_TAXON_WEIGHT, taxonWeight);
 	})
 }
@@ -665,7 +757,7 @@ function getPhaenologyFactor(obs, taxon) {
 
 exports.getPhaenologyFactor = getPhaenologyFactor;
 
-function swapPrimaryDeterminationIfNeeded(observation_id, t) {
+function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 
 //return models.sequelize.transaction(function(t){
 	return models.Observation.find({
@@ -691,6 +783,10 @@ function swapPrimaryDeterminationIfNeeded(observation_id, t) {
 				var newPrimaryDetermination = _.maxBy(obs.Determinations, function(o) {
 					return o.score;
 				});
+				
+				
+				logObject.primaryDeterminationSwapped = (obs.PrimaryDetermination.primarydetermination_id != newPrimaryDetermination._id ) ? true : false;
+				
 				console.log("###### new primary= "+newPrimaryDetermination._id)
 			return	obs.setPrimaryDetermination(newPrimaryDetermination, {transaction: t});
 			//	return obs.save();

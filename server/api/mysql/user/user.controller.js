@@ -181,6 +181,8 @@ var morphogroupId = req.params.morphogroupid;
 var userMorphoGroupImpact = req.body;
 	return models.UserMorphoGroupImpact.find({where: {user_id: userId, morphogroup_id: morphogroupId}}).then(function(usrmorphogroup){
 		
+		console.log("##### usrmorphogroup "+ JSON.stringify(usrmorphogroup))
+		
 		if(usrmorphogroup){
 			usrmorphogroup.max_impact = req.body.max_impact;
 			usrmorphogroup.min_impact = req.body.min_impact;
