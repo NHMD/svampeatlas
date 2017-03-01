@@ -240,7 +240,7 @@ exports.addVoteToDetermination = (req, res) => {
 
 
 					return Promise.all([vote, det, calculateSumAndAbsSum(det, t),
-						determinationController.getTaxonWeight(det.Taxon, det.Observation, t)
+						determinationController.getTaxonWeight(det.Taxon, det.Observation, t, logObject)
 					])
 
 })

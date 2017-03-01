@@ -1,0 +1,61 @@
+<div role="dialog" aria-label="Other determinations" layout="column" layout-align="center center">
+ <md-toolbar>
+   <div class="md-toolbar-tools">
+     
+	<h2 ng-if="editMode">{{'Log for bestemmelse'}}</h2>
+     <span flex></span>
+     <md-button class="md-icon-button" ng-click="ctrl.closeDialog()">
+       <ng-md-icon icon="close"></ng-md-icon>
+     </md-button>
+   </div>
+ </md-toolbar>
+
+      <div id="determination-panel-content" class="demo-dialog-content">
+		  
+		  
+	<table class="table taxontable table-bordered" st-table="displayed" st-safe-src="ctrl.logs">
+		<thead>
+		<tr>
+		
+			<th st-sort="createdAt" st-sort-default="reverse">Created</th>
+			<th >Description</th>
+		</tr>
+		</thead>
+		<tbody >
+		<tr ng-repeat="row in displayed">
+			<td>{{row.createdAt | date : 'medium'}}</td>
+			<td><json-formatter open="1" json="row.logObject"></json-formatter></td>
+			
+		
+		
+		</tr>
+		</tbody>
+		
+		
+	</table>	  
+		  
+
+
+      </div>
+
+  <div class="demo-dialog-button" layout="row">
+	  
+	  <span flex></span>
+    <md-button   class="md-primary" style="margin-right:20px;" ng-click="ctrl.closeDialog()" >
+      {{'Luk' | translate}}
+    </md-button>
+   
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+ 

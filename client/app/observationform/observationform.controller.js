@@ -410,7 +410,7 @@ angular.module('svampeatlasApp')
 
 			$scope.observationIsValid = function() {
 				var valid = true;
-
+				
 				if ($scope.newTaxon.length === 0 || !$scope.newTaxon[0]._id) valid = false;
 				if ((!Auth.hasRole('validator')) && ($scope.determiner.length === 0 || !$scope.determiner[0]._id)) valid = false;
 				if (!that.selectedSubstrate) valid = false;
@@ -1299,8 +1299,13 @@ $scope.showExifConfirmPanel(exif)
 						$scope.cancel();
 					})
 					.
-				catch(function(err) {
-					alert("Der er sket en fejl - luk venligst fundet og prøv igen.")
+				catch(function(res) {
+					var msg = "Der er sket en fejl - luk venligst fundet og prøv igen.";
+					if(res.status === 422){
+						msg = "Du skal vælge en lokalitet."
+						that.savingObservation = false;
+					}
+					alert(msg)
 				})
 
 			};

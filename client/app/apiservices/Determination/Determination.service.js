@@ -43,6 +43,14 @@ angular.module('svampeatlasApp')
 				          return response.resource;
 				        }
 				      }
+			},
+			'getLogs': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/determinations/:id/logs',
+				isArray: true
 			}
 			
 		});
