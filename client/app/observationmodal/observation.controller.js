@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService) {
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
+			this.DeterminationLogModalService = DeterminationLogModalService;
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
 			$scope.openSideNav = function() {

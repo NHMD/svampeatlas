@@ -675,7 +675,7 @@ exports.create = function(req, res) {
 				}).then(function(obs) {
 
 
-					return determinationController.createDetermination(obs, determination, req.user, t);
+					return determinationController.createDetermination(obs, determination, req.user, t, { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'NEW OBSERVATION WITH INITIAL DETERMINATION'});
 
 				})
 				.spread(function(det, obs) {
@@ -704,13 +704,22 @@ exports.create = function(req, res) {
 				.spread(function(obs) {
 					return obs
 				})
+					.
+				catch((err) => {
+					throw err
+				});
 
 		}).then(function(obs) {
 
 			return res.status(201).json(obs)
 		})
-		.
-	catch(handleError(res));
+			.
+		catch((err) => {
+			var statusCode = (err.message === "LOCALITY_MISSING") ? 422 : 500;
+			console.log(err);
+
+			return res.status(statusCode).send(err.message);
+		});
 
 
 

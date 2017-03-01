@@ -5,7 +5,7 @@ var controller = require('./DeterminationLog.controller');
 var auth = require('../../../auth/auth.service');
 var router = express.Router();
 
-router.get('/',  controller.index);
+router.get('/', /*auth.hasRole('validator'), */controller.index);
 //router.post('/', controller.create);
 //router.put('/:id', controller.update);
 //router.patch('/:id', controller.update);

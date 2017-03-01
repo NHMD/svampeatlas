@@ -33,8 +33,12 @@ module.exports = function(sequelize, DataTypes) {
    },
    locality_id: {
    	type: DataTypes.INTEGER,
-   	allowNull: true,
+   	allowNull: true
    },
+   geonameId : {
+      	type: DataTypes.INTEGER,
+      		allowNull: true,
+      },
    verbatimLocality: {
    	type: DataTypes.STRING,
    	allowNull: true,
@@ -118,6 +122,11 @@ module.exports = function(sequelize, DataTypes) {
    }
 
   }, {
+	  
+	  
+	    
+	  
+	  
     	tableName: 'Observation',
     	timestamps: true,
     	freezeTableName: true,
@@ -308,7 +317,14 @@ module.exports = function(sequelize, DataTypes) {
        * Pre-save hooks
        */
       hooks: {
-
+		beforeCreate: function(obs){
+					
+			
+				   if(!obs.locality_id  && !obs.geonameId){
+				   	throw new Error("LOCALITY_MISSING")
+				   }
+	
+			   }
 	  
   	  
       },

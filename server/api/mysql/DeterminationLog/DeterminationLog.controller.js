@@ -107,3 +107,14 @@ exports.index = function(req, res) {
 		.
 	catch (handleError(res));
 };
+
+exports.getLogForDetermination = (req, res) =>{
+ 
+ return DeterminationLog.findAll({where: { determination_id: req.params.id}})
+	.then(function(DeterminationLog) {
+
+		return res.status(200).json(DeterminationLog);
+	})
+	.
+catch (handleError(res));
+} 

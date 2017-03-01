@@ -43,6 +43,7 @@ module.exports = function(app) {
 	app.use('/api/observations', intparser.parseLimitOffset(), require('./api/mysql/Observation'));
 	app.use('/api/observationimages', intparser.parseLimitOffset(), require('./api/mysql/ObservationImage'));
 	app.use('/api/determinations', intparser.parseLimitOffset(), require('./api/mysql/Determination'));
+	app.use('/api/determinationlogs', intparser.parseLimitOffset(), require('./api/mysql/DeterminationLog'));
 	app.use('/api/localities', intparser.parseLimitOffset(), require('./api/mysql/Locality'));
 
 

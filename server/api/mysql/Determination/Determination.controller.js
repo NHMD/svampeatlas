@@ -19,7 +19,7 @@ var userTool = require("../userTool");
 var nestedQueryParser = require("../nestedQueryParser")
 
 // Min score for an determination to "verified"
-const ACCEPTED_SCORE = 99;
+const ACCEPTED_SCORE = 80;
 // a bonus for each accepted determination of the current accepted taxon - will be added to the users score
 const ACCEPTED_OBSERVATION_BONUS = 5;
 
@@ -27,7 +27,7 @@ const ACCEPTED_OBSERVATION_BONUS = 5;
 const PHAENOLOGY_MIN_ACCEPTED_COUNT = 20;
 // In order to get a bonus for phaenololgy the taxon must not be recorded in more than 9 months
 const MAX_NUMBER_OF_MONTHS_FOR_PHAENOLOGY_FACTOR = 9;
-// And the taxon weight should be less than 25
+// And the taxon weight should be less than 25, i.e. fairly commonly recored species
 const MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR = 30;
 // if so the taxon weight will be halfed
 const PHAENOLOGY_BONUS_FACTOR = 0.5;
@@ -38,7 +38,7 @@ const PHAENOLOGY_PENALTY_VALUE = 25;
 const SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR = 0.5;
 // the short distance in km
 const SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE = 1;
-// the radius to search for known observations
+// the radius (in km) to search for known observations
 const SEARCH_CLOSEST_RADIUS = 25;
 // on the other hand, if more than 500 records exists and the observation is more than 25 km from the closest known we add 25 to the penalty
 const DISTANCE_PENALTY_MIN_ACCEPTED_COUNT = 500;
@@ -510,11 +510,17 @@ function getUserBaseImpact(user_id, taxon, logObject) {
 				usrRelativeScore = 1;
 				logObject.User.remarks = "The user has no base score in this group."
 			} else {
-				if(!logObject.Taxon){
-					logObject.Taxon = {morphoGroupName : usr.MorphoGroup[0].name_dk};
+				
+				if(logObject.MorphoGroup){
+					logObject.MorphoGroup.userMaxScoreInGroup = usrMaxScoreInGroup;
+					logObject.MorphoGroup.morphogroup_id = usr.MorphoGroup[0]._id;
+					logObject.MorphoGroup.morphoGroupName = usr.MorphoGroup[0].name_dk;
+					
+					
+				}	else {
+					logObject.MorphoGroup = {userMaxScoreInGroup : usrMaxScoreInGroup, morphoGroupName : usr.MorphoGroup[0].name_dk, morphogroup_id : usr.MorphoGroup[0]._id }
 				}
 				
-				logObject.userMaxScoreInMorphoGroup = usrMaxScoreInGroup;
 				logObject.User.morphoGroupImpact = usr.MorphoGroup[0].UserMorphoGroupImpact.impact;
 				logObject.User.acceptedCountForTaxon = usrAcceptedCountForTaxon;
 				logObject.User.min_impact = usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact;
@@ -544,35 +550,35 @@ exports.getUserBaseImpact = getUserBaseImpact;
 
 function addConstantsToLogObject(logObject){
 	
-	logObject.constants = {};
+	logObject.Constants = {};
 	
-	logObject.constants.ACCEPTED_SCORE = ACCEPTED_SCORE;
+	logObject.Constants.ACCEPTED_SCORE = ACCEPTED_SCORE;
 	// a bonus for each accepted determination of the current accepted taxon - will be added to the users score
-	logObject.constants.ACCEPTED_OBSERVATION_BONUS = ACCEPTED_OBSERVATION_BONUS;
+	logObject.Constants.ACCEPTED_OBSERVATION_BONUS = ACCEPTED_OBSERVATION_BONUS;
 
 	// we will only take phaenology into account if we have more than 20 records of a taxon
-	logObject.constants.PHAENOLOGY_MIN_ACCEPTED_COUNT = PHAENOLOGY_MIN_ACCEPTED_COUNT;
+	logObject.Constants.PHAENOLOGY_MIN_ACCEPTED_COUNT = PHAENOLOGY_MIN_ACCEPTED_COUNT;
 	// In order to get a bonus for phaenololgy the taxon must not be recorded in more than 9 months
-	logObject.constants.MAX_NUMBER_OF_MONTHS_FOR_PHAENOLOGY_FACTOR = MAX_NUMBER_OF_MONTHS_FOR_PHAENOLOGY_FACTOR;
+	logObject.Constants.MAX_NUMBER_OF_MONTHS_FOR_PHAENOLOGY_FACTOR = MAX_NUMBER_OF_MONTHS_FOR_PHAENOLOGY_FACTOR;
 	// And the taxon weight should be less than 25
-	logObject.constants.MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR = MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR;
+	logObject.Constants.MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR = MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR;
 	// if so the taxon weight will be halfed
-	logObject.constants.PHAENOLOGY_BONUS_FACTOR = PHAENOLOGY_BONUS_FACTOR;
+	logObject.Constants.PHAENOLOGY_BONUS_FACTOR = PHAENOLOGY_BONUS_FACTOR;
 
-	logObject.constants.PHAENOLOGY_PENALTY_VALUE = PHAENOLOGY_PENALTY_VALUE;
+	logObject.Constants.PHAENOLOGY_PENALTY_VALUE = PHAENOLOGY_PENALTY_VALUE;
 
 	// if there exists records within a short distance, we will half the taxon penalty
-	logObject.constants.SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR = SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
+	logObject.Constants.SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR = SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
 	// the short distance in km
-	logObject.constants.SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE = SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE;
+	logObject.Constants.SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE = SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE;
 	// the radius to search for known observations
-	logObject.constants.SEARCH_CLOSEST_RADIUS = SEARCH_CLOSEST_RADIUS;
+	logObject.Constants.SEARCH_CLOSEST_RADIUS = SEARCH_CLOSEST_RADIUS;
 	// on the other hand, if more than 500 records exists and the observation is more than 25 km from the closest known we add 25 to the penalty
-	logObject.constants.DISTANCE_PENALTY_MIN_ACCEPTED_COUNT = DISTANCE_PENALTY_MIN_ACCEPTED_COUNT;
-	logObject.constants.FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE = FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE;
-	logObject.constants.DISTANCE_PENALTY_VALUE = DISTANCE_PENALTY_VALUE;
+	logObject.Constants.DISTANCE_PENALTY_MIN_ACCEPTED_COUNT = DISTANCE_PENALTY_MIN_ACCEPTED_COUNT;
+	logObject.Constants.FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE = FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE;
+	logObject.Constants.DISTANCE_PENALTY_VALUE = DISTANCE_PENALTY_VALUE;
 
-	logObject.constants.MAX_TAXON_WEIGHT = MAX_TAXON_WEIGHT;
+	logObject.Constants.MAX_TAXON_WEIGHT = MAX_TAXON_WEIGHT;
 	
 	
 }
@@ -607,20 +613,24 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 	}), getDistanceToClosetsAcceptedObservation(obs, taxon, t), getPhaenologyFactor(obs, taxon), previousRecordsThisMonth(obs, taxon, t)])
 
 	.spread(function(taxonCalculation, closestDistance, phaenologyFactor, prevRecordsThisMonth) {
-		console.log("#### Using Taxon weight: " + taxonCalculation[0].TaxonWeight)
 		
 		logObject.Taxon.taxon_accepted_count = taxon.acceptedTaxon.Statistics.accepted_count;
 		logObject.Taxon.taxonWeight = taxonCalculation[0].TaxonWeight;
 		logObject.Taxon.closestDistance = Math.round(closestDistance * 100) / 100;
 		logObject.Taxon.phaenologyFactor = phaenologyFactor;
-		logObject.Taxon.morphogroup_id = taxon.acceptedTaxon.morphogroup_id;
+		
+		
+		if(logObject.MorphoGroup){
+			logObject.MorphoGroup.morphogroup_id = taxon.acceptedTaxon.morphogroup_id;
+		}	else {
+			logObject.MorphoGroup = {morphogroup_id : taxon.acceptedTaxon.morphogroup_id}
+		}
 		
 		addConstantsToLogObject(logObject)
 		var factor = 1;
 		if (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT) {
 			if (prevRecordsThisMonth > 0 && taxonCalculation[0].TaxonWeight < MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR) {
 				factor = factor * phaenologyFactor;
-				console.log("#### Using phaenology factor: " + phaenologyFactor)
 			}
 
 
@@ -629,7 +639,6 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 		
 		if (closestDistance < SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE) {
 			factor = factor * SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
-			console.log("#### Using short distance factor: " + SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR)
 		}
 
 		var taxonWeight = taxonCalculation[0].TaxonWeight * factor;
@@ -637,17 +646,13 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 		// additions
 		if (closestDistance >= FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.Statistics.accepted_count > DISTANCE_PENALTY_MIN_ACCEPTED_COUNT) {
 			taxonWeight += DISTANCE_PENALTY_VALUE;
-			console.log("#### Adding penalty for distance: " + DISTANCE_PENALTY_VALUE)
 		}
 
 		if (prevRecordsThisMonth === 0 && (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT)) {
 			taxonWeight += PHAENOLOGY_PENALTY_VALUE;
-			console.log("#### Adding penalty for phaenology: " + PHAENOLOGY_PENALTY_VALUE)
 		}
 		logObject.Taxon.calculatedTaxonWeight = taxonWeight;
-		console.log("####### Calculated taxon weight = " + taxonWeight)
-		console.log("####### logObject:");
-		console.log(JSON.stringify(logObject));
+		
 		return Math.min(MAX_TAXON_WEIGHT, taxonWeight);
 	})
 }
@@ -777,17 +782,19 @@ function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 		})
 		.then(function(obs) {
 
+			
 			if (obs.PrimaryDetermination.validation === "Godkendt") {
+				logObject.primaryDeterminationSwapped = false;
 				return Promise.resolve(obs);
+				
 			} else {
 				var newPrimaryDetermination = _.maxBy(obs.Determinations, function(o) {
 					return o.score;
 				});
 				
+				logObject.primaryDeterminationSwapped = (obs.PrimaryDetermination._id != newPrimaryDetermination._id ) ? true : false;
 				
-				logObject.primaryDeterminationSwapped = (obs.PrimaryDetermination.primarydetermination_id != newPrimaryDetermination._id ) ? true : false;
-				
-				console.log("###### new primary= "+newPrimaryDetermination._id)
+			
 			return	obs.setPrimaryDetermination(newPrimaryDetermination, {transaction: t});
 			//	return obs.save();
 			}
