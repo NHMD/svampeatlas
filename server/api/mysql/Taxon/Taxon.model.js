@@ -193,6 +193,12 @@ module.exports = function(sequelize, DataTypes) {
     					foreignKey: "parent_id",
     					as: "children"
     				});
+					
+    			models.Taxon
+    				.belongsTo(models.MorphoGroup, {
+    					foreignKey: "morphogroup_id",
+    					as: "MorphoGroup"
+    				});
 			
     		models.TaxonImages
     				.belongsTo(models.Taxon, {

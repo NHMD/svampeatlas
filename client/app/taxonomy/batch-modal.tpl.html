@@ -28,6 +28,9 @@
 	    		 <md-input-container layout-fill>
 	    		       
 	    		        <md-select ng-model="propertyType">
+    		          <md-option value="MorphoGroup" translate>
+    		            MorphoGroup
+    		          </md-option>
 	    		          <md-option value="Tag" translate>
 	    		            Tag
 	    		          </md-option>
@@ -40,7 +43,19 @@
    			 
          </div>
 		<div layout="row" layout-margin>
+		   <md-input-container ng-if="propertyType === 'MorphoGroup'">
+		           <label>{{'MorphoGroups' | translate}}</label>
+		           <md-select name="MorphoGroups" ng-model="$parent.selectedMorphoGroup" >
 
+   				             <md-option ng-repeat="mg in morphoGroup"  value="{{mg._id}}" >
+   				               {{mg.name_dk}} 
+   				             </md-option>
+ 
+
+		           </md-select>
+
+		         </md-input-container>
+				 
       <md-chips ng-model="selectedTags" md-max-chips=1 md-autocomplete-snap md-require-match="true" ng-if="propertyType === 'Tag'">
 
         <md-autocomplete

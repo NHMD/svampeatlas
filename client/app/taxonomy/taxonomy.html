@@ -214,6 +214,22 @@
 	 							        </md-chip-template>
 	 							      </md-chips>
 									  </div>
+									  
+									   <p  class="md-title taxonomy-query-section-header">{{'Morphogroups' | translate}}:</p>
+						  		    <div >
+						    			   <md-input-container>
+						    			           <label>{{'MorphoGroups' | translate}}</label>
+						    			           <md-select name="MorphoGroups" ng-model="selectedMorphoGroups" multiple>
+		            
+						    	   				             <md-option ng-repeat="mg in morphoGroup"  value="{{mg._id}}" >
+						    	   				               {{mg.name_dk}} 
+						    	   				             </md-option>
+  	   							 
+
+						    			           </md-select>
+	   
+						    			         </md-input-container>
+						  			</div>
 								  
 								  
 								  

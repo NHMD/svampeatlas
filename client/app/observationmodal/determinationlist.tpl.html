@@ -46,7 +46,10 @@
 	          </div>
 			
 			  <div layout="column" layout-align="center center" class="md-secondary"><md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
-				  <h3 class="vote-count"><a ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a></h3>
+				  <h3 class="vote-count">
+					  <a ng-if="Auth.hasRole('validator')" ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a>
+					  <span ng-if="!Auth.hasRole('validator')">{{det.score}}</span>
+				  </h3>
 			  <md-button aria-label="downvote" ng-if="Auth.hasRole('validator')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
 			  </div>
 
@@ -81,7 +84,10 @@
 	          </div>
 			
 			  <div layout="column" layout-align="center center" class="md-secondary"><md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
-				  <h3 class="vote-count"><a ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a></h3>
+				  <h3 class="vote-count">
+					  <a ng-if="Auth.hasRole('validator')" ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a>
+					  <span ng-if="!Auth.hasRole('validator')">{{det.score}}</span>
+				  </h3>
 		  <md-button aria-label="downvote" ng-if="Auth.hasRole('validator')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
 			  </div>
 

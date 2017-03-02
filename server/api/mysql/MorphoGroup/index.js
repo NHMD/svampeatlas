@@ -10,6 +10,9 @@ var router = express.Router();
 
 router.get('/', controller.index);
 
+
+router.post('/:id/taxa',auth.hasRole('taxonomyadmin'), controller.batchUpdateMorphoGroup);
+
 //router.get('/:id', controller.show);
 
 

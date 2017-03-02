@@ -22,6 +22,8 @@ angular.module('svampeatlasApp')
 
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
+			this.DeterminationLogModalService = DeterminationLogModalService;
+			
 			$scope.$translate = $translate;
 			$scope.imageurl = appConstants.imageurl;
 			$scope.maxDate = new Date();
@@ -1300,12 +1302,15 @@ $scope.showExifConfirmPanel(exif)
 					})
 					.
 				catch(function(res) {
-					var msg = "Der er sket en fejl - luk venligst fundet og prøv igen.";
-					if(res.status === 422){
-						msg = "Du skal vælge en lokalitet."
-						that.savingObservation = false;
+					if(res.status === 500){
+						ErrorHandlingService.handle500();
 					}
+					if(res.status === 422){
+						msg = $translate.instant("Du skal vælge en lokalitet.")
+						that.savingObservation = false;
 					alert(msg)
+						
+					}
 				})
 
 			};
