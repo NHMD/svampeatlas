@@ -1,8 +1,8 @@
-<div role="dialog" aria-label="Other determinations" layout="column" layout-align="center center">
+<div role="dialog" aria-label="Other determinations" layout="column" layout-align="center center" flex>
  <md-toolbar>
    <div class="md-toolbar-tools">
      
-	<h2 ng-if="editMode">{{'Log for bestemmelse'}}</h2>
+	<h2>{{'Hændelses-log for bestemmelse' | translate}}</h2>
      <span flex></span>
      <md-button class="md-icon-button" ng-click="ctrl.closeDialog()">
        <ng-md-icon icon="close"></ng-md-icon>
@@ -10,21 +10,21 @@
    </div>
  </md-toolbar>
 
-      <div id="determination-panel-content" class="demo-dialog-content">
+      <md-content id="determinationlog-panel-content" class="demo-dialog-content">
 		  
-		  
-	<table class="table taxontable table-bordered" st-table="displayed" st-safe-src="ctrl.logs">
+	<table class="table taxontable table-bordered log-table" st-table="displayed" st-safe-src="ctrl.logs">
 		<thead>
 		<tr>
 		
-			<th st-sort="createdAt" st-sort-default="reverse">Created</th>
-			<th >Description</th>
+			<th st-ratio="30" st-sort="createdAt" st-sort-default="reverse">Created</th>
+			<th st-ratio="70"></th>
 		</tr>
+		
 		</thead>
 		<tbody >
 		<tr ng-repeat="row in displayed">
-			<td>{{row.createdAt | date : 'medium'}}</td>
-			<td><json-formatter open="1" json="row.logObject"></json-formatter></td>
+			<td st-ratio="30">{{row.createdAt | date : 'medium'}}</td>
+			<td st-ratio="70"><json-formatter open="1" json="row.logObject"></json-formatter></td>
 			
 		
 		
@@ -35,8 +35,8 @@
 	</table>	  
 		  
 
-
-      </div>
+	
+      </md-content>
 
   <div class="demo-dialog-button" layout="row">
 	  

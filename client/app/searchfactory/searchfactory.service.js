@@ -1,11 +1,12 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User, Substrate, VegetationType, Area, DataSet) {
+	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User, Substrate, VegetationType, Area, DataSet, MorphoGroup) {
 		
 		var substrate = Substrate.query();
 		var vegetationType = VegetationType.query();
 		var municipalities = Area.query({where: {type: 'kommune'}})
 		var dataSet = DataSet.query({cachekey : 'dataSet'});
+		var morphoGroup = MorphoGroup.query();
 		return {
 			getDataSet : function(){
 				return dataSet.$promise;
@@ -18,6 +19,9 @@ angular.module('svampeatlasApp')
 			},
 			getMunicipalities : function(){
 				return municipalities.$promise;
+			},
+			getMorphoGroup : function(){
+				return morphoGroup.$promise;
 			},
 			querySearchLocality : function(query, leafletBounds) {
 

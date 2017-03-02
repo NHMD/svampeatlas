@@ -6,13 +6,27 @@ angular.module('svampeatlasApp')
 				show: function( markedTaxa) {
 			      $mdDialog.show({
 					locals: {markedTaxa: markedTaxa},  
-			        controller: ['$scope','$mdDialog', '$mdToast','$http', '$translate', 'TaxonomyTags','MycokeyCharacters', 'ErrorHandlingService',
-					  				function($scope, $mdDialog,$mdToast,  $http, $translate, TaxonomyTags, MycokeyCharacters, ErrorHandlingService) {
+			        controller: ['$scope','$mdDialog', '$mdToast','$http', '$translate', 'TaxonomyTags','MycokeyCharacters', 'ErrorHandlingService', 'SearchService',
+					  				function($scope, $mdDialog,$mdToast,  $http, $translate, TaxonomyTags, MycokeyCharacters, ErrorHandlingService, SearchService) {
 										$scope.actionType = "Add";
 										$scope.propertyType = "Tag";
 										
+										
+										$scope.$watch('propertyType', function(newVal, oldVal){
+											
+											if(newVal === 'MorphoGroup'){
+												$scope.actionType = "Add";
+											}
+										})
+										
 										$scope.selectedTags = [];
 										$scope.selectedMycokeyCharacters = [];
+										
+										
+										SearchService.getMorphoGroup().then(function(morphoGroup){
+											$scope.morphoGroup = morphoGroup;
+								
+										})
 										
 										$scope.tagSearch = function(query) {
 
@@ -58,8 +72,21 @@ angular.module('svampeatlasApp')
 									  $scope.doBatchOperation = function(){
 										  
 										  var method = ($scope.actionType === "Add") ? "POST" : "DELETE";
-										  var baseUrl = ($scope.propertyType === "Tag") ? '/api/taxonomytags/' : '/api/mycokeycharacters/';
-										  var id = ($scope.propertyType === "Tag") ? $scope.selectedTags[0]._id : $scope.selectedMycokeyCharacters[0].CharacterID;
+										  var baseUrl;
+										  var id;
+										   if($scope.propertyType === "Tag") {
+											   baseUrl = '/api/taxonomytags/' ;
+											   id = $scope.selectedTags[0]._id
+										   }
+											   else if($scope.propertyType === "MycoKeyCharacter")  {
+											   baseUrl =	'/api/mycokeycharacters/';
+											   id = $scope.selectedMycokeyCharacters[0].CharacterID
+											   } 
+											   else if($scope.propertyType === "MorphoGroup"){
+											   baseUrl =	'/api/morphogroups/';
+											   id= $scope.selectedMorphoGroup
+											   }
+											    
 											  $http({
 											      method: method,
 											      url: baseUrl+id+'/taxa',

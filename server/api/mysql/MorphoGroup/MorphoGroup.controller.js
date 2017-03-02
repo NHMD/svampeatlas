@@ -81,3 +81,27 @@ exports.index = function(req, res) {
 };
 
 
+exports.batchUpdateMorphoGroup = function(req, res) {
+		
+	MorphoGroup.find({where: {_id: req.params.id}})
+	.then(function(morphoGroup){
+		if (!morphoGroup) {
+			throw new Error("Not found")
+		}
+		
+		var taxonIds = _.map(req.body, function(e){
+			return e._id;
+		})
+		return models.Taxon.update({morphogroup_id: morphoGroup._id}, {where :{_id: taxonIds}})
+	})
+	
+	.then(function(){
+	  return res.status(201).send()
+  })
+    .catch(function(err){
+    	var statusCode = (err.message = "Not found")? 404 : 500;
+		return res.status(statusCode).send(err.message)
+    });
+}
+
+

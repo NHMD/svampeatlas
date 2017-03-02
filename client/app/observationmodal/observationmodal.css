@@ -125,3 +125,23 @@
 	margin-top: 60px;
 }
 
+
+table.log-table > thead, table.log-table > tbody { 
+	display: block; 
+	
+}
+
+
+
+table.log-table > tbody {
+	height: 500px;
+           /* Just for the demo          */
+    overflow-y: scroll;    /* Trigger vertical scroll    */
+	 overflow-x: hidden;
+}
+
+
+
+
+
+

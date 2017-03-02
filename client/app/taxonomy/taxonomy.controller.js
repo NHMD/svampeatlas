@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'MycokeyCharacters', 'TaxonBatchUpdateModalService',
-		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters, TaxonBatchUpdateModalService) {
+	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'MycokeyCharacters', 'TaxonBatchUpdateModalService', 'SearchService',
+		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters, TaxonBatchUpdateModalService, SearchService) {
 			$scope.translate = $translate;
 			$scope.resetSearch = function() {
 				localStorage.removeItem('taxonomy_attribute_conditions');
@@ -14,6 +14,7 @@ angular.module('svampeatlasApp')
 				localStorage.removeItem("taxon_search_table");
 				localStorage.removeItem('taxonomy_selected_mycokeycharacters');
 				localStorage.removeItem('taxonomy_statistics_conditions');
+				localStorage.removeItem('taxonomy_morphogroups');
 				$("input[st-search]").val("");
 				$scope.InitialzeSavedSettings();
 				$timeout(function() {
@@ -58,7 +59,11 @@ angular.module('svampeatlasApp')
 
 				var mycokeyCharacters = localStorage.getItem('taxonomy_selected_mycokeycharacters');
 				$scope.selectedMycokeyCharacters = (mycokeyCharacters) ? JSON.parse(mycokeyCharacters) : [];
-
+				
+				var morphoGroups_ = localStorage.getItem('taxonomy_morphogroups');
+				$scope.selectedMorphoGroups = (morphoGroups_) ? JSON.parse(morphoGroups_) : [];
+				
+				
 				var redListCategories = localStorage.getItem('taxonomy_redlist_categories');
 				$scope.selectedRedListCategories = (redListCategories) ? JSON.parse(redListCategories) : {};
 
@@ -206,6 +211,11 @@ angular.module('svampeatlasApp')
 
 				return results;
 			}
+			
+			SearchService.getMorphoGroup().then(function(morphoGroup){
+				$scope.morphoGroup = morphoGroup;
+								
+			})
 
 
 			$scope.$watchCollection('selectedTags', function(newVal, oldVal) {
@@ -221,6 +231,15 @@ angular.module('svampeatlasApp')
 
 
 				localStorage.setItem('taxonomy_selected_mycokeycharacters', JSON.stringify($scope.selectedMycokeyCharacters))
+
+				$scope.callServerSafe();
+
+			})
+			
+			$scope.$watchCollection('selectedMorphoGroups', function(newVal, oldVal) {
+
+
+				localStorage.setItem('taxonomy_morphogroups', JSON.stringify($scope.selectedMorphoGroups))
 
 				$scope.callServerSafe();
 
@@ -494,7 +513,25 @@ angular.module('svampeatlasApp')
 						where: JSON.stringify(dkNameWhere)
 					}
 				];
+				
+				var storedMorphoGroups = localStorage.getItem('taxonomy_morphogroups');
 
+				if (storedMorphoGroups) {
+
+
+					var parsedGroups = JSON.parse(storedMorphoGroups);
+					if(parsedGroups.length > 0){
+						include.push({
+							model: "MorphoGroup",
+							as: "MorphoGroup",
+							where: JSON.stringify({_id: parsedGroups})
+						})
+					}
+
+
+				}
+				
+				
 				var storedTags = localStorage.getItem('taxonomy_selected_tags');
 
 				if (storedTags) {

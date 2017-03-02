@@ -15,7 +15,7 @@ angular.module('svampeatlasApp')
   					determination: determination
   				},
   			    controllerAs: 'ctrl',
-  			    disableParentScroll: true,
+  			    disableParentScroll: false,
   			    templateUrl: 'app/observationmodal/determinationlog-panel.tpl.html',
   			    hasBackdrop: true,
   			    panelClass: 'demo-dialog-example',
