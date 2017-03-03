@@ -67,7 +67,7 @@ module.exports = function(app) {
 	app.use('/api/areas', require('./api/mysql/Area'));
 	app.use('/api/dataset', require('./api/mysql/DataSet'));
 	app.use('/api/search', require('./api/mysql/StoredSearch'));
-	app.use('/api/morphogroups', require('./api/mysql/MorphoGroup'));
+	app.use('/api/morphogroups', intparser.parseLimitOffset(), require('./api/mysql/MorphoGroup'));
 	
 	app.use('/auth', require('./auth'));
 

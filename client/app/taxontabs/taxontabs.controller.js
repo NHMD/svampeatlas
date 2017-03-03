@@ -30,7 +30,8 @@ angular.module('svampeatlasApp')
 				'taxonlayout-taxonredlistdata': 'Red List',
 				'taxonlayout-taxonbooklayout': 'Book layout',
 				'taxonlog' : 'Log',
-				'taxontags' : 'Tags'
+				'taxontags' : 'Tags',
+			  'taxonmorphogroups': 'Morphogroups'
 			};
 			
 	

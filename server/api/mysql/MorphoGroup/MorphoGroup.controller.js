@@ -65,11 +65,64 @@ function removeEntity(res) {
 	};
 }
 
+
+// Creates a new thing in the DB.
+exports.create = function(req, res) {
+	var group = 	req.body;
+	group.createdbyuser_id = req.user._id;
+  MorphoGroup.create(group)
+    .then(responseWithResult(res, 201))
+    .catch(handleError(res));
+};
+
+
+
+// Deletes a thing from the DB.
+exports.destroy = function(req, res) {
+	
+  MorphoGroup.find({
+    where: {
+      _id: req.params.id
+    }
+  })
+    .then(handleEntityNotFound(res))
+    .then(removeEntity(res))
+    .catch(handleError(res));
+};
+
 // Get list of taxons
 exports.index = function(req, res) {
+	
+	var query = {
+		offset: req.query.offset,
+		limit: req.query.limit,
+		order: req.query.order
+	};
+	if (req.query.where) {
+		query['where'] = JSON.parse(req.query.where);
+	}
 
+	if (req.query.include) {
+		var include = JSON.parse(req.query.include)
+		
+	query['include'] =	_.map(include, function(n){
+		
+		
+		if(n.model === "User"){
+			
+			n = userTool.secureUser(n);
+			
+		} 
+		
+		n.model = models[n.model];
+		if(n.where) {
+			n.where = JSON.parse(n.where)
+		}
+		return n;
+		})	
+	}
 
-	MorphoGroup.findAndCountAll()
+	MorphoGroup.findAndCountAll(query)
 		.then(function(morphogroup) {
 			res.set('count', morphogroup.count);
 			
@@ -78,6 +131,22 @@ exports.index = function(req, res) {
 		.
 	catch(handleError(res));
 
+};
+
+
+exports.update = function(req, res) {
+  if (req.body._id) {
+    delete req.body._id;
+  }
+  MorphoGroup.find({
+    where: {
+      _id: req.params.id
+    }
+  })
+    .then(handleEntityNotFound(res))
+    .then(saveUpdates(req.body))
+    .then(responseWithResult(res))
+    .catch(handleError(res));
 };
 
 

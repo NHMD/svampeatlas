@@ -10,6 +10,9 @@ var router = express.Router();
 
 router.get('/', controller.index);
 
+router.post('/',auth.hasRole('taxonomyadmin'), controller.create);
+router.delete('/:id',auth.hasRole('taxonomyadmin'), controller.destroy);
+router.put('/:id', auth.hasRole('taxonomyadmin'),  controller.update);
 
 router.post('/:id/taxa',auth.hasRole('taxonomyadmin'), controller.batchUpdateMorphoGroup);
 
