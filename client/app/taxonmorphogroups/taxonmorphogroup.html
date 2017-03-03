@@ -1,0 +1,96 @@
+<md-toolbar    ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
+	
+</md-toolbar>	
+<md-content flex md-scroll-y layout-padding>
+
+
+<div class="col-md-12" layout layout-sm="column" >
+							           <!--
+										  <md-input-container >
+							  			<label>Add new group</label>
+							  			      <input ng-model="newGroup" type="text">
+							            </md-input-container>
+		  							  		  <md-input-container ng-if="newTag">
+		  							  	<md-button class="md-raised md-primary" ng-click="addTag(newTag)">Add tag</md-button>
+		  							  </md-input-container> -->
+</div>	
+<div class="col-md-12" >
+
+<table class="table taxontable table-bordered"  st-table="displayed" st-pipe="callServer">
+	<thead>
+	<tr>
+		<th st-sort="_id" st-ratio="10" st-sort-default>ID</th>
+		<th st-ratio="10" ></th>
+		<th st-sort="createdAt" >Created</th>
+		<th st-sort="name_dk">Name dk</th>
+		
+		<th st-sort="name_uk">Name uk</th>
+		<th st-sort="notes">Notes</th>
+		<th></th>
+	</tr>
+	<tr>
+		<th st-ratio="10"> <input class="form-control" st-search="_id" placeholder="Find id..."></th>
+		<th st-ratio="10" ></th>
+		<th></th>
+		<th><input class="form-control" st-search="name_dk" placeholder="Find DK name..."></th>
+		
+		<th><input class="form-control" st-search="name_uk" placeholder="Find UK name..."></th>
+		<th><input class="form-control" st-search="notes" placeholder="Search in notes..."></th>
+		<th><button type="button" class="btn btn-default" ng-click="addGroupInTable('start')">Add group</button></th>
+	</tr>
+	</thead>
+	<tbody ng-show="!isLoading">
+	<tr ng-repeat="mg in displayed">
+		<td st-ratio="10">{{mg._id}}</td>
+		<td st-ratio="10"><button type="button" class="btn btn-default" ng-click="viewTaxa(mg)">View taxa</button></td>
+		<td>{{mg.createdAt | date : 'medium'}}</td>
+		<td>
+			<span editable-text="mg.name_dk" e-name="name_dk" e-form="rowform">
+			          {{ mg.name_dk }}
+			        </span>
+			
+		<td><span editable-text="mg.name_uk" e-name="name_uk" e-form="rowform">
+			          {{ mg.name_uk }}
+			        </span></td>
+		<td><span editable-text="mg.notes" e-name="notes" e-form="rowform">
+					          {{ mg.notes }}
+					        </span></td>
+		<td>
+			<!-- form -->
+			        <form editable-form name="rowform" onbeforesave="addOrUpdateGroup(mg)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == mg">
+			          <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+			            save
+			          </button>
+			          <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+			            cancel
+			          </button>
+			        </form>
+					<div class="buttons" ng-show="!rowform.$visible">
+					          <button type="button" class="btn btn-primary" ng-click="rowform.$show()">edit</button>
+					          <button type="button" class="btn btn-danger" ng-click="removeGroup($index, mg)">del</button>
+					        </div>
+			
+		</td>
+	</tr>
+	</tbody>
+	<tbody ng-show="isLoading">
+	<tr>
+		<td colspan="4" class="text-center">Loading ... </td>
+	</tr>
+	</tbody>
+	<tfoot>
+	<tr>
+		<td class="text-center" colspan="7">
+			<button type="button" class="btn btn-default" ng-click="addGroupInTable('end')">Add group</button>
+		</td>
+	</tr>
+	</tfoot>
+</table>
+</div>	
+	
+</md-content>
+
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+	        
+	      </div>
+

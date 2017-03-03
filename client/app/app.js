@@ -278,6 +278,11 @@ angular.module('svampeatlasApp', [
 						name: 'Tags',
 						state: 'taxontags',
 						requireRole: 'taxonomyadmin',
+					}, {
+						id: 'TaxonBase_morphogroups',
+						name: 'Morphogroups',
+						state: 'taxonmorphogroups',
+						requireRole: 'taxonomyadmin',
 					}]
 				}]
 			}, {

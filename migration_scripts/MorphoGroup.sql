@@ -1,11 +1,21 @@
-CREATE TABLE MorphoGroup (
-_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-updatedAt datetime DEFAULT NULL,
-name_dk VARCHAR(520),
-name_uk VARCHAR(520),
-image VARCHAR(520)
-) ENGINE=InnoDB DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS `MorphoGroup` (
+`_id` int(11) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` datetime DEFAULT NULL,
+  `name_dk` varchar(520) DEFAULT NULL,
+  `name_uk` varchar(520) DEFAULT NULL,
+  `image` varchar(520) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `createdbyuser_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `MorphoGroup`
+ ADD PRIMARY KEY (`_id`);
+
+
+ALTER TABLE `MorphoGroup`
+MODIFY `_id` int(11) NOT NULL AUTO_INCREMENT;
 
 
 
@@ -49,6 +59,18 @@ ALTER TABLE `UserMorphoGroupImpact`
 ALTER TABLE Taxon ADD COLUMN morphogroup_id INT(11);
 ALTER TABLE Taxon ADD CONSTRAINT fk_morphogroup_id FOREIGN KEY (morphogroup_id) REFERENCES MorphoGroup(_id);
 
+
+UPDATE Taxon set morphogroup_id= NULL;
+DELETE FROM UserMorphoGroupImpact;
+DELETE FROM MorphoGroup;
+ALTER TABLE MorphoGroup AUTO_INCREMENT = 1;
+
+INSERT INTO MorphoGroup (name_dk, createdbyuser_id) SELECT DISTINCT gruppe, 60 FROM kompetencegrupper;
+
+UPDATE kompetencegrupper k, MorphoGroup m SET k.gruppe_id=m._id WHERE k.gruppe = m.name_dk;
+UPDATE Taxon t, kompetencegrupper k SET t.morphogroup_id = k.gruppe_id WHERE t.FullName LIKE CONCAT( k.genus, "%") AND t.RankID > 4999;
+
+
 -- testdata Cortinarius 
 UPDATE Taxon t, Taxon t1 set t.morphogroup_id=1 WHERE t1._id=50471 AND t.Path LIKE CONCAT(t1.Path, "%");
 
@@ -72,7 +94,7 @@ SELECT u._id, a.morphogroup_id, CEIL((COUNT(distinct ta._id)/ a.totalCount * 100
 FROM
 Determination d,Taxon t, Taxon ta, Users u, 
 (SELECT morphogroup_id, COUNT(_id) as totalCount FROM Taxon t, TaxonAttributes ta WHERE ta.taxon_id=t._id AND t.accepted_id=t._id AND ta.PresentInDK = 1 AND t.morphogroup_id IS NOT NULL GROUP BY morphogroup_id) a
-WHERE d.user_id=u._id AND d.taxon_id=t._id AND ta._id=t.accepted_id AND ta.morphogroup_id = a.morphogroup_id AND d.validation="Godkendt" GROUP BY u._id, a.morphogroup_id;
+WHERE d.user_id=u._id AND d.taxon_id=t._id AND ta._id=t.accepted_id AND ta.morphogroup_id = a.morphogroup_id AND (d.validation="Godkendt" OR d.score > 80) GROUP BY u._id, a.morphogroup_id;
 
 
 DELETE FROM UserMorphoGroupImpact;
