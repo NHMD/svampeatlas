@@ -47,7 +47,12 @@ const DISTANCE_PENALTY_VALUE = 25;
 
 const MAX_TAXON_WEIGHT = 100;
 
-
+// For higher taxa we cannot use accepted record count in a meaningfull sense, therefore we give them a default weight
+const DEFAULT_HIGHER_TAXON_WEIGHT = 25;
+// What defines a higher taxon (10000 = species rank)
+const DEFAULT_HIGHER_TAXON_RANK_LIMIT = 10000;
+// in order to pick a determination to higher taxon rather than to species the higher taxon determintion must have twice the score (factor 0.5) of the species determination
+const DEFAULT_HIGHER_TAXON_FACTOR = 0.5;
 
 
 
@@ -580,6 +585,10 @@ function addConstantsToLogObject(logObject){
 
 	logObject.Constants.MAX_TAXON_WEIGHT = MAX_TAXON_WEIGHT;
 	
+	logObject.Constants.DEFAULT_HIGHER_TAXON_WEIGHT = DEFAULT_HIGHER_TAXON_WEIGHT;
+	logObject.Constants.DEFAULT_HIGHER_TAXON_RANK_LIMIT = DEFAULT_HIGHER_TAXON_RANK_LIMIT;
+	logObject.Constants.DEFAULT_HIGHER_TAXON_FACTOR = DEFAULT_HIGHER_TAXON_FACTOR;
+	
 	
 }
 
@@ -604,20 +613,24 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 	 ts.accepted_count as recordCount, (SELECT MAX(accepted_count) FROM TaxonStatistics) as maxRecordCount
 	FROM Taxon t LEFT JOIN TaxonStatistics ts  ON ts.taxon_id = t._id WHERE t._id = :taxonid`;
 
-	return Promise.all([models.sequelize.query(scoreSql, {
+
+	var taxonWeightPromise = (taxon.acceptedTaxon.RankID < DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? Promise.resolve([{TaxonWeight: DEFAULT_HIGHER_TAXON_WEIGHT}]) : models.sequelize.query(scoreSql, {
 		replacements: {
 			taxonid: taxon.acceptedTaxon._id
 
 		},
 		type: models.sequelize.QueryTypes.SELECT
-	}), getDistanceToClosetsAcceptedObservation(obs, taxon, t), getPhaenologyFactor(obs, taxon), previousRecordsThisMonth(obs, taxon, t)])
+	});
+	
+	return Promise.all([taxonWeightPromise, getDistanceToClosetsAcceptedObservation(obs, taxon, t), getPhaenologyFactor(obs, taxon), previousRecordsThisMonth(obs, taxon, t)])
 
 	.spread(function(taxonCalculation, closestDistance, phaenologyFactor, prevRecordsThisMonth) {
 		
-		logObject.Taxon.taxon_accepted_count = taxon.acceptedTaxon.Statistics.accepted_count;
+		if(!taxon.acceptedTaxon.morphogroup_id) {
+			logObject.WARNING = taxon.acceptedTaxon.FullName + " is not assigned to a morphogroup!"; 
+		};
+		
 		logObject.Taxon.taxonWeight = taxonCalculation[0].TaxonWeight;
-		logObject.Taxon.closestDistance = Math.round(closestDistance * 100) / 100;
-		logObject.Taxon.phaenologyFactor = phaenologyFactor;
 		
 		
 		if(logObject.MorphoGroup){
@@ -628,21 +641,28 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 		
 		addConstantsToLogObject(logObject)
 		var factor = 1;
-		if (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT) {
+		if (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT && taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
 			if (prevRecordsThisMonth > 0 && taxonCalculation[0].TaxonWeight < MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR) {
 				factor = factor * phaenologyFactor;
 			}
-
+			logObject.Taxon.phaenologyFactor = phaenologyFactor;
 
 		};
 		
 		
-		if (closestDistance < SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE) {
+		if (closestDistance < SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
 			factor = factor * SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
+			logObject.Taxon.closestDistance = Math.round(closestDistance * 100) / 100;
 		}
 
 		var taxonWeight = taxonCalculation[0].TaxonWeight * factor;
-
+		
+		if(taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT){
+			
+			
+			
+			logObject.Taxon.taxon_accepted_count = taxon.acceptedTaxon.Statistics.accepted_count;
+			
 		// additions
 		if (closestDistance >= FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.Statistics.accepted_count > DISTANCE_PENALTY_MIN_ACCEPTED_COUNT) {
 			taxonWeight += DISTANCE_PENALTY_VALUE;
@@ -651,6 +671,8 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 		if (prevRecordsThisMonth === 0 && (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT)) {
 			taxonWeight += PHAENOLOGY_PENALTY_VALUE;
 		}
+	}
+		
 		logObject.Taxon.calculatedTaxonWeight = taxonWeight;
 		
 		return Math.min(MAX_TAXON_WEIGHT, taxonWeight);
@@ -762,6 +784,8 @@ function getPhaenologyFactor(obs, taxon) {
 
 exports.getPhaenologyFactor = getPhaenologyFactor;
 
+
+
 function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 
 //return models.sequelize.transaction(function(t){
@@ -775,7 +799,17 @@ function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 
 			}, {
 				model: models.Determination,
-				as: 'Determinations'
+				as: 'Determinations',
+				include: [{
+					model: models.Taxon,
+					as: 'Taxon',
+					include: [{
+						model: models.Taxon,
+						as: 'acceptedTaxon'
+
+					}]
+
+				}]
 
 			}],
 			transaction: t
@@ -788,9 +822,28 @@ function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 				return Promise.resolve(obs);
 				
 			} else {
-				var newPrimaryDetermination = _.maxBy(obs.Determinations, function(o) {
-					return o.score;
+				/*
+				var newPrimaryDetermination = obs.PrimaryDetermination;
+				
+				for(var i=0; i < obs.Determinations.length; i++){
+					var score = obs.Determinations[i].score;
+					if(obs.Determinations[i].RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT){
+						score = score *  DEFAULT_HIGHER_TAXON_FACTOR;
+					}
+					
+					if(score > newPrimaryDetermination.score){
+						newPrimaryDetermination = obs.Determinations[i];
+					}
+				}
+				*/
+				
+				
+			var newPrimaryDetermination = 	 _.maxBy(obs.Determinations, function(d) {
+					// determinations to higher taxon will be handicapped towards determinations to species
+					return (d.Taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? d.score : (d.score * DEFAULT_HIGHER_TAXON_FACTOR);
 				});
+				
+				
 				
 				logObject.primaryDeterminationSwapped = (obs.PrimaryDetermination._id != newPrimaryDetermination._id ) ? true : false;
 				

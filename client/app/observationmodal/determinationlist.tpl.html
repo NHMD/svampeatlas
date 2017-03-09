@@ -40,15 +40,23 @@
 	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
-	            <p>Status: {{ det.validation }} </p>
-				<p>{{(det.Validator) ? ('Status senest ændret af '+ det.Validator.name+' ('+det.Validator.Initialer+')'):"" }}</p>
+	            <p>{{'Antal stemmer: '}}{{ det.Votes.length }} </p>
+				
+					 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></p>
+					
+				
+				
 				
 	          </div>
 			
-			  <div layout="column" layout-align="center center" class="md-secondary"><md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
+			  <div layout="column" layout-align="center center" class="md-secondary">
+		  		<md-tooltip md-direction="left"  >
+		  		          {{'Jeg er enig i bestemmelsen' | translate}}
+		  		        </md-tooltip>
+				  <md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
 				  <h3 class="vote-count">
 					  <a ng-if="Auth.hasRole('validator')" ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a>
-					  <span ng-if="!Auth.hasRole('validator')">{{det.score}}</span>
+					  <span ng-if="!Auth.hasRole('validator')">{{(1 > det.score ) ? 1 : det.score}}</span>
 				  </h3>
 			  <md-button aria-label="downvote" ng-if="Auth.hasRole('validator')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
 			  </div>
@@ -78,15 +86,21 @@
 	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
-	            <p>Status: {{ det.validation }} </p>
-				<p>{{(det.Validator) ? ('Status senest ændret af '+ det.Validator.name+' ('+det.Validator.Initialer+')'):"" }}</p>
+	            <p>{{'Antal stemmer: '}}{{ det.Votes.length }} </p>
+			 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></p>
+				
+				
 				
 	          </div>
-			
-			  <div layout="column" layout-align="center center" class="md-secondary"><md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
+	  		
+			  <div layout="column" layout-align="center center" class="md-secondary">
+	  	  		<md-tooltip md-direction="left" >
+	  	  		          {{'Jeg er enig i bestemmelsen' | translate}}
+	  	  		        </md-tooltip>
+				  <md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
 				  <h3 class="vote-count">
 					  <a ng-if="Auth.hasRole('validator')" ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a>
-					  <span ng-if="!Auth.hasRole('validator')">{{det.score}}</span>
+					  <span ng-if="!Auth.hasRole('validator')">{{(1 > det.score ) ? 1 : det.score}}</span>
 				  </h3>
 		  <md-button aria-label="downvote" ng-if="Auth.hasRole('validator')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
 			  </div>

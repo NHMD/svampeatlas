@@ -68,25 +68,13 @@ ALTER TABLE MorphoGroup AUTO_INCREMENT = 1;
 INSERT INTO MorphoGroup (name_dk, createdbyuser_id) SELECT DISTINCT gruppe, 60 FROM kompetencegrupper;
 
 UPDATE kompetencegrupper k, MorphoGroup m SET k.gruppe_id=m._id WHERE k.gruppe = m.name_dk;
-UPDATE Taxon t, kompetencegrupper k SET t.morphogroup_id = k.gruppe_id WHERE t.FullName LIKE CONCAT( k.genus, "%") AND t.RankID > 4999;
+-- UPDATE Taxon t, kompetencegrupper k SET t.morphogroup_id = k.gruppe_id WHERE t.FullName LIKE CONCAT( k.genus, "%") AND t.RankID > 4999;
 
 
--- testdata Cortinarius 
-UPDATE Taxon t, Taxon t1 set t.morphogroup_id=1 WHERE t1._id=50471 AND t.Path LIKE CONCAT(t1.Path, "%");
-
--- testdata Lactarius s.lato
-UPDATE Taxon t, Taxon t1 set t.morphogroup_id=2 WHERE t1._id=62369 AND t.Path LIKE CONCAT(t1.Path, "%");
-
-UPDATE Taxon t, Taxon t1 set t.morphogroup_id=2 WHERE t1._id=66617 AND t.Path LIKE CONCAT(t1.Path, "%");
+UPDATE Taxon t, Taxon t1, kompetencegrupper k SET t.morphogroup_id = k.gruppe_id WHERE t1.FullName = k.genus AND t.Path LIKE CONCAT(t1.Path, "%");
 
 
--- testdata Russula
-UPDATE Taxon t, Taxon t1 set t.morphogroup_id=3 WHERE t1._id=51729 AND t.Path LIKE CONCAT(t1.Path, "%");
 
--- testdata boletaceae 60065 og suillaceae 60556
-
-UPDATE Taxon t, Taxon t1 set t.morphogroup_id=4 WHERE t1._id=60065 AND t.Path LIKE CONCAT(t1.Path, "%");
-UPDATE Taxon t, Taxon t1 set t.morphogroup_id=4 WHERE t1._id=60556 AND t.Path LIKE CONCAT(t1.Path, "%");
 
 -- User impact
 INSERT INTO UserMorphoGroupImpact (user_id, morphogroup_id, impact) 
@@ -98,3 +86,6 @@ WHERE d.user_id=u._id AND d.taxon_id=t._id AND ta._id=t.accepted_id AND ta.morph
 
 
 DELETE FROM UserMorphoGroupImpact;
+
+-- detect unmapped DK taxa
+select t._id, t.parent_id, p.RankName as parentrank, p.FullName as parentname, t.FullName as name,t.RankName as rank from Taxon t, Taxon p, TaxonAttributes ta where t._id= ta.taxon_id AND  ta.PresentInDK = 1 AND t.parent_id=p._id AND t.RankID > 9950 AND t.morphogroup_id IS NULL GROUP BY p._id ORDER BY p.FullName
