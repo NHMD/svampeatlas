@@ -52,9 +52,8 @@ angular.module('svampeatlasApp')
 
 			$scope.showSpeciesSearch = function(row, view) {
 				var search = ObservationSearchService.getSearch();
-				search.include[0].where = {
-					Taxon_id: row.DeterminationView.Taxon_id
-				};
+				search.include[0].where.Taxon_id = row.DeterminationView.Taxon_id;
+				
 				if (view === 'list') {
 					$state.go('search-list')
 				} else if (view === 'map') {
@@ -72,8 +71,8 @@ angular.module('svampeatlasApp')
 				search.include = [{
 						model: "DeterminationView",
 						as: "DeterminationView",
-						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id'],
-						where: {}
+						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
+						where: { }
 					}, {
 						model: "User",
 						as: 'PrimaryUser',

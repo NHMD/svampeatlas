@@ -103,7 +103,12 @@ angular.module('svampeatlasApp')
 							as: "DeterminationView",
 							where: {
 								Taxon_id: $scope.taxon.accepted_id,
-								Determination_validation: 'Godkendt'
+								$or : {
+								Determination_validation: 'Godkendt',
+									Determination_score: {$gte: appConstants.AcceptedDeterminationScore}	
+									
+								}
+								
 							}
 						}),
 						JSON.stringify({

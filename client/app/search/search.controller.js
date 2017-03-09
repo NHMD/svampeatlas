@@ -9,6 +9,9 @@ angular.module('svampeatlasApp')
 			$scope.$cookies = $cookies;
 			$scope.mdMedia = $mdMedia;
 			$scope.$translate = $translate;
+			$scope.AcceptedDeterminationScore = appConstants.AcceptedDeterminationScore;
+			$scope.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
+			
 			$scope.setDate = function(days, model) {
 				ObservationSearchService.setDate(days, model, $scope.search);
 			};
@@ -54,6 +57,8 @@ angular.module('svampeatlasApp')
   						$scope.search.determiner = $scope.search.determiner || [];
   						$scope.search.PrimaryUser = $scope.search.PrimaryUser || [];
   						$scope.search.selectedMonths = $scope.search.selectedMonths || [];
+						$scope.search.Determination_score = $scope.search.Determination_score || [];
+						$scope.search.Determination_validation = $scope.search.Determination_validation || [];
 						
 						/*if($scope.search.geometry){
 							$scope.leafletPolygon = new L.geoJson($scope.search.geometry);
@@ -389,7 +394,8 @@ angular.module('svampeatlasApp')
 						$scope.search.notMyObservations = false;
 						break;
 					case 'recordproperties':
-						delete $scope.search.include[0].where.Determination_validation ;
+						$scope.search.Determination_validation = [];
+						$scope.search.Determination_score = [];
 						delete $scope.search.fieldnumber;
 						delete $scope.search.databasenumber
 						delete $scope.search._id;
@@ -419,7 +425,9 @@ angular.module('svampeatlasApp')
 					model: "DeterminationView",
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
-					where: {}
+					where: {
+						$and: {$or: {}}
+					}
 				}, {
 					model: "User",
 					as: 'PrimaryUser',
@@ -453,6 +461,7 @@ angular.module('svampeatlasApp')
 
 				}];
 			}
+			
 
 
 			$scope.strategiesUI = [{
@@ -484,6 +493,7 @@ angular.module('svampeatlasApp')
 			$scope.search.determiner = $scope.search.determiner || [];
 			$scope.search.PrimaryUser = $scope.search.PrimaryUser || [];
 			$scope.search.selectedMonths = $scope.search.selectedMonths || [];
+			$scope.search.Determination_score = $scope.search.Determination_score  || [];
 			$scope.querySearchPlantTaxon = SearchService.querySearchPlantTaxon;
 
 			$scope.setAccuracy = function(){

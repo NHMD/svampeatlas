@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.factory('ObservationSearchService', function(Taxon, $filter, Auth, $rootScope, $stateParams) {
+	.factory('ObservationSearchService', function(Taxon, $filter, Auth, $rootScope, $stateParams, appConstants) {
 	
 		$rootScope.$on('$stateChangeStart', function(event, next, nextParams, prev, prevParams) {
 			
@@ -23,7 +23,13 @@ angular.module('svampeatlasApp')
 					model: "DeterminationView",
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
-					where: {}
+					where: {
+						
+						// $and: $or is reserved for searches across communityvalidated and hardvalidated determinations
+						$and: {
+							$or: {}
+						}
+					}
 				}, {
 					model: "User",
 					as: 'PrimaryUser',
@@ -82,7 +88,7 @@ angular.module('svampeatlasApp')
 						as: "DeterminationView",
 						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
 						where: {
-
+							$and: {$or: {}}
 						}
 					}, {
 						model: "User",
@@ -127,6 +133,8 @@ angular.module('svampeatlasApp')
 					determiner: [],
 					PrimaryUser: [],
 					selectedMonths: [],
+					Determination_score: [],
+					Determination_validation: []
 
 				}
 
@@ -138,7 +146,7 @@ angular.module('svampeatlasApp')
 						as: "DeterminationView",
 						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
 						where: {
-
+							$and: {$or: {}}
 						}
 					}, {
 						model: "User",
@@ -215,6 +223,9 @@ angular.module('svampeatlasApp')
 
 			uiSearchToDBquery: function(search, dbQuery) {
 				var that = this;
+				
+			
+				
 				if (search.livsstrategi) {
 
 					_.each(that.strategies, function(n) {
@@ -271,7 +282,7 @@ angular.module('svampeatlasApp')
 					delete dbQuery.where.dataSource;
 				}
 
-
+				
 
 
 
@@ -394,7 +405,7 @@ angular.module('svampeatlasApp')
 					delete search.include[0].where.Determination_user_id;
 
 				}
-
+				
 
 
 
@@ -416,7 +427,51 @@ angular.module('svampeatlasApp')
 
 
 				dbQuery.include = search.include;
+				
+				
+				dbQuery.include[0].where.$and.$or = [];
+				
+				if (search.Determination_score && search.Determination_score.length > 0) {
+				//	var $or = [];
+					
+					for(var i =0; i< search.Determination_score.length; i++){
+						var ds = search.Determination_score[i];
+						
+						switch(ds) {
+						case 'VALIDATION_STATUS_COMMUNITY_LEVEL_3':
+								dbQuery.include[0].where.$and.$or.push({Determination_score: {$gte: appConstants.AcceptedDeterminationScore}, Determination_validation: 'Valideres'})
+						       // $or.push({$gte: appConstants.AcceptedDeterminationScore});
+						        break;
+							case 'VALIDATION_STATUS_COMMUNITY_LEVEL_2':
+								dbQuery.include[0].where.$and.$or.push({Determination_score: {$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore]}, Determination_validation: 'Valideres'})
+							      //  $or.push( {$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore]});
+							        break;
+								case 'VALIDATION_STATUS_COMMUNITY_LEVEL_1':
+									dbQuery.include[0].where.$and.$or.push({Determination_score: {$lt: appConstants.ProbableDeterminationScore}, Determination_validation: 'Valideres'})
+								      //  $or.push({$lt: appConstants.ProbableDeterminationScore});
+								        break;
+									case 'VALIDATION_STATUS_COMMUNITY_LEVEL_1':
+										dbQuery.include[0].where.$and.$or.push({Determination_score: {$lt: appConstants.ProbableDeterminationScore}, Determination_validation: 'Valideres'})
+									      //  $or.push({$lt: appConstants.ProbableDeterminationScore});
+									        break;
+										case 'VALIDATION_STATUS_EXPERT':
+											dbQuery.include[0].where.$and.$or.push({Determination_validation: "Godkendt", Determination_validator_id: {}})
+										      //  $or.push({$lt: appConstants.ProbableDeterminationScore});
+										        break;		
+										
+									
 
+						}
+					}
+					
+				//	dbQuery.include[0].where.$and.$or.Determination_score = {$or: $or}
+					
+
+				} 
+				
+				if(search.Determination_validation && search.Determination_validation.length > 0){
+					dbQuery.include[0].where.$and.$or.push({Determination_validation: search.Determination_validation})
+				}
 
 				if (search.associatedOrganism.length > 0) {
 					dbQuery.where.primaryassociatedorganism_id = {
@@ -502,6 +557,11 @@ angular.module('svampeatlasApp')
 					delete dbQuery.where._id;
 					dbQuery.include[0].where.Determination_validation = search.include[0].where.Determination_validation;
 				}
+				
+		
+				
+				
+				
 				if (search.fieldnumber) {
 					dbQuery.where.fieldnumber = {
 						$like: "%" + search.fieldnumber + "%"

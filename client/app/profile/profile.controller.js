@@ -201,7 +201,11 @@ angular.module('svampeatlasApp')
 			$state.go('search-list')
 		} else if(searchType === 'specieslist'){
 			search.include[0].where = {
-				Determination_validation: "Godkendt",
+				$or: {
+					Determination_validation: "Godkendt",
+					Determination_score: {$gte: appConstants.AcceptedDeterminationScore}
+				},
+				
 				Taxon_RankID : { $gt: 9950}
 			} 
 			search.include[4].where = {
@@ -226,7 +230,10 @@ angular.module('svampeatlasApp')
 		} else if(searchType === 'specieslistyear'){
 			search.where = {observationDate: {$between: [searchProfile.year+'-01-01', searchProfile.year+'-12-31']}}
 			search.include[0].where = {
-				Determination_validation: "Godkendt",
+				$or: {
+					Determination_validation: "Godkendt",
+					Determination_score: {$gte: appConstants.AcceptedDeterminationScore}
+				},
 				Taxon_RankID : { $gt: 9950}
 			} 
 			search.include[4].where = {
@@ -249,7 +256,10 @@ angular.module('svampeatlasApp')
 		} else if(searchType === 'specieslisthighertaxon'){
 			
 			search.include[0].where = {
-				Determination_validation: "Godkendt",
+				$or: {
+					Determination_validation: "Godkendt",
+					Determination_score: {$gte: appConstants.AcceptedDeterminationScore}
+				},
 				Taxon_RankID : { $gt: 9950},
 				Taxon_Path: {like: searchProfile+"%"}
 			} 

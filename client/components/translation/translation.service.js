@@ -389,6 +389,7 @@ angular.module('svampeatlasApp')
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_3': 'godkendt',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_2': 'sandsynlig',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_1': 'et forslag',
+			'Dashboard': 'Min side'
 
 
 		});
