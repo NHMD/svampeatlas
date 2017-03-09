@@ -592,6 +592,16 @@ function addConstantsToLogObject(logObject){
 	
 }
 
+exports.getCrowsourcedIdentificationConstants = function(){
+	
+	var obj = {};
+	
+	addConstantsToLogObject(obj);
+	
+	return obj.Constants;
+	
+}
+
 
 function getTaxonWeight(taxon, obs, t, logObject) {
 

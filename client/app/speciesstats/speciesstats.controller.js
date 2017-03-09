@@ -227,7 +227,11 @@ angular.module('svampeatlasApp')
 			
 			search.include[0].where = {
 				Taxon_Path: {like: $scope.taxon.Path+"%"},
-				Determination_validation: 'Godkendt'
+				$or: {
+					Determination_validation: 'Godkendt',
+					Determination_score: {$gte: appConstants.AcceptedDeterminationScore}	
+				}
+				
 			};
 			
 			search.include[2].required = true;
