@@ -238,7 +238,7 @@ exports.addVoteToDetermination = (req, res) => {
 			
 		.spread(function(vote, det) {		
 
-
+			logObject.Vote = vote;
 					return Promise.all([vote, det, calculateSumAndAbsSum(det, t),
 						determinationController.getTaxonWeight(det.Taxon, det.Observation, t, logObject)
 					])

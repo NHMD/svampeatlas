@@ -659,6 +659,7 @@ exports.create = function(req, res) {
 	if (!userIsValidator) {
 		delete observation.noteInternal;
 	};
+	var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'NEW OBSERVATION WITH INITIAL DETERMINATION'};
 	observation.primaryuser_id = req.user._id;
 	observation.geom = models.sequelize.fn('GeomFromText', 'POINT (' + req.body.decimalLongitude + ' ' + req.body.decimalLatitude + ')');
 
@@ -675,7 +676,7 @@ exports.create = function(req, res) {
 				}).then(function(obs) {
 
 
-					return determinationController.createDetermination(obs, determination, req.user, t, { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'NEW OBSERVATION WITH INITIAL DETERMINATION'});
+					return determinationController.createDetermination(obs, determination, req.user, t, logObject);
 
 				})
 				.spread(function(det, obs) {
@@ -695,14 +696,18 @@ exports.create = function(req, res) {
 					})
 					return [obs.save({
 						transaction: t
-					}), models.ObservationPlantTaxon.bulkCreate(associated, {
+					}), det,
+					 models.ObservationPlantTaxon.bulkCreate(associated, {
 						transaction: t
 					}), models.ObservationUser.bulkCreate(finders, {
 						transaction: t
 					})];
 				})
+				.spread(function(obs, det) {
+					return [obs, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: obs._id, logObject: JSON.stringify(logObject)}, {transaction: t})]
+				})
 				.spread(function(obs) {
-					return obs
+					return obs;
 				})
 					.
 				catch((err) => {

@@ -48,3 +48,8 @@ md-checkbox.months > div._md-label {
 	cursor: pointer;
 }
 
+span.star-rating > ng-md-icon {
+	width: 12px;
+	height: 12px;
+}
+

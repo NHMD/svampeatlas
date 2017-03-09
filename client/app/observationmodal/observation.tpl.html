@@ -6,9 +6,29 @@
 	            <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>{{'Indlagt som' | translate}} <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
-	  		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
+	  		 
+			  
+  			
+  			
+  			<span ng-if=" 0 >= obs.PrimaryDetermination.score  && obs.PrimaryDetermination.validation !== 'Afvist' && obs.PrimaryDetermination.validation !== 'Godkendt'">
+  				{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}
+  			</span>
+  			<span ng-if="obs.PrimaryDetermination.validation !== 'Afvist' && !(obs.PrimaryDetermination.validation === 'Godkendt' && obs.PrimaryDetermination.Validator)" layout="row">
+  				<span ng-if="obs.PrimaryDetermination.score > 0 && ProbableDeterminationScore > obs.PrimaryDetermination.score">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_1' | translate}}</span>
+  				<span ng-if="obs.PrimaryDetermination.score >= ProbableDeterminationScore  && AcceptedDeterminationScore > obs.PrimaryDetermination.score">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_2' | translate}}</span>
+  				<span ng-if="obs.PrimaryDetermination.score >= AcceptedDeterminationScore">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_3' | translate}} </span>
+				<span class="star-rating" layout="row" >
+					<span flex ng-if="$mdMedia('xs')"></span>
+					<ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score > 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score >= ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score >= AcceptedDeterminationScore"></ng-md-icon> <span flex ng-if="$mdMedia('gt-xs')"></span></span>
+  			</span>
+			  
+			  
+			  
+			  
+			  
 	  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
-			  <span ng-if="obs.PrimaryDetermination.validation === 'Godkendt' && obs.PrimaryDetermination.Validator">{{'Dette fund er valideret og godkendt af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></span>
+			  			  
+			  <span ng-if="obs.PrimaryDetermination.validation === 'Godkendt' && obs.PrimaryDetermination.Validator">{{'Dette fund er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}}<br> <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a> <ng-md-icon icon="microscope"></ng-md-icon></span>
 		  </div>
 		
 	  		<div class="validator-button-container" ng-if="Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'">
@@ -166,9 +186,24 @@
           <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 		  <span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>{{'Indlagt som' | translate}} <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
-		  <span ng-if="obs.PrimaryDetermination.validation !== 'Godkendt' && obs.PrimaryDetermination.validation !== 'Afvist'">{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}</span>
-		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
-		  <span ng-if="obs.PrimaryDetermination.validation === 'Godkendt' && obs.PrimaryDetermination.Validator">{{'Dette fund er valideret og godkendt af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></span>
+		<span ng-if=" 0 >= obs.PrimaryDetermination.score  && obs.PrimaryDetermination.validation !== 'Afvist' && obs.PrimaryDetermination.validation !== 'Godkendt'">
+			{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}
+		</span>
+		<span ng-if="obs.PrimaryDetermination.validation !== 'Afvist' && !(obs.PrimaryDetermination.validation === 'Godkendt' && obs.PrimaryDetermination.Validator)" layout="row">
+			<span ng-if="obs.PrimaryDetermination.score > 0 && ProbableDeterminationScore > obs.PrimaryDetermination.score">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_1' | translate}}</span>
+			<span ng-if="obs.PrimaryDetermination.score >= ProbableDeterminationScore  && AcceptedDeterminationScore > obs.PrimaryDetermination.score">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_2' | translate}}</span>
+			<span ng-if="obs.PrimaryDetermination.score >= AcceptedDeterminationScore">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_3' | translate}} </span>
+			<span flex ng-if="$mdMedia('xs')"></span>
+			<ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score > 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score >= ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score >= AcceptedDeterminationScore"></ng-md-icon> <span flex ng-if="$mdMedia('gt-xs')"></span></span>
+		</span>
+		  
+		  
+		  
+		  
+		  
+  		  <span ng-if="obs.PrimaryDetermination.validation === 'Afvist'">{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}</span>
+		  			  
+		  <span ng-if="obs.PrimaryDetermination.validation === 'Godkendt' && obs.PrimaryDetermination.Validator">{{'Dette fund er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a> <ng-md-icon icon="microscope"></ng-md-icon></span>
         </md-card-title-text>
 
 		

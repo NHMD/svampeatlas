@@ -8,6 +8,9 @@ angular.module('svampeatlasApp')
 			this.DeterminationLogModalService = DeterminationLogModalService;
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
+			
+			$scope.AcceptedDeterminationScore = appConstants.AcceptedDeterminationScore;
+			$scope.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
 			$scope.openSideNav = function() {
 
 				$scope.menu.userHasForceClosed = false;

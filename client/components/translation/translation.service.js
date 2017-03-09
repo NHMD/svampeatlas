@@ -68,7 +68,7 @@ angular.module('svampeatlasApp')
 			'Afventer': 'Validation in progress',
 			'Afviste': 'Rejected',
 			'Dette fund er under godkendelse og bør ikke refereres før det er godkendt': 'This sighting is under review and should not be referenced before it has been accepted',
-			'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker': 'This sighting has been rejected based on the information given since the determintaion is too uncertain',
+			'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker': 'This sighting has been rejected based on the information given since the identification is too uncertain',
 			'Henter': 'Fetching',
 			'Kun de første 50000 vises på kortet, prøv evt. at afgrænse din søgning yderligere.': 'Only the first 50000 records is shown on the map, try narrowing your search further.',
 			'Din søgning gav': 'Your search returned',
@@ -251,9 +251,17 @@ angular.module('svampeatlasApp')
 			'Note til bestemmelsen' : 'Notes about this determination',
 			'Du kan ikke stemme på dine egne bestemmelser' : 'You cannot rate your own determinations',
 			'Vælg billeder': 'Choose images',
-			'Gem fund' : 'Save sighting'
-			
+			'Gem fund' : 'Save sighting',
+			'Bestemmelsen er': 'Determination is',
+			'af' : 'by',
+			'VALIDATION_STATUS_EXPERT': 'expert approved',
+			'VALIDATION_STATUS_COMMUNITY_LEVEL_3': 'approved',
+			'VALIDATION_STATUS_COMMUNITY_LEVEL_2': 'probable',
+			'VALIDATION_STATUS_COMMUNITY_LEVEL_1': 'a suggestion',
+			'Dette fund er': 'This sighting is',
+			'Bestemmelsen er': 'The identification is'
 		});
+		
 
 		$translateProvider.translations('dk', {
 			'Logout': 'Log ud',
@@ -375,7 +383,12 @@ angular.module('svampeatlasApp')
 			'Similar Taxa' : 'Forvekslingsmuligheder',
 			'Add similar taxon' : 'Tilføj forvekslingsmulighed',
 			'Add search terms on statistics' : 'Tilføg søgetermer på statistik',
-			'Statistics name' : 'Statistik navn'
+			'Statistics name' : 'Statistik navn',
+			'VALIDATION_STATUS_EXPERT': 'ekspert-godkendt',
+
+			'VALIDATION_STATUS_COMMUNITY_LEVEL_3': 'godkendt',
+			'VALIDATION_STATUS_COMMUNITY_LEVEL_2': 'sandsynlig',
+			'VALIDATION_STATUS_COMMUNITY_LEVEL_1': 'et forslag',
 
 
 		});

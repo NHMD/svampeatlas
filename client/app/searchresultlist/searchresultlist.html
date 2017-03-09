@@ -60,7 +60,8 @@
 		</tr> 
 
 		<th ></th>
-		<th ></th>
+		<th ng-if="Auth.hasRole('validator')" translate>Validator</th>
+		<th translate>Status</th>
 		<th st-sort="createdAt" ng-if="$stateParams.searchterm && ($stateParams.searchterm === 'mine' || $stateParams.searchterm === 'today' || $stateParams.searchterm === '3days')" translate>Indlagt</th>
 		<th st-sort="observationDate"  translate>Dato</th>
 		
@@ -83,21 +84,47 @@
 	<md-button class="table-button" ng-if="currentUser._id === row.primaryuser_id" ng-click="ObservationFormService.show($event, row)">		<ng-md-icon icon="edit" ></ng-md-icon> </md-button>
 		</div>
 		</td>
-		<td data-title="Status"><md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt' &&  AcceptedDeterminationScore >= row.DeterminationView.Determination_score ">
-          {{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}
-        </md-tooltip>
-		<md-tooltip md-direction="right" ng-if="mdMedia('min-width: 768px')  && row.DeterminationView.Determination_validation === 'Afvist'" >
-		          {{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}
-		        </md-tooltip>
-		<ng-md-icon style="fill:red" ng-if="row.DeterminationView.Determination_validation === 'Afvist'" icon="block" ></ng-md-icon>
-			<ng-md-icon style="fill:wheat" ng-if="!Auth.hasRole('validator') && AcceptedDeterminationScore >= row.DeterminationView.Determination_score  && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>
-			<ng-md-icon  ng-click="updateValidation(row)" style="{{(row.DeterminationView.Determination_validation === 'Valideres') ? 'fill:wheat' : 'fill:pink' }}" ng-if="Auth.hasRole('validator') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="{{(row.DeterminationView.Determination_validation === 'Valideres') ? 'error' : 'pause_circle_filled' }}" ></ng-md-icon> 
+		<td data-title="Validator" ng-if="Auth.hasRole('validator')">
+			<div layout="row">
+				<span flex ng-if="mdMedia('xs')"></span>
+			<md-tooltip md-direction="right" ng-if="mdMedia('gt-xs') && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">
+			{{'Godkend som ekspert' | translate}}
+		</md-tooltip>
+		
+			<md-button class="table-button"  ng-click="updateValidation(row)" ng-if="row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">	
+			<ng-md-icon   icon="thumb_up" ></ng-md-icon> </md-button>
 			
 			
 			
-			<ng-md-icon style="fill:green" ng-if="(mdMedia('xs') || Auth.hasRole('validator') ) && row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
+			<ng-md-icon style="fill:green" ng-if="row.DeterminationView.Determination_validation === 'Godkendt'" icon="thumb_up" ></ng-md-icon>
 			
 			{{(row.DeterminationView.Determination_validation !== 'Godkendt') ? row.DeterminationView.Determination_score: ''}}
+		</div>
+		</td>
+		<td data-title="Status">
+			<md-tooltip md-direction="right" ng-if="mdMedia('gt-xs')" >
+			<span ng-if="row.DeterminationView.Determination_validation === 'Godkendt' && row.DeterminationView.Determination_validator_id">
+				{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}}
+			</span>
+			<span ng-if="row.DeterminationView.Determination_validation === 'Afvist'">
+				{{'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker' | translate}}
+			</span>
+			<span ng-if=" 0 >= row.DeterminationView.Determination_score  && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">
+				{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}
+			</span>
+			<span ng-if="row.DeterminationView.Determination_validation !== 'Afvist' && !(row.DeterminationView.Determination_validation === 'Godkendt' && row.DeterminationView.Determination_validator_id)">
+				<span ng-if="row.DeterminationView.Determination_score > 0 && ProbableDeterminationScore > row.DeterminationView.Determination_score">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_1' | translate}}</span>
+				<span ng-if="row.DeterminationView.Determination_score >= ProbableDeterminationScore  && AcceptedDeterminationScore > row.DeterminationView.Determination_score">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_2' | translate}}</span>
+				<span ng-if="row.DeterminationView.Determination_score >= AcceptedDeterminationScore">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_3' | translate}}</span>
+			</span>
+			          
+			        </md-tooltip>
+			<ng-md-icon style="fill:wheat" ng-if=" 0 >= row.DeterminationView.Determination_score  && row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>		
+			<ng-md-icon style="fill:red" ng-if="row.DeterminationView.Determination_validation === 'Afvist'" icon="block" ></ng-md-icon>
+			<ng-md-icon icon="microscope" ng-if="row.DeterminationView.Determination_validation === 'Godkendt' && row.DeterminationView.Determination_validator_id"></ng-md-icon>
+		<span class="star-rating" layout="row" ng-if="row.DeterminationView.Determination_validation !== 'Afvist' && !(row.DeterminationView.Determination_validation === 'Godkendt' && row.DeterminationView.Determination_validator_id)">
+			<span flex ng-if="mdMedia('xs')"></span>
+			<ng-md-icon size="12" icon="star" ng-if="row.DeterminationView.Determination_score > 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="row.DeterminationView.Determination_score >= ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="row.DeterminationView.Determination_score >= AcceptedDeterminationScore"></ng-md-icon> <span flex ng-if="mdMedia('gt-xs')"></span></span>
 		</td>
 		<td ng-if="$stateParams.searchterm && ($stateParams.searchterm === 'mine' || $stateParams.searchterm === 'today' || $stateParams.searchterm === '3days')" data-title="{{'Indlagt' | translate}}">{{(moment(row.createdAt).isSame(moment(), 'day')) ? getCreatedAt(row.createdAt) : (row.createdAt | date : 'dd/MM/yyyy')}}</td>
 		<td data-title="{{'Dato' | translate}}" >{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>

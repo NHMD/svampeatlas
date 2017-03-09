@@ -15,6 +15,7 @@ angular.module('svampeatlasApp')
 			
 			$scope.baseUrl =appConstants.baseurl;
 			$scope.AcceptedDeterminationScore = appConstants.AcceptedDeterminationScore;
+			$scope.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
 			$scope.SpeciesModalService = SpeciesModalService;
 			
 			$scope.csvSeparator = ",";
