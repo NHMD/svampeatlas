@@ -56,7 +56,7 @@ ALTER TABLE `UserMorphoGroupImpact`
 
 
 
-ALTER TABLE Taxon ADD COLUMN morphogroup_id INT(11);
+ALTER TABLE Taxon ADD COLUMN morphogroup_id INT(11) default NULL;
 ALTER TABLE Taxon ADD CONSTRAINT fk_morphogroup_id FOREIGN KEY (morphogroup_id) REFERENCES MorphoGroup(_id);
 
 

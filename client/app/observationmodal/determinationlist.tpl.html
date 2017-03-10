@@ -58,7 +58,7 @@
 					  <a ng-if="Auth.hasRole('validator')" ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a>
 					  <span ng-if="!Auth.hasRole('validator')">{{(1 > det.score ) ? 1 : det.score}}</span>
 				  </h3>
-			  <md-button aria-label="downvote" ng-if="Auth.hasRole('validator')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
+			  <md-button aria-label="downvote" ng-if="Auth.hasRole('downvotedetermination')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
 			  </div>
 
 			  <md-divider ></md-divider>
@@ -102,7 +102,7 @@
 					  <a ng-if="Auth.hasRole('validator')" ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a>
 					  <span ng-if="!Auth.hasRole('validator')">{{(1 > det.score ) ? 1 : det.score}}</span>
 				  </h3>
-		  <md-button aria-label="downvote" ng-if="Auth.hasRole('validator')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
+		  <md-button aria-label="downvote" ng-if="Auth.hasRole('downvotedetermination')" ng-click="vote($event, det, 'down')" class="vote-btn"><ng-md-icon icon="thumb_down" ng-class="{'red-thumb' : det.vote === 'down'}"></ng-md-icon></md-button> 
 			  </div>
 
 			  <md-divider ></md-divider>

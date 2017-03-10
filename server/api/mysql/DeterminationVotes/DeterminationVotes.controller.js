@@ -17,6 +17,7 @@ var Promise = require("bluebird");
 var determinationController = require('../Determination/Determination.controller');
 
 var nestedQueryParser = require("../nestedQueryParser")
+var userTool = require("../userTool");
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -214,7 +215,7 @@ exports.addVoteToDetermination = (req, res) => {
 		.then(function(det) {
 
 				if (det.user_id === req.user._id) {
-					throw new Error("Forbidden");
+					throw new Error("You are not allwoed to vote on your own identifications");
 				}
 				vote.observation_id = det.observation_id;
 
@@ -229,6 +230,9 @@ exports.addVoteToDetermination = (req, res) => {
 					vote.score = parseInt(userImpact);
 				}
 				if (vote.upOrDown === 'down') {
+					if(!userTool.hasRole(req.user, 'downvotedetermination')){
+						throw new Error("Downvote authorization missing");
+					}
 					vote.score = (0 - parseInt(userImpact));
 				}
 
@@ -289,7 +293,7 @@ exports.addVoteToDetermination = (req, res) => {
 		})
 		.
 	catch((err) => {
-		var statusCode = (err.message === 'Forbidden') ? 403 : 500;
+		var statusCode = (err.message === "You are not allowed to vote on your own identifications" || err.message ==="Downvote authorization missing") ? 403 : 500;
 		console.log(err);
 
 		res.status(statusCode).send(err.message);

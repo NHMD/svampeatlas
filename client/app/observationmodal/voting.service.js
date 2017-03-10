@@ -46,7 +46,7 @@ var user = Auth.getCurrentUser();
 							if(err.status === 403){
 								$mdToast.show(
 									$mdToast.simple()
-									.textContent($translate.instant("Du kan ikke stemme på dine egne bestemmelser"))
+									.textContent($translate.instant(err.data))
 									.position("top right")
 								
 									.parent($event.currentTarget.parentElement.parentElement.parentElement)
@@ -78,7 +78,7 @@ var user = Auth.getCurrentUser();
 							if(err.status === 403){
 								$mdToast.show(
 									$mdToast.simple()
-									.textContent($translate.instant("Du kan ikke stemme på dine egne bestemmelser"))
+									.textContent($translate.instant(err.data))
 									.position("top right")
 								
 									.parent($event.currentTarget.parentElement.parentElement.parentElement)
