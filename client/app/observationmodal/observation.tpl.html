@@ -193,8 +193,10 @@
 			<span ng-if="obs.PrimaryDetermination.score > 0 && ProbableDeterminationScore > obs.PrimaryDetermination.score">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_1' | translate}}</span>
 			<span ng-if="obs.PrimaryDetermination.score >= ProbableDeterminationScore  && AcceptedDeterminationScore > obs.PrimaryDetermination.score">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_2' | translate}}</span>
 			<span ng-if="obs.PrimaryDetermination.score >= AcceptedDeterminationScore">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_COMMUNITY_LEVEL_3' | translate}} </span>
+			<span class="star-rating" layout="row" >
 			<span flex ng-if="$mdMedia('xs')"></span>
 			<ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score > 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score >= ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="obs.PrimaryDetermination.score >= AcceptedDeterminationScore"></ng-md-icon> <span flex ng-if="$mdMedia('gt-xs')"></span></span>
+		</span>
 		</span>
 		  
 		  

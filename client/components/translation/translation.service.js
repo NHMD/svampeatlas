@@ -249,7 +249,7 @@ angular.module('svampeatlasApp')
 			'Denne' : 'This',
 			'Foreslå bestemmelse til' : 'Propose determination of',
 			'Note til bestemmelsen' : 'Notes about this determination',
-			'Du kan ikke stemme på dine egne bestemmelser' : 'You cannot rate your own determinations',
+		
 			'Vælg billeder': 'Choose images',
 			'Gem fund' : 'Save sighting',
 			'Bestemmelsen er': 'Determination is',
@@ -389,7 +389,9 @@ angular.module('svampeatlasApp')
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_3': 'godkendt',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_2': 'sandsynlig',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_1': 'et forslag',
-			'Dashboard': 'Min side'
+			'Dashboard': 'Min side',
+			'You are not allowed to vote on your own identifications':  'Du kan ikke stemme på dine egne bestemmelser',
+			'Downvote authorization missing' : 'Du har ikke rettighed til at nedstemme'
 
 
 		});
