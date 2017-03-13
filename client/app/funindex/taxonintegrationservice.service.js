@@ -42,6 +42,11 @@ angular.module('svampeatlasApp')
 						thisTaxon.TaxonName = that.getTaxonName(taxon);
 						if (parents.length > 0) {
 							thisTaxon.Parent = parents[0];
+							
+							if(parents[0].morphogroup_id){
+								thisTaxon.morphogroup_id = parents[0].morphogroup_id;
+							}
+							
 						} else {
 							thisTaxon.Parent = null;
 						}
@@ -95,6 +100,9 @@ angular.module('svampeatlasApp')
 						thisTaxon.TaxonName = taxon.epithet_;
 						if (parents.length > 0) {
 							thisTaxon.Parent = parents[0];
+							if(parents[0].morphogroup_id){
+								thisTaxon.morphogroup_id = parents[0].morphogroup_id;
+							}
 						} else {
 							thisTaxon.Parent = null;
 						}

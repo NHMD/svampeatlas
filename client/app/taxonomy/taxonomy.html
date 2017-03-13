@@ -244,23 +244,29 @@
  
 </div>
 			
-<div class="col-md-12">
-	 <md-input-container class="col-md-2">
+<md-content layout="row">
+	
 	<md-button class="md-raised md-warn" ng-click="resetSearch()"><i class="fa fa-refresh"></i> {{ 'Reset search' | translate}}</md-button>
-	</md-input-container>
-	<md-switch class="col-md-2" ng-model="checkboxes.acceptedTaxaOnly" aria-label="Only accepted taxa" >
+	
+	<md-switch  ng-model="checkboxes.acceptedTaxaOnly" aria-label="Only accepted taxa" >
 	         {{ 'Omit synonyms' | translate}}
 	        </md-switch>
 			
-	<md-switch  class="col-md-2" ng-model="checkboxes.PresentInDK" aria-label="Only DK taxa">
+	<md-switch  ng-model="checkboxes.PresentInDK" aria-label="Only DK taxa">
 	{{ 'Only DK taxa' | translate}}
 	          
 	        </md-switch>
-	<md-switch  class="col-md-3" ng-model="checkboxes.OrphantTaxa" aria-label="Only DK taxa">
+	<md-switch  ng-model="checkboxes.OrphantTaxa" aria-label="Only DK taxa">
 	{{ 'Find orphant taxa' | translate}}     
 	        </md-switch>
+		<md-switch   ng-model="checkboxes.MorphogroupMissing" aria-label="Morphogroup missing">
+		{{ 'Morphogroup missing' | translate}}     
+		        </md-switch>
 			
-<div class="col-md-2"> <h4 class="md-headline pull-right">{{'Found' | translate}} {{taxonCount}} taxa</h4></div>
+
+</md-content>
+<div class="col-md-12">
+	<h4 class="md-headline pull-right">{{'Found' | translate}} {{taxonCount}} taxa</h4>
 <md-progress-linear class="col-md-12" md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
 <table st-persist="taxon_search_table" class="table table-bordered" st-pipe="callServer" st-table="displayed">
 	<thead>

@@ -36,7 +36,7 @@
 				
 			<h2><span ng-show="taxon._id === undefined || taxon.FunIndexNumber"><em>{{taxon.FullName}}</em> {{taxon.Author}}</span>
 				
-				<button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="saveIsClicked || taxon.Parent === null" ng-click="saveNewTaxon(taxon)" translate>Save taxon <i ng-show="saveIsClicked" class="fa fa-spinner fa-spin"></i></button> <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="synonymModal.show()" tabindex="0" translate>Make into synonym</button>
+				<button class="btn btn-lg btn-primary" ng-show="taxon._id === undefined" ng-disabled="!taxon || (saveIsClicked || taxon.Parent === null || taxon.morphogroup_id === undefined)" ng-click="saveNewTaxon(taxon)" translate>Save taxon <i ng-show="saveIsClicked" class="fa fa-spinner fa-spin"></i></button> <button class="btn btn-danger" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="synonymModal.show()" tabindex="0" translate>Make into synonym</button>
 <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="Taxon.updateAttributes({id: taxon._id}, taxon.attributes); taxonAttributesUnsaved = false;">Save attributes</button> <button class="btn btn-lg btn-primary" ng-show="taxonAttributesUnsaved === true"  ng-click="taxon = Taxon.get({id: taxon._id}); taxonAttributesUnsaved = false;">Discard imported attributes</button>			
 			</h2>
 			
@@ -141,6 +141,33 @@
 		  		        <a href="#" id="internalNote" editable-textarea="taxon.attributes.valideringsrapport" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
 		  		            <div class="x-editable-texarea">{{ taxon.attributes.valideringsrapport || 'n/a' }}</div>
 		  		          </a>
+		    	      </div>
+		    	    </div>
+		    	  </div>
+		    	  <!-- ########################################-->
+		    	  <!-- ########################################-->
+		    	  <div class="panel panel-default">
+		    	    <div class="panel-heading" role="tab">
+		    	      <h4 class="panel-title">
+		    	        <a bs-collapse-toggle>
+		    	       <i class="fa fa-exclamation-triangle text-danger" ng-show="!taxon.morphogroup_id"></i>   {{'Morpho group' | translate}}
+		    	        </a>
+		    	      </h4>
+		    	    </div>
+		    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+		    	      <div class="panel-body">
+	    			   <md-input-container>
+	    			           <label>{{'Morpho group' | translate}}</label>
+	    			           <md-select name="MorphoGroups" ng-model="taxon.morphogroup_id" ng-change="Taxon.update({id: taxon._id}, taxon)">
+  
+	    	   				             <md-option ng-repeat="mg in morphoGroup"  value="{{mg._id}}" >
+	    	   				               {{mg.name_dk}} 
+	    	   				             </md-option>
+			 
+
+	    			           </md-select>
+
+	    			         </md-input-container>
 		    	      </div>
 		    	    </div>
 		    	  </div>

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters', 'Observation', 'ObservationModalService', 'SimilarTaxaModalService', 'SimilarTaxa',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters, Observation, ObservationModalService, SimilarTaxaModalService, SimilarTaxa) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters', 'Observation', 'ObservationModalService', 'SimilarTaxaModalService', 'SimilarTaxa','SearchService',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters, Observation, ObservationModalService, SimilarTaxaModalService, SimilarTaxa, SearchService) {
 			$scope.$translate = $translate;
 			$scope._ = _;
 			$scope.Taxon = Taxon;
@@ -11,6 +11,12 @@ angular.module('svampeatlasApp')
 			$scope.moment = moment;
 			$scope.ObservationModalService = ObservationModalService;
 			$scope.SimilarTaxaModalService = SimilarTaxaModalService;
+			
+			SearchService.getMorphoGroup().then(function(morphoGroup){
+				$scope.morphoGroup = morphoGroup;
+								
+			})
+			
 			$scope.changeRankAndSave = function(taxon) {
 				// If the taxon was a species or genus we are changing it to superspecies and therefore deattacing from fun, otherwise we are just changing rank level
 				if (taxon.RankID === 5000 || taxon.RankID === 10000) {
@@ -898,7 +904,7 @@ angular.module('svampeatlasApp')
 
 			}
 
-			$scope.activePanel = 0;
+			$scope.activePanel =  1;
 
 
 
