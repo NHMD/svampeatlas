@@ -50,10 +50,13 @@
 	          </div>
 			
 			  <div layout="column" layout-align="center center" class="md-secondary">
-		  		<md-tooltip md-direction="left"  >
+		  		<div>
+				<md-tooltip md-direction="left"  >
 		  		          {{'Jeg er enig i bestemmelsen' | translate}}
 		  		        </md-tooltip>
+						
 				  <md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
+			  </div>
 				  <h3 class="vote-count">
 					  <a ng-if="Auth.hasRole('validator')" ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a>
 					  <span ng-if="!Auth.hasRole('validator')">{{(1 > det.score ) ? 1 : det.score}}</span>
@@ -94,10 +97,12 @@
 	          </div>
 	  		
 			  <div layout="column" layout-align="center center" class="md-secondary">
-	  	  		<md-tooltip md-direction="left" >
+	  	  		<div>
+				<md-tooltip md-direction="left" >
 	  	  		          {{'Jeg er enig i bestemmelsen' | translate}}
 	  	  		        </md-tooltip>
 				  <md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>
+			  </div>
 				  <h3 class="vote-count">
 					  <a ng-if="Auth.hasRole('validator')" ng-click="ctrl.DeterminationLogModalService.show($event, det)">{{det.score}}</a>
 					  <span ng-if="!Auth.hasRole('validator')">{{(1 > det.score ) ? 1 : det.score}}</span>

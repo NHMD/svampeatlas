@@ -391,7 +391,9 @@ angular.module('svampeatlasApp')
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_1': 'et forslag',
 			'Dashboard': 'Min side',
 			'You are not allowed to vote on your own identifications':  'Du kan ikke stemme på dine egne bestemmelser',
-			'Downvote authorization missing' : 'Du har ikke rettighed til at nedstemme'
+			'Downvote authorization missing' : 'Du har ikke rettighed til at nedstemme',
+			'Morpho group': 'Morfo-gruppe',
+			'Morpho group missing': 'Morfo-gruppe mangler',
 
 
 		});

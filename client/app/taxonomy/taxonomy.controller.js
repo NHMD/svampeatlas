@@ -337,6 +337,19 @@ angular.module('svampeatlasApp')
 				}
 
 			})
+			
+			$scope.$watch('checkboxes.MorphogroupMissing', function(newVal, oldVal) {
+
+				if (newVal !== oldVal) {
+					if (newVal === true) {
+						$scope.selectedMorphoGroups = [];
+					};
+
+					$scope.saveStateAndTriggerSearchFromCheckboxes();
+				}
+
+			})
+			
 			$scope.saveStateAndTriggerSearchFromCheckboxes = function() {
 				localStorage.setItem('taxonomy_search_checkboxes', JSON.stringify($scope.checkboxes))
 				$scope.callServerSafe();
@@ -442,6 +455,13 @@ angular.module('svampeatlasApp')
 						parent_id: null
 					}
 				};
+				
+				if ($scope.checkboxes.MorphogroupMissing === true) {
+
+					where = _.merge({}, where, {
+						morphogroup_id: null
+					});
+				};
 
 				var order = tableState.sort.predicate;
 				if (tableState.sort.reverse) {
@@ -473,6 +493,7 @@ angular.module('svampeatlasApp')
 						PresentInDK: true
 					});
 				};
+				
 				var attConds = localStorage.getItem('taxonomy_attribute_conditions');
 
 				if (attConds) {
