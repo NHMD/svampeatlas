@@ -11,7 +11,7 @@
 
 <md-content layout="row"  layout-align="end center" class="pagination-container">
 <p class="pagination-text">{{'Poster pr side' | translate}}:</p>
-        <md-select ng-model="$parent.stItemsPrPage">
+        <md-select ng-model="$parent.stItemsPrPage" aria-label="Antal poster pr side">
           <md-option  value=50 >
             50
           </md-option>
@@ -30,11 +30,11 @@
      
         
       
-<md-button class="md-icon-button" aria-label="Previous page" ng-disabled="!($parent.fromRecord > 1)">
-        <ng-md-icon icon="chevron_left" ng-click="selectPage(currentPage - 1)"></ng-md-icon>
+<md-button ng-click="selectPage(currentPage - 1)" class="md-icon-button" aria-label="Previous page" ng-disabled="!($parent.fromRecord > 1)">
+        <ng-md-icon icon="chevron_left" ></ng-md-icon>
       </md-button>
- <md-button class="md-icon-button" aria-label="Next page" ng-disabled="!($parent.toRecord < totalItemCount)">
-         <ng-md-icon icon="chevron_right" ng-click="selectPage(currentPage + 1)"></ng-md-icon>
+ <md-button ng-click="selectPage(currentPage + 1)" class="md-icon-button" aria-label="Next page" ng-disabled="!($parent.toRecord < totalItemCount)">
+         <ng-md-icon icon="chevron_right" ></ng-md-icon>
        </md-button> 
 
   </md-content>

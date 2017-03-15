@@ -4,6 +4,7 @@ angular.module('svampeatlasApp')
 	.config(function($translateProvider) {
 
 		$translateProvider.translations('en', {
+			
 			'Danmarks svampeatlas': 'Atlas of Danish Fungi',
 			'internetstedet hvor du kan deltage i kortlægningen af Danmarks svampe': 'participate in the mapping of the fungi of Denmark and Europe',
 			'Dansk navn': 'Danish name',
@@ -46,7 +47,6 @@ angular.module('svampeatlasApp')
 			'Dato': 'Date',
 			'Art': 'Species',
 			'Poster pr side': 'Records / page',
-			'af': 'of',
 			'Fra dato': 'From date',
 			'Til dato': 'To date',
 			'Livsstrategi': 'Life strategy',
@@ -252,18 +252,20 @@ angular.module('svampeatlasApp')
 		
 			'Vælg billeder': 'Choose images',
 			'Gem fund' : 'Save sighting',
-			'Bestemmelsen er': 'Determination is',
 			'af' : 'by',
 			'VALIDATION_STATUS_EXPERT': 'expert approved',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_3': 'approved',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_2': 'probable',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_1': 'a suggestion',
 			'Dette fund er': 'This sighting is',
-			'Bestemmelsen er': 'The identification is'
+			'Bestemmelsen er': 'The identification is',
+			'Validering' : 'Validation'
+			
 		});
 		
 
 		$translateProvider.translations('dk', {
+			
 			'Logout': 'Log ud',
 			'Home': 'Hjem',
 			'Search taxa': 'Søg taxa',
@@ -393,7 +395,11 @@ angular.module('svampeatlasApp')
 			'You are not allowed to vote on your own identifications':  'Du kan ikke stemme på dine egne bestemmelser',
 			'Downvote authorization missing' : 'Du har ikke rettighed til at nedstemme',
 			'Morpho group': 'Morfo-gruppe',
+			'Morpho groups': 'Morfo-grupper',
 			'Morpho group missing': 'Morfo-gruppe mangler',
+			'Login' : 'Log ind',
+			'Sign up': 'Tilmeld'
+			
 
 
 		});

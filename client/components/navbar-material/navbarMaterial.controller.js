@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('NavbarMaterialCtrl', function ($scope, $timeout, Auth, User, $state, $translate,$mdDateLocale, $cookies, $mdBottomSheet,$mdSidenav, ssSideNav,ssSideNavSharedService,$rootScope, $mdDialog, $mdMedia) {
+  .controller('NavbarMaterialCtrl', function ($scope, $timeout, Auth, User, $state, $translate,$mdDateLocale, $cookies, $mdBottomSheet,$mdSidenav, ssSideNav,ssSideNavSharedService,$rootScope, $mdDialog, $mdMedia, $window) {
       $scope.isLoggedIn = Auth.isLoggedIn;
       $scope.hasRole = Auth.hasRole;
       $scope.getCurrentUser = Auth.getCurrentUser;
@@ -82,6 +82,8 @@ angular.module('svampeatlasApp')
 			} else {
 				$cookies.put("preferred_language",newval)
 				$translate.use(newval);
+				$rootScope.$broadcast("preferred_language_changed", newval)
+				
 			}
 			
 			
@@ -92,7 +94,12 @@ angular.module('svampeatlasApp')
 		$scope.preferred_language = $cookies.get('preferred_language') || 'dk';
 	})
 	
-	
+	$scope.sendNewUserRequestByEmail = function(){
+		
+		
+		    $window.open("mailto:svampejagt@svampe.dk"+  "?subject=" +"Brugeroprettelse på svampeatlas"+"&body="+"Jeg vil gerne oprettes som bruger på Danmarks svampeatlas, mit fulde navn er: ","_self");
+		
+	}
 	$scope.showLoginForm = function(ev){
 		var useFullScreen = $mdMedia('xs');
 		    $mdDialog.show({

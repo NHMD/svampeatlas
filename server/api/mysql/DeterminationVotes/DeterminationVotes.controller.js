@@ -305,7 +305,8 @@ function calculateSumAndAbsSum(determination, t){
 	return Promise.all([
 		models.DeterminationVote.sum('score', {
 									where: {
-										determination_id: determination._id
+										determination_id: determination._id,
+										score: {$gte: 0}
 									},
 									transaction: t
 								}),
@@ -316,7 +317,7 @@ function calculateSumAndAbsSum(determination, t){
 										determination_id: determination._id
 									},
 									attributes: [
-										[models.sequelize.fn('ABS', models.sequelize.fn('SUM', models.sequelize.col('score'))), 'absolutesum']
+										[models.sequelize.fn('SUM', models.sequelize.fn('ABS', models.sequelize.col('score'))), 'absolutesum']
 									],
 									group: ['determination_id'],
 									transaction: t

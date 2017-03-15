@@ -35,7 +35,7 @@ angular.module('svampeatlasApp')
 	      $scope.inserted = {
 	       
 	        name_dk: '',
-	        name_dk: '',
+	        name_uk: '',
 			  notes: ''  
 	      };
 		  

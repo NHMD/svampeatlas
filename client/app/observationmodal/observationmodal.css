@@ -131,7 +131,9 @@ table.log-table > thead, table.log-table > tbody {
 	
 }
 
-
+button.md-icon-button.determination-list-btn {
+	min-width: 40px !important;
+}
 
 table.log-table > tbody {
 	height: 500px;

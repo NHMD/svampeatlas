@@ -3,25 +3,43 @@
 angular
 .module('userAvatar', [])
 .directive('userAvatar', ["avatarService", function (avatarService) {
-	var controller = function ($scope) {
+	var controller = function ($scope, $translate, $rootScope) {
 		$scope.ImageAvailable = false;
-		if($scope.User === null){
+		
+		
+		function setDefaultGuestInitials() {
+ 				
+		   			 $scope.User.Initialer = ($translate.use() === 'en') ? 'Guest' : 'Gæst';
+		   			 $scope.GenericAvatar = avatarService.getAvatar($scope.User);
+				
+		 			}
+		
+		
+		 if($scope.User  && $scope.User.isDefaultGuestUser){
+			 setDefaultGuestInitials();
+ 			$rootScope.$on('preferred_language_changed', setDefaultGuestInitials);		
+					
+					}
+		
+		else if($scope.User === null ){
 			$scope.GenericAvatar = avatarService.getAvatar({ Initialer: "?"});
 		}
 		else if($scope.User.hasOwnProperty('$promise')){
 			$scope.User.$promise.then(function(User){
-				if (User.facebook === null || User.facebook == undefined) {
+				if ((User.facebook === null || User.facebook == undefined) && !$scope.User.isDefaultGuestUser) {
 					$scope.GenericAvatar = avatarService.getAvatar(User);
 				} else {
 					$scope.ImageAvailable = true;
 				}
 			})
 		} else {
-			if ($scope.User.facebook === null || $scope.User.facebook == undefined) {
+			if (($scope.User.facebook === null || $scope.User.facebook == undefined) && !$scope.User.isDefaultGuestUser) {
 				$scope.GenericAvatar = avatarService.getAvatar($scope.User);
-			} else {
+			} 
+			else {
 				$scope.ImageAvailable = true;
 			}
+			
 		}
 		
 		

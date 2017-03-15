@@ -640,8 +640,10 @@ exports.show = function(req, res) {
 	};
 
 	Observation.find(query)
+
 		.then(handleEntityNotFound(res))
 		.then(responseWithResult(res))
+	
 		.
 	catch(handleError(res));
 };

@@ -80,8 +80,8 @@
 	</thead>
 	<tbody ng-show="displayed.length > 0">
 	<tr ng-repeat="row in displayed" id="{{row._id}}" st-select-row="row" >
-		<td data-title=""> <div layout="row" ><span flex></span><md-button class="table-button" ng-click="ObservationModalService.show($event, row)"><ng-md-icon icon="more_horiz" ></ng-md-icon> </md-button>
-	<md-button class="table-button" ng-if="currentUser._id === row.primaryuser_id" ng-click="ObservationFormService.show($event, row)">		<ng-md-icon icon="edit" ></ng-md-icon> </md-button>
+		<td data-title=""> <div layout="row" ><span flex></span><md-button class="table-button" aria-label="Vis obs" ng-click="ObservationModalService.show($event, row)"><ng-md-icon icon="more_horiz" ></ng-md-icon> </md-button>
+	<md-button class="table-button" aria-label="Ret obs" ng-if="currentUser._id === row.primaryuser_id" ng-click="ObservationFormService.show($event, row)">		<ng-md-icon icon="edit" ></ng-md-icon> </md-button>
 		</div>
 		</td>
 		<td data-title="Validator" ng-if="Auth.hasRole('validator')">
@@ -91,7 +91,7 @@
 			{{'Godkend som ekspert' | translate}}
 		</md-tooltip>
 		
-			<md-button class="table-button"  ng-click="updateValidation(row)" ng-if="row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">	
+			<md-button class="table-button" aria-label="Godkend" ng-click="updateValidation(row)" ng-if="row.DeterminationView.Determination_validation !== 'Afvist' && row.DeterminationView.Determination_validation !== 'Godkendt'">	
 			<ng-md-icon   icon="thumb_up" ></ng-md-icon> </md-button>
 			
 			

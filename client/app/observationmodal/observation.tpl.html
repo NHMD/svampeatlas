@@ -128,8 +128,8 @@
 	  			   <md-divider  ng-if="!$last"></md-divider>                        
 	   	       </md-list-item>
         </md-list>
-		<div ng-include="'app/observationmodal/determinationlist.tpl.html'" flex></div>
-		<div ng-include="'app/observationmodal/commentlist.tpl.html'"></div>
+		<div ng-if="Auth.isLoggedIn()" ng-include="'app/observationmodal/determinationlist.tpl.html'" flex></div>
+		<div ng-if="Auth.isLoggedIn() || obs.Forum.length > 0" ng-include="'app/observationmodal/commentlist.tpl.html'"></div>
 	          </md-content>
 	        </md-tab>
 	        <md-tab label="Kort">
@@ -278,8 +278,8 @@
       </md-card-content>
      
     </md-card>
-	   <div ng-include="'app/observationmodal/determinationlist.tpl.html'"></div>
- 	   <div ng-include="'app/observationmodal/commentlist.tpl.html'"> </div> 
+	   <div ng-if="Auth.isLoggedIn()" ng-include="'app/observationmodal/determinationlist.tpl.html'"></div>
+ 	   <div ng-if="Auth.isLoggedIn() || obs.Forum.length > 0" ng-include="'app/observationmodal/commentlist.tpl.html'"> </div> 
 </div>
 	
 <md-card flex="40">	

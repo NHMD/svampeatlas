@@ -22,7 +22,8 @@ $scope.states =
 	  'checklist': { name: "Checkliste for danske arter", icon: 'playlist_add_check'},
 	  'species': { name: "Artspræsentation", icon: 'fungus'},
 	  'taxon-tree-dk': {name: "Klassifikation", icon: 'taxonomy'},
-	  'fieldtrips': {name: "Mine feltture", icon: 'shopping_basket'}
+	  'fieldtrips': {name: "Mine feltture", icon: 'shopping_basket'},
+	  'validation': {name: "Validering", icon: 'microscope'}
 	};
 	/*
 	$scope.openSideNav = function(){
