@@ -5,6 +5,7 @@ angular.module('svampeatlasApp')
 
 		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 		$scope.Auth = Auth;
+		$scope.translate = $translate;
 		$scope.SimilarTaxaModalService = SimilarTaxaModalService;
 		$scope.$state = $state;
 		$scope.baseUrl = appConstants.baseurl;

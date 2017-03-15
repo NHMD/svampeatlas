@@ -126,7 +126,10 @@ angular.module('svampeatlasApp')
 					}
 				}
 			}
-
+				
+			if($scope.uiDkName === "*"){
+				query.include[2].required = true;
+			} else {
 				var dkNameWhere = (tableState.search.predicateObject && tableState.search.predicateObject.Vernacularname_DK) ? _.mapValues(tableState.search.predicateObject.Vernacularname_DK, function(value, key) {
 
 
@@ -138,7 +141,7 @@ angular.module('svampeatlasApp')
 				if(dkNameWhere){
 					query.include[2].where = JSON.stringify(dkNameWhere)
 				}
-				
+			}
 
 				var order = tableState.sort.predicate;
 				if (tableState.sort.reverse) {
