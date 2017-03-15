@@ -225,6 +225,13 @@ angular.module('svampeatlasApp', [
 					type: 'link',
 					requireLogin: false,
 				}, {
+					id: 'validation',
+					icon: 'microscope',
+					name: 'Validering',
+					state: 'validation',
+					type: 'link',
+					requireLogin: false,
+				},{
 					id: 'demos',
 					icon: 'school',
 					name: 'Vejledninger',
@@ -280,7 +287,7 @@ angular.module('svampeatlasApp', [
 						requireRole: 'taxonomyadmin',
 					}, {
 						id: 'TaxonBase_morphogroups',
-						name: 'Morphogroups',
+						name: 'Morpho groups',
 						state: 'taxonmorphogroups',
 						requireRole: 'taxonomyadmin',
 					}]

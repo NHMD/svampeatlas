@@ -45,7 +45,7 @@ md-sidenav ng-md-icon {
 }
 
 
-#login-button {
+.login-button {
     box-shadow: none !important;
     border-radius: 0;
     /* color: white; */

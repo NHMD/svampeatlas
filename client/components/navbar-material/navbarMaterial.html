@@ -6,7 +6,7 @@
         <span flex></span>
         <div layout="column" class="md-toolbar-tools-bottom inset">
 			<div layout="row" >
-<svg ng-if="!isLoggedIn()" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<!--<svg ng-if="!isLoggedIn()" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="64px" height="67.5px" viewBox="32 33.75 64 67.5" enable-background="new 32 33.75 64 67.5" xml:space="preserve">
 <g>
 	<g>
@@ -79,7 +79,8 @@
 	c0,0,0.98,0.853,0.98,0.853L57,53.667l1.25,0.75c2.875-0.625,11.058-0.063,11.592-0.055c0.832-0.167,6.658-1.023,9.283-0.898
 	s11.212,0.636,11.212-0.114S85.5,46.213,81.75,43.213s-12.875-4.129-14.25-4.754c-1.336-0.607-2.082-2.631-2.926-2.631
 	C64.549,35.829,64.524,35.829,64.5,35.833"/>
-</svg>
+</svg> -->
+<user-avatar class="useravatar md-avatar" size="'large'" user="{isDefaultGuestUser: true}" ng-if="!isLoggedIn()"></user-avatar>				
 <user-avatar class="useravatar md-avatar" size="'large'" user="User" ng-if="isLoggedIn()"></user-avatar>
  <span class="flex"></span>
  <div layout="row" layout-fill  layout-align="end start" flex>
@@ -88,13 +89,17 @@
          </div> 
           <span></span>
 		  <div layout="row" >
-		  <div ng-show="isLoggedIn()">
+		  <div ng-show="isLoggedIn()" >
           <div>{{ getCurrentUser().name }} ({{getCurrentUser().Initialer}})</div>
           <div>{{ getCurrentUser().email }}</div>
 	  </div>
-	  	<div ng-hide="isLoggedIn()" >
-	        <md-button  class="md-primary"  id="login-button" ng-click="showLoginForm()">
+		  
+	  	<div ng-if="!isLoggedIn()" layout="row">
+	        <md-button   ng-click="showLoginForm()">
 	         <ng-md-icon icon="login"></ng-md-icon>{{'Login' | translate}}
+	        </md-button>
+	        <md-button   ng-click="sendNewUserRequestByEmail()">
+	         <ng-md-icon icon="person_add"></ng-md-icon>{{'Sign up' | translate }}
 	        </md-button>
 			</div>
 			<div layout="row" layout-align="end center" layout-fill flex>

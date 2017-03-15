@@ -40,10 +40,10 @@
 	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
-	            <p>{{'Antal stemmer: '}}{{ det.Votes.length }} </p>
+	            <p>{{'Antal stemmer' | translate}}: {{ det.Votes.length }} </p>
 				
 					 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></p>
-					
+					<p ng-if="det.notes">{{'Noter' | translate}}: {{ det.notes }} </p>
 				
 				
 				
@@ -67,7 +67,7 @@
 			  <md-divider ></md-divider>
 	        </md-list-item>	
 
-	        <md-list-item class="md-3-line md-long-text" ng-repeat="det in obs.Determinations | filter:{ _id: '!' + obs.PrimaryDetermination._id} | orderBy:'createdAt' : true" >
+	        <md-list-item class="md-3-line md-long-text" ng-repeat="det in obs.Determinations | filter:{ _id: '!' + obs.PrimaryDetermination._id} | orderBy:'score' : true" >
 		
 	         <md-icon ng-if="det._id !== obs.primarydetermination_id && !Auth.hasRole('validator') " md-font-icon="fa fa-tag fa-2x" class="material-icons md-light md-48 md-primary" >
 		 
@@ -75,7 +75,7 @@
 	         <md-icon ng-if="det._id === obs.primarydetermination_id" md-font-icon="fa fa-check fa-2x" class="material-icons md-light md-48 green-check" >
 		 
 		 </md-icon>
-		 <md-button ng-if="det._id !== obs.primarydetermination_id && Auth.hasRole('validator')" class="md-icon-button"
+		 <md-button ng-if="det._id !== obs.primarydetermination_id && Auth.hasRole('validator')" class="md-icon-button determination-list-btn"
 		                ng-click="setPrimaryDetermination(det, obs)">
 			   		 <md-tooltip md-direction="right">
 			   		          {{'Anvend bestemmelse' | translate}}
@@ -89,10 +89,10 @@
 	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
-	            <p>{{'Antal stemmer: '}}{{ det.Votes.length }} </p>
+	            <p>{{'Antal stemmer' | translate}}: {{ det.Votes.length }} </p>
 			 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></p>
 				
-				
+				<p ng-if="det.notes">{{'Noter' | translate}}: {{ det.notes }} </p>
 				
 	          </div>
 	  		
