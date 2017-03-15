@@ -7,6 +7,9 @@ angular.module('svampeatlasApp')
  	  
 	  $scope.demos = [
 		  { title: 'Hvordan man lægger fund i svampeatlas', url: 'http://quick.as/xw4zcbzvx', icon: 'ondemand_video' },
+		  
+		  { title: 'Hvordan man kommer med bestemmelsesforslag', url: 'http://quick.as/bp7qtngeg', icon: 'ondemand_video' },
+		  
 		  { title: 'Indtastning af udenlandske fund i Svampeatlas', url: 'http://quick.as/YznXs8nOz' , icon: 'ondemand_video'},
 		  { title: 'Søgning i svampeatlas', url: 'https://www.facebook.com/groups/svampeatlas/permalink/10154445124923522/' , icon: 'facebook'},
 		  { title: 'Rapportører og findere', url: 'https://www.facebook.com/groups/svampeatlas/permalink/10154445112068522/' , icon: 'facebook'},
