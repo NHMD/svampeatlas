@@ -410,7 +410,13 @@ angular.module('svampeatlasApp')
 			})
 
 
+
 			$scope.observationIsValid = function() {
+				
+				if($scope.obs && $scope.obs.dataSource && (Auth.hasRole('validator') || $scope.currentUser._id === $scope.obs.primaryuser_id)){
+					return true
+				}
+				else {
 				var valid = true;
 				
 				if ($scope.newTaxon.length === 0 || !$scope.newTaxon[0]._id) valid = false;
@@ -421,6 +427,7 @@ angular.module('svampeatlasApp')
 				if (($scope.selectedLocality.length === 0 || !$scope.selectedLocality[0]._id) && (!$scope.foreignLocality)) valid = false;
 				
 				return valid;
+			}
 
 			}
 
@@ -1135,9 +1142,12 @@ $scope.showExifConfirmPanel(exif)
 
 			$scope.submitObservation = function() {
 
-
+				var observationDate = ($scope.obs && !moment($scope.obs.observationDate, 'YYYY-MM-DD').isValid()) ?  $scope.obs.observationDate : $filter('date')(that.observationDate, "yyyy-MM-dd") ;
+				
+				
+				;
 				var obs = {
-					observationDate: $filter('date')(that.observationDate, "yyyy-MM-dd"),
+					observationDate: observationDate,
 
 
 					substrate_id: that.selectedSubstrate,
