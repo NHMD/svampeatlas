@@ -19,7 +19,7 @@
 	 		</div>
       <md-grid-tile-footer class="img-footer footer-full-width" >
 	  <span ng-if="tile.Images.length > 1" class="footer-img-count">{{tile.Images.length}} {{'billeder' | translate}}</span>
-	  <em>{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
+	  <em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && translate.use() !='en'">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</span><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
   <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{tile.Locality.name}}<br>
   {{tile.PrimaryUser.name}}</span>
   </md-grid-tile-footer>

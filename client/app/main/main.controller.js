@@ -7,7 +7,7 @@ angular.module('svampeatlasApp')
 	  $scope.Auth = Auth;
 	  $scope.$state = $state;
 	  $scope.ObservationFormService = ObservationFormService;
-	  
+	  $scope.translate = $translate;
 	  
 	  $scope.showLogin = function(){
   		var useFullScreen = $mdMedia('xs');
