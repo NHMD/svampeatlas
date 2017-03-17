@@ -17,7 +17,7 @@ var user = Auth.getCurrentUser();
 				observation.primarydetermination_id = newPrimaryDeterminationId;
 				observation.PrimaryDetermination = newPrimaryDetermination;
 				
-				$rootScope.$broadcast('observation_updated', observation);
+				
 			  }
 			
           }
@@ -40,7 +40,8 @@ var user = Auth.getCurrentUser();
 							    user_id: user._id
 							});
 							
-							swapPrimaryDeterminationIfNeeded(obs, res.newPrimaryDeterminationId)
+							swapPrimaryDeterminationIfNeeded(obs, res.newPrimaryDeterminationId);
+							$rootScope.$broadcast('observation_updated', obs);
 						})
 						.catch(function(err) {
 							if(err.status === 403){
@@ -72,6 +73,7 @@ var user = Auth.getCurrentUser();
 								det.Votes.push(res.vote)
 								det.score = res.newDeterminationScore;
 								swapPrimaryDeterminationIfNeeded(obs, res.newPrimaryDeterminationId);
+								$rootScope.$broadcast('observation_updated', obs);
 								
 						})
 						.catch(function(err) {

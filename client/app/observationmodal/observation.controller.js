@@ -8,7 +8,8 @@ angular.module('svampeatlasApp')
 			this.DeterminationLogModalService = DeterminationLogModalService;
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
-			
+			$scope.moment = moment;
+			$scope.Determination = Determination;
 			$scope.AcceptedDeterminationScore = appConstants.AcceptedDeterminationScore;
 			$scope.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
 			$scope.openSideNav = function() {

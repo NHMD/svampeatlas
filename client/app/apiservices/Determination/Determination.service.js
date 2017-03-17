@@ -10,6 +10,13 @@ angular.module('svampeatlasApp')
 			update: {
 				method: 'PUT' // this method issues a PUT request
 			},
+			'remove': {
+				method: 'DELETE',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/determinations/:id'
+			},
 			'updateValidation': {
 				method: 'PUT',
 				params: {

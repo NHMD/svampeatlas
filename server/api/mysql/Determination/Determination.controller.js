@@ -16,6 +16,8 @@ var Determination = models.Determination;
 var Promise = require("bluebird");
 var userTool = require("../userTool");
 
+var moment = require('moment');
+
 var nestedQueryParser = require("../nestedQueryParser")
 
 // Min score for an determination to "verified"
@@ -200,42 +202,44 @@ exports.show = function(req, res) {
 	catch(handleError(res));
 };
 
-exports.getDeterminationsForObservation = (req, res)=> {
-	 
-	 return Determination.findAll({where: {observation_id: req.params.id}, 
-		include: [{
-			model: models.Taxon,
-			as: "Taxon",
+exports.getDeterminationsForObservation = (req, res) => {
+
+	return Determination.findAll({
+			where: {
+				observation_id: req.params.id
+			},
 			include: [{
-				model: models.Taxon,
-				as: "acceptedTaxon",
-				include: [{
-					model: models.TaxonDKnames,
-					as: "Vernacularname_DK"
-				}]
-			}]
-		}, {
-			model: models.User,
-			as: 'User',
-			attributes: ['_id', 'email', 'Initialer', 'name']
-		}, {
-			model: models.User,
-			as: 'Validator',
-			attributes: ['_id', 'Initialer', 'name']
-		},
-		{
-							model: models.DeterminationVote,
-							as: 'Votes',
-							attributes: ['_id','user_id', 'createdAt',  'score']
-						},
-	
-	]
-		 })
-		 .then((determinations)=>{
-		 	return res.status(200).json(determinations)
-		 })
-	 		.
-	 	catch(handleError(res));
+					model: models.Taxon,
+					as: "Taxon",
+					include: [{
+						model: models.Taxon,
+						as: "acceptedTaxon",
+						include: [{
+							model: models.TaxonDKnames,
+							as: "Vernacularname_DK"
+						}]
+					}]
+				}, {
+					model: models.User,
+					as: 'User',
+					attributes: ['_id', 'email', 'Initialer', 'name']
+				}, {
+					model: models.User,
+					as: 'Validator',
+					attributes: ['_id', 'Initialer', 'name']
+				}, {
+					model: models.DeterminationVote,
+					as: 'Votes',
+					attributes: ['_id', 'user_id', 'createdAt', 'score']
+				},
+
+			]
+		})
+		.then((determinations) => {
+			return res.status(200).json(determinations)
+		})
+		.
+	catch(handleError(res));
 }
 
 
@@ -281,14 +285,14 @@ function createDetermination(obs, determination, user, t, logObject) {
 			console.log("### taxonWeight: " + taxonWeight)
 
 			logObject.Determination = {};
-		
+
 			logObject.Determination.initialScore = baseScore;
 			logObject.Determination.confidence = determination.confidence;
 			if (userIsValidator && determination.validation === "Godkendt") {
 				determination.validation = "Godkendt";
 				logObject.Determination.votingSystemOverRuledByValidator = true;
 			} else {
-				
+
 				determination.validation = 'Valideres';
 			}
 
@@ -314,50 +318,74 @@ exports.createDetermination = createDetermination;
 
 exports.updateValidation = (req, res) => {
 
-var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'VALIDATION STATUS CHANGED BY VALIDATOR'};
+	var logObject = {
+		User: {
+			_id: req.user._id,
+			name: req.user.name,
+			initials: req.user.Initialer
+		},
+		_eventType: 'VALIDATION STATUS CHANGED BY VALIDATOR'
+	};
 
-return models.sequelize.transaction(function(t) {
- return	Determination.find({
-		where: {
-			_id: req.params.id
-		},
-		transaction: t
-	}).then(function(determination) {
-		
-		logObject.Determination = { oldValidationStatus: determination.validation, newValidationStatus: req.body.validation, };
-		determination.validation = req.body.validation;
-		determination.validator_id = req.user._id;
-		return determination.save({
-			fields: ['validation', 'validator_id'],
-		transaction: t
-		})
+	return models.sequelize.transaction(function(t) {
+		return Determination.find({
+				where: {
+					_id: req.params.id
+				},
+				transaction: t
+			}).then(function(determination) {
+
+				logObject.Determination = {
+					oldValidationStatus: determination.validation,
+					newValidationStatus: req.body.validation,
+				};
+				determination.validation = req.body.validation;
+				determination.validator_id = req.user._id;
+				return determination.save({
+					fields: ['validation', 'validator_id'],
+					transaction: t
+				})
+			})
+			.then(function(determination) {
+
+
+
+				var updatePromise = (req.body.validation === "Godkendt") ? Determination.update({
+					validation: 'Valideres'
+				}, {
+					where: {
+						observation_id: determination.observation_id,
+						_id: {
+							$ne: determination._id
+						},
+						validation: 'Godkendt'
+					},
+					transaction: t
+				}) : Promise.resolve(false);
+
+				return [determination, updatePromise]
+			})
+			.spread(function(determination, updatePromise) {
+				return determination;
+			})
+			.then((det) => {
+
+				return [det, models.DeterminationLog.create({
+					eventType: logObject._eventType,
+					user_id: req.user._id,
+					determination_id: det._id,
+					observation_id: det.observation_id,
+					logObject: JSON.stringify(logObject)
+				}, {
+					transaction: t
+				})]
+			})
+			.spread(function(det, determinationLogSavePromise) {
+
+				return det
+			})
 	})
-	.then(function(determination) {
-		
-		
-		
-		var updatePromise = (req.body.validation === "Godkendt") ? Determination.update({validation: 'Valideres'}, {where: {
-			observation_id: determination.observation_id,
-			_id: { $ne:  determination._id},
-			validation: 'Godkendt'
-		},
-		transaction: t}) : Promise.resolve(false);
-		
-		return [determination, updatePromise]
-		})
-		.spread(function(determination, updatePromise) {
-			return determination;
-		})
-		.then((det) => {
-			
-			return [det, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: det.observation_id, logObject: JSON.stringify(logObject)}, {transaction: t})]
-		})
-		.spread(function(det, determinationLogSavePromise) {
-			
-			return det
-		})
-	})
-	
+
 	.then(function(determination) {
 		return res.status(204).json(determination)
 	})
@@ -369,7 +397,14 @@ exports.addDeterminationToObs = (req, res) => {
 	determination.observation_id = req.params.id;
 	determination.user_id = (determination.user_id) ? determination.user_id : req.user._id;
 	determination.createdByUser = req.user._id;
-	var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'NEW DETERMINATION ADDED'};
+	var logObject = {
+		User: {
+			_id: req.user._id,
+			name: req.user.name,
+			initials: req.user.Initialer
+		},
+		_eventType: 'NEW DETERMINATION ADDED'
+	};
 
 
 	return models.sequelize.transaction(function(t) {
@@ -395,20 +430,28 @@ exports.addDeterminationToObs = (req, res) => {
 				return [update, det, obs]
 			})
 			.spread((updated, det, obs) => {
-				
-				return [det, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: obs._id, logObject: JSON.stringify(logObject)}, {transaction: t})]
+
+				return [det, models.DeterminationLog.create({
+					eventType: logObject._eventType,
+					user_id: req.user._id,
+					determination_id: det._id,
+					observation_id: obs._id,
+					logObject: JSON.stringify(logObject)
+				}, {
+					transaction: t
+				})]
 			})
 			.spread(function(det, determinationLogSavePromise) {
-				
+
 				return det
 			})
 
 	})
 
-	.then(( det) => {
+	.then((det) => {
 
-		
-		
+
+
 			return models.DeterminationView.find({
 				where: {
 					Determination_id: det._id
@@ -431,7 +474,7 @@ exports.addDeterminationToObs = (req, res) => {
 
 
 function getDeterminationScore(usrscore, taxonweight, absScore) {
-	
+
 
 	if (absScore) {
 		return Math.ceil((usrscore / (absScore + taxonweight)) * 100)
@@ -450,7 +493,7 @@ exports.getDeterminationScore = getDeterminationScore;
 
 function getUserBaseImpact(user_id, taxon, logObject, determination) {
 
-	
+
 
 	var usrPromise = models.User.find({
 		where: {
@@ -506,54 +549,58 @@ function getUserBaseImpact(user_id, taxon, logObject, determination) {
 
 	return Promise.all([usrPromise, usrMaxScoreInGroupPromise, usrAcceptedCountForTaxonPromise])
 		.spread(function(usr, usrMaxScoreInGroup, usrAcceptedCountForTaxon) {
-			
+
 			var usrRelativeScore;
 			var useConfidencePenalty = (determination && determination.user_id === user_id && determination.confidence === 'mulig') ? true : false;
-			
-			
-			if(!usr){
+
+
+			if (!usr) {
 				// the user has no score in this group.
 				usrRelativeScore = 1;
 				logObject.User.remarks = "The user has no base score in this group."
 			} else {
-				
-				if(logObject.MorphoGroup){
+
+				if (logObject.MorphoGroup) {
 					logObject.MorphoGroup.userMaxScoreInGroup = usrMaxScoreInGroup;
 					logObject.MorphoGroup.morphogroup_id = usr.MorphoGroup[0]._id;
 					logObject.MorphoGroup.morphoGroupName = usr.MorphoGroup[0].name_dk;
-					
-					
-				}	else {
-					logObject.MorphoGroup = {userMaxScoreInGroup : usrMaxScoreInGroup, morphoGroupName : usr.MorphoGroup[0].name_dk, morphogroup_id : usr.MorphoGroup[0]._id }
+
+
+				} else {
+					logObject.MorphoGroup = {
+						userMaxScoreInGroup: usrMaxScoreInGroup,
+						morphoGroupName: usr.MorphoGroup[0].name_dk,
+						morphogroup_id: usr.MorphoGroup[0]._id
+					}
 				}
-				
+
 				logObject.User.morphoGroupImpact = usr.MorphoGroup[0].UserMorphoGroupImpact.impact;
 				logObject.User.acceptedCountForTaxon = usrAcceptedCountForTaxon;
 				logObject.User.min_impact = usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact;
 				logObject.User.max_impact = usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact;
-				
+
 				logObject.User.morphoGroupImpactRelative = Math.ceil(usr.MorphoGroup[0].UserMorphoGroupImpact.impact / usrMaxScoreInGroup * 100);
-			// We return the userscore + 5 pr accepted record, but no more than 100
-				
-				if(!useConfidencePenalty)	{
-			usrRelativeScore = Math.min(100, (Math.ceil(usr.MorphoGroup[0].UserMorphoGroupImpact.impact / usrMaxScoreInGroup * 100) + (usrAcceptedCountForTaxon * ACCEPTED_OBSERVATION_BONUS)))
-			
-			// If a user has a minimum-impact, i.e. a trusted specialist	
-			if(usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact > usrRelativeScore){
-				usrRelativeScore = Math.min(100,usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact);
+				// We return the userscore + 5 pr accepted record, but no more than 100
+
+				if (!useConfidencePenalty) {
+					usrRelativeScore = Math.min(100, (Math.ceil(usr.MorphoGroup[0].UserMorphoGroupImpact.impact / usrMaxScoreInGroup * 100) + (usrAcceptedCountForTaxon * ACCEPTED_OBSERVATION_BONUS)))
+
+					// If a user has a minimum-impact, i.e. a trusted specialist	
+					if (usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact > usrRelativeScore) {
+						usrRelativeScore = Math.min(100, usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact);
+					}
+					// If a user has a maximum-impact, i.e. someone who is not considered skillfull in the current morphogroup
+					if (usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact < usrRelativeScore) {
+						usrRelativeScore = Math.min(100, usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact);
+					}
+				} else if (useConfidencePenalty) {
+					usrRelativeScore = Math.ceil((usr.MorphoGroup[0].UserMorphoGroupImpact.impact * IDENTIFICATION_CERTAINTY_PENALTY_FACTOR) / usrMaxScoreInGroup * 100);
+				}
+				console.log("usrAcceptedCountForTaxon " + usrAcceptedCountForTaxon)
+				console.log("usrRelativeScore " + usrRelativeScore)
 			}
-			// If a user has a maximum-impact, i.e. someone who is not considered skillfull in the current morphogroup
-			if(usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact < usrRelativeScore){
-				usrRelativeScore = Math.min(100,usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact);
-			}	
-		} else if(useConfidencePenalty){
-			usrRelativeScore = Math.ceil((usr.MorphoGroup[0].UserMorphoGroupImpact.impact * IDENTIFICATION_CERTAINTY_PENALTY_FACTOR) / usrMaxScoreInGroup * 100);
-		}
-			console.log("usrAcceptedCountForTaxon " + usrAcceptedCountForTaxon)
-			console.log("usrRelativeScore " + usrRelativeScore)
-		}
-			
-		logObject.User.morphoGroupImpactCalculated = usrRelativeScore;
+
+			logObject.User.morphoGroupImpactCalculated = usrRelativeScore;
 			return usrRelativeScore;
 		})
 
@@ -562,10 +609,10 @@ function getUserBaseImpact(user_id, taxon, logObject, determination) {
 exports.getUserBaseImpact = getUserBaseImpact;
 
 
-function addConstantsToLogObject(logObject){
-	
+function addConstantsToLogObject(logObject) {
+
 	logObject.Constants = {};
-	
+
 	logObject.Constants.ACCEPTED_SCORE = ACCEPTED_SCORE;
 	// a bonus for each accepted determination of the current accepted taxon - will be added to the users score
 	logObject.Constants.ACCEPTED_OBSERVATION_BONUS = ACCEPTED_OBSERVATION_BONUS;
@@ -593,37 +640,43 @@ function addConstantsToLogObject(logObject){
 	logObject.Constants.DISTANCE_PENALTY_VALUE = DISTANCE_PENALTY_VALUE;
 
 	logObject.Constants.MAX_TAXON_WEIGHT = MAX_TAXON_WEIGHT;
-	
+
 	logObject.Constants.DEFAULT_HIGHER_TAXON_WEIGHT = DEFAULT_HIGHER_TAXON_WEIGHT;
 	logObject.Constants.DEFAULT_HIGHER_TAXON_RANK_LIMIT = DEFAULT_HIGHER_TAXON_RANK_LIMIT;
 	logObject.Constants.DEFAULT_HIGHER_TAXON_FACTOR = DEFAULT_HIGHER_TAXON_FACTOR;
 	logObject.Constants.IDENTIFICATION_CERTAINTY_PENALTY_FACTOR = IDENTIFICATION_CERTAINTY_PENALTY_FACTOR;
-	
+
 }
 
-exports.getCrowsourcedIdentificationConstants = function(){
-	
+exports.getCrowsourcedIdentificationConstants = function() {
+
 	var obj = {};
-	
+
 	addConstantsToLogObject(obj);
-	
+
 	return obj.Constants;
-	
+
 }
 
 
 function getTaxonWeight(taxon, obs, t, logObject) {
 
-	if(!logObject){
+	if (!logObject) {
 		logObject = {};
 	};
-	
-	if(!logObject.Taxon){
-		logObject.Taxon = { _id : taxon.acceptedTaxon._id, FullName: taxon.acceptedTaxon.FullName};
+
+	if (!logObject.Taxon) {
+		logObject.Taxon = {
+			_id: taxon.acceptedTaxon._id,
+			FullName: taxon.acceptedTaxon.FullName
+		};
 	} else {
-		_.merge(logObject.Taxon, { _id : taxon.acceptedTaxon._id, FullName: taxon.acceptedTaxon.FullName});
+		_.merge(logObject.Taxon, {
+			_id: taxon.acceptedTaxon._id,
+			FullName: taxon.acceptedTaxon.FullName
+		});
 	}
-	
+
 	// Observation included here to calculations based on phaenology
 
 	var scoreSql = `select t.FullName, CEIL(CEIL((LOG10((SELECT MAX(accepted_count) +1.2 FROM TaxonStatistics)) - LOG10((if((ts.accepted_count IS NULL),0, ts.accepted_count)
@@ -633,67 +686,71 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 	FROM Taxon t LEFT JOIN TaxonStatistics ts  ON ts.taxon_id = t._id WHERE t._id = :taxonid`;
 
 
-	var taxonWeightPromise = (taxon.acceptedTaxon.RankID < DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? Promise.resolve([{TaxonWeight: DEFAULT_HIGHER_TAXON_WEIGHT}]) : models.sequelize.query(scoreSql, {
+	var taxonWeightPromise = (taxon.acceptedTaxon.RankID < DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? Promise.resolve([{
+		TaxonWeight: DEFAULT_HIGHER_TAXON_WEIGHT
+	}]) : models.sequelize.query(scoreSql, {
 		replacements: {
 			taxonid: taxon.acceptedTaxon._id
 
 		},
 		type: models.sequelize.QueryTypes.SELECT
 	});
-	
+
 	return Promise.all([taxonWeightPromise, getDistanceToClosetsAcceptedObservation(obs, taxon, t), getPhaenologyFactor(obs, taxon), previousRecordsThisMonth(obs, taxon, t)])
 
 	.spread(function(taxonCalculation, closestDistance, phaenologyFactor, prevRecordsThisMonth) {
-		
-		if(!taxon.acceptedTaxon.morphogroup_id) {
-			logObject.WARNING = taxon.acceptedTaxon.FullName + " is not assigned to a morphogroup!"; 
+
+		if (!taxon.acceptedTaxon.morphogroup_id) {
+			logObject.WARNING = taxon.acceptedTaxon.FullName + " is not assigned to a morphogroup!";
 		};
-		
+
 		logObject.Taxon.taxonWeight = taxonCalculation[0].TaxonWeight;
-		
-		
-		if(logObject.MorphoGroup){
+
+
+		if (logObject.MorphoGroup) {
 			logObject.MorphoGroup.morphogroup_id = taxon.acceptedTaxon.morphogroup_id;
-		}	else {
-			logObject.MorphoGroup = {morphogroup_id : taxon.acceptedTaxon.morphogroup_id}
+		} else {
+			logObject.MorphoGroup = {
+				morphogroup_id: taxon.acceptedTaxon.morphogroup_id
+			}
 		}
-		
+
 		addConstantsToLogObject(logObject)
 		var factor = 1;
-		if (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT && taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
+		if (taxon.acceptedTaxon.Statistics && taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT && taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
 			if (prevRecordsThisMonth > 0 && taxonCalculation[0].TaxonWeight < MAX_TAXON_WEIGHT_FOR_PHAENOLOGY_FACTOR) {
 				factor = factor * phaenologyFactor;
 			}
 			logObject.Taxon.phaenologyFactor = phaenologyFactor;
 
 		};
-		
-		
+
+
 		if (closestDistance < SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
 			factor = factor * SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
 			logObject.Taxon.closestDistance = Math.round(closestDistance * 100) / 100;
 		}
 
 		var taxonWeight = taxonCalculation[0].TaxonWeight * factor;
-		
-		if(taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT){
-			
-			
-			
-			logObject.Taxon.taxon_accepted_count = taxon.acceptedTaxon.Statistics.accepted_count;
-			
-		// additions
-		if (closestDistance >= FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.Statistics.accepted_count > DISTANCE_PENALTY_MIN_ACCEPTED_COUNT) {
-			taxonWeight += DISTANCE_PENALTY_VALUE;
+
+		if (taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
+
+
+
+			logObject.Taxon.taxon_accepted_count = (taxon.acceptedTaxon.Statistics) ? taxon.acceptedTaxon.Statistics.accepted_count : 0;
+
+			// additions
+			if (taxon.acceptedTaxon.Statistics && closestDistance >= FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.Statistics.accepted_count > DISTANCE_PENALTY_MIN_ACCEPTED_COUNT) {
+				taxonWeight += DISTANCE_PENALTY_VALUE;
+			}
+
+			if (taxon.acceptedTaxon.Statistics &&  prevRecordsThisMonth === 0 && (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT)) {
+				taxonWeight += PHAENOLOGY_PENALTY_VALUE;
+			}
 		}
 
-		if (prevRecordsThisMonth === 0 && (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT)) {
-			taxonWeight += PHAENOLOGY_PENALTY_VALUE;
-		}
-	}
-		
 		logObject.Taxon.calculatedTaxonWeight = taxonWeight;
-		
+
 		return Math.min(MAX_TAXON_WEIGHT, taxonWeight);
 	})
 }
@@ -774,7 +831,7 @@ function previousRecordsThisMonth(obs, taxon, t) {
 
 function getPhaenologyFactor(obs, taxon) {
 
-	if (taxon.acceptedTaxon.Statistics.accepted_count < PHAENOLOGY_MIN_ACCEPTED_COUNT) {
+	if (taxon.acceptedTaxon.Statistics && taxon.acceptedTaxon.Statistics.accepted_count < PHAENOLOGY_MIN_ACCEPTED_COUNT) {
 
 		return Promise.resolve(1);
 	} else {
@@ -787,7 +844,7 @@ function getPhaenologyFactor(obs, taxon) {
 				replacements: {
 					taxon_id: taxon.acceptedTaxon._id,
 					accepted_score: ACCEPTED_SCORE,
-					observation_id : obs._id
+					observation_id: obs._id
 
 				},
 				type: models.sequelize.QueryTypes.SELECT
@@ -808,7 +865,7 @@ exports.getPhaenologyFactor = getPhaenologyFactor;
 
 function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 
-//return models.sequelize.transaction(function(t){
+	//return models.sequelize.transaction(function(t){
 	return models.Observation.find({
 			where: {
 				_id: observation_id
@@ -836,11 +893,11 @@ function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 		})
 		.then(function(obs) {
 
-			
+
 			if (obs.PrimaryDetermination.validation === "Godkendt") {
 				logObject.primaryDeterminationSwapped = false;
 				return Promise.resolve(obs);
-				
+
 			} else {
 				/*
 				var newPrimaryDetermination = obs.PrimaryDetermination;
@@ -856,30 +913,32 @@ function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 					}
 				}
 				*/
-				
-				
-			var newPrimaryDetermination = 	 _.maxBy(obs.Determinations, function(d) {
+
+
+				var newPrimaryDetermination = _.maxBy(obs.Determinations, function(d) {
 					// determinations to higher taxon will be handicapped towards determinations to species
 					return (d.Taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? d.score : (d.score * DEFAULT_HIGHER_TAXON_FACTOR);
 				});
-				
-				
-				
-				logObject.primaryDeterminationSwapped = (obs.PrimaryDetermination._id != newPrimaryDetermination._id ) ? true : false;
-				
-			
-			return	obs.setPrimaryDetermination(newPrimaryDetermination, {transaction: t});
-			//	return obs.save();
+
+
+
+				logObject.primaryDeterminationSwapped = (obs.PrimaryDetermination._id != newPrimaryDetermination._id) ? true : false;
+
+
+				return obs.setPrimaryDetermination(newPrimaryDetermination, {
+					transaction: t
+				});
+				//	return obs.save();
 			}
 		})
-		
-//		})
+
+	//		})
 
 
 }
 
 
-exports.swapPrimaryDeterminationIfNeeded	= 	swapPrimaryDeterminationIfNeeded;	
+exports.swapPrimaryDeterminationIfNeeded = swapPrimaryDeterminationIfNeeded;
 
 
 // Updates an existing taxon in the DB.
@@ -904,13 +963,74 @@ exports.update = function(req, res) {
 
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
-	Determination.find({
-			where: {
-				_id: req.params.id
-			}
+
+		var userIsValidator = userTool.hasRole(req.user, 'validator');
+
+		Determination.find({
+				where: {
+					_id: req.params.id,
+					user_id: req.user._id
+				},
+				include: [{
+						model: models.DeterminationVote,
+						as: 'Votes',
+						attributes: ['_id', 'user_id', 'createdAt', 'score']
+					}, {
+						model: models.Observation,
+						as: 'Observation',
+						include: [
+							{model: models.Determination,
+							as: "PrimaryDetermination"},
+							{
+								model: models.Determination,
+								as: 'Determinations',
+							include: [{
+								model: models.Taxon,
+								as: "Taxon",
+								include: [{
+									model: models.Taxon,
+									as: "acceptedTaxon"}]
+								}]
+							}
+	
+					]
+				}]
 		})
-		.then(handleEntityNotFound(res))
-		.then(removeEntity(res))
-		.
-	catch(handleError(res));
+	.then(handleEntityNotFound(res))
+	.then(function(det) {
+		if (det.Observation.Determinations.length === 1 || (!userIsValidator && !(req.user._id === det.Observation.primaryuser_id && det.Observation.createdAt > moment().subtract(4, 'hours')))) {
+			throw new Error("Forbidden");
+		};
+		
+		var promise;
+		
+		if(parseInt(req.params.id) !== parseInt(det.Observation.primarydetermination_id)){
+			
+			promise = Promise.resolve(1);
+		} else {
+			console.log("## Its the primary")
+			var newPrimaryDetermination = _.maxBy(_.reject(det.Observation.Determinations, function(o) { return parseInt(o._id) === parseInt(req.params.id) }), function(d) {
+				// determinations to higher taxon will be handicapped towards determinations to species
+				return (d.Taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? d.score : (d.score * DEFAULT_HIGHER_TAXON_FACTOR);
+			});
+			
+			promise =  models.Observation.update({primarydetermination_id: newPrimaryDetermination._id}, {where: {_id: det.Observation._id}});
+		};
+		
+		return promise.then(function(){
+			return models.DeterminationVote.destroy({where: {determination_id: req.params.id}}).then(function(){
+				return det.destroy();
+			})
+		})
+	})
+	.then(function(){
+		return res.sendStatus(204)
+	})
+	.
+catch(function(err) {
+	var statusCode = (err.message === 'Forbidden') ? 403 : 500;
+	console.log(err);
+
+	res.status(statusCode).send(err.message);
+});
 };
