@@ -933,7 +933,9 @@ exports.updatePrimaryDetermination = (req, res) => {
 		if(!newDetermination) {
 			throw new Error("Not found");
 		} else {
-			return [obs.setPrimaryDetermination(newDetermination), newDetermination, oldDetermination]
+			newDetermination.validation = "Godkendt";
+			newDetermination.validator_id = req.user._id;
+			return [obs.setPrimaryDetermination(newDetermination), newDetermination.save(), oldDetermination]
 		}
 	})
 	.spread((obs, newDetermination, oldDetermination)=>{

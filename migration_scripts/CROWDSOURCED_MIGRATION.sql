@@ -58,6 +58,10 @@ INSERT INTO `svampeatlas`.`Role` (`_id`, `createdAt`, `updatedAt`, `name`) VALUE
 ALTER TABLE `Determination` ADD INDEX `score` (`score`);
 
 
+ALTER TABLE Determination ADD COLUMN baseScore INT(11) DEFAULT 0;
+
+>>>>>>>>>>>>>>>>>>
+
 CREATE TABLE IF NOT EXISTS `MorphoGroup` (
 `_id` int(11) NOT NULL,
   `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -124,7 +128,11 @@ WHERE d.user_id=u._id AND d.taxon_id=t._id AND ta._id=t.accepted_id AND ta.morph
 DELETE FROM UserMorphoGroupImpact;
 
 -- detect unmapped DK taxa
-select t._id, t.parent_id, p.RankName as parentrank, p.FullName as parentname, t.FullName as name,t.RankName as rank from Taxon t, Taxon p, TaxonAttributes ta where t._id= ta.taxon_id AND  ta.PresentInDK = 1 AND t.parent_id=p._id AND t.RankID > 9950 AND t.morphogroup_id IS NULL GROUP BY p._id ORDER BY p.FullName
+select t._id, t.parent_id, p.RankName as parentrank, p.FullName as parentname, t.FullName as name,t.RankName as rank 
+INTO OUTFILE '/tmp/morphogroup_missing.csv'
+  FIELDS TERMINATED BY ';' OPTIONALLY ENCLOSED BY '"'
+  LINES TERMINATED BY '\n'
+from Taxon t, Taxon p, TaxonAttributes ta where t._id= ta.taxon_id AND  ta.PresentInDK = 1 AND t.parent_id=p._id AND t.RankID > 9950 AND t.morphogroup_id IS NULL GROUP BY p._id ORDER BY p.FullName;
 
 DROP EVENT `stats_daily`;
 
@@ -132,7 +140,7 @@ DELIMITER $$
 --
 -- Hændelser
 --
-CREATE EVENT `stats_daily` ON SCHEDULE EVERY 1 DAY STARTS '2017-03-10 04:00:00' DO BEGIN
+CREATE EVENT `stats_daily` ON SCHEDULE EVERY 1 DAY STARTS '2017-03-16 04:00:00' DO BEGIN
 	 DELETE FROM TaxonStatistics;
 	 INSERT INTO TaxonStatistics (taxon_id, createdAt, updatedAt, total_count) SELECT * FROM (SELECT ta._id, NOW() as createdAt, NOW() as updatedAt, COUNT(*) as total FROM Observation o, Determination d, Taxon t, Taxon ta WHERE o.primarydetermination_id = d._id AND d.taxon_id = t._id AND t.accepted_id=ta._id AND o.locality_id IS NOT NULL GROUP BY ta._id) a
      ON DUPLICATE KEY UPDATE updatedAt=NOW(), total_count=a.total;
@@ -158,7 +166,7 @@ DELIMITER $$
 --
 -- Hændelser
 --
-CREATE EVENT `user_impact` ON SCHEDULE EVERY 1 DAY STARTS '2017-03-10 03:30:00' DO BEGIN
+CREATE EVENT `user_impact` ON SCHEDULE EVERY 1 DAY STARTS '2017-03-16 03:45:00' DO BEGIN
 DELETE FROM UserMorphoGroupImpact;
 INSERT INTO UserMorphoGroupImpact (user_id, morphogroup_id, impact) 
 SELECT u._id, a.morphogroup_id, CEIL((COUNT(distinct ta._id)/ a.totalCount * 100))
