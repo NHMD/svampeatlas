@@ -24,7 +24,7 @@ router.patch('/:id',auth.hasRole('validator'),  controller.update);
 
 router.post('/:id/votes',auth.appendUser(), voteController.addVoteToDetermination);
 router.delete('/:id/votes/:userid',auth.appendUser(), voteController.deleteVoteFromDetermination);
-//router.delete('/:id',auth.hasRole('taxonomyadmin'),  controller.destroy);
+router.delete('/:id', auth.isAuthenticated(),   controller.destroy);
 
 
 

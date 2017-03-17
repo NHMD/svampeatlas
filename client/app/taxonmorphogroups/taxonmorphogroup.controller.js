@@ -6,7 +6,15 @@ angular.module('svampeatlasApp')
 	  
 	  
 	  $scope.viewTaxa = function(mg){
-	  	
+		localStorage.removeItem('taxonomy_attribute_conditions');
+		localStorage.removeItem('taxonomy_selected_higher_taxa');
+		localStorage.removeItem('taxonomy_higher_taxa_predicate')
+		localStorage.removeItem('taxonomy_selected_tags');
+		localStorage.removeItem('taxonomy_redlist_categories');
+		localStorage.removeItem('taxonomy_search_checkboxes');
+		localStorage.removeItem("taxon_search_table");
+		localStorage.removeItem('taxonomy_selected_mycokeycharacters');
+		localStorage.removeItem('taxonomy_statistics_conditions');
 		  localStorage.setItem('taxonomy_morphogroups', JSON.stringify([mg._id]));
 		  $state.go('taxonomy');
 	  }

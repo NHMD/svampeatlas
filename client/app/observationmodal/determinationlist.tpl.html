@@ -28,11 +28,16 @@
 	
 	        <md-list-item class="md-3-line md-long-text" ng-repeat="det in obs.Determinations | filter:{ _id:  obs.PrimaryDetermination._id} " >
 		
-	        
+	        <div layout="column">
 	         <md-icon md-font-icon="fa fa-check fa-2x" class="material-icons md-light md-48 green-check" >
+			 
 		 
 		 </md-icon>
-
+		<md-tooltip md-direction="right"  >
+  		          {{'Slet bestemmelsen' | translate}}
+  		        </md-tooltip>
+		 <md-button ng-click="Determination.remove({id: det._id})" ng-if="User._id === det.user_id && det.Votes.length === 0 && moment(det.createdAt) > moment().subtract(4, 'hours')" class="table-button" aria-label="Delete identification"><ng-md-icon icon="delete_forever"></ng-md-icon></md-button>
+	 </div>
 	
 
 	          <div class="md-list-item-text"  >

@@ -7,6 +7,8 @@ angular.module('svampeatlasApp')
 			$scope.mdSidenav = $mdSidenav;
 			$scope.menu = ssSideNav;
 			$scope.$cookies = $cookies;
+			$scope.Determination = Determination;
+			$scope.moment = moment;
 			$scope.vote = VotingService.vote;
 			$scope.openSideNav = function() {
 
