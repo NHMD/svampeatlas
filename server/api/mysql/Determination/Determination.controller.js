@@ -53,8 +53,8 @@ const DEFAULT_HIGHER_TAXON_WEIGHT = 25;
 const DEFAULT_HIGHER_TAXON_RANK_LIMIT = 10000;
 // in order to pick a determination to higher taxon rather than to species the higher taxon determintion must have twice the score (factor 0.5) of the species determination
 const DEFAULT_HIGHER_TAXON_FACTOR = 0.5;
-
-
+// If the user says its only a possible id, degrade the user impact
+const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR = 0.5;
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -272,7 +272,7 @@ function createDetermination(obs, determination, user, t, logObject) {
 		.spread((taxon, obs) => {
 
 
-			return [getUserBaseImpact(determination.user_id, taxon, logObject), getTaxonWeight(taxon, obs, t, logObject), taxon, obs]
+			return [getUserBaseImpact(determination.user_id, taxon, logObject, determination), getTaxonWeight(taxon, obs, t, logObject), taxon, obs]
 
 		}).spread((baseScore, taxonWeight, taxon, obs) => {
 
@@ -283,7 +283,7 @@ function createDetermination(obs, determination, user, t, logObject) {
 			logObject.Determination = {};
 		
 			logObject.Determination.initialScore = baseScore;
-
+			logObject.Determination.confidence = determination.confidence;
 			if (userIsValidator && determination.validation === "Godkendt") {
 				determination.validation = "Godkendt";
 				logObject.Determination.votingSystemOverRuledByValidator = true;
@@ -448,7 +448,7 @@ exports.getDeterminationScore = getDeterminationScore;
 /* gives the users impact in a morphogroup with bonus for earlier accepted records. Return a promise  
  */
 
-function getUserBaseImpact(user_id, taxon, logObject) {
+function getUserBaseImpact(user_id, taxon, logObject, determination) {
 
 	
 
@@ -508,7 +508,7 @@ function getUserBaseImpact(user_id, taxon, logObject) {
 		.spread(function(usr, usrMaxScoreInGroup, usrAcceptedCountForTaxon) {
 			
 			var usrRelativeScore;
-			
+			var useConfidencePenalty = (determination && determination.user_id === user_id && determination.confidence === 'mulig') ? true : false;
 			
 			
 			if(!usr){
@@ -531,7 +531,11 @@ function getUserBaseImpact(user_id, taxon, logObject) {
 				logObject.User.acceptedCountForTaxon = usrAcceptedCountForTaxon;
 				logObject.User.min_impact = usr.MorphoGroup[0].UserMorphoGroupImpact.min_impact;
 				logObject.User.max_impact = usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact;
+				
+				logObject.User.morphoGroupImpactRelative = Math.ceil(usr.MorphoGroup[0].UserMorphoGroupImpact.impact / usrMaxScoreInGroup * 100);
 			// We return the userscore + 5 pr accepted record, but no more than 100
+				
+				if(!useConfidencePenalty)	{
 			usrRelativeScore = Math.min(100, (Math.ceil(usr.MorphoGroup[0].UserMorphoGroupImpact.impact / usrMaxScoreInGroup * 100) + (usrAcceptedCountForTaxon * ACCEPTED_OBSERVATION_BONUS)))
 			
 			// If a user has a minimum-impact, i.e. a trusted specialist	
@@ -542,10 +546,14 @@ function getUserBaseImpact(user_id, taxon, logObject) {
 			if(usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact < usrRelativeScore){
 				usrRelativeScore = Math.min(100,usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact);
 			}	
-				
+		} else if(useConfidencePenalty){
+			usrRelativeScore = Math.ceil((usr.MorphoGroup[0].UserMorphoGroupImpact.impact * IDENTIFICATION_CERTAINTY_PENALTY_FACTOR) / usrMaxScoreInGroup * 100);
+		}
 			console.log("usrAcceptedCountForTaxon " + usrAcceptedCountForTaxon)
 			console.log("usrRelativeScore " + usrRelativeScore)
 		}
+			
+		logObject.User.morphoGroupImpactCalculated = usrRelativeScore;
 			return usrRelativeScore;
 		})
 
@@ -589,7 +597,7 @@ function addConstantsToLogObject(logObject){
 	logObject.Constants.DEFAULT_HIGHER_TAXON_WEIGHT = DEFAULT_HIGHER_TAXON_WEIGHT;
 	logObject.Constants.DEFAULT_HIGHER_TAXON_RANK_LIMIT = DEFAULT_HIGHER_TAXON_RANK_LIMIT;
 	logObject.Constants.DEFAULT_HIGHER_TAXON_FACTOR = DEFAULT_HIGHER_TAXON_FACTOR;
-	
+	logObject.Constants.IDENTIFICATION_CERTAINTY_PENALTY_FACTOR = IDENTIFICATION_CERTAINTY_PENALTY_FACTOR;
 	
 }
 

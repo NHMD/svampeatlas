@@ -91,6 +91,22 @@
   		 	     </md-switch>
 				 
 			 </div>
+			 <div layout="row" layout-margin>
+			 <md-input-container layout-fill  ng-show="newTaxon.length > 0">
+			        <label>{{'Hvor sikker er du?' | translate}}</label>
+			        <md-select ng-model="ctrl.determinationConfidence">
+			          <md-option value="sikker" >
+			            {{'Det er helt sikkert denne' | translate}} {{newTaxon[0].RankName | translate | lowercaseAll}}
+			          </md-option>
+			          <md-option value="sandsynlig">
+			            {{'Det er sandsynligvis denne' | translate}} {{newTaxon[0].RankName | translate | lowercaseAll}}
+			          </md-option>
+			          <md-option value="mulig">
+			            {{'Det er muligvis denne' | translate}} {{newTaxon[0].RankName | translate | lowercaseAll}}
+			          </md-option>
+			        </md-select>
+			      </md-input-container>
+			  </div>
 			 <md-whiteframe class="md-whiteframe-2dp valideringsrapport" layout layout-align="center center" layout-padding layout-margin ng-if="taxonAttrs && taxonAttrs.valideringsrapport">
 			     <span >{{taxonAttrs.valideringsrapport}}</span>
 			   </md-whiteframe>

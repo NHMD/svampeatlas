@@ -38,7 +38,7 @@ angular.module('svampeatlasApp')
 			$scope.Auth = Auth;
 			$scope.moment = moment;
 			
-			
+			this.determinationConfidence = "sikker";
 			
 			$rootScope.$on('observation_updated', function(evt, obs) {
 				if ($scope.obs && obs._id === $scope.obs._id) {
@@ -1180,7 +1180,8 @@ $scope.showExifConfirmPanel(exif)
 				if ($scope.duplicateID || !row) {
 					obs.determination = {
 						taxon_id: $scope.newTaxon[0]._id,
-						user_id: $scope.determiner[0]._id
+						user_id: $scope.determiner[0]._id,
+						confidence: that.determinationConfidence
 					};
 
 				}
@@ -1291,8 +1292,8 @@ $scope.showExifConfirmPanel(exif)
 						$rootScope.$broadcast(evt, obs);
 						$scope.newTaxon = [];
 						that.files = [];
+						that.determinationConfidence = "sikker";
 						
-
 						delete that.fieldnumber;
 						delete that.herbarium;
 						delete that.note;
