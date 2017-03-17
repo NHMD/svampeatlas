@@ -215,7 +215,7 @@ exports.addVoteToDetermination = (req, res) => {
 		.then(function(det) {
 
 				if (det.user_id === req.user._id) {
-					throw new Error("You are not allwoed to vote on your own identifications");
+					throw new Error("You are not allowed to vote on your own identifications");
 				}
 				vote.observation_id = det.observation_id;
 
@@ -293,7 +293,7 @@ exports.addVoteToDetermination = (req, res) => {
 		})
 		.
 	catch((err) => {
-		var statusCode = (err.message === "You are not allowed to vote on your own identifications" || err.message ==="Downvote authorization missing") ? 403 : 500;
+		var statusCode = (err.message === "You are not allowed to vote on your own identifications" || err.message ==="Downvote authorization missing" || err.message ==='Validation error') ? 403 : 500;
 		console.log(err);
 
 		res.status(statusCode).send(err.message);
@@ -398,6 +398,9 @@ exports.deleteVoteFromDetermination = function(req, res){
 						logObject.Determination.initialScore = det.baseScore;
 						logObject.Determination.sumOfVotes = SumAndAbsSum.sum;
 						logObject.Determination.absoluteSumOfVotes = SumAndAbsSum.absSum;
+						
+						console.log("########")
+						console.log(JSON.stringify(SumAndAbsSum));
 
 						/*
 						console.log("######### absSumCalc "+JSON.stringify(absSumCalc))

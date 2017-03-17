@@ -368,7 +368,7 @@ exports.addDeterminationToObs = (req, res) => {
 	var determination = req.body;
 	determination.observation_id = req.params.id;
 	determination.user_id = (determination.user_id) ? determination.user_id : req.user._id;
-
+	determination.createdByUser = req.user._id;
 	var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'NEW DETERMINATION ADDED'};
 
 
@@ -431,6 +431,7 @@ exports.addDeterminationToObs = (req, res) => {
 
 
 function getDeterminationScore(usrscore, taxonweight, absScore) {
+	
 
 	if (absScore) {
 		return Math.ceil((usrscore / (absScore + taxonweight)) * 100)
@@ -702,7 +703,7 @@ function getDistanceToClosetsAcceptedObservation(obs, taxon, t) {
                     + SIN(RADIANS(p.latpoint))
                     * SIN(RADIANS(z.decimalLatitude)))) AS distance_in_km
      FROM (SELECT o._id, o.decimalLatitude, o.decimalLongitude FROM Observation o JOIN Determination d JOIN Taxon t 
-		 ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= :taxon_id AND (d.validation="Godkendt" OR d.score > :accepted_score)) AS z
+		 ON o.primarydetermination_id=d._id AND o._id <> :observation_id AND d.taxon_id= t._id AND t.accepted_id= :taxon_id AND (d.validation="Godkendt" OR d.score > :accepted_score)) AS z
      JOIN (   
            SELECT  _id,  decimalLatitude  AS latpoint,  decimalLongitude AS longpoint,
                    :radius AS radius,      111.045 AS distance_unit FROM Observation WHERE  _id = :observation_id
@@ -740,7 +741,7 @@ function previousRecordsThisMonth(obs, taxon, t) {
 
 
 	var sql = `SELECT COUNT(*) as count FROM Observation o JOIN Observation o2 JOIN Determination d JOIN Taxon t 
-	ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= :taxon_id AND (d.validation="Godkendt" OR d.score > :accepted_score) AND MONTH(o.observationDate) = MONTH(o2.observationDate) AND o2._id = :observation_id;`;
+	ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= :taxon_id AND (d.validation="Godkendt" OR d.score > :accepted_score) AND MONTH(o.observationDate) = MONTH(o2.observationDate) AND o2._id = :observation_id AND o._id <> :observation_id;`;
 
 
 	return models.sequelize.query(sql, {
@@ -772,12 +773,13 @@ function getPhaenologyFactor(obs, taxon) {
 
 
 
-		var sql = `SELECT COUNT(*) as count, MONTH(observationDate) as month FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= :taxon_id AND (d.validation="Godkendt" OR d.score > :accepted_score) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate);`
+		var sql = `SELECT COUNT(*) as count, MONTH(observationDate) as month FROM Observation o JOIN Determination d JOIN Taxon t ON o.primarydetermination_id=d._id AND d.taxon_id= t._id AND t.accepted_id= :taxon_id AND o._id <> :observation_id AND (d.validation="Godkendt" OR d.score > :accepted_score) AND MONTH(observationDate) >0 GROUP BY MONTH(observationDate);`
 
 		return models.sequelize.query(sql, {
 				replacements: {
 					taxon_id: taxon.acceptedTaxon._id,
-					accepted_score: ACCEPTED_SCORE
+					accepted_score: ACCEPTED_SCORE,
+					observation_id : obs._id
 
 				},
 				type: models.sequelize.QueryTypes.SELECT

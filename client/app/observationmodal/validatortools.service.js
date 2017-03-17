@@ -48,6 +48,8 @@ angular.module('svampeatlasApp')
 				},
 			
 				setPrimaryDetermination : function(det, obs){
+					
+							
 					return Observation.setPrimaryDetermination({
 															id: obs._id
 														}, det).$promise.then(function(){

@@ -76,9 +76,12 @@ var user = Auth.getCurrentUser();
 						})
 						.catch(function(err) {
 							if(err.status === 403){
+								
+								var msg = (err.data === "Validation error") ? $translate.instant('Du kan kun stemme én gang på hver bestemmelse') : err.data;
+								
 								$mdToast.show(
 									$mdToast.simple()
-									.textContent($translate.instant(err.data))
+									.textContent($translate.instant(msg))
 									.position("top right")
 								
 									.parent($event.currentTarget.parentElement.parentElement.parentElement)
