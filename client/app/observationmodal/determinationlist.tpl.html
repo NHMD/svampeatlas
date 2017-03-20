@@ -36,7 +36,7 @@
 		<md-tooltip md-direction="right"  >
   		          {{'Slet bestemmelsen' | translate}}
   		        </md-tooltip>
-		 <md-button ng-click="Determination.remove({id: det._id})" ng-if="User._id === det.user_id && det.Votes.length === 0 && moment(det.createdAt) > moment().subtract(4, 'hours')" class="table-button" aria-label="Delete identification"><ng-md-icon icon="delete_forever"></ng-md-icon></md-button>
+		 <md-button ng-click="deleteDetermination(det, obs)" ng-if="User._id === det.user_id && obs.Determinations.length > 1 && det.Votes.length === 0 && moment(det.createdAt) > moment().subtract(4, 'hours')" class="table-button" aria-label="Delete identification"><ng-md-icon icon="delete_forever"></ng-md-icon></md-button>
 	 </div>
 	
 
@@ -73,7 +73,7 @@
 	        </md-list-item>	
 
 	        <md-list-item class="md-3-line md-long-text" ng-repeat="det in obs.Determinations | filter:{ _id: '!' + obs.PrimaryDetermination._id} | orderBy:'score' : true" >
-		
+		<div layout="column">
 	         <md-icon ng-if="det._id !== obs.primarydetermination_id && !Auth.hasRole('validator') " md-font-icon="fa fa-tag fa-2x" class="material-icons md-light md-48 md-primary" >
 		 
 		 </md-icon>
@@ -87,7 +87,11 @@
 			   		        </md-tooltip>
 		       <md-icon md-font-icon="fa fa-tag fa-2x" class="material-icons md-light md-48 md-primary" >
 		     </md-button>
-	
+	 		<md-tooltip md-direction="right"  >
+	   		          {{'Slet bestemmelsen' | translate}}
+	   		        </md-tooltip>
+	 		 <md-button ng-click="deleteDetermination(det, obs)" ng-if="User._id === det.user_id && obs.Determinations.length > 1 &&  det.Votes.length === 0 && moment(det.createdAt) > moment().subtract(4, 'hours')" class="table-button" aria-label="Delete identification"><ng-md-icon icon="delete_forever"></ng-md-icon></md-button>
+	</div>
 
 	          <div class="md-list-item-text"  >
 				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>

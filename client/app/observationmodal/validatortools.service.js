@@ -1,6 +1,6 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('ValidatorToolsService', function(Determination, Observation, ErrorHandlingService, $rootScope, $mdToast) {
+	.factory('ValidatorToolsService', function(Determination, Observation, ErrorHandlingService, $rootScope, $mdToast, $translate) {
 		
 
 
@@ -58,6 +58,34 @@ angular.module('svampeatlasApp')
 															ErrorHandlingService.handle500();
 														
 														})
+				},
+				
+				deleteDetermination : function(det, obs){
+					
+							
+					return Determination.remove({id: det._id}).$promise.then(function(res){
+						
+						for(var i=0; i< obs.Determinations.length; i++){
+								if(parseInt(obs.Determinations[i]._id) === parseInt(res.newprimarydermintaion_id)){
+									obs.PrimaryDetermination = obs.Determinations[i];
+									break;
+								} 
+							};
+							for(var i=0; i< obs.Determinations.length; i++){
+									if(parseInt(obs.Determinations[i]._id) === parseInt(det._id)){
+										obs.Determinations.splice(i, 1);
+										break;
+									} 
+								};
+								$mdToast.show(
+									$mdToast.simple()
+									.textContent($translate.instant('Bestemmelsen blev slettet'))
+									.position("bottom left")
+									
+									.hideDelay(3000)
+								);
+						
+					})
 				}
 			};
 

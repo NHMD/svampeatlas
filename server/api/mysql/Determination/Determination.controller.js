@@ -56,7 +56,9 @@ const DEFAULT_HIGHER_TAXON_RANK_LIMIT = 10000;
 // in order to pick a determination to higher taxon rather than to species the higher taxon determintion must have twice the score (factor 0.5) of the species determination
 const DEFAULT_HIGHER_TAXON_FACTOR = 0.5;
 // If the user says its only a possible id, degrade the user impact
-const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR = 0.5;
+const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_POSSIBLE = 0.5;
+
+const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY = 0.9;
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -551,7 +553,7 @@ function getUserBaseImpact(user_id, taxon, logObject, determination) {
 		.spread(function(usr, usrMaxScoreInGroup, usrAcceptedCountForTaxon) {
 
 			var usrRelativeScore;
-			var useConfidencePenalty = (determination && determination.user_id === user_id && determination.confidence === 'mulig') ? true : false;
+			var useConfidencePenalty = (determination && determination.user_id === user_id && (determination.confidence === 'mulig' || determination.confidence === 'sandsynlig')) ? true : false;
 
 
 			if (!usr) {
@@ -593,11 +595,12 @@ function getUserBaseImpact(user_id, taxon, logObject, determination) {
 					if (usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact < usrRelativeScore) {
 						usrRelativeScore = Math.min(100, usr.MorphoGroup[0].UserMorphoGroupImpact.max_impact);
 					}
-				} else if (useConfidencePenalty) {
-					usrRelativeScore = Math.ceil((usr.MorphoGroup[0].UserMorphoGroupImpact.impact * IDENTIFICATION_CERTAINTY_PENALTY_FACTOR) / usrMaxScoreInGroup * 100);
+				} else if (useConfidencePenalty && determination.confidence === 'mulig') {
+					usrRelativeScore = Math.ceil((usr.MorphoGroup[0].UserMorphoGroupImpact.impact * IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_POSSIBLE) / usrMaxScoreInGroup * 100);
+				} else if (useConfidencePenalty && determination.confidence === 'sandsynlig') {
+					usrRelativeScore = Math.ceil((usr.MorphoGroup[0].UserMorphoGroupImpact.impact * IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY) / usrMaxScoreInGroup * 100);
 				}
-				console.log("usrAcceptedCountForTaxon " + usrAcceptedCountForTaxon)
-				console.log("usrRelativeScore " + usrRelativeScore)
+				
 			}
 
 			logObject.User.morphoGroupImpactCalculated = usrRelativeScore;
@@ -644,7 +647,8 @@ function addConstantsToLogObject(logObject) {
 	logObject.Constants.DEFAULT_HIGHER_TAXON_WEIGHT = DEFAULT_HIGHER_TAXON_WEIGHT;
 	logObject.Constants.DEFAULT_HIGHER_TAXON_RANK_LIMIT = DEFAULT_HIGHER_TAXON_RANK_LIMIT;
 	logObject.Constants.DEFAULT_HIGHER_TAXON_FACTOR = DEFAULT_HIGHER_TAXON_FACTOR;
-	logObject.Constants.IDENTIFICATION_CERTAINTY_PENALTY_FACTOR = IDENTIFICATION_CERTAINTY_PENALTY_FACTOR;
+	logObject.Constants.IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_POSSIBLE = IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_POSSIBLE;
+	logObject.Constants.IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY = IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY;
 
 }
 
@@ -965,8 +969,8 @@ exports.update = function(req, res) {
 exports.destroy = function(req, res) {
 
 		var userIsValidator = userTool.hasRole(req.user, 'validator');
-
-		Determination.find({
+return models.sequelize.transaction(function(t) {
+		return Determination.find({
 				where: {
 					_id: req.params.id,
 					user_id: req.user._id
@@ -998,18 +1002,17 @@ exports.destroy = function(req, res) {
 		})
 	.then(handleEntityNotFound(res))
 	.then(function(det) {
-		if (det.Observation.Determinations.length === 1 || (!userIsValidator && !(req.user._id === det.Observation.primaryuser_id && det.Observation.createdAt > moment().subtract(4, 'hours')))) {
+		if (det.Observation.Determinations.length === 1 || !(userIsValidator || (req.user._id === det.Observation.primaryuser_id && det.createdAt > moment().subtract(4, 'hours')))) {
 			throw new Error("Forbidden");
 		};
 		
 		var promise;
-		
+		var newPrimaryDetermination;
 		if(parseInt(req.params.id) !== parseInt(det.Observation.primarydetermination_id)){
-			
+			newPrimaryDetermination = det.Observation.PrimaryDetermination;
 			promise = Promise.resolve(1);
 		} else {
-			console.log("## Its the primary")
-			var newPrimaryDetermination = _.maxBy(_.reject(det.Observation.Determinations, function(o) { return parseInt(o._id) === parseInt(req.params.id) }), function(d) {
+			newPrimaryDetermination = _.maxBy(_.reject(det.Observation.Determinations, function(o) { return parseInt(o._id) === parseInt(req.params.id) }), function(d) {
 				// determinations to higher taxon will be handicapped towards determinations to species
 				return (d.Taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? d.score : (d.score * DEFAULT_HIGHER_TAXON_FACTOR);
 			});
@@ -1017,14 +1020,17 @@ exports.destroy = function(req, res) {
 			promise =  models.Observation.update({primarydetermination_id: newPrimaryDetermination._id}, {where: {_id: det.Observation._id}});
 		};
 		
-		return promise.then(function(){
+		return [promise.then(function(){
 			return models.DeterminationVote.destroy({where: {determination_id: req.params.id}}).then(function(){
 				return det.destroy();
 			})
-		})
+		}), newPrimaryDetermination]
 	})
-	.then(function(){
-		return res.sendStatus(204)
+	.spread(function(destroyPromise, newPrimaryDetermination){
+		return {status: 'deleted', newprimarydermintaion_id : newPrimaryDetermination._id};
+	})
+	}).then(function(statusObject){
+		return res.status(200).json(statusObject)
 	})
 	.
 catch(function(err) {
