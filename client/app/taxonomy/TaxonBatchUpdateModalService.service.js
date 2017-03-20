@@ -6,8 +6,8 @@ angular.module('svampeatlasApp')
 				show: function( markedTaxa) {
 			      $mdDialog.show({
 					locals: {markedTaxa: markedTaxa},  
-			        controller: ['$scope','$mdDialog', '$mdToast','$http', '$translate', 'TaxonomyTags','MycokeyCharacters', 'ErrorHandlingService', 'SearchService',
-					  				function($scope, $mdDialog,$mdToast,  $http, $translate, TaxonomyTags, MycokeyCharacters, ErrorHandlingService, SearchService) {
+			        controller: ['$scope','$mdDialog', '$mdToast','$http', '$translate', 'TaxonomyTags','MycokeyCharacters', 'ErrorHandlingService', 'SearchService', '$rootScope',
+					  				function($scope, $mdDialog,$mdToast,  $http, $translate, TaxonomyTags, MycokeyCharacters, ErrorHandlingService, SearchService, $rootScope) {
 										$scope.actionType = "Add";
 										$scope.propertyType = "Tag";
 										
@@ -99,6 +99,9 @@ angular.module('svampeatlasApp')
 				  								  
   	  					  					})
 											.then(function(){
+												
+												$rootScope.$broadcast('taxon_batch_assignment_done');
+												
 			  								    $mdToast.show(
 			  								      $mdToast.simple()
 			  								        .textContent($translate.instant("Operation succeeded."))

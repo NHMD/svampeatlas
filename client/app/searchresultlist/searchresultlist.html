@@ -20,13 +20,13 @@
 	<md-progress-linear  md-mode="indeterminate" ng-show="displayed && isLoading"></md-progress-linear>
 	<thead>
 	<tr ng-show="displayed && !isLoading">
-			<th colspan="4"><md-button ng-if="10001 > totalCount" aria-label="Download csv" ng-click="getObservationCsv()" ng-csv="csv" quote-strings="true" csv-label="true" filename="svampeatlasdata.csv" field-separator="{{csvSeparator}}" ng-disabled="csvInProgress">
+			<th colspan="4"><md-button  aria-label="Download csv" ng-click="getObservationCsv()" ng-csv="csv" quote-strings="true" csv-label="true" filename="svampeatlasdata.csv" field-separator="{{csvSeparator}}" ng-disabled="csvInProgress">
              <ng-md-icon icon="file_download" ></ng-md-icon>
 
 			   Download csv
 			   <md-progress-linear ng-show="csvInProgress" ></md-progress-linear>
            </md-button>
-	   <md-menu ng-if="10001 > totalCount" >
+	   <md-menu >
 	   			            <md-button  aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
 	   			               <ng-md-icon icon="settings" ></ng-md-icon>
 	   			            </md-button>

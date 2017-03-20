@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService',  '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants', 'StoredSearch', 'SpeciesModalService',
-		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService,  $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, StoredSearch, SpeciesModalService) {
+	.controller('SearchListCtrl', ['$scope', '$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService',  '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants', 'StoredSearch', 'SpeciesModalService','$mdToast',
+		function($scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService,  $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, StoredSearch, SpeciesModalService, $mdToast) {
 
 			$scope.moment = moment;
 			$scope.Auth = Auth;
@@ -27,7 +27,18 @@ angular.module('svampeatlasApp')
 			
 			$scope.getObservationCsv = function(){
 				
-				$scope.csvInProgress = true;
+				if(parseInt($scope.totalCount) > 10000){
+					$mdToast.show(
+						$mdToast.simple()
+						.textContent($translate.instant('Der kan kun downloades CSV filer med op til 10000 poster. Prøv at indsnævre din søgning.'))
+						.position("top left")
+						
+						.hideDelay(3000)
+					);
+				}
+				else
+				{
+					$scope.csvInProgress = true;
 				function getLocality(elm){
 					if(elm.Locality){
 						return elm.Locality.name
@@ -134,7 +145,7 @@ angular.module('svampeatlasApp')
 					delete $scope.csvInProgress;
 					ErrorHandlingService.handle500();
 				});
-				
+				}
 				
 				
 				
@@ -317,7 +328,7 @@ angular.module('svampeatlasApp')
 				if ($cookies.get('preferred_language') === "en") {
 					lang = "en"
 				}
-				return moment(createdAt).lang(lang).fromNow();
+				return moment(createdAt).locale(lang).fromNow();
 			}
 
 			$scope.getDate = function(observationDate, observationDateAccuracy) {

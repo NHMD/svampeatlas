@@ -139,6 +139,7 @@ angular.module('svampeatlasApp')
 			$scope.updateValidation = ValidatorToolsService.updateValidation;
 			
 			$scope.setPrimaryDetermination = ValidatorToolsService.setPrimaryDetermination;
+			$scope.deleteDetermination = ValidatorToolsService.deleteDetermination;
 
 			
 

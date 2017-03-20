@@ -368,6 +368,10 @@ angular.module('svampeatlasApp')
 					$scope.callServer(state);
 
 				}
+				
+				$scope.$on('taxon_batch_assignment_done', function(ev, obs) {
+					$scope.callServerSafe();
+				})
 				//************************************************************
 
 

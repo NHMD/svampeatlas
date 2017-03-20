@@ -259,7 +259,9 @@ angular.module('svampeatlasApp')
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_1': 'a suggestion',
 			'Dette fund er': 'This sighting is',
 			'Bestemmelsen er': 'The identification is',
-			'Validering' : 'Validation'
+			'Validering' : 'Validation',
+			'Bestemmelsen blev slettet': 'The identification was deleted',
+			'Der kan kun downloades CSV filer med op til 10000 poster. Prøv at indsnævre din søgning.' : 'Download of CSV data is restricted to 10000 rows. Please narrow your search.'
 			
 		});
 		
