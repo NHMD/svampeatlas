@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('TaxonMorphoGroupCtrl',['$scope','MorphoGroup', '$mdDialog', 'Auth',  '$state', function ($scope, MorphoGroup, $mdDialog, Auth, $state) {
+  .controller('TaxonMorphoGroupCtrl',['$scope','MorphoGroup', '$mdDialog', 'Auth',  '$state','SearchService', function ($scope, MorphoGroup, $mdDialog, Auth, $state, SearchService) {
 	  $scope.getCurrentUser = Auth.getCurrentUser;
 	  
 	  
@@ -16,7 +16,10 @@ angular.module('svampeatlasApp')
 		localStorage.removeItem('taxonomy_selected_mycokeycharacters');
 		localStorage.removeItem('taxonomy_statistics_conditions');
 		  localStorage.setItem('taxonomy_morphogroups', JSON.stringify([mg._id]));
-		  $state.go('taxonomy');
+		 
+		  	$state.go('taxonomy');
+		  
+		  
 	  }
 	  
 	  $scope.addOrUpdateGroup = function(group){
@@ -30,6 +33,8 @@ angular.module('svampeatlasApp')
 			if(!group._id){
 				_.merge(group, result)
 			}
+			
+			SearchService.reloadMorphoGroup();
 			
 		})
 		

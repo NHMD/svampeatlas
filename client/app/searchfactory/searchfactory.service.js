@@ -23,6 +23,10 @@ angular.module('svampeatlasApp')
 			getMorphoGroup : function(){
 				return morphoGroup.$promise;
 			},
+			reloadMorphoGroup : function(){
+				 morphoGroup = MorphoGroup.query();
+				 return morphoGroup.$promise;
+			},
 			querySearchLocality : function(query, leafletBounds) {
 
 				var q = {
@@ -62,11 +66,17 @@ angular.module('svampeatlasApp')
 			
 			querySearchTaxon : function(query, onlyHigherTaxa) {
 
-				var RankID = (onlyHigherTaxa) ? {
+				var RankID;
+				
+				 if (typeof onlyHigherTaxa === 'boolean') {
+				 	RankID = (onlyHigherTaxa) ? {
 					lt: 5000
 				} : {
 					gt: 4999
 				};
+				 } else if(onlyHigherTaxa){
+					 RankID: onlyHigherTaxa
+				 }
 
 				var q = {
 

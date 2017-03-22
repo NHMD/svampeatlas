@@ -1,25 +1,31 @@
 'use strict';
 
 module.exports = function(sequelize, DataTypes) {
-	var ObservationUser = sequelize.define('ObservationUser', {
+	var ObservationArea = sequelize.define('ObservationArea', {
 		observation_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 			references:     'Observation',
         referencesKey:  '_id'
 		},
-		user_id: {
+		area_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
-			references:     'User',
+			references:     'Area',
         referencesKey:  '_id'
 		}
+		/*,
+	    'createdAt': {
+	    	type: DataTypes.DATE,
+	    	allowNull: false,
+	    	defaultValue: DataTypes.NOW
+	    } */
 	}, {
-		tableName: 'ObservationUsers',
+		tableName: 'ObservationAreas',
 		//	timestamps: false,
 		freezeTableName: true,
 
 	});
 
-	return ObservationUser;
+	return ObservationArea;
 };
