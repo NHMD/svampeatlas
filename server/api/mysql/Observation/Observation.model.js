@@ -184,7 +184,28 @@ module.exports = function(sequelize, DataTypes) {
 				models.User.belongsToMany(models.Observation, {
 				  through: models.ObservationUser,
 				  foreignKey: 'user_id'
-				});				
+				});		
+				
+				/*
+				models.Observation.belongsToMany(models.Area, {
+				  through: models.ObservationArea,
+				  foreignKey: 'observation_id',
+				as: 'Observations'
+				});
+				
+				models.Area.belongsToMany(models.Observation, {
+				  through: models.ObservationArea,
+				  foreignKey: 'area_id',
+				as: 'Areas'
+				});
+				
+					
+				models.Observation.hasMany(models.ObservationArea, {
+				 
+				  foreignKey: 'observation_id',
+					
+					as: 'areaIds'
+				});		*/
 			/*	
 				models.Taxon.belongsToMany(models.Naturtype, {
 				  through: models.TaxonNaturtype,

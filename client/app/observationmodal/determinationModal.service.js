@@ -54,7 +54,7 @@ angular.module('svampeatlasApp')
 
 			} else {
 				that.determination = {
-					
+					confidence : 'sikker'
 				};
 				
 				that.determination.validation = (sender === 'validatorbutton') ? "Godkendt" : "Valideres";

@@ -10,7 +10,8 @@ module.exports = function(sequelize, DataTypes) {
 _id : {
    	type: DataTypes.INTEGER,
    	allowNull: false,
-   	primaryKey: true
+   	primaryKey: true,
+   	autoIncrement: true
    },
    createdAt: {
    	type: DataTypes.DATE,
