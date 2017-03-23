@@ -174,7 +174,7 @@ angular.module('svampeatlasApp')
 					return m._id === parseInt(id);
 				})
 				
-				Area.geometry({id: area.verbatim_id}).$promise.then(function(geo){
+				Area.geometry({id: area._id}).$promise.then(function(geo){
 					leafletData.getMap('searchformmap').then(function(map) {
 						
 						if($scope.municipality){
@@ -184,7 +184,8 @@ angular.module('svampeatlasApp')
 						map.addLayer($scope.municipality);
 						map.fitBounds($scope.municipality.getBounds());
 						//$scope.search.municipalityid = area._id;
-						$scope.search.include[2].where.municipality_id = area._id
+					//	$scope.search.include[2].where.municipality_id = area._id
+						$scope.search.include[7].where.area_id = area._id
 					});
 					
 				})
@@ -202,6 +203,7 @@ angular.module('svampeatlasApp')
 			});
 			}
 			
+			$scope.utm10polygons = [];
 			//	ObservationSearchService.reset();
 			$scope.search = ObservationSearchService.getUIstate();
 
@@ -223,7 +225,6 @@ angular.module('svampeatlasApp')
 					
 				
 			})
-			
 			
 			
 			
@@ -315,15 +316,103 @@ angular.module('svampeatlasApp')
 						//map.removeControl(editControl);
 						//map.addControl(drawControl);
 					});
+					SearchService.getUTM10().then(function(polygons){
+						
+						
+						
+						
+						
+						$scope.utm10OnMapButton = L.easyButton('fa-th fa-lg', function(btn, map) {
+							
+							$scope.toogleUtm10(polygons, map);
+						}).addTo(map);
+						
+					});
+			
+					
+					
 
 				})
 			}
 
+			$scope.toogleUtm10 = function(polygons,map){
+				
+				var onPolyClick = function(event){
+				    //callFancyboxIframe('flrs.html')
+				    var label = event.target.options.label;
+				    var _id = event.target.options._id;
+					event.target.options.isSelected = !event.target.options.isSelected ;
+					//var fillColor = (event.target.options.isSelected) ? '#FF0000' : '#0000FF';
+					if(event.target.options.isSelected){
+						event.target.setStyle({color: '#FF0000', fillColor: '#FF0000', weight: 5});
+						$scope.search.utm10.push(event.target.options)
+		
+						
+					} else {
+						event.target.setStyle({color: '#0000FF', fillColor: '#0000FF', weight: 2});
+						
+						for(var i=0; i < $scope.search.utm10.length; i++){
+							if($scope.search.utm10[i]._id === event.target.options._id){
+								$scope.search.utm10.splice(i, 1);
+							}
+						}
+					}
+		
+				};
+				
+				
+				if (!$scope.showUTM10OnMap) {
+					$scope.showUTM10OnMap = true;
+					if( $scope.utm10polygons.length ===0){
+						for(var i=0; i < polygons.length; i++){
+							var poly ;
+							
+							if($scope.search.utm10.length > 0){
+								var opts = {'isSelected': false, 'label': polygons[i].name, '_id': polygons[i]._id, weight: 2};
+								for(var j=0; j < $scope.search.utm10.length; j++){
+									if($scope.search.utm10[j]._id === polygons[i]._id){
+										opts = {'isSelected': true, color: '#FF0000', fillColor: '#FF0000', weight: 5, 'label': polygons[i].name, '_id': polygons[i]._id};
+										break;
+									}
+								}
+								poly = new L.geoJson(polygons[i].geom, opts);
+							} else {
+								poly = new L.geoJson(polygons[i].geom, {'isSelected': false, 'label': polygons[i].name, '_id': polygons[i]._id, weight: 2});
+							}
+							$scope.utm10polygons.push(poly);
+							map.addLayer(poly)
+						
+						
+							poly.on('click', onPolyClick);
+						}
+					} else {
+						for(var i=0; i < $scope.utm10polygons.length; i++){
+							map.addLayer($scope.utm10polygons[i])
+						}
+					}
+					
 
+				} else {
+					$scope.showUTM10OnMap = false;
+					for(var i=0; i < $scope.utm10polygons.length; i++){
+						var poly = $scope.utm10polygons[i];
+						
+						map.removeLayer(poly);
+						
+					};
+					
+				}
+			}
 
 			initMap();
 			
-			
+			if($scope.search.utm10.length > 0){
+				SearchService.getUTM10().then(function(polygons){
+					leafletData.getMap('searchformmap').then(function(map){
+						$scope.toogleUtm10(polygons, map)
+					})
+				})
+			}
 
 			$scope.$watch('search.selectedMunicipality', function(newVal, oldVal){
 				
@@ -421,45 +510,7 @@ angular.module('svampeatlasApp')
 
 
 			if (!$scope.search.include) {
-				$scope.search.include = [{
-					model: "DeterminationView",
-					as: "DeterminationView",
-					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
-					where: {
-						$and: {$or: {}}
-					}
-				}, {
-					model: "User",
-					as: 'PrimaryUser',
-					//	attributes: ['email', 'Initialer', 'name'],
-					required: false,
-					where: {}
-				}, {
-					model: "Locality",
-					as: 'Locality',
-					attributes: ['_id', 'name'],
-					where: {},
-					required: true
-				}, {
-					model: "GeoNames",
-					as: 'GeoNames',
-					where: {},
-					required: false
-				}, {
-					model: "ObservationUser",
-					as: 'userIds',
-					where: {},
-					required: false
-				}, {
-					model: "ObservationImage",
-					as: 'Images',
-					where: {}
-				}, {
-					model: "ObservationForum",
-					as: 'Forum',
-					where: {}
-
-				}];
+				$scope.search.include = ObservationSearchService.getNewSearch().include;
 			}
 			
 

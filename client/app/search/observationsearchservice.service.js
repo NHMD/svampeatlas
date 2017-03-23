@@ -61,11 +61,25 @@ angular.module('svampeatlasApp')
 					as: 'Forum',
 					where: {}
 
+				}, {
+					model: "ObservationArea",
+					as: 'areaIds',
+					where: {},
+					required: false
 				}]
 			},
 
 			uistate: {
-				selectedMonths: []
+					selectedHigherTaxa: [],
+					selectedLocalities: [],
+					associatedOrganism: [],
+					collectors: [],
+					determiner: [],
+					PrimaryUser: [],
+					selectedMonths: [],
+					Determination_score: [],
+					Determination_validation: [],
+				utm10: []
 			},
 			strategies: ['mycorrhizal', 'lichenized', 'parasite', 'saprobe', 'on_lichens', 'on_wood'],
 
@@ -82,49 +96,7 @@ angular.module('svampeatlasApp')
 
 			},
 			reset: function() {
-				this.search = {
-					include: [{
-						model: "DeterminationView",
-						as: "DeterminationView",
-						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
-						where: {
-							$and: {$or: {}}
-						}
-					}, {
-						model: "User",
-						as: 'PrimaryUser',
-						//	attributes: ['email', 'Initialer', 'name'],
-						required: false,
-						where: {}
-					}, {
-						model: "Locality",
-						as: 'Locality',
-						attributes: ['_id', 'name'],
-						where: {},
-						required: true
-					}, {
-						model: "GeoNames",
-						as: 'GeoNames',
-						where: {},
-						required: false
-					}, {
-						model: "ObservationUser",
-						as: 'userIds',
-						where: {},
-						required: false
-					}, {
-						model: "ObservationImage",
-						as: 'Images',
-						where: {},
-						required: false
-					}, {
-						model: "ObservationForum",
-						as: 'Forum',
-						where: {},
-						required: false
-
-					}]
-				};
+				this.search = this.getNewSearch();
 				this.uistate = {
 					selectedHigherTaxa: [],
 					selectedLocalities: [],
@@ -134,7 +106,8 @@ angular.module('svampeatlasApp')
 					PrimaryUser: [],
 					selectedMonths: [],
 					Determination_score: [],
-					Determination_validation: []
+					Determination_validation: [],
+					utm10: []
 
 				}
 
@@ -181,7 +154,12 @@ angular.module('svampeatlasApp')
 						where: {},
 						required: false
 
-					}]
+					}, {
+					model: "ObservationArea",
+					as: 'areaIds',
+					where: {},
+					required: false
+				}]
 				}
 			},
 			convertSearchDateStrings: function(search) {
@@ -610,6 +588,19 @@ angular.module('svampeatlasApp')
 					dbQuery.geometry = search.geometry;
 				} else {
 					delete dbQuery.geometry;
+				}
+				
+				if (search.utm10.length > 0) {
+					dbQuery.include[7].where.area_id = _.map(search.utm10, function(u){
+						return u._id
+					})
+				}
+				
+				
+				if (search.include[7].where.area_id) {
+					dbQuery.include[7].required = true;
+				} else {
+					dbQuery.include[7].required = false;
 				}
 				/*
 														if (search.municipalityid) {

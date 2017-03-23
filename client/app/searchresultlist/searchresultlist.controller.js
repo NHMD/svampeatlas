@@ -27,18 +27,6 @@ angular.module('svampeatlasApp')
 			
 			$scope.getObservationCsv = function(){
 				
-				if(parseInt($scope.totalCount) > 10000){
-					$mdToast.show(
-						$mdToast.simple()
-						.textContent($translate.instant('Der kan kun downloades CSV filer med op til 10000 poster. Prøv at indsnævre din søgning.'))
-						.position("top left")
-						
-						.hideDelay(3000)
-					);
-				}
-				else
-				{
-					$scope.csvInProgress = true;
 				function getLocality(elm){
 					if(elm.Locality){
 						return elm.Locality.name
@@ -66,6 +54,20 @@ angular.module('svampeatlasApp')
 						return (prev === "") ? tx.DKandLatinName : prev+", "+ tx.DKandLatinName;
 					}, "")
 				}
+				
+				if(parseInt($scope.totalCount) > 10000){
+					$mdToast.show(
+						$mdToast.simple()
+						.textContent($translate.instant('Der kan kun downloades CSV filer med op til 10000 poster. Prøv at indsnævre din søgning.'))
+						.position("top left")
+						
+						.hideDelay(3000)
+					);
+				}
+				else
+				{
+					$scope.csvInProgress = true;
+				
 				
 				
 				var csvsearch = angular.copy(ObservationSearchService.getSearch());

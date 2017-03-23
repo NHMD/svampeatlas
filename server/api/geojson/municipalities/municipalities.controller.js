@@ -62,7 +62,7 @@ function removeEntity(res) {
   };
 }
 
-// Get list of things
+// Get  municipality
 exports.show = function(req, res) {
 	
 	var kommunenr = req.params.id;

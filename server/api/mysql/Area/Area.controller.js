@@ -73,7 +73,11 @@ exports.index = function(req, res) {
 		limit: req.query.limit,
 		order: req.query.order,
 		where: {},
-		attributes: ['_id', 'verbatim_id', 'name', 'type']
+		attributes: ['_id', 'verbatim_id', 'name', 'type'],
+		include: [{
+				model: models.AreaStatistics,
+				as: 'Statistics'
+			}]
 	};
 
 	
@@ -81,7 +85,10 @@ exports.index = function(req, res) {
 	if (req.query.where) {
 		_.merge(query.where, JSON.parse(req.query.where));
 	}
-
+	
+	if(req.query.includeGeom){
+		query.attributes.push('geom')
+	}
 
 	
 	Area.findAndCount(query)
@@ -115,6 +122,7 @@ exports.show = function(req, res) {
 };
 
 exports.showStoredGeom = function(req, res) {
+	/*
 	if(req.query.type === 'kommune'){
 		var kommunenr = req.params.id;
 		var json = require('../../geojson/kommuner/'+kommunenr+'.json');
@@ -122,10 +130,20 @@ exports.showStoredGeom = function(req, res) {
 	} else {
 		handleError(res)
 	}
+	*/
+	Area.find({
+		where: {
+			_id: req.params.id
+		} 
+	})
+		.then(handleEntityNotFound(res))
+		.then(function(area){
+			res.status(200).send(area.geom);
+			
+		})
+		.
+	catch (handleError(res));
 	
-	var kommunenr = req.params.id;
-	var json = require('../../geojson/kommuner/'+kommunenr+'.json');
-	res.status(200).send(json);
 	
 	
 };

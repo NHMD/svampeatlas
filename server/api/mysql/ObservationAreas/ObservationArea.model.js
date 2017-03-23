@@ -2,6 +2,12 @@
 
 module.exports = function(sequelize, DataTypes) {
 	var ObservationArea = sequelize.define('ObservationArea', {
+		
+		_id: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			primaryKey:     true
+		},
 		observation_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
@@ -22,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
 	    } */
 	}, {
 		tableName: 'ObservationAreas',
-		//	timestamps: false,
+			timestamps: false,
 		freezeTableName: true,
 
 	});

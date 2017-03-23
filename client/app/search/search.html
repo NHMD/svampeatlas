@@ -208,7 +208,19 @@
 	             </md-option>
 			  </md-select>
 		  </md-input-container>
- 			 	</div>
+		  </div>
+ 			 	
+				 <div ng-if="search.utm10.length > 0">
+			  		 
+			  		   <label class="search-sub-header">{{'UTM 10km kvadrat' | translate}}</label>
+			  		   <md-chips ng-model="search.utm10" readonly="true"  >
+			  	   <md-chip-template>
+			  	             <strong>{{$chip.label}}</strong>
+	             
+			  	           </md-chip-template>
+			  	   </md-chips>
+			  		  
+					 </div>
 				<md-divider></md-divider>
 				<label class="search-sub-header">{{'Koordinat' | translate}}</label>
   			   <div layout-gt-xs="row">

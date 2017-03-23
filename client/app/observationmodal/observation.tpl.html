@@ -314,7 +314,9 @@
      <md-grid-list
            md-cols="1" 
            md-row-height="4:3"
-           md-gutter="12px" md-gutter-gt-sm="8px" >
+           md-gutter="12px" md-gutter-gt-sm="8px" 
+		   
+		   class="obs-img-grid">
    
        <md-grid-tile ng-repeat="img in obs.Images" 
        md-colspan-sm="1" md-rowspan="{{(img.height > img.width) ? 2: 1}}"

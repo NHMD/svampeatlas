@@ -13,24 +13,22 @@ geom GEOMETRY NOT NULL
 ALTER TABLE Areas ADD SPATIAL KEY (geom);
 
 CREATE TABLE ObservationAreas (
+	_id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	observation_id INT(11) NOT NULL,
 	area_id INT(11) NOT NULL,
-	createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (area_id, observation_id)
+	createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE = InnoDB;
 
 ALTER TABLE `ObservationAreas`
+ADD CONSTRAINT `observationarea_unq_1` UNIQUE (area_id, observation_id),
 ADD CONSTRAINT `observationarea_ibfk_1` FOREIGN KEY (area_id) REFERENCES `Areas` (_id),
 ADD CONSTRAINT `observationarea_ibfk_2` FOREIGN KEY (observation_id) REFERENCES `Observation` (_id);
 
 
 
 
-SELECT @geom := `geom` from Observation where _id = 9188571;
 
-
-SELECT a._id FROM Areas a,  WHERE ST_Contains(a.geom, (SELECT geom from Observation WHERE _id=9188571));
-
+-- triggers for setting areas on new and updated observations
 
 DELIMITER //
 DROP PROCEDURE IF EXISTS observation_to_area_mapping//
@@ -49,8 +47,8 @@ DELIMITER ;
 
 
 DELIMITER //
-DROP TRIGGER IF EXISTS area_insert_trigger//
-CREATE  TRIGGER area_insert_trigger
+DROP TRIGGER IF EXISTS observation_insert_trigger//
+CREATE  TRIGGER observation_insert_trigger
     AFTER INSERT ON `Observation`
     FOR EACH ROW
 
@@ -60,19 +58,63 @@ END//
 DELIMITER ;
 
 DELIMITER //
-DROP TRIGGER IF EXISTS area_update_trigger//
-CREATE  TRIGGER area_update_trigger
+DROP TRIGGER IF EXISTS observation_update_trigger//
+CREATE  TRIGGER observation_update_trigger
     AFTER UPDATE ON `Observation`
+    FOR EACH ROW
+BEGIN
+	CALL observation_to_area_mapping(NEW._id);
+END//
+DELIMITER ;
+
+
+-- triggers for  mapping observations to new areas inserted
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS area_to_observation_mapping//
+
+CREATE PROCEDURE area_to_observation_mapping(IN table_row_id INT(11))
+READS SQL DATA
+BEGIN
+
+DELETE FROM ObservationAreas WHERE area_id = table_row_id;
+SELECT geom 
+INTO @geom 
+FROM Areas 
+WHERE _id= table_row_id;
+INSERT INTO ObservationAreas (observation_id, area_id) SELECT o._id, table_row_id FROM Observation o WHERE ST_Contains(@geom , o.geom);
+
+END//
+DELIMITER ;
+
+
+DELIMITER //
+DROP TRIGGER IF EXISTS area_insert_trigger//
+CREATE  TRIGGER area_insert_trigger
+    AFTER INSERT ON `Areas`
     FOR EACH ROW
 
 BEGIN
-	if (NEW.decimalLatitude <=> OLD.decimalLatitude OR  NEW.decimalLongitude <=> OLD.decimalLongitude) THEN
-    CALL observation_to_area_mapping(NEW._id);
+    CALL area_to_observation_mapping(NEW._id);
+END//
+DELIMITER ;
+
+DELIMITER //
+DROP TRIGGER IF EXISTS area_update_trigger//
+CREATE  TRIGGER area_update_trigger
+    AFTER UPDATE ON `Areas`
+    FOR EACH ROW
+
+BEGIN
+    CALL area_to_observation_mapping(NEW._id);
 END//
 DELIMITER ;
 
 
 
+
+
+-- Procedure to map all observations to all areas
 
 DELIMITER //
 CREATE PROCEDURE map_all_observations_to_areas()
@@ -103,9 +145,48 @@ DELIMITER $$
 --
 -- Hændelser
 --
-CREATE EVENT `observation_to_area_mapping` ON SCHEDULE EVERY 1 DAY STARTS '2017-03-22 03:45:00' DO BEGIN
+CREATE EVENT `observation_to_area_mapping` ON SCHEDULE AT '2017-03-22 00:45:00' DO BEGIN
 CALL map_all_observations_to_areas();
 END$$
 
 DELIMITER ;
+
+
+
+
+
+
+
+CREATE TABLE AreaStatistics (
+area_id INT(11) NOT NULL PRIMARY KEY,
+createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+num_users INT(11) DEFAULT NULL,
+num_obs INT(11) DEFAULT NULL,
+num_days INT(11) DEFAULT NULL,
+num_years INT(11) DEFAULT NULL,
+num_species INT(11) DEFAULT NULL
+
+) ENGINE = InnoDB;
+
+
+
+
+delimiter |
+
+CREATE EVENT area_stats_daily
+    ON SCHEDULE
+      EVERY 1 DAY
+	  STARTS '2016-12-03 04:15:00'
+    COMMENT 'Updates statistics'
+    DO
+      BEGIN
+	  TRUNCATE AreaStatistics;
+	  INSERT INTO AreaStatistics (area_id, num_users, num_obs, num_days, num_years) SELECT a._id, COUNT(distinct o.primaryuser_id) as num_users, COUNT(o._id) as num_obs, COUNT(distinct o.observationDate) as num_days, COUNT(distinct YEAR(o.observationDate)) as num_years FROM Observation o, Areas a, ObservationAreas oa WHERE o._id = oa.observation_id AND a._id= oa.area_id GROUP BY a._id;
+	  UPDATE AreaStatistics ast, (SELECT a._id, COUNT(distinct ta._id) as count FROM Observation o, Determination d, Taxon t, Taxon ta, Areas a, ObservationAreas oa  WHERE  o._id = oa.observation_id AND a._id= oa.area_id AND o.primarydetermination_id = d._id AND d.taxon_id=t._id AND t.accepted_id=ta._id AND ta.RankID > 9950 AND (d.validation = 'Godkendt' OR d.score > 79) GROUP BY a._id) x
+	  SET ast.num_species = x.count WHERE ast.area_id = x._id;      
+	  END |
+
+delimiter ;  
+
+
 
