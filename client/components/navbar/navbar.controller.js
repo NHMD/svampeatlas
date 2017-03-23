@@ -23,7 +23,9 @@ $scope.states =
 	  'species': { name: "Artspræsentation", icon: 'fungus'},
 	  'taxon-tree-dk': {name: "Klassifikation", icon: 'taxonomy'},
 	  'fieldtrips': {name: "Mine feltture", icon: 'shopping_basket'},
-	  'validation': {name: "Validering", icon: 'microscope'}
+	  'validation': {name: "Validering", icon: 'microscope'},
+	  'utm': {name: "UTM felter", icon: 'grid_on'}
+	  
 	};
 	/*
 	$scope.openSideNav = function(){

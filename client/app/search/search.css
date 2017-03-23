@@ -57,4 +57,7 @@ span.star-rating > ng-md-icon {
 	width: 12px;
 	height: 12px;
 }
+.polygon-label {
+	left: 10px;
+}
 

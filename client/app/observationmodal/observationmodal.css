@@ -142,6 +142,14 @@ table.log-table > tbody {
 	 overflow-x: hidden;
 }
 
+.observation-body {
+	min-height: 100%;
+}
+
+.obs-img-grid {
+	top: 40px;
+	margin-bottom: 24px;
+}
 
 
 

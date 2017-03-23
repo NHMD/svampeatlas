@@ -4,7 +4,8 @@ angular.module('svampeatlasApp')
 		
 		var substrate = Substrate.query();
 		var vegetationType = VegetationType.query();
-		var municipalities = Area.query({where: {type: 'kommune'}})
+		var municipalities = Area.query({where: {type: 'kommune'}});
+		var utm10polygons = Area.query({where: {type: 'UTM10'}, includeGeom: true})
 		var dataSet = DataSet.query({cachekey : 'dataSet'});
 		var morphoGroup = MorphoGroup.query();
 		return {
@@ -19,6 +20,9 @@ angular.module('svampeatlasApp')
 			},
 			getMunicipalities : function(){
 				return municipalities.$promise;
+			},
+			getUTM10 : function(){
+				return utm10polygons.$promise;
 			},
 			getMorphoGroup : function(){
 				return morphoGroup.$promise;

@@ -44,7 +44,11 @@ _id : {
     		associate: function(models) {
 				
 		
-		
+		models.Area
+				.hasOne(models.AreaStatistics, {
+					foreignKey: "area_id" ,
+					as: "Statistics"
+				});
 
 
 					

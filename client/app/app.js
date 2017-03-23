@@ -176,7 +176,16 @@ angular.module('svampeatlasApp', [
 						}
 
 					}]
-				}]
+				},
+				{
+									id: 'utm',
+									icon: 'grid_on',
+									name: 'UTM felter',
+									state: 'utm',
+									type: 'link',
+									requireLogin: false,
+								}
+			]
 			}, {
 				id: 'book',
 				name: 'Svampebog',

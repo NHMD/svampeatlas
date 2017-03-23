@@ -1,0 +1,29 @@
+ <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
+	
+<div layout="row" flex>		
+				
+<leaflet id="utmmap" width="100%" height="400px" center="mapsettings.center" ></leaflet>
+<div md-whiteframe="3"  >
+	
+	
+</div>
+
+
+
+	<md-sidenav id="utm-specieslist-sidenav" class="md-sidenav-right md-whiteframe-z2" md-component-id="utmlistsidenav" md-is-locked-open="!$mdMedia('xs')">
+		  <md-toolbar class="md-theme-light" layout="row" ng-if="mdMedia('xs')">
+		   
+		 
+       
+		          <h1 class="md-toolbar-tools" translate>Artsliste</h1>
+		        </md-toolbar>
+	      <md-content layout="row"  layout-padding>
+       
+	        
+	         </md-content>
+			<md-content  layout-padding>
+			
+		
+	      </md-content>
+	    </md-sidenav>
+</div>

@@ -199,13 +199,13 @@ module.exports = function(sequelize, DataTypes) {
 				as: 'Areas'
 				});
 				
-					
+				*/	
 				models.Observation.hasMany(models.ObservationArea, {
 				 
 				  foreignKey: 'observation_id',
 					
 					as: 'areaIds'
-				});		*/
+				});		
 			/*	
 				models.Taxon.belongsToMany(models.Naturtype, {
 				  through: models.TaxonNaturtype,
