@@ -6,7 +6,7 @@
 		  <ng-md-icon icon="{{states[state.current.name].icon}}" ></ng-md-icon>
 		  
           <h3 class="inset">
-            {{states[state.current.name].name | translate}}
+            {{states[state.current.name].name | translate}} <span ng-if="ctrlparam">/ {{ctrlparam | translate}}</span>
           </h3>
           <span flex></span>
 		 <span layout-margin ng-if="mdMedia('gt-xs')"> <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>

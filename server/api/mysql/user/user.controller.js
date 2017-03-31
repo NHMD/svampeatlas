@@ -389,7 +389,7 @@ exports.authCallback = function(req, res, next) {
 exports.showFirstFindings = function(req, res) {
 
 
-	var sql = 'SELECT b._id, b.firstRec as observationDate, b.Taxon_FullName FROM (SELECT MIN(o.observationDate) as firstRec, o._id, d.Taxon_FullName , d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Observation o WHERE u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND d.Determination_validation = "Godkendt"  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND u.user_id = :userid AND YEAR(observationDate) = :year' +
+	var sql = 'SELECT b._id, b.firstRec as observationDate, b.Taxon_FullName FROM (SELECT MIN(o.observationDate) as firstRec, o._id, d.Taxon_FullName , d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Observation o WHERE u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+')  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND u.user_id = :userid AND YEAR(observationDate) = :year' +
 		' GROUP BY d.Taxon_id) b, (SELECT MIN(ox.observationDate) as firstRec, dx.Taxon_id FROM Observation ox, DeterminationView2 dx WHERE dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+') AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) = :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id) a WHERE a.firstRec = b.firstRec AND a.Taxon_id=b.Taxon_id;';
 
 	return models.sequelize.query(sql, {

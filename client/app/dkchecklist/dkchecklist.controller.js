@@ -45,10 +45,11 @@ angular.module('svampeatlasApp')
 					taxon_id: taxon_id
 				})
 			}
-
+			
+			$scope.acceptedTaxaOnly = true;
 			
 			$scope.query = {
-				acceptedTaxaOnly: true,
+				
 				include: [{
 					"model": "TaxonRedListData",
 					"as": "redlistdata",
@@ -58,24 +59,36 @@ angular.module('svampeatlasApp')
 						year: 2009
 					})
 				}, {
+					"model": "Taxon",
+					"as": "acceptedTaxon",
+					include: [JSON.stringify({
 					"model": "TaxonAttributes",
 					"as": "attributes",
 					"attributes": ['PresentInDK'],
 					"where": JSON.stringify({
 						PresentInDK: true
 					})
-				}, {
+				})]
+				} , {
 					"model": "TaxonDKnames",
 					"as": "Vernacularname_DK"
 				}, {
 					"model": "Taxon",
 					"as": "synonyms"
-				}],
+				},{
+					"model": "TaxonStatistics",
+					"as": "Statistics"
+				}]
 
 
 			}
 
-
+			$scope.$watch('acceptedTaxaOnly', function(newval, oldval){
+				$timeout(function() {
+						$("#reset-table-state").trigger('click');
+					})
+			})
+			
 
 			$scope.callServer = function(tableState) {
 				var query = angular.copy($scope.query);
@@ -93,7 +106,9 @@ angular.module('svampeatlasApp')
 				limit = parseInt(limit)
 
 				var where = (tableState.search.predicateObject) ? _.mapValues(_.omit(tableState.search.predicateObject, ['Vernacularname_DK', 'synonyms', 'indexLetter']), function(value, key) {
-
+					 
+	
+					 
 					return {
 						like: "%" +value + "%"
 					};
@@ -154,9 +169,11 @@ angular.module('svampeatlasApp')
 				query.limit = limit;
 				query.order = order;
 				query.where = where;
-
-
-
+				
+				if($scope.acceptedTaxaOnly === true){
+					query.acceptedTaxaOnly = $scope.acceptedTaxaOnly;
+					
+				}
 
 				Taxon.query(query, function(result, headers) {
 

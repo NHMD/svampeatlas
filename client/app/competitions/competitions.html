@@ -1,0 +1,58 @@
+ <md-toolbar  ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
+	
+
+
+
+	<md-content>		   		 
+			   		 
+					
+					   		 <div layout="column" layout-align="center center" ng-if="ctrl.isLoading"> 
+					   			 <p>{{'Henter data' | translate}}</p>
+					   			 <md-progress-linear md-mode="indeterminate" ></md-progress-linear>
+							 </div>
+							 <div layout-margin>
+								<h1 class="md-headline">{{ctrl.info[ctrl.currentController].description | translate}}</h1>
+								<p>{{ctrl.info[ctrl.currentController].details | translate}}</p>
+							</div>
+								<div layout-padding layout-margin layout-gt-xs="row">
+									
+	   							 <md-input-container>
+	   							           <label translate>År</label>
+	   							           <md-select ng-model="ctrl.selectedYear" ng-change="ctrl.updateYear(ctrl.selectedYear)">
+	   							             <md-option ng-value=""><em>Alle</em></md-option>
+	   							             <md-option ng-repeat="y in ctrl.years" ng-value="y" >
+	   							               {{y}}
+	   							             </md-option>
+	   							           </md-select>
+	   							         </md-input-container>
+										 
+										 
+										 
+								</div>
+			<div layout-margin	> 			     
+		  		<md-list>
+						   	       <md-list-item class="md-3-line" ng-repeat="elm in ctrl.serverData">
+		   						<div layout-margin><h1>{{$index+1}}</h1></div>
+						  		   <user-avatar class="useravatar md-avatar" user="elm" ></user-avatar> 
+	   
+									<div class="md-list-item-text" layout="column">
+									            <h3><strong>{{ elm.count }}</strong></h3>
+									            <h4><a ng-href="/userprofile/{{elm._id}}">{{ elm.name }} ({{elm.Initialer}})</a></h4>
+									          </div>
+ 	        
+			 
+						  			   <md-divider class="forum-divider" ng-if="!$last"></md-divider>                        
+						   	       </md-list-item>
+								   
+								   <md-list>
+								   
+							   </div>
+								   
+								   	     
+</md-content>		
+
+
+
+
+
+	

@@ -7,6 +7,7 @@ angular.module('svampeatlasApp')
 		  title: 'UTM kvadrater', 
         url: '/utm',
         templateUrl: 'app/utm/utm.html',
-        controller: 'UtmCtrl'
+        controller: 'UtmCtrl',
+		  controllerAs: 'ctrl'
       });
   });

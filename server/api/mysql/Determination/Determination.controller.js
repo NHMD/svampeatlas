@@ -551,7 +551,7 @@ function getUserBaseImpact(user_id, taxon, logObject, determination) {
 
 	return Promise.all([usrPromise, usrMaxScoreInGroupPromise, usrAcceptedCountForTaxonPromise])
 		.spread(function(usr, usrMaxScoreInGroup, usrAcceptedCountForTaxon) {
-
+			console.log("##### User name" + usr.name)
 			var usrRelativeScore;
 			var useConfidencePenalty = (determination && determination.user_id === user_id && (determination.confidence === 'mulig' || determination.confidence === 'sandsynlig')) ? true : false;
 

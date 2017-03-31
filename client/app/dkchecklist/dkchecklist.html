@@ -5,7 +5,9 @@
 
 <md-content flex md-scroll-y layout-padding ng-cloak>
 	   
-		
+  	  <md-switch ng-if="mdMedia('xs')"  ng-model="acceptedTaxaOnly" aria-label="Only accepted taxa" >
+  	         {{ 'Omit synonyms' | translate}}
+  	        </md-switch>
 			   
 	<div class="table-responsive-vertical shadow-z-1">
 
@@ -37,7 +39,7 @@
 			       </md-radio-group> -->
 				<md-input-container class="md-block th-filter-container" >
         <label>Latinsk navn</label>
-		<md-icon md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
+		<md-icon id="reset-table-state" md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
         <input st-search="FullName"  ng-model="uiFullName" ng-model-options="{ debounce: 500 }">
 		
       </md-input-container> </th>
@@ -52,15 +54,19 @@
         <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="uiDkName" ng-model-options="{ debounce: 500 }">
 		
       </md-input-container> </th>
+	  <th ng-show="mdMedia('gt-xs')"><md-switch  ng-model="acceptedTaxaOnly" aria-label="Only accepted taxa" >
+	         {{ 'Omit synonyms' | translate}}
+	        </md-switch></th>
 			<th ng-if="mdMedia('gt-xs')" st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultlist/pagination.tpl.html">
 			</th>
 		</tr>
 	<tr>
 		<th st-ratio="5"></th>
 		
-		<th st-sort="FullName"  translate>Art</th>
+		<th st-sort="FullName" colspan="3" translate>Art</th>
 		
-		
+		<th  translate>Antal danske fund</th>
+		<th  translate>Seneste danske fund</th>
 		
 		
 	</tr>
@@ -94,16 +100,19 @@
 			            </md-menu-content>
 			          </md-menu></td>
 		
-		<td  data-title="{{'Art' | translate}}" colspan="4">
-			<a class="cursor-pointer" ng-click="$state.go('species', {id: row._id})"> 
+		<td  data-title="{{'Art' | translate}}" colspan="3">
+			<a class="cursor-pointer" ng-click="$state.go('species', {id: row.acceptedTaxon._id})"> 
 				<em>{{row.FullName}} </em><span ng-if="row.redlistdata && row.redlistdata.length === 1 "> 
 				({{row.redlistdata[0].status}})</span> <span ng-if="row.Vernacularname_DK"> - {{row.Vernacularname_DK.vernacularname_dk | capitalize}}  </span>
-				 </a> 
+				<span ng-if="row._id !== row.acceptedTaxon._id" class="md-caption"><br>Synonym til <em>{{row.acceptedTaxon.FullName}}</em> </span>
+				 </a> <a ng-if="mdMedia('gt-xs')" target="_BLANK" ng-href="/taxon/{{row.acceptedTaxon._id}}"><i class="fa fa-external-link"></i></a>
 			
 
 		<span ng-repeat="syn in row.synonyms | synonymsWithoutSelf" class="md-caption"><br>{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt:'): 'Syn.:'}} <em>{{syn.FullName}}</em></span>
 		</td>
 	
+	<td ng-if="row.Statistics || mdMedia('gt-xs')" data-title="{{'Antal danske fund' | translate}}">{{row.Statistics.accepted_count}}</td>
+	<td ng-if="row.Statistics || mdMedia('gt-xs')" data-title="{{'Seneste danske fund' | translate}}">{{row.Statistics.last_accepted_record | date : 'dd/MM/yyyy'}}</td>
 		
 		
 

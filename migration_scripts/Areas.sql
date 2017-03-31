@@ -170,23 +170,40 @@ num_species INT(11) DEFAULT NULL
 
 
 
-
+DROP EVENT area_stats_daily;
 delimiter |
 
 CREATE EVENT area_stats_daily
     ON SCHEDULE
       EVERY 1 DAY
-	  STARTS '2016-12-03 04:15:00'
+	  STARTS '2017-03-31 04:15:00'
     COMMENT 'Updates statistics'
     DO
       BEGIN
 	  TRUNCATE AreaStatistics;
-	  INSERT INTO AreaStatistics (area_id, num_users, num_obs, num_days, num_years) SELECT a._id, COUNT(distinct o.primaryuser_id) as num_users, COUNT(o._id) as num_obs, COUNT(distinct o.observationDate) as num_days, COUNT(distinct YEAR(o.observationDate)) as num_years FROM Observation o, Areas a, ObservationAreas oa WHERE o._id = oa.observation_id AND a._id= oa.area_id GROUP BY a._id;
-	  UPDATE AreaStatistics ast, (SELECT a._id, COUNT(distinct ta._id) as count FROM Observation o, Determination d, Taxon t, Taxon ta, Areas a, ObservationAreas oa  WHERE  o._id = oa.observation_id AND a._id= oa.area_id AND o.primarydetermination_id = d._id AND d.taxon_id=t._id AND t.accepted_id=ta._id AND ta.RankID > 9950 AND (d.validation = 'Godkendt' OR d.score > 79) GROUP BY a._id) x
-	  SET ast.num_species = x.count WHERE ast.area_id = x._id;      
+	  CALL updateAreaStistics();  
 	  END |
 
 delimiter ;  
+
+
+
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS updateAreaStistics//
+
+CREATE PROCEDURE updateAreaStistics()
+READS SQL DATA
+BEGIN
+TRUNCATE AreaStatistics;
+INSERT INTO AreaStatistics (area_id, num_species) SELECT a._id, COUNT(distinct ta._id) as count FROM Observation o, Determination d, Taxon t, Taxon ta, Areas a, ObservationAreas oa  WHERE  o._id = oa.observation_id AND a._id= oa.area_id AND o.primarydetermination_id = d._id AND d.taxon_id=t._id AND t.accepted_id=ta._id AND ta.RankID > 9950 AND (d.validation = 'Godkendt' OR d.score > 79) GROUP BY a._id ;  
+INSERT INTO AreaStatistics (area_id, num_users) SELECT * FROM (SELECT a._id, COUNT(distinct o.primaryuser_id) as num_users FROM Observation o, Areas a, ObservationAreas oa WHERE o._id = oa.observation_id AND a._id= oa.area_id GROUP BY a._id) x ON DUPLICATE KEY UPDATE num_users= x.num_users;
+INSERT INTO AreaStatistics (area_id, num_obs) SELECT * FROM (SELECT a._id, COUNT(distinct o._id) as num_obs FROM Observation o, Areas a, ObservationAreas oa WHERE o._id = oa.observation_id AND a._id= oa.area_id GROUP BY a._id) x ON DUPLICATE KEY UPDATE num_obs= x.num_obs;
+INSERT INTO AreaStatistics (area_id, num_days) SELECT * FROM (SELECT a._id, COUNT(distinct o.observationDate) as num_days FROM Observation o, Areas a, ObservationAreas oa WHERE o._id = oa.observation_id AND a._id= oa.area_id GROUP BY a._id) x ON DUPLICATE KEY UPDATE num_days= x.num_days;
+INSERT INTO AreaStatistics (area_id, num_years) SELECT * FROM (SELECT a._id, COUNT(distinct YEAR(o.observationDate)) as num_years FROM Observation o, Areas a, ObservationAreas oa WHERE o._id = oa.observation_id AND a._id= oa.area_id GROUP BY a._id) x ON DUPLICATE KEY UPDATE num_years= x.num_years;    
+END//
+DELIMITER ;
 
 
 

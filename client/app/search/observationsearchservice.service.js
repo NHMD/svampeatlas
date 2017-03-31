@@ -433,7 +433,7 @@ angular.module('svampeatlasApp')
 									      //  $or.push({$lt: appConstants.ProbableDeterminationScore});
 									        break;
 										case 'VALIDATION_STATUS_EXPERT':
-											dbQuery.include[0].where.$and.$or.push({Determination_validation: "Godkendt", Determination_validator_id: {}})
+											dbQuery.include[0].where.$and.$or.push({Determination_validation: "Godkendt", Determination_validator_id: { $ne: null}})
 										      //  $or.push({$lt: appConstants.ProbableDeterminationScore});
 										        break;		
 										
