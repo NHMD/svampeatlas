@@ -1,14 +1,16 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('NavbarCtrl', function ($scope, $state, ssSideNav, $mdMedia, $mdSidenav) {
+  .controller('NavbarCtrl', function ($scope, $state, ssSideNav, $mdMedia, $mdSidenav, $stateParams, $translate) {
 	 /*
 	  $scope.mdMedia = $mdMedia;
 	  $scope.mdSidenav = $mdSidenav;
 	  $scope.menu = ssSideNav;
 	  */
 	  $scope.state = $state;
-	  
+	  if($stateParams.controller){
+		  $scope.ctrlparam = $translate.instant($stateParams.controller);
+	  }
 	  
 $scope.states = 
     { 'admin': { name: "Useradmin", icon: 'group'},
@@ -24,7 +26,8 @@ $scope.states =
 	  'taxon-tree-dk': {name: "Klassifikation", icon: 'taxonomy'},
 	  'fieldtrips': {name: "Mine feltture", icon: 'shopping_basket'},
 	  'validation': {name: "Validering", icon: 'microscope'},
-	  'utm': {name: "UTM felter", icon: 'grid_on'}
+	  'utm': {name: "UTM felter", icon: 'grid_on'},
+	  'competitions': {name: "Konkurrencer", icon: 'trophy'},
 	  
 	};
 	/*

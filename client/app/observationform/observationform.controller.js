@@ -183,7 +183,7 @@ angular.module('svampeatlasApp')
 							}
 							$scope.determiner.push(obs.PrimaryDetermination.User)
 							$scope.associatedOrganism = obs.associatedTaxa;
-							that.observationDate = new Date(obs.observationDate);
+							that.observationDate = (moment(obs.observationDate, 'YYYY-MM-DD').isValid()) ? new Date(obs.observationDate) : undefined;
 							that.ecologynote = obs.ecologynote;
 
 							that.precision = obs.accuracy;
@@ -1144,7 +1144,7 @@ $scope.showExifConfirmPanel(exif)
 
 			$scope.submitObservation = function() {
 
-				var observationDate = ($scope.obs && !moment($scope.obs.observationDate, 'YYYY-MM-DD').isValid()) ?  $scope.obs.observationDate : $filter('date')(that.observationDate, "yyyy-MM-dd") ;
+				var observationDate = ($scope.obs && !moment($scope.obs.observationDate, 'YYYY-MM-DD').isValid() && !that.observationDate) ?  $scope.obs.observationDate : $filter('date')(that.observationDate, "yyyy-MM-dd") ;
 				
 				
 				;

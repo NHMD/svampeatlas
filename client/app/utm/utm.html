@@ -1,25 +1,67 @@
  <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
 	
-<div layout="row" flex>		
-				
-<leaflet id="utmmap" width="100%" height="400px" center="mapsettings.center" ></leaflet>
-<div md-whiteframe="3"  >
+<div layout="row"  flex>	
+	
+   
+		
+			<div md-whiteframe="3" layout-margin layout-fill >	
+			   <md-content ng-if="selectedUTM10">
+			   <h4>{{'UTM Felt' | translate}} : {{selectedUTM10.options.label}}</h4>
+		   	<p><strong>{{'num_species' | translate}}:</strong> {{selectedUTM10.options.num_species}}, <strong>{{'num_obs' | translate}}:</strong> {{selectedUTM10.options.num_obs}}, <strong>{{'num_users' | translate}}:</strong> {{selectedUTM10.options.num_users}}, <strong>{{'num_days' | translate}}:</strong> {{selectedUTM10.options.num_days}}, <strong>{{'num_years' | translate}}:</strong> {{selectedUTM10.options.num_years}}</p>
+		 <div layout="column" layout-align="center center" ng-if="ctrl.isLoading"> 
+			 <p>{{'Henter artsliste' | translate}}</p>
+			 <md-progress-linear md-mode="indeterminate" ></md-progress-linear></div>
+			<md-button ng-if="!ctrl.isLoading" ng-click="toggleSpeciesListSideNav()"
+				  				            class="md-primary"  ng-show="ctrl.$mdMedia('xs')" >
+				  				            {{'Artsliste' | translate}}
+				  				          </md-button>
+		   </md-content>
+				<label ng-if="!selectedUTM10">{{'Klik på et felt for at se info' | translate}}</label>
+<leaflet id="utmmap" width="100%" height="400px" center="ctrl.mapsettings.center" ></leaflet>
+				<label>{{'Farvelæg felter efter' | translate}}:</label>
+			    <md-radio-group ng-model="ctrl.selectedStat" ng-change="ctrl.paintGridBy(ctrl.selectedStat, ctrl.maxValues)" layout-gt-xs="row">
+
+			         <md-radio-button value="num_species" >{{'num_species' | translate}}</md-radio-button>
+			         <md-radio-button value="num_obs"> {{'num_obs' | translate}} </md-radio-button>
+			         <md-radio-button value="num_users">{{'num_users' | translate}}</md-radio-button>
+					  <md-radio-button value="num_days"> {{'num_days' | translate}} </md-radio-button>
+					   <md-radio-button value="num_years"> {{'num_years' | translate}} </md-radio-button>
+
+			       </md-radio-group>
 	
 	
 </div>
 
 
 
-	<md-sidenav id="utm-specieslist-sidenav" class="md-sidenav-right md-whiteframe-z2" md-component-id="utmlistsidenav" md-is-locked-open="!$mdMedia('xs')">
-		  <md-toolbar class="md-theme-light" layout="row" ng-if="mdMedia('xs')">
+	<md-sidenav id="utm-specieslist-sidenav" class="md-sidenav-right md-whiteframe-z2" md-component-id="utmlistsidenav" md-is-locked-open="!$mdMedia('xs') && selectedUTM10">
+		  <md-toolbar class="md-theme-light" layout="row" ng-if="ctrl.$mdMedia('xs')">
 		   
 		 
        
 		          <h1 class="md-toolbar-tools" translate>Artsliste</h1>
 		        </md-toolbar>
-	      <md-content layout="row"  layout-padding>
+				 <md-content  layout-padding>
+				 <div layout="column" layout-align="center center" ng-if="ctrl.isLoading"> 
+					 <p>{{'Henter artsliste' | translate}}</p>
+					 <md-progress-circular md-mode="indeterminate" ></md-progress-circular></div>
+				<table class="table-bordered table-condensed" ng-show="selectedUTM10 && !ctrl.isLoading" id="tx-table">
+					<thead><tr><th>{{'Art' | translate}}</th><th>{{'Antal fund' | translate}}</th></tr></thead>
+					<tbody>
+				  <tr  ng-repeat="row in ctrl.serverData"><td data-title="{{'Art' | translate}}"> <em>{{row.DeterminationView.Taxon_FullName}} <span ng-if=" 5001 > row.DeterminationView.Taxon_RankID">sp. </span></em>
+						<span ng-if="row.DeterminationView.Taxon_vernacularname_dk">- {{row.DeterminationView.Taxon_vernacularname_dk}} </span>
+						<span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}})</span></td>
+					<td data-title="{{'Antal fund' | translate}}">{{row.observationCount}}</td>	</tr>
+
+</tbody>
+				</table>
+	     
        
-	        
+	   <!--      Species table        -- >
+	   
+	
+	   
+	   <!-- -->     
 	         </md-content>
 			<md-content  layout-padding>
 			

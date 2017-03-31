@@ -57,7 +57,7 @@
 			  <div layout="column" layout-align="center center" class="md-secondary">
 		  		<div>
 				<md-tooltip md-direction="left"  >
-		  		          {{'Jeg er enig i bestemmelsen' | translate}}
+		  		          {{(det.vote !== 'up') ? ('Jeg er enig i bestemmelsen' | translate) : ('Jeg er alligevel ikke enig i bestemmelsen' | translate)}}
 		  		        </md-tooltip>
 						
 				  <md-button aria-label="upvote" ng-click="vote($event, det, 'up')" class="vote-btn"><ng-md-icon icon="thumb_up" ng-class="{'green-thumb' : det.vote === 'up'}"></ng-md-icon></md-button>

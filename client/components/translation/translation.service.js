@@ -261,7 +261,20 @@ angular.module('svampeatlasApp')
 			'Bestemmelsen er': 'The identification is',
 			'Validering' : 'Validation',
 			'Bestemmelsen blev slettet': 'The identification was deleted',
-			'Der kan kun downloades CSV filer med op til 10000 poster. Prøv at indsnævre din søgning.' : 'Download of CSV data is restricted to 10000 rows. Please narrow your search.'
+			'Der kan kun downloades CSV filer med op til 10000 poster. Prøv at indsnævre din søgning.' : 'Download of CSV data is restricted to 10000 rows. Please narrow your search.',
+		  'num_users' : 'Number of reporters', 
+		  'num_obs' : 'Number of observations', 
+		  'num_days' : 'Number of field days', 
+		  'num_years' : 'Number of years', 
+		  'num_species' : 'Number of species',
+			'UTM Felt': 'UTM Field',
+			'UTM felter': 'UTM fields',
+			'Henter artsliste' : 'Fetching species list',
+			'Farvelæg felter efter': 'Color fields by',
+			'Klik på et felt for at se info' : 'Click a field to see info',
+			'Jeg er alligevel ikke enig i bestemmelsen' : 'Withdraw vote on this determination',
+			'Jeg er enig i bestemmelsen' : 'I agree on this determination'
+			
 			
 		});
 		
@@ -389,7 +402,6 @@ angular.module('svampeatlasApp')
 			'Add search terms on statistics' : 'Tilføg søgetermer på statistik',
 			'Statistics name' : 'Statistik navn',
 			'VALIDATION_STATUS_EXPERT': 'ekspert-godkendt',
-
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_3': 'godkendt',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_2': 'sandsynlig',
 			'VALIDATION_STATUS_COMMUNITY_LEVEL_1': 'et forslag',
@@ -400,7 +412,18 @@ angular.module('svampeatlasApp')
 			'Morpho groups': 'Morfo-grupper',
 			'Morpho group missing': 'Morfo-gruppe mangler',
 			'Login' : 'Log ind',
-			'Sign up': 'Tilmeld'
+			'Sign up': 'Tilmeld',
+		  'num_users' : 'Antal rapportører', 
+		  'num_obs' : 'Antal observationer', 
+		  'num_days' : 'Antal feltdage', 
+		  'num_years' : 'Antal år', 
+		  'num_species' : 'Antal arter',
+			'numberofobservations' : 'Årets slider',
+			'speciescount' : 'Årets hitjæger',
+			'highjumper' : 'Årets højdespringer',
+			'numberofmobileobservations' : 'Årets mobilrapportør',
+			'numberofarchiveobservations' : 'Årets arkivar',
+			'pioneer' : 'Årets fornyer'
 			
 
 
