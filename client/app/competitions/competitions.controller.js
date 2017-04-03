@@ -6,14 +6,14 @@ angular.module('svampeatlasApp')
 	  var that = this;
 	  this.$mdMedia = $mdMedia;
 	  this.info= {
-		 speciescount : { description: "Flest fund af rødlistede arter", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbletindtastinger, som helst frabedes."},
-		  numberofobservations:{ description: "Flest fund" , details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbletindtastinger, som helst frabedes."},
+		 speciescount : { description: "Flest arter", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."},
+		  numberofobservations:{ description: "Flest fund" , details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."},
 		  
 		  numberofmobileobservations: { description:"Flest fund indlagt med mobile enheder",  details: "Konkurrencen går på rapportør."},
 		  numberofarchiveobservations:{ description: "Flest fund indlagt fra gamle notesbøger mv.", details: "Her tælles fund fra tidligere år, indlagt i konkurrenceåret. Konkurrencen går på rapportør."},
-
-		  pioneer: { description:"Flest fund af arter fra områder (UTM felter), hvor de ikke før var kendt", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbletindtastinger, som helst frabedes."},
-		  highjumper :{ description: "Flest nye arter på den personlige fundliste", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbletindtastinger, som helst frabedes."}
+		  pioneerredlisted: { description:"Flest fund af rødlistede arter fra områder (UTM felter), hvor de ikke før var kendt", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."},
+		  pioneer: { description:"Flest fund af arter fra områder (UTM felter), hvor de ikke før var kendt", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."},
+		  highjumper :{ description: "Flest nye arter på den personlige fundliste", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."}
 	  	
 	  };
 	  

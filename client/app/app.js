@@ -188,7 +188,19 @@ angular.module('svampeatlasApp', [
 								controller: 'speciescount'
 							}
 
-						}, {
+						}, 
+						
+						{
+													id: 'pioneerredlisted',
+													name: 'pioneerredlisted',
+													state: 'competitions',
+													params: {
+														controller: 'pioneerredlisted'
+													}
+
+												},
+						
+						{
 							id: 'numberofobservations',
 							name: 'numberofobservations',
 							state: 'competitions',
