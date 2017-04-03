@@ -215,7 +215,7 @@ angular.module('svampeatlasApp')
 					as: "DeterminationView",
 					where: {
 						Taxon_redlist_status: ['RE', 'CR', 'EN', 'VU', 'NT'],
-						Determination_validation: 'Godkendt'
+						$or: [{Determination_validation: 'Godkendt'} , {Determination_score: {$gte: 80}}]
 					}
 				}),
 				JSON.stringify({
