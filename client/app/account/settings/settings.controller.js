@@ -8,6 +8,17 @@ angular.module('svampeatlasApp')
 	$scope.isLoggedIn = Auth.isLoggedIn;
 	$scope.oldEmail = $scope.getCurrentUser().email;
 	
+	$scope.useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
+	
+	$scope.$watch('useLichenFilter', function(newval, oldval){
+			
+		if(newval){
+			localStorage.setItem('use_lichen_filter', newval);
+		} else {
+			localStorage.removeItem("use_lichen_filter");
+		}
+			
+	});
 	
 	$scope.restoreEmail = function(){
 		

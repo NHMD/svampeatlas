@@ -235,7 +235,7 @@ angular.module('svampeatlasApp')
 				var search = ObservationSearchService.getSearch();
 				search.wasInitiatedOutsideSearchForm = true;
 				search.where = {};
-
+				var useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
 				if ($stateParams.searchterm === "mine") {
 
 					search.include[1].where = {
@@ -246,26 +246,37 @@ angular.module('svampeatlasApp')
 					search.include[2].required = false;
 
 				} else if ($stateParams.searchterm === "today") {
-
+					if(useLichenFilter) {
+						search.include[0].where.lichenized = 1;
+					}
 					search.where.observationDate = $filter('date')(moment().startOf('day').toDate(), "yyyy-MM-dd", '+0200')
 					
 				} else if ($stateParams.searchterm === "3days") {
-
+					if(useLichenFilter) {
+						search.include[0].where.lichenized = 1;
+					}
 					search.where.observationDate = {
 						gt: $filter('date')(moment().startOf('day').subtract(3, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 				} else if ($stateParams.searchterm === "7days") {
-
+					if(useLichenFilter) {
+						search.include[0].where.lichenized = 1;
+					}
 					search.where.observationDate = {
 						gt: $filter('date')(moment().startOf('day').subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 
 				} else if ($stateParams.searchterm === "foreign") {
-
+					if(useLichenFilter) {
+						search.include[0].where.lichenized = 1;
+					}
 					search.include[2].required = false;
 					search.where.locality_id = {"$eq":null};
 
 				} else if ($stateParams.locality_id && $stateParams.date) {
+					if(useLichenFilter) {
+						search.include[0].where.lichenized = 1;
+					}
 					search.where.observationDate = {
 
 						gt: $filter('date')(moment($stateParams.date).toDate(), "yyyy-MM-dd", '+0200')

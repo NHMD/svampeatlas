@@ -8,6 +8,7 @@ angular.module('svampeatlasApp')
 	  $scope.$state = $state;
 	  $scope.ObservationFormService = ObservationFormService;
 	  $scope.translate = $translate;
+	  var useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
 	  
 	  $scope.showLogin = function(){
   		var useFullScreen = $mdMedia('xs');
@@ -152,7 +153,13 @@ angular.module('svampeatlasApp')
 		} else {
 			$scope.latestlocalitydays = days;
 		}
-	 return	Locality.recent({days: days}).$promise.then(function(localities){
+		
+		var locQuery = {days: days};
+		if(useLichenFilter){
+			locQuery.lichensonly = true;
+		}
+		
+	 return	Locality.recent(locQuery).$promise.then(function(localities){
 		 $scope.mapsettings.markers = {};
 			for (var i = 0; i < localities.length; i++) {
 				$scope.mapsettings.markers[localities[i].name] = {
@@ -202,44 +209,65 @@ angular.module('svampeatlasApp')
 		}
 		
 	}
-					
-	Observation.query({
+	
+	
+	
+	var determinationwhere = (useLichenFilter) ?	{
+						lichenized: 1,
+						$or: [{Determination_validation: 'Godkendt'} , {Determination_score: {$gte: 80}}]
+					} : {
+						Taxon_redlist_status: ['RE', 'CR', 'EN', 'VU', 'NT'],
+						$or: [{Determination_validation: 'Godkendt'} , {Determination_score: {$gte: 80}}]
+					};
+		
+		
+	var query = {
 		nocount: true,
-		order: 'observationDate DESC',
-		limit: 50,
-		cachekey: 'latestredlisted',
+		_order: JSON.stringify([
+					['observationDate', 'DESC'],
+					['_id', 'DESC']
+				]),
+		limit: 24,
+		
 		include: JSON.stringify(
 			[
 				JSON.stringify({
 					model: "DeterminationView",
 					as: "DeterminationView",
-					where: {
-						Taxon_redlist_status: ['RE', 'CR', 'EN', 'VU', 'NT'],
-						$or: [{Determination_validation: 'Godkendt'} , {Determination_score: {$gte: 80}}]
-					}
+					where: determinationwhere,
+					required: true
 				}),
 				JSON.stringify({
 					model: "ObservationImage",
 					as: 'Images',
-					offset: 0,
-					limit: 1
+					required: true
 
 				}), 
 				JSON.stringify({
 					model: "User",
 					as: 'PrimaryUser',
 					attributes: ['_id','email', 'Initialer', 'name'],
-					where: {}
+					where: {},
+					required: true
 				}),
 				JSON.stringify({
 					model: "Locality",
 					as: 'Locality',
-					where: {}
+					where: {},
+					required: true
 				}),
 			]
 		)
 		
-	}).$promise.then(function(observations) {
+	};	
+	
+//	if(!useLichenFilter) {
+	//	query.cachekey = 'latestredlisted';
+//	};
+	
+
+					
+	Observation.query(query).$promise.then(function(observations) {
 		
 		$scope.tiles = _.filter(observations, function(u) {
 			return u.Images.length > 0;
