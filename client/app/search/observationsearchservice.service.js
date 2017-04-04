@@ -202,7 +202,11 @@ angular.module('svampeatlasApp')
 			uiSearchToDBquery: function(search, dbQuery) {
 				var that = this;
 				
-			
+				var useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
+				
+				if(useLichenFilter) {
+					search.livsstrategi = "lichenized";
+				}
 				
 				if (search.livsstrategi) {
 

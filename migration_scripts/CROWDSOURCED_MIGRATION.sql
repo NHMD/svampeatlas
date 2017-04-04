@@ -166,14 +166,14 @@ DELIMITER $$
 --
 -- Hændelser
 --
-CREATE EVENT `user_impact` ON SCHEDULE EVERY 1 DAY STARTS '2017-03-16 03:45:00' DO BEGIN
-DELETE FROM UserMorphoGroupImpact;
+CREATE EVENT `user_impact` ON SCHEDULE EVERY 1 DAY STARTS '2017-04-03 03:45:00' DO BEGIN
 INSERT INTO UserMorphoGroupImpact (user_id, morphogroup_id, impact) 
-SELECT u._id, a.morphogroup_id, CEIL((COUNT(distinct ta._id)/ a.totalCount * 100))
+SELECT * FROM
+(SELECT u._id, a.morphogroup_id, CEIL(COUNT(distinct ta._id)/ a.totalCount * 100) as impact
 FROM
 Determination d,Taxon t, Taxon ta, Users u, 
 (SELECT morphogroup_id, COUNT(_id) as totalCount FROM Taxon t, TaxonAttributes ta WHERE ta.taxon_id=t._id AND t.accepted_id=t._id AND ta.PresentInDK = 1 AND t.morphogroup_id IS NOT NULL GROUP BY morphogroup_id) a
-WHERE d.user_id=u._id AND d.taxon_id=t._id AND ta._id=t.accepted_id AND ta.morphogroup_id = a.morphogroup_id AND (d.validation="Godkendt" OR d.score > 80) GROUP BY u._id, a.morphogroup_id;
+WHERE d.user_id=u._id AND d.taxon_id=t._id AND ta._id=t.accepted_id AND ta.morphogroup_id = a.morphogroup_id AND (d.validation="Godkendt" OR d.score > 80) GROUP BY u._id, a.morphogroup_id) x  ON DUPLICATE KEY UPDATE impact=x.impact, updatedAt = NOW();
 	 
 
          END$$

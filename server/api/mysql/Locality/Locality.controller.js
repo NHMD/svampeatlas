@@ -196,9 +196,19 @@ function cacheResult(req, value){
 
 exports.localititesWithRecentFindings = function(req, res){
 	
+	var sql;
+	
+	if(req.query.lichensonly){
+		sql = 'SELECT l._id, l.decimalLatitude, l.decimalLongitude, l.name FROM Locality l JOIN Observation o JOIN DeterminationView2 d ON o.primarydetermination_id=d.Determination_id AND d.lichenized = 1 AND o.locality_id = l._id '
+		+'AND DATE_ADD(CURDATE(), INTERVAL :days DAY) < DATE(o.observationDate) GROUP BY l._id';
+		
+	} else {
+		sql = 'SELECT l._id, l.decimalLatitude, l.decimalLongitude, l.name FROM Locality l JOIN Observation o ON o.locality_id = l._id '
+		+'AND DATE_ADD(CURDATE(), INTERVAL :days DAY) < DATE(o.observationDate) GROUP BY l._id';
+	}
+	
 	return models.sequelize.query(
-		'SELECT l._id, l.decimalLatitude, l.decimalLongitude, l.name FROM Locality l JOIN Observation o ON o.locality_id = l._id '
-		+'AND DATE_ADD(CURDATE(), INTERVAL :days DAY) < DATE(o.observationDate) GROUP BY l._id',
+		sql,
   { replacements: { days: -Math.abs(req.query.days) }, type: models.sequelize.QueryTypes.SELECT }
 ).then(function(localities){
 	

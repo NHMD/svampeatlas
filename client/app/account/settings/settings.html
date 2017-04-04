@@ -55,6 +55,10 @@
 					<md-button class="md-raised btn-facebook"  ng-show="getCurrentUser().facebook" ng-click="disconnectOauth('facebook')"><ng-md-icon icon="facebook"></ng-md-icon>  Disconnect Facebook account</md-button>
 					
 					<md-button ng-click="showPwForm()" class="md-raised md-primary"><ng-md-icon icon="edit"></ng-md-icon> <span translate>Change password</span></md-button>
+					
+					<md-switch  ng-model="useLichenFilter" aria-label="Show only Lichens as default" >
+					         {{ 'Vis kun laver i søgninger' | translate}}
+					        </md-switch>
 				</div>
 			
 			

@@ -273,7 +273,16 @@ angular.module('svampeatlasApp')
 			'Farvelæg felter efter': 'Color fields by',
 			'Klik på et felt for at se info' : 'Click a field to see info',
 			'Jeg er alligevel ikke enig i bestemmelsen' : 'Withdraw vote on this determination',
-			'Jeg er enig i bestemmelsen' : 'I agree on this determination'
+			'Jeg er enig i bestemmelsen' : 'I agree on this determination',
+			'Vis kun laver i søgninger' : 'Show only Lichens in searches',
+			'numberofobservations' : 'Effort of the year',
+			'pioneerredlisted' : 'Hit hunter of the year',
+			'speciescount' : 'Most species',
+			'highjumper' : 'High jumper of the year',
+			'numberofmobileobservations' : 'Mobile reporter of the year',
+			'numberofarchiveobservations' : 'Archiver of the year',
+			'pioneer' : 'Pioneer of the year',
+			'Konkurrencer' : 'Competitions'
 			
 			
 		});

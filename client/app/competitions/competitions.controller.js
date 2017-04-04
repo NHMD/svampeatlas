@@ -34,7 +34,7 @@ angular.module('svampeatlasApp')
 		  if($stateParams.controller === "speciescount"){
 		  	params.redlisted = true
 		  }
-		  if($stateParams.controller === "speciescount" || $stateParams.controller === "numberofobservations" || $stateParams.controller === "pioneer" || $stateParams.controller === "highjumper"  ){
+		  if($stateParams.controller === "speciescount" || $stateParams.controller === "numberofobservations" || $stateParams.controller === "pioneer" || $stateParams.controller === "highjumper"  || $stateParams.controller === "pioneerredlisted"){
 			  params.persontype  = "finder";
 		  }
 		  params.cachekey = that.currentController + that.selectedYear;
