@@ -266,6 +266,36 @@
 
 </md-content>
 <div class="col-md-12">
+	<md-button aria-label="Download csv" class="csv-button"  ng-click="getTaxonListCsv()" ng-csv="csv" quote-strings="true" csv-label="true" filename="svampeatlastaxondata.csv" field-separator="{{csvSeparator}}">
+		                <ng-md-icon icon="file_download"></ng-md-icon>Download csv
+		            </md-button>
+		 	   <md-menu  >
+		 	   			            <md-button aria-label="Open demo menu" class="md-icon-button csv-button" ng-click="$mdOpenMenu($event)">
+		 	   			               <ng-md-icon icon="settings" ></ng-md-icon>
+		 	   			            </md-button>
+		 	   			            <md-menu-content width="4">
+		 	   			              <md-menu-item >
+		 	   			                <md-button ng-click="setCsvSeparator(',')">
+		 	   			                    <div layout="row" flex>
+		 	   			                      <p flex>{{'Komma som separator' | translate}}</p>
+		 			                      <ng-md-icon ng-if="csvSeparator === ','" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+		 								  <ng-md-icon ng-if="csvSeparator === ';'" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+		 	   			                    </div>
+		 	   			                </md-button>
+		 	   			              </md-menu-item>
+		 	   			              <md-menu-item >
+		 	   			                <md-button  ng-click="setCsvSeparator(';')">
+		 	   			                    <div layout="row" flex>
+		 	   			                      <p flex>{{'Semikolon som separator'  | translate}}</p>
+		 				                      <ng-md-icon ng-if="csvSeparator === ';'" icon="check_box" style="margin: auto 3px auto 0;"></ng-md-icon>
+		 									  <ng-md-icon ng-if="csvSeparator === ','" icon="check_box_outline_blank" style="margin: auto 3px auto 0;"></ng-md-icon>
+								  
+		 	   			                    </div>
+		 	   			                </md-button>
+		 	   			              </md-menu-item>
+			          
+		 	   			            </md-menu-content>
+		 	   			          </md-menu>
 	<h4 class="md-headline pull-right">{{'Found' | translate}} {{taxonCount}} taxa</h4>
 <md-progress-linear class="col-md-12" md-mode="indeterminate" ng-show="isLoading"></md-progress-linear>
 <table st-persist="taxon_search_table" class="table table-bordered" st-pipe="callServer" st-table="displayed">
