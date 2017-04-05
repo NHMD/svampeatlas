@@ -261,9 +261,9 @@ angular.module('svampeatlasApp')
 		
 	};	
 	
-//	if(!useLichenFilter) {
-	//	query.cachekey = 'latestredlisted';
-//	};
+	
+		query.cachekey = (useLichenFilter) ? 'latestlichens': 'latestredlisted';
+	 
 	
 
 					

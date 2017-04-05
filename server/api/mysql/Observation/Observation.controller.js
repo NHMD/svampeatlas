@@ -1047,6 +1047,7 @@ exports.destroy = function(req, res) {
 						transaction: t
 					};
 					return [
+						models.ObservationArea.destroy(q),
 						models.Determination.destroy(q),
 						models.ObservationForum.destroy(q),
 						models.ObservationImage.destroy(q),

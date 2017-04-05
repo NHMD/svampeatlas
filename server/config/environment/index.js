@@ -74,6 +74,7 @@ var all = {
   
   redisTTL: {
 	  latestredlisted: 60 * 60 * 24,
+	  latestlichens: 60 * 60 * 24,
 	  todayslocalities:  60 * 15,
 	  countGroupedByYear: 60 * 60 * 24 * 7,
 	  countGroupedByDecade: 60 * 60 * 24 * 7,

@@ -3,6 +3,70 @@
 angular.module('svampeatlasApp')
 	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'MycokeyCharacters', 'TaxonBatchUpdateModalService', 'SearchService',
 		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters, TaxonBatchUpdateModalService, SearchService) {
+			
+			$scope.csvSeparator = ",";
+			$scope.setCsvSeparator = function(sep){
+				$scope.csvSeparator= sep;
+			}
+			
+			
+			var csvDeferred = $q.defer();
+			$scope.csv = csvDeferred.promise;
+			$scope.getTaxonListCsv = function() {
+
+				delete $scope.csvQuery.limit;
+				delete $scope.csvQuery.offset;
+				
+				var includeMap = {};
+				
+				for(var i=0; i< $scope.csvInclude.length; i++){
+					includeMap[$scope.csvInclude[i].model] = true;
+				};
+				var associations = [{model: 'MorphoGroup', as: 'MorphoGroup', required: false}, {model : 'TaxonRedListData' , as: 'redlistdata', where: JSON.stringify({year: 2009}), attributes: ['status'], required: false}, {model: 'TaxonStatistics', as: 'Statistics', required: false}];
+				for(var i=0; i< associations.length; i++){
+					if(!includeMap[associations[i].model]){
+						$scope.csvInclude.push( associations[i])
+					}
+				};
+				$scope.csvQuery.include = JSON.stringify($scope.csvInclude);
+				Taxon.query($scope.csvQuery, function(result, headers) {
+					
+				delete $scope.csvInProgress;
+				var mapped =  _.map(result, function(e){
+					return {
+						
+						taxon_id: e._id,
+						FullName: e.FullName,
+						Author: e.Author,
+						MorphoGroup: (e.MorphoGroup) ? e.MorphoGroup.name_dk : "",
+						RedlistCategory: (e.redlistdata && e.redlistdata.length >0) ? e.redlistdata[0].status : "",
+						DanishName : (e.Vernacularname_DK) ? e.Vernacularname_DK.vernacularname_dk : "",
+						RankName : e.RankName,
+						PresentInDK : (e.attributes) ? e.attributes.PresentInDK : "",
+						DK_reference: (e.attributes) ? e.attributes.DK_reference : "",
+						accepted_count: (e.Statistics) ? e.Statistics.accepted_count : "",
+						total_count: (e.Statistics) ? e.Statistics.total_count : "",
+						accepted_count_before_atlas: (e.Statistics) ? e.Statistics.accepted_count_before_atlas : "",
+						accepted_count_during_atlas	: (e.Statistics) ? e.Statistics.accepted_count_during_atlas	 : "",
+						accepted_count_after_atlas	: (e.Statistics) ? e.Statistics.accepted_count_after_atlas	 : "",
+						last_accepted_record	: (e.Statistics) ? e.Statistics.last_accepted_record	 : "",
+						first_accepted_record	: (e.Statistics) ? e.Statistics.first_accepted_record	 : ""
+						
+						
+					}
+				})
+				
+				csvDeferred.resolve(mapped)
+				
+				 
+				})
+
+			}
+			
+			
+			
+			
+			
 			$scope.translate = $translate;
 			$scope.resetSearch = function() {
 				localStorage.removeItem('taxonomy_attribute_conditions');
@@ -661,11 +725,14 @@ angular.module('svampeatlasApp')
 				if ($scope.checkboxes.acceptedTaxaOnly === true) {
 					query.acceptedTaxaOnly = true;
 				}
-
-
+				
+				$scope.csvQuery = angular.copy(query);
+				$scope.csvInclude = angular.copy(include);
 				query.include = JSON.stringify(include);
 				Taxon.query(query, function(result, headers) {
-
+					
+					
+					
 					$scope.taxonCount = headers('count');
 
 					var numPages = Math.ceil(headers('count') / limit);
