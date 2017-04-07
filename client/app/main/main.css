@@ -75,3 +75,35 @@ md-list-item > img {
 	min-width: 500px;
 }
 
+.caroussel-nav-left {
+    top: 75px;
+    right: -35px;
+    bottom: auto;
+    left: auto;
+    position: relative;
+	margin-left: -30px;
+}
+
+.caroussel-nav-right {
+    top: 75px;
+    left: -35px !important;
+    bottom: auto;
+    left: auto;
+    position: relative;
+	margin-right: -30px;
+}
+
+.validation-needed-sub-header {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1em;
+    margin-top: 10px;
+	margin-left: 10px;
+    position: relative;
+	color: rgb(96,125,139);
+}
+
+.news-subheader {
+	margin-bottom: 14px;
+}

@@ -282,7 +282,16 @@ angular.module('svampeatlasApp')
 			'numberofmobileobservations' : 'Mobile reporter of the year',
 			'numberofarchiveobservations' : 'Archiver of the year',
 			'pioneer' : 'Pioneer of the year',
-			'Konkurrencer' : 'Competitions'
+			'Konkurrencer' : 'Competitions',
+			'Hjælp med at validere fund' : 'Participate in the identification',
+			'Filtrér til artsgruppe(r)' : 'Filter to species group(s)',
+			'Samarbejdspartnere': 'Partners',
+			'Seneste aktivitet' : 'Latest activity',
+			'Fund i dag' : 'Sightings today',
+			
+			'Seneste uge' : 'Past week',
+			'Nyheder fra svampeatlas' : 'News from the Atlas of Danish Fungi',
+			'Opdatér' : 'Refresh'
 			
 			
 		});

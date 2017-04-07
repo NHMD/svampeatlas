@@ -6,9 +6,9 @@ angular.module('svampeatlasApp')
       $scope.hasRole = Auth.hasRole;
       $scope.getCurrentUser = Auth.getCurrentUser;
 	  $scope.mdMedia = $mdMedia;
+	  var that = this;
 	  $scope.User = Auth.getCurrentUser();
 	              $scope.menu = ssSideNav;
-				
 
 	              // Listen event SS_SIDENAV_CLICK_ITEM to close menu
 	              $rootScope.$on('SS_SIDENAV_CLICK_ITEM', function() {
@@ -16,10 +16,10 @@ angular.module('svampeatlasApp')
 	              });
 
 				  $scope.forceCloseSidenav = function(){
-					 
+					 that.closed = true;
 					  $mdSidenav('left').close();
-				
-						$scope.menu.userHasForceClosed = true;
+					  
+					//	$scope.menu.userHasForceClosed = true;
 					
 				  };
 				  
@@ -42,7 +42,9 @@ angular.module('svampeatlasApp')
 		})
 	
 	
-	
+	$rootScope.$on('userHasOpenedMenu', function(){
+		that.closed = false;
+	})
 	$rootScope.$on('logged_in', function(ev, usr){
 		$scope.User = usr;
 	})

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, $translate, ssSideNav, $mdMedia, $mdSidenav, Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth, $location, preloader) {
+  .controller('MainCtrl', function($scope, $http, $translate,  $mdMedia,  Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth, $location, preloader, SearchService) {
 	 
 	//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 	  $scope.Auth = Auth;
@@ -27,15 +27,20 @@ angular.module('svampeatlasApp')
 		  $scope.showLogin();
 	
 	  }
-	  
-	  
+	  $scope.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
+	  $scope.AcceptedDeterminationScore = appConstants.AcceptedDeterminationScore;
+	SearchService.getMorphoGroup().then(function(morphoGroup){
+		$scope.morphoGroup = morphoGroup;
+						
+	})
 	$scope.getBackgroundStyle = function(tile){
 		
 		var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
 		
 
+		return {'background-image':  'url('+url+')', 'background-size': 'cover'};
 		
-	    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
+	   
 	}
 	  
 	  
@@ -44,17 +49,8 @@ angular.module('svampeatlasApp')
       $mdOpenMenu(ev);
     };
 	  $scope.mdMedia = $mdMedia;
-	  $scope.mdSidenav = $mdSidenav;
 	  $scope.ObservationModalService = ObservationModalService;
-	  $scope.menu = ssSideNav;
-	  $scope.menu.userHasForceClosed = true;
 	
-	$scope.openSideNav = function(){
-	
-			$scope.menu.userHasForceClosed = false;
-	
-		 $mdSidenav('left').open();
-	}
 	
 	$scope.positionRadius = 500;
 	$scope.redListOnly = false;
@@ -313,31 +309,127 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
     };
 	
 	
+	$scope.$watch(function() { return $mdMedia('sm'); }, function() {
+		$scope.validationTileLimit = 2
+	  });
 	
-   /*
-    $scope.awesomeThings = [];
+  	$scope.$watch(function() { return $mdMedia('md'); }, function() {
+  		$scope.validationTileLimit = 3
+  	  });
+    	$scope.$watch(function() { return $mdMedia('gt-md'); }, function() {
+    		$scope.validationTileLimit = 4
+    	  });
+	
+	$scope.pageForward = function(){
+		$scope.validationTileOffset = ($scope.validationTileOffset + $scope.validationTileLimit );
+	}
+	
+	$scope.pageBackward = function(){
+		$scope.validationTileOffset = ($scope.validationTileOffset - $scope.validationTileLimit );
+	}
+	
+	
+	var morphoGroups_ = localStorage.getItem('frontpage_filter_morphogroups');
+	$scope.selectedMorphoGroup = (morphoGroups_) ? JSON.parse(morphoGroups_) : [];
+	
+	$scope.$watchCollection('selectedMorphoGroup', function(newVal, oldVal) {
 
-    $http.get('/api/things').success(function(awesomeThings) {
-      $scope.awesomeThings = awesomeThings;
-      socket.syncUpdates('thing', $scope.awesomeThings);
-    });
+		
+		localStorage.setItem('frontpage_filter_morphogroups', JSON.stringify($scope.selectedMorphoGroup));
+		if(newVal && oldVal && newVal.length !== oldVal.length){
+			$scope.selectedMorphoGroupChanged = true;
+		};
+	});
+	
+	$scope.findMorphoGroup = function(searchText){
+		if(searchText === "*"){
+			return $scope.morphoGroup;
+		} else {
+			return _.filter($scope.morphoGroup, function(g){
+				return g.name_dk.indexOf(searchText) > -1;
+			})
+		}
+		
+	}
 
-    $scope.addThing = function() {
-      if ($scope.newThing === '') {
-        return;
-      }
-      $http.post('/api/things', { name: $scope.newThing });
-      $scope.newThing = '';
-    };
+	
+	$scope.loadValidationTiles = function(){
+		 $scope.validationNeededtiles ;
+		
+		
+			$scope.validationTilesLoading  = true;
+		
+		var determinationwhere = {
+						
+						$and: [{Determination_validation: { $ne: 'Godkendt'}} , {Determination_score: {$lt: 80}}]
+					};
+					
+					if(useLichenFilter)	{
+						determinationwhere.lichenized  = 1;
+					}		;
+					if($scope.selectedMorphoGroup && $scope.selectedMorphoGroup.length > 0){
+						determinationwhere.Taxon_morphogroup_id = _.map($scope.selectedMorphoGroup, function(d){
+							return d._id;
+						})
+					}		
+					
+		var q = {
+			nocount: true,
+			_order: JSON.stringify([
+						['observationDate', 'DESC'],
+						['_id', 'DESC']
+					]),
+			limit: 100,
+		
+			include: JSON.stringify(
+				[
+					JSON.stringify({
+						model: "DeterminationView",
+						as: "DeterminationView",
+						where: determinationwhere,
+						required: true
+					}),
+					JSON.stringify({
+						model: "ObservationImage",
+						as: 'Images',
+						required: true
 
-    $scope.deleteThing = function(thing) {
-      $http.delete('/api/things/' + thing._id);
-    };
+					}), 
+					JSON.stringify({
+						model: "User",
+						as: 'PrimaryUser',
+						attributes: ['_id','email', 'Initialer', 'name'],
+						where: {},
+						required: true
+					}),
+					JSON.stringify({
+						model: "Locality",
+						as: 'Locality',
+						where: {},
+						required: true
+					}),
+				]
+			)
+		
+		};	
+	
+		$scope.validationTileOffset = 0;
+		Observation.query(q).$promise.then(function(observations) {
+		
+			$scope.validationNeededtiles = observations;
+		$scope.validationTilesLoading  = false;
+			preloader.preloadImages( $scope.validationNeededtiles);
+			$scope.selectedMorphoGroupChanged = false;
+		})
+		
+	}
+	
+	if(Auth.isLoggedIn()){
 
-    $scope.$on('$destroy', function() {
-      socket.unsyncUpdates('thing');
-    });
-	*/
+		$scope.loadValidationTiles();
+		
+	};	
+		
   })
   .filter('limitHtml', function() {
       return function(text, limit) {

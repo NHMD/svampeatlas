@@ -1,6 +1,6 @@
     <md-toolbar>
       <div class="md-toolbar-tools">
-          <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
+          <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu" ng-controller="SideNavBtnCtrl">
             <ng-md-icon icon="menu"></ng-md-icon>
           </md-button>
         <h2 ng-if="!obs || !obs._id">{{'Nyt fund' | translate}} {{(duplicateID) ? ('('+('klonet fra' | translate)+' DMS-'+duplicateID+')') : ''}}</h2>

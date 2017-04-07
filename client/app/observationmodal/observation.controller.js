@@ -1,23 +1,17 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog', '$mdSidenav', 'ssSideNav', 'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog, $mdSidenav, ssSideNav, Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog',  'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'KMS', 'MapBox', '$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog,  Observation, Determination, $mdMedia, $mdToast, leafletData, KMS, MapBox, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService) {
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
 			this.DeterminationLogModalService = DeterminationLogModalService;
-			$scope.mdSidenav = $mdSidenav;
-			$scope.menu = ssSideNav;
+		
 			$scope.moment = moment;
 			$scope.Determination = Determination;
 			$scope.AcceptedDeterminationScore = appConstants.AcceptedDeterminationScore;
 			$scope.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
-			$scope.openSideNav = function() {
-
-				$scope.menu.userHasForceClosed = false;
-
-				$mdSidenav('left').open();
-			}
+			
 			$scope.openMenu = function($mdOpenMenu, ev) {
 
 				$mdOpenMenu(ev);
@@ -368,7 +362,7 @@ angular.module('svampeatlasApp')
 					
 				}
 				
-				
+				$mdExpansionPanel().waitFor('determinationsPanel').then(function (instance) { instance.expand();});
 				$mdExpansionPanel().waitFor('commentsPanel').then(function (instance) { instance.expand();});
 
 

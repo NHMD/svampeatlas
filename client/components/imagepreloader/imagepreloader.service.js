@@ -7,14 +7,21 @@ angular.module('svampeatlasApp')
 
 				// I manage the preloading of image objects. Accepts an array of image URLs.
 				function Preloader( observations ) {
-
+					var that = this;
 					// I am the image SRC values to preload.
 					this.observations = observations;
 
 					// As the images load, we'll need to keep track of the load/error
 					// counts when announing the progress on the loading.
 					// if theres only one observation, we should load all images from that single obs.
-					this.imageCount = (this.observations.length > 1) ? this.observations.length : this.observations[0].Images.length;
+					this.imageCount;
+					if(this.observations.length > 1){
+						that.imageCount = that.observations.length 
+					} else if(this.observations[0] && this.observations[0].Images){
+						that.imageCount = that.observations[0].Images.length;
+					} else {
+						that.imageCount = 0
+					};
 					this.loadCount = 0;
 					this.errorCount = 0;
 					this.missingImages = [];
@@ -113,7 +120,7 @@ angular.module('svampeatlasApp')
 							_.each(this.observations, function(obs){
 								that.loadimage(obs.Images[0])
 							})
-						} else {
+						} else if(this.observations[0] && this.observations[0].Images) {
 							_.each(this.observations[0].Images, function(img){
 								that.loadimage(img)
 							})
@@ -191,8 +198,9 @@ angular.module('svampeatlasApp')
 						// we bind the event handlers BEFORE we actually set the image
 						// source. Failure to do so will prevent the events from proper
 						// triggering in some browsers.
+						
 						var image = $( new Image() )
-							.load(
+							.on('load',
 								function( event ) {
 									imgref.width = this.width;
 									imgref.height = this.height;
@@ -212,7 +220,7 @@ angular.module('svampeatlasApp')
 
 								}
 							)
-							.error(
+							.on('error',
 								function( event ) {
 
 									// Since the load event is asynchronous, we have to
