@@ -152,6 +152,11 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: true,
       },
 	  
+	  Taxon_morphogroup_id:  {
+        type: DataTypes.INTEGER(11),
+   	allowNull: true
+      },
+	  
 	  mycorrhizal: {
 	  	type: DataTypes.BOOLEAN
 	  },

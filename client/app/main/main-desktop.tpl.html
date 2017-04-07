@@ -1,14 +1,90 @@
 <div layout="row" layout-xs="column" layout-sm="column" flex>
+<div layout="column" flex-gt-sm="66">
+<md-whiteframe class="md-whiteframe-5dp newsfeed" ng-if="Auth.isLoggedIn()">
+<span class="validation-needed-sub-header">{{'Hjælp med at validere fund' | translate }}:</span>
+<div flex layout-fill layout="center center" ng-if="validationTilesLoading"><md-progress-linear></md-progress-linear></div>
+<div layout="row" >
+	<span ng-if="validationNeededtiles && validationNeededtiles.length ===0" class="validation-needed-sub-header">{{'Ingen data fundet' | translate}}</span>
+
+	<md-button class="md-fab md-mini caroussel-nav-left" aria-label="Back" ng-click="pageBackward()" ng-show="validationTileOffset > 0">
+	          <ng-md-icon icon="chevron_left"></ng-md-icon>
+	        </md-button>
+<md-grid-list
+         md-cols="{{validationTileLimit}}"
+        md-row-height="200px"
+        md-gutter="12px" md-gutter-gt-sm="8px" flex>
+
+<md-grid-tile ng-repeat="tile in validationNeededtiles | limitTo : validationTileLimit : validationTileOffset"
+                 
+                  md-colspan-sm="1"
+                  
+			   ng-if="!tile.Images[0].imageLoadError"
+			   ng-style="getBackgroundStyle(tile)"
+			   ng-click="ObservationModalService.show($event, tile)"
+				  >
+		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
+			<div flex="33"></div>
+			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
+			<div flex="33"></div>
+		</div>
+    <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
+     
+      <md-grid-tile-footer class="img-footer footer-full-width" >
+	  <span  class="footer-img-count star-rating"><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= AcceptedDeterminationScore"></ng-md-icon></span>
+	  <em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && translate.use() !='en'">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</span><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
+  <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{tile.Locality.name}}<br>
+  {{tile.PrimaryUser.name}}</span>
+  </md-grid-tile-footer>
+  </md-grid-tile>
+  </md-grid-list>
+	<md-button class="md-fab md-mini caroussel-nav-right" aria-label="Forward" ng-click="pageForward()" ng-show="validationNeededtiles.length  > (validationTileOffset+validationTileLimit)">
+	          <ng-md-icon icon="chevron_right"></ng-md-icon>
+	        </md-button>
+
+</div>
+<md-chips ng-model="selectedMorphoGroup" md-autocomplete-snap
+              md-require-match="true">
+      <md-autocomplete
+          md-selected-item="selectedItem"
+          md-search-text="searchText"
+          md-items="mg in findMorphoGroup(searchText)"
+          md-item-text="mg.name_dk"
+          placeholder="{{translate.instant('Filtrér til artsgruppe(r)')}}">
+        <span md-highlight-text="searchText">{{mg.name_dk}}</span>
+      </md-autocomplete>
+      <md-chip-template>
+        <span>
+          <strong>{{$chip.name_dk}}</strong>
+         
+        </span>
+      </md-chip-template>
+    </md-chips>
+	<md-button ng-if="selectedMorphoGroupChanged" ng-click="loadValidationTiles()">{{'Opdatér' | translate}}</md-button>
+		 <!--   <md-input-container >
+		           <label>{{'MorphoGroups' | translate}}</label>
+		           <md-select name="MorphoGroups" ng-model="selectedMorphoGroup" multiple>
+
+   				             <md-option ng-repeat="mg in morphoGroup"  value="{{mg._id}}" >
+   				               {{mg.name_dk}} 
+   				             </md-option>
+ 
+
+		           </md-select>
+				    </md-input-container > -->
+</md-whiteframe>
+
+<md-whiteframe class="md-whiteframe-5dp newsfeed" >
+<span class="validation-needed-sub-header">{{'Seneste aktivitet' | translate }}:</span>
 <md-grid-list
         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
         md-row-height="200px"
-        md-gutter="12px" md-gutter-gt-sm="8px" flex-gt-sm="66">
+        md-gutter="12px" md-gutter-gt-sm="8px" >
 <md-grid-tile md-colspan="2" md-colspan-xs="1" md-rowspan="2" ><leaflet id="frontpagemap" width="100%" height="400px" center="mapsettings.center" defaults="mapsettings.defaults" markers="mapsettings.markers" ></leaflet>
      <md-grid-tile-footer class="map-footer" >
 	 <md-radio-group ng-model="latestlocalitydays" layout="row" ng-change="getLatestLocalities(latestlocalitydays)">
-	       <md-radio-button value="1" >Fund i dag</md-radio-button>
-	       <md-radio-button value="3">Seneste 3 dage </md-radio-button>
-	       <md-radio-button value="7">Seneste uge</md-radio-button>
+	       <md-radio-button value="1" >{{'Fund i dag' | translate}}</md-radio-button>
+	       <md-radio-button value="3">{{'Seneste 3 dage' | translate}} </md-radio-button>
+	       <md-radio-button value="7">{{'Seneste uge' | translate}}</md-radio-button>
 	     </md-radio-group>
 	 
  </md-grid-tile-footer>     
@@ -27,18 +103,24 @@
 			<div flex="33"></div>
 		</div>
     <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
-      <md-grid-tile-footer class="img-footer"><em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && translate.use() !='en'">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</span><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
+      <md-grid-tile-footer class="img-footer footer-full-width" >
+	  <span class="footer-img-count star-rating">
+	  <ng-md-icon icon="microscope" size="18" ng-if="tile.DeterminationView.Determination_validation === 'Godkendt'"></ng-md-icon>
+	  <span  class="star-rating" ng-if="tile.DeterminationView.Determination_validation !== 'Godkendt' "><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= AcceptedDeterminationScore"></ng-md-icon></span></span>
+	  <em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && translate.use() !='en'">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</span><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>
   <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{tile.Locality.name}}<br>
   {{tile.PrimaryUser.name}}</span>
   </md-grid-tile-footer>
   </md-grid-tile>
   </md-grid-list>
-  
+  </md-whiteframe>
+</div>
  <div layout="column" flex-gt-sm="33" layout ng-if="mdMedia('gt-sm')">
 
    <md-whiteframe class="md-whiteframe-5dp newsfeed" >
  
- <md-subheader class="md-no-sticky">Samarbejdspartnere</md-subheader>
+ 
+ <span class="validation-needed-sub-header news-subheader">{{'Samarbejdspartnere' | translate }}:</span>
    <div flex layout="row" layout-align="space-around center" >
     
 
@@ -51,8 +133,10 @@
  
    </div>
   <md-divider layout-margin layout-padding></md-divider>
+  <span class="validation-needed-sub-header news-subheader">{{'Nyheder fra svampeatlas' | translate }}:</span>
     <md-list layout-fill layout-padding>
-      <md-subheader class="md-no-sticky">Nyheder fra svampeatlas</md-subheader>
+	
+      
       <md-list-item class="md-3-line md-long-text" ng-repeat="item in news | limitTo : 5">
        
         <div class="md-list-item-text" layout="column">

@@ -8,7 +8,7 @@
 
     
         <div class="md-toolbar-tools">
-          <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu">
+          <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu" ng-controller="SideNavBtnCtrl">
             <ng-md-icon icon="menu"></ng-md-icon>
           </md-button>
 		  <ng-md-icon icon="search" ></ng-md-icon>

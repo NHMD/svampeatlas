@@ -40,15 +40,15 @@ $scope.states =
 	*/
 	
   })
-  .controller('SideNavBtnCtrl', function ($scope, $state, ssSideNav, $mdMedia, $mdSidenav) {
+  .controller('SideNavBtnCtrl', function ($rootScope, $scope, $state, ssSideNav, $mdMedia, $mdSidenav) {
 	  $scope.mdMedia = $mdMedia;
 	  $scope.mdSidenav = $mdSidenav;
 	  $scope.state = $state;
 	  $scope.menu = ssSideNav;
 	
 	$scope.openSideNav = function(){
-	
-			$scope.menu.userHasForceClosed = false;
+		$rootScope.$broadcast('userHasOpenedMenu');
+			//$scope.menu.userHasForceClosed = false;
 	
 		 $mdSidenav('left').open();
 	}
