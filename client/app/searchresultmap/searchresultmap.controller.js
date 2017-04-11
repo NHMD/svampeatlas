@@ -214,7 +214,7 @@ angular.module('svampeatlasApp')
 				if (observation.Images && observation.Images.length > 0) {
 					iconOptions.icon = 'camera';
 				};
-				if (observation.DeterminationView.Determination_validation === "Godkendt") {
+				if (observation.DeterminationView.Determination_validation === "Godkendt" || observation.DeterminationView.Determination_score >= appConstants.AcceptedDeterminationScore) {
 					iconOptions.markerColor = 'blue';
 					marker.category = 0;
 				} else if (observation.DeterminationView.Determination_validation === "Afvist") {

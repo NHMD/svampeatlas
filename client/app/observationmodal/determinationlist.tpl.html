@@ -33,18 +33,25 @@
 			 
 		 
 		 </md-icon>
+		 <div ng-if="User._id === det.user_id && obs.Determinations.length > 1 && det.Votes.length === 0 && moment(det.createdAt) > moment().subtract(4, 'hours')">
 		<md-tooltip md-direction="right"  >
   		          {{'Slet bestemmelsen' | translate}}
   		        </md-tooltip>
-		 <md-button ng-click="deleteDetermination(det, obs)" ng-if="User._id === det.user_id && obs.Determinations.length > 1 && det.Votes.length === 0 && moment(det.createdAt) > moment().subtract(4, 'hours')" class="table-button" aria-label="Delete identification"><ng-md-icon icon="delete_forever"></ng-md-icon></md-button>
+		 <md-button ng-click="deleteDetermination(det, obs)"  class="table-button" aria-label="Delete identification"><ng-md-icon icon="delete_forever"></ng-md-icon></md-button></div>
 	 </div>
 	
 
 	          <div class="md-list-item-text"  >
-				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
-	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
+				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(det._id === obs.primarydetermination_id) ? ('('+('Nuværende bestemmelse' | translate)+')') : '' }}</h3>
+	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? ('('+('Nuværende bestemmelse' | translate)+')') : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
+   			
+
+   			      
+				<p ng-if="det.confidence">{{'Bestemmelsens sikkerhed' | translate}}: <span ng-if="User._id !== det.user_id">{{ det.confidence | translate}}</span><a  ng-if="User._id === det.user_id" href="#" editable-select="det.confidence" e-ng-options="(s | translate) for s in ['sikker', 'sandsynlig', 'mulig']" onaftersave="updateConfidence(det, obs)">
+			    {{det.confidence | translate}}
+			  </a> </p>
 	            <p>{{'Antal stemmer' | translate}}: {{ det.Votes.length }} </p>
 				
 					 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></p>
@@ -87,10 +94,11 @@
 			   		        </md-tooltip>
 		       <md-icon md-font-icon="fa fa-tag fa-2x" class="material-icons md-light md-48 md-primary" >
 		     </md-button>
-	 		<md-tooltip md-direction="right"  >
-	   		          {{'Slet bestemmelsen' | translate}}
-	   		        </md-tooltip>
-	 		 <md-button ng-click="deleteDetermination(det, obs)" ng-if="User._id === det.user_id && obs.Determinations.length > 1 &&  det.Votes.length === 0 && moment(det.createdAt) > moment().subtract(4, 'hours')" class="table-button" aria-label="Delete identification"><ng-md-icon icon="delete_forever"></ng-md-icon></md-button>
+			 <div ng-if="User._id === det.user_id && obs.Determinations.length > 1 && det.Votes.length === 0 && moment(det.createdAt) > moment().subtract(4, 'hours')">
+			<md-tooltip md-direction="right"  >
+	  		          {{'Slet bestemmelsen' | translate}}
+	  		        </md-tooltip>
+			 <md-button ng-click="deleteDetermination(det, obs)"  class="table-button" aria-label="Delete identification"><ng-md-icon icon="delete_forever"></ng-md-icon></md-button></div>
 	</div>
 
 	          <div class="md-list-item-text"  >
@@ -98,6 +106,9 @@
 	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
+  				<p ng-if="det.confidence">{{'Bestemmelsens sikkerhed' | translate}}: <span ng-if="User._id !== det.user_id">{{ det.confidence | translate}}</span><a  ng-if="User._id === det.user_id" href="#" editable-select="det.confidence" e-ng-options="(s | translate) for s in ['sikker', 'sandsynlig', 'mulig']" onaftersave="updateConfidence(det, obs)">
+  			    {{det.confidence | translate}}
+  			  </a> </p>
 	            <p>{{'Antal stemmer' | translate}}: {{ det.Votes.length }} </p>
 			 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></p>
 				

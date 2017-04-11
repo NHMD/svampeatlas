@@ -26,10 +26,10 @@ angular.module('svampeatlasApp')
 			var storedState = localStorage.getItem('dkchecklist_table');
 			var parsedStoredState = (storedState) ? JSON.parse(storedState) : undefined;
 			if(parsedStoredState && parsedStoredState.search && parsedStoredState.search.predicateObject && parsedStoredState.search.predicateObject.FullName){
-				$scope.uiFullName = parsedStoredState.search.predicateObject.FullName;
+				that.uiFullName = parsedStoredState.search.predicateObject.FullName;
 			}
 			if(parsedStoredState && parsedStoredState.search && parsedStoredState.search.predicateObject && parsedStoredState.search.predicateObject.Vernacularname_DK){
-				$scope.uiDkName = parsedStoredState.search.predicateObject.Vernacularname_DK.vernacularname_dk;
+				that.uiDkName = parsedStoredState.search.predicateObject.Vernacularname_DK.vernacularname_dk;
 			}
 			
 			if(parsedStoredState && parsedStoredState.search && parsedStoredState.search.predicateObject && parsedStoredState.search.predicateObject.indexLetter){
@@ -84,9 +84,14 @@ angular.module('svampeatlasApp')
 			}
 
 			$scope.$watch('acceptedTaxaOnly', function(newval, oldval){
-				$timeout(function() {
-						$("#reset-table-state").trigger('click');
-					})
+				
+				if(newval !== undefined && newval !== oldval){
+					$timeout(function() {
+							$("#reset-table-state").trigger('click');
+						})
+				}
+				
+				
 			})
 			
 

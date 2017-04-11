@@ -23,6 +23,7 @@ router.put('/:id/validation', auth.hasRole('validator'),  controller.updateValid
 router.patch('/:id',auth.hasRole('validator'),  controller.update);
 
 router.post('/:id/votes',auth.appendUser(), voteController.addVoteToDetermination);
+router.put('/:id/confidence', auth.isAuthenticated(),    controller.updateConfidence);
 router.delete('/:id/votes/:userid',auth.appendUser(), voteController.deleteVoteFromDetermination);
 router.delete('/:id', auth.isAuthenticated(),   controller.destroy);
 

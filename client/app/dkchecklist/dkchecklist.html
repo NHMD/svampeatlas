@@ -40,7 +40,7 @@
 				<md-input-container class="md-block th-filter-container" >
         <label>Latinsk navn</label>
 		<md-icon id="reset-table-state" md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
-        <input st-search="FullName"  ng-model="uiFullName" ng-model-options="{ debounce: 500 }">
+        <input st-search="FullName"  ng-model="ctrl.uiFullName" ng-model-options="{ debounce: 500 }">
 		
       </md-input-container> </th>
 			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
@@ -51,7 +51,7 @@
 			       </md-radio-group> -->
 				<md-input-container class="md-block th-filter-container">
         <label>Dansk navn</label>
-        <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="uiDkName" ng-model-options="{ debounce: 500 }">
+        <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="ctrl.uiDkName" ng-model-options="{ debounce: 500 }">
 		
       </md-input-container> </th>
 	  <th ng-show="mdMedia('gt-xs')"><md-switch  ng-model="acceptedTaxaOnly" aria-label="Only accepted taxa" >

@@ -1,6 +1,6 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('ValidatorToolsService', function(Determination, Observation, ErrorHandlingService, $rootScope, $mdToast, $translate) {
+	.factory('ValidatorToolsService', function(Determination, Observation, ErrorHandlingService, $rootScope, $mdToast, $translate, VotingService) {
 		
 
 
@@ -41,6 +41,50 @@ angular.module('svampeatlasApp')
 							obs.Determinations = determinations;
 						
 						})
+						.catch(function(err) {
+
+							ErrorHandlingService.handle500();
+						})
+				},
+				updateConfidence : function( det, obs) {
+
+					Determination.updateConfidence({
+							id: det._id
+						}, {
+							confidence: det.confidence
+						}).$promise
+						.then(function(res) {
+							//det.confidence = confidence;
+						
+							var txt =  $translate.instant("Bestemmelsens sikkerhed ændret til")+ " " + $translate.instant(det.confidence);
+							
+							$mdToast.show(
+								$mdToast.simple()
+								.textContent(txt)
+								.position("bottom right")
+								.hideDelay(3000)
+							);
+						
+							VotingService
+						
+						
+							det.score = res.newDeterminationScore;
+							
+							
+							VotingService.swapPrimaryDeterminationIfNeeded(obs, res.newPrimaryDeterminationId);
+							$rootScope.$broadcast('observation_updated', obs);
+						
+						
+							/*
+							for(var i=0; i< $scope.obs.Determinations.length; i++){
+								if($scope.obs.Determinations[i]._id === $scope.obs.PrimaryDetermination._id){
+									$scope.obs.Determinations[i].validation = determination.validation;
+								}
+							}
+							*/
+						
+						})
+						
 						.catch(function(err) {
 
 							ErrorHandlingService.handle500();

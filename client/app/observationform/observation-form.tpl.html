@@ -9,9 +9,9 @@
   		  </div>
 		  <div class="validator-button-container" ng-cloak ng-if="obs && (obs._id && !duplicateID) && Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'"></div>
 		  <div ng-if="$mdMedia('gt-xs') && obs && (obs._id && !duplicateID) && !Auth.hasRole('validator')">
-	         <md-button aria-label="add determination" class="md-raised md-warn" ng-click="showDeterminationDialog($event, obs)">
+	         <md-button aria-label="add determination" class="md-raised md-warn" ng-click="ctrl.DeterminationModalService.show($event, obs)">
 			  
-	            <ng-md-icon icon="undo"></ng-md-icon> {{"Ombestem" | translate}}
+	            <ng-md-icon icon="undo"></ng-md-icon> {{"Ny bestemmelse" | translate}}
 	          </md-button>
 		  </div>
 		  </div>
