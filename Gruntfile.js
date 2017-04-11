@@ -436,6 +436,13 @@ module.exports = function(grunt) {
 					cwd: '<%= yeoman.client %>/bower_components/bootstrap',
 					src: ['fonts/*.*'],
 					dest: '<%= yeoman.dist %>/client/assets'
+				},{
+					// include leaflet draw images
+					expand: true,
+					dot: true,
+					cwd: '<%= yeoman.client %>/bower_components/leaflet.draw/dist',
+					src: ['images/*.*'],
+					dest: '<%= yeoman.dist %>/client/assets'
 				}, {
 					expand: true,
 					dot: true,

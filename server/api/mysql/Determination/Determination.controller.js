@@ -15,6 +15,7 @@ var models = require('../')
 var Determination = models.Determination;
 var Promise = require("bluebird");
 var userTool = require("../userTool");
+var determinationVotesController = require('../DeterminationVotes/DeterminationVotes.controller');
 
 var moment = require('moment');
 
@@ -313,10 +314,132 @@ function createDetermination(obs, determination, user, t, logObject) {
 		})
 
 
-
 };
 
 exports.createDetermination = createDetermination;
+
+exports.updateConfidence = (req, res) => {
+
+
+	var logObject = {
+		User: {
+			_id: req.user._id,
+			name: req.user.name,
+			initials: req.user.Initialer
+		},
+		_eventType: 'DETERMINATION CONFIDENCE CHANGED'
+	};
+
+
+	return models.sequelize.transaction(function(t) {
+		return Determination.find({
+				where: {
+					_id: req.params.id,
+					user_id: req.user._id
+				},
+				include: [{
+					model: models.Observation,
+					as: "Observation"
+				}, {
+					model: models.Taxon,
+					as: "Taxon",
+					include: [{
+						model: models.Taxon,
+						as: "acceptedTaxon",
+						include: [{
+							model: models.TaxonAttributes,
+							as: "attributes",
+							fields: ['validation']
+						}, {
+							model: models.TaxonStatistics,
+							as: "Statistics"
+						}]
+					}]
+				}],
+				transaction: t
+			}).then(function(determination) {
+
+				logObject.Determination = {
+					oldConfidence: determination.confidence,
+					oldInitialScore: determination.baseScore,
+					oldScore: determination.score
+				};
+				determination.confidence = req.body.confidence;
+
+				return [determination, getUserBaseImpact(determination.user_id, determination.Taxon, logObject, determination), getTaxonWeight(determination.Taxon, determination.Taxon, t, logObject), determination.Taxon, determination.Observation, determinationVotesController.calculateSumAndAbsSum(determination, t)]
+
+				/*
+				return determination.save({
+					fields: ['validation', 'validator_id'],
+					transaction: t
+				})*/
+			})
+			.spread((determination, baseScore, taxonWeight, taxon, obs, SumAndAbsSum) => {
+
+
+				console.log("### baseScore: " + baseScore)
+				console.log("### taxonWeight: " + taxonWeight)
+
+
+				logObject.Determination.newInitialScore = baseScore;
+				logObject.Determination.confidence = determination.confidence;
+
+
+
+
+				determination.baseScore = baseScore;
+
+				determination.score = getDeterminationScore(SumAndAbsSum.sum + determination.baseScore, taxonWeight, SumAndAbsSum.absSum + determination.baseScore);
+
+				return [determination.save({
+					transaction: t
+				}), obs, determination]
+			})
+			.spread((savePromise, obs, determination) => {
+
+				return [determination, swapPrimaryDeterminationIfNeeded(obs._id, t, logObject)]
+
+			})
+			.spread(function(determination, obs) {
+				return [determination, {
+					newDeterminationScore: determination.score,
+					newPrimaryDeterminationId: obs.primarydetermination_id
+				}];
+			})
+			.spread((det, result) => {
+
+				return [result, models.DeterminationLog.create({
+					eventType: logObject._eventType,
+					user_id: req.user._id,
+					determination_id: det._id,
+					observation_id: det.observation_id,
+					logObject: JSON.stringify(logObject)
+				}, {
+					transaction: t
+				})]
+			})
+			.spread(function(result, determinationLogSavePromise) {
+
+				return result;
+			})
+	})
+
+	.then(function(result) {
+			return res.status(200).json(result)
+		})
+		.
+	catch((err) => {
+		var statusCode = (err.message === 'Forbidden') ? 403 : 500;
+		console.log(err);
+
+		res.status(statusCode).send(err.message);
+	});
+
+
+}
+
+
+
 
 exports.updateValidation = (req, res) => {
 
@@ -389,8 +512,15 @@ exports.updateValidation = (req, res) => {
 	})
 
 	.then(function(determination) {
-		return res.status(204).json(determination)
-	})
+			return res.status(204).json(determination)
+		})
+		.
+	catch((err) => {
+		var statusCode = (err.message === 'Forbidden') ? 403 : 500;
+		console.log(err);
+
+		res.status(statusCode).send(err.message);
+	});
 }
 
 exports.addDeterminationToObs = (req, res) => {
@@ -599,7 +729,7 @@ function getUserBaseImpact(user_id, taxon, logObject, determination) {
 				} else if (useConfidencePenalty && determination.confidence === 'sandsynlig') {
 					usrRelativeScore = Math.ceil((usr.MorphoGroup[0].UserMorphoGroupImpact.impact * IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY) / usrMaxScoreInGroup * 100);
 				}
-				
+
 			}
 
 			logObject.User.morphoGroupImpactCalculated = usrRelativeScore;
@@ -729,9 +859,15 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 		};
 
 
-		if (closestDistance < SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
+		if (obs.locality_id && closestDistance < SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
 			factor = factor * SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
 			logObject.Taxon.closestDistance = Math.round(closestDistance * 100) / 100;
+		} else if (obs.geonameId && closestDistance < SEARCH_CLOSEST_RADIUS && taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) {
+
+			factor = factor * SHORT_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_FACTOR;
+			logObject.Taxon.closestDistance = Math.round(closestDistance * 100) / 100;
+
+			logObject.observationIsNotInDenmark = true
 		}
 
 		var taxonWeight = taxonCalculation[0].TaxonWeight * factor;
@@ -743,12 +879,15 @@ function getTaxonWeight(taxon, obs, t, logObject) {
 			logObject.Taxon.taxon_accepted_count = (taxon.acceptedTaxon.Statistics) ? taxon.acceptedTaxon.Statistics.accepted_count : 0;
 
 			// additions
-			if (taxon.acceptedTaxon.Statistics && closestDistance >= FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.Statistics.accepted_count > DISTANCE_PENALTY_MIN_ACCEPTED_COUNT) {
-				taxonWeight += DISTANCE_PENALTY_VALUE;
-			}
+			if (obs.locality_id) {
+				if (taxon.acceptedTaxon.Statistics && closestDistance >= FAR_DISTANCE_TO_CLOSEST_KNOWN_RECORDING_DISTANCE && taxon.acceptedTaxon.Statistics.accepted_count > DISTANCE_PENALTY_MIN_ACCEPTED_COUNT) {
+					taxonWeight += DISTANCE_PENALTY_VALUE;
+				}
 
-			if (taxon.acceptedTaxon.Statistics &&  prevRecordsThisMonth === 0 && (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT)) {
-				taxonWeight += PHAENOLOGY_PENALTY_VALUE;
+				if (taxon.acceptedTaxon.Statistics && prevRecordsThisMonth === 0 && (taxon.acceptedTaxon.Statistics.accepted_count > PHAENOLOGY_MIN_ACCEPTED_COUNT)) {
+					taxonWeight += PHAENOLOGY_PENALTY_VALUE;
+				}
+
 			}
 		}
 
@@ -967,75 +1106,91 @@ exports.update = function(req, res) {
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
 
-		var userIsValidator = userTool.hasRole(req.user, 'validator');
-return models.sequelize.transaction(function(t) {
-		return Determination.find({
-				where: {
-					_id: req.params.id,
-					user_id: req.user._id
-				},
-				include: [{
+	var userIsValidator = userTool.hasRole(req.user, 'validator');
+	return models.sequelize.transaction(function(t) {
+			return Determination.find({
+					where: {
+						_id: req.params.id,
+						user_id: req.user._id
+					},
+					include: [{
 						model: models.DeterminationVote,
 						as: 'Votes',
 						attributes: ['_id', 'user_id', 'createdAt', 'score']
 					}, {
 						model: models.Observation,
 						as: 'Observation',
-						include: [
-							{model: models.Determination,
-							as: "PrimaryDetermination"},
-							{
+						include: [{
+								model: models.Determination,
+								as: "PrimaryDetermination"
+							}, {
 								model: models.Determination,
 								as: 'Determinations',
-							include: [{
-								model: models.Taxon,
-								as: "Taxon",
 								include: [{
 									model: models.Taxon,
-									as: "acceptedTaxon"}]
+									as: "Taxon",
+									include: [{
+										model: models.Taxon,
+										as: "acceptedTaxon"
+									}]
 								}]
 							}
-	
-					]
-				}]
-		})
-	.then(handleEntityNotFound(res))
-	.then(function(det) {
-		if (det.Observation.Determinations.length === 1 || !(userIsValidator || (req.user._id === det.Observation.primaryuser_id && det.createdAt > moment().subtract(4, 'hours')))) {
-			throw new Error("Forbidden");
-		};
-		
-		var promise;
-		var newPrimaryDetermination;
-		if(parseInt(req.params.id) !== parseInt(det.Observation.primarydetermination_id)){
-			newPrimaryDetermination = det.Observation.PrimaryDetermination;
-			promise = Promise.resolve(1);
-		} else {
-			newPrimaryDetermination = _.maxBy(_.reject(det.Observation.Determinations, function(o) { return parseInt(o._id) === parseInt(req.params.id) }), function(d) {
-				// determinations to higher taxon will be handicapped towards determinations to species
-				return (d.Taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? d.score : (d.score * DEFAULT_HIGHER_TAXON_FACTOR);
-			});
-			
-			promise =  models.Observation.update({primarydetermination_id: newPrimaryDetermination._id}, {where: {_id: det.Observation._id}});
-		};
-		
-		return [promise.then(function(){
-			return models.DeterminationVote.destroy({where: {determination_id: req.params.id}}).then(function(){
-				return det.destroy();
-			})
-		}), newPrimaryDetermination]
-	})
-	.spread(function(destroyPromise, newPrimaryDetermination){
-		return {status: 'deleted', newprimarydermintaion_id : newPrimaryDetermination._id};
-	})
-	}).then(function(statusObject){
-		return res.status(200).json(statusObject)
-	})
-	.
-catch(function(err) {
-	var statusCode = (err.message === 'Forbidden') ? 403 : 500;
-	console.log(err);
 
-	res.status(statusCode).send(err.message);
-});
+						]
+					}]
+				})
+				.then(handleEntityNotFound(res))
+				.then(function(det) {
+					if (det.Observation.Determinations.length === 1 || !(userIsValidator || (req.user._id === det.Observation.primaryuser_id && det.createdAt > moment().subtract(4, 'hours')))) {
+						throw new Error("Forbidden");
+					};
+
+					var promise;
+					var newPrimaryDetermination;
+					if (parseInt(req.params.id) !== parseInt(det.Observation.primarydetermination_id)) {
+						newPrimaryDetermination = det.Observation.PrimaryDetermination;
+						promise = Promise.resolve(1);
+					} else {
+						newPrimaryDetermination = _.maxBy(_.reject(det.Observation.Determinations, function(o) {
+							return parseInt(o._id) === parseInt(req.params.id)
+						}), function(d) {
+							// determinations to higher taxon will be handicapped towards determinations to species
+							return (d.Taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? d.score : (d.score * DEFAULT_HIGHER_TAXON_FACTOR);
+						});
+
+						promise = models.Observation.update({
+							primarydetermination_id: newPrimaryDetermination._id
+						}, {
+							where: {
+								_id: det.Observation._id
+							}
+						});
+					};
+
+					return [promise.then(function() {
+						return models.DeterminationVote.destroy({
+							where: {
+								determination_id: req.params.id
+							}
+						}).then(function() {
+							return det.destroy();
+						})
+					}), newPrimaryDetermination]
+				})
+				.spread(function(destroyPromise, newPrimaryDetermination) {
+					return {
+						status: 'deleted',
+						newprimarydermintaion_id: newPrimaryDetermination._id
+					};
+				})
+		}).then(function(statusObject) {
+			return res.status(200).json(statusObject)
+		})
+		.
+	catch(function(err) {
+		var statusCode = (err.message === 'Forbidden') ? 403 : 500;
+		console.log(err);
+
+		res.status(statusCode).send(err.message);
+	});
 };

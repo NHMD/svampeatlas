@@ -24,6 +24,7 @@ var user = Auth.getCurrentUser();
 
 
 			return {
+				swapPrimaryDeterminationIfNeeded: swapPrimaryDeterminationIfNeeded,
 				vote : function($event,obs, det, upOrDown) {
 
 				// if the vote is already there delete it (its another click in same direction to remove it)

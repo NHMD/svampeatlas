@@ -8,8 +8,8 @@ angular.module('svampeatlasApp')
 	  $scope.$state = $state;
 	  $scope.ObservationFormService = ObservationFormService;
 	  $scope.translate = $translate;
-	  var useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
-	  
+	  $scope.useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
+	 
 	  $scope.showLogin = function(){
   		var useFullScreen = $mdMedia('xs');
   		    $mdDialog.show({
@@ -151,7 +151,7 @@ angular.module('svampeatlasApp')
 		}
 		
 		var locQuery = {days: days};
-		if(useLichenFilter){
+		if($scope.useLichenFilter){
 			locQuery.lichensonly = true;
 		}
 		
@@ -208,7 +208,7 @@ angular.module('svampeatlasApp')
 	
 	
 	
-	var determinationwhere = (useLichenFilter) ?	{
+	var determinationwhere = ($scope.useLichenFilter) ?	{
 						lichenized: 1,
 						$or: [{Determination_validation: 'Godkendt'} , {Determination_score: {$gte: 80}}]
 					} : {
@@ -258,7 +258,7 @@ angular.module('svampeatlasApp')
 	};	
 	
 	
-		query.cachekey = (useLichenFilter) ? 'latestlichens': 'latestredlisted';
+		query.cachekey = ($scope.useLichenFilter) ? 'latestlichens': 'latestredlisted';
 	 
 	
 
@@ -322,6 +322,13 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 	
 	$scope.pageForward = function(){
 		$scope.validationTileOffset = ($scope.validationTileOffset + $scope.validationTileLimit );
+		
+		var deepCopiedArraySlice = [];
+		for(var i = ($scope.validationTileOffset + $scope.validationTileLimit ); i < ($scope.validationTileOffset + $scope.validationTileLimit *2); i++){
+			deepCopiedArraySlice.push($scope.validationNeededtiles[i])
+		}
+		preloader.preloadImages(deepCopiedArraySlice);
+		
 	}
 	
 	$scope.pageBackward = function(){
@@ -364,14 +371,14 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 						$and: [{Determination_validation: { $ne: 'Godkendt'}} , {Determination_score: {$lt: 80}}]
 					};
 					
-					if(useLichenFilter)	{
+					if($scope.useLichenFilter)	{
 						determinationwhere.lichenized  = 1;
-					}		;
-					if($scope.selectedMorphoGroup && $scope.selectedMorphoGroup.length > 0){
+					}	
+					else if($scope.selectedMorphoGroup && $scope.selectedMorphoGroup.length > 0){
 						determinationwhere.Taxon_morphogroup_id = _.map($scope.selectedMorphoGroup, function(d){
 							return d._id;
 						})
-					}		
+					};		
 					
 		var q = {
 			nocount: true,
@@ -418,7 +425,12 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 		
 			$scope.validationNeededtiles = observations;
 		$scope.validationTilesLoading  = false;
-			preloader.preloadImages( $scope.validationNeededtiles);
+		var deepCopiedArraySlice = [];
+		for(var i = $scope.validationTileOffset; i < ($scope.validationTileLimit *2); i++){
+			deepCopiedArraySlice.push($scope.validationNeededtiles[i])
+		}
+		preloader.preloadImages(deepCopiedArraySlice);
+			
 			$scope.selectedMorphoGroupChanged = false;
 		})
 		

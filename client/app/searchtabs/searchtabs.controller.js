@@ -15,7 +15,7 @@ angular.module('svampeatlasApp')
 				{ title:'Resultat i liste',  state: 'search-list', icon: 'list'},
 				{ title:'Galleri',  state: 'search-gallery', icon: 'view_comfy'},
 				{ title:'Resultat på kort',  state: 'search-map', icon: 'map'},
-				{ title:'Artsliste',  state: 'search-specieslist', icon: 'list'}
+				{ title:'Artsliste',  state: 'search-specieslist', icon: 'fungus'}
 			  ];
 			  
   			$scope.states = 

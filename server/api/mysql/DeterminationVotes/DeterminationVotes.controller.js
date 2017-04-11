@@ -340,6 +340,8 @@ function calculateSumAndAbsSum(determination, t){
 	
 }
 
+exports.calculateSumAndAbsSum = calculateSumAndAbsSum;
+
 exports.deleteVoteFromDetermination = function(req, res){
 	
 	

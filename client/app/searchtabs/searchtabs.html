@@ -25,8 +25,8 @@
    
     <md-tab ng-repeat="tab in tabs"  ng-class="{'md-active': tab.active}" ng-disabled="tab.disabled" >
       <md-tab-label>
-	  <!-- <ng-md-icon icon="{{tab.icon}}" ng-if="mdMedia('xs')"></ng-md-icon>-->
-        <span >{{tab.title | translate}}</span>
+	  <ng-md-icon icon="{{tab.icon}}" ng-if="mdMedia('xs')"></ng-md-icon>
+        <span ng-if="mdMedia('gt-xs')">{{tab.title | translate}}</span>
        
       </md-tab-label>
     

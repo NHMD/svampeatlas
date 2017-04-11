@@ -43,7 +43,7 @@
 
 </div>
 <md-chips ng-model="selectedMorphoGroup" md-autocomplete-snap
-              md-require-match="true">
+              md-require-match="true" ng-if="!useLichenFilter">
       <md-autocomplete
           md-selected-item="selectedItem"
           md-search-text="searchText"

@@ -291,7 +291,15 @@ angular.module('svampeatlasApp')
 			
 			'Seneste uge' : 'Past week',
 			'Nyheder fra svampeatlas' : 'News from the Atlas of Danish Fungi',
-			'Opdatér' : 'Refresh'
+			'Opdatér' : 'Refresh',
+			'Bestemmelsens sikkerhed ændret til' : 'Identification certainty changed to',
+			'mulig' : 'possible',
+			'sandsynlig' : 'likely',
+			'sikker' : 'certain',
+			'Bestemmelsens sikkerhed' : 'Identification certainty',
+			'Antal stemmer' : 'Number of votes',
+			'Nuværende bestemmelse' : 'Current identification',
+			'Ny bestemmelse' : 'New identification'
 			
 			
 		});
