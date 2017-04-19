@@ -236,19 +236,19 @@ exports.showArchiveObservationCount = function(req, res) {
 
 exports.showNewTaxonInAreaCount = function(req, res) {
 var sql;	
-var redlistsql = (req.query.redlisted) ? "d.Taxon_redlist_status IS NOT NULL AND " : "";
+var redlistsql = (req.query.redlisted) ? "d.Taxon_redlist_status IN ('RE', 'CR', 'EN', 'VU', 'NT') AND " : "";
 
 if(req.query.persontype === "finder"){
 	sql = `	SELECT COUNT(b.Taxon_id) as count, b._id, b.name, b.Initialer, b.facebook FROM 
-	(SELECT oa.area_id, usr._id, usr.name, usr.Initialer, usr.facebook, d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Users usr, Observation o, ObservationAreas oa, Areas ar WHERE `+redlistsql+`u.user_id=usr._id AND ar._id=oa.area_id AND ar.type="UTM10" AND oa.observation_id=o._id AND u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(observationDate) = :year GROUP BY d.Taxon_id) b
+	(SELECT oa.area_id, usr._id, usr.name, usr.Initialer, usr.facebook, d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Users usr, Observation o, ObservationAreas oa, Areas ar WHERE `+redlistsql+`u.user_id=usr._id AND ar._id=oa.area_id AND ar.type="UTM10" AND oa.observation_id=o._id AND u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(observationDate) = :year GROUP BY d.Taxon_id, oa.area_id) b
 	LEFT JOIN  
-(SELECT oax.area_id, dx.Taxon_id FROM Observation ox, DeterminationView2 dx, ObservationAreas oax, Areas arx WHERE arx._id=oax.area_id AND arx.type="UTM10" AND oax.observation_id=ox._id AND dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= :acceptedScore) AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) < :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id) a 
+(SELECT oax.area_id, dx.Taxon_id FROM Observation ox, DeterminationView2 dx, ObservationAreas oax, Areas arx WHERE arx._id=oax.area_id AND arx.type="UTM10" AND oax.observation_id=ox._id AND dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= :acceptedScore) AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) < :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id, oax.area_id) a 
 ON a.Taxon_id = b.Taxon_id AND a.area_id = b.area_id WHERE a.Taxon_id IS NULL GROUP BY b._id ORDER BY count DESC;`;
 } else {
 	sql = `	SELECT COUNT(b.Taxon_id) as count, b._id, b.name, b.Initialer, b.facebook FROM 
-	(SELECT oa.area_id, usr._id, usr.name, usr.Initialer,usr.facebook, d.Taxon_id FROM DeterminationView2 d,  Users usr, Observation o, ObservationAreas oa, Areas ar WHERE `+redlistsql+`usr._id=o.primaryuser_id AND ar._id=oa.area_id AND ar.type="UTM10" AND oa.observation_id=o._id  AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(observationDate) = :year GROUP BY d.Taxon_id) b
+	(SELECT oa.area_id, usr._id, usr.name, usr.Initialer,usr.facebook, d.Taxon_id FROM DeterminationView2 d,  Users usr, Observation o, ObservationAreas oa, Areas ar WHERE `+redlistsql+`usr._id=o.primaryuser_id AND ar._id=oa.area_id AND ar.type="UTM10" AND oa.observation_id=o._id  AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(observationDate) = :year GROUP BY d.Taxon_id, oa.area_id) b
 	LEFT JOIN  
-(SELECT oax.area_id, dx.Taxon_id FROM Observation ox, DeterminationView2 dx, ObservationAreas oax, Areas arx WHERE arx._id=oax.area_id AND arx.type="UTM10" AND oax.observation_id=ox._id AND dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= :acceptedScore) AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) < :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id) a 
+(SELECT oax.area_id, dx.Taxon_id FROM Observation ox, DeterminationView2 dx, ObservationAreas oax, Areas arx WHERE arx._id=oax.area_id AND arx.type="UTM10" AND oax.observation_id=ox._id AND dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= :acceptedScore) AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) < :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id, oax.area_id) a 
 ON a.Taxon_id = b.Taxon_id AND a.area_id = b.area_id WHERE a.Taxon_id IS NULL GROUP BY b._id ORDER BY count DESC;`;
 }
 
