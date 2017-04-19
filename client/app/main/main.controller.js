@@ -368,7 +368,7 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 		
 		var determinationwhere = {
 						
-						$and: [{Determination_validation: { $ne: 'Godkendt'}} , {Determination_score: {$lt: 80}}]
+						$and: [{Determination_validation: { $ne: 'Godkendt'}},{Determination_validation: { $ne: 'Afvist'}} , {Determination_score: {$lt: 80}}]
 					};
 					
 					if($scope.useLichenFilter)	{
