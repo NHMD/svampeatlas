@@ -383,7 +383,7 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 		var q = {
 			nocount: true,
 			_order: JSON.stringify([
-						['observationDate', 'DESC'],
+						['createdAt', 'DESC'],
 						['_id', 'DESC']
 					]),
 			limit: 100,
@@ -413,7 +413,7 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 						model: "Locality",
 						as: 'Locality',
 						where: {},
-						required: true
+						required: false
 					}),
 				]
 			)

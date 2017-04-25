@@ -80,6 +80,12 @@ var all = {
 	  countGroupedByDecade: 60 * 60 * 24 * 7,
 	  count: 60 * 60 * 24,
 	  dataSet : 60 * 60 * 24
+  },
+  mail: {
+	  server: 'asmtp.unoeuro.com',
+	  port: 587,
+	  address: 'svampe.databasen@svampe.dk',
+	  password: 'WQ53hryTGB8957'
   }
 };
 

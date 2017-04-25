@@ -34,7 +34,7 @@
 	"PruneCluster": "2.0.0-beta",
 	"Leaflet.awesome-markers":"2.0.2",
 	"angular-leaflet-directive": "0.10.0",
-	"ng-file-upload" : "12.0.4",
+	"ng-file-upload" : "12.2.4",
 	"highcharts" : "",
 	"highcharts-ng" : "0.0.13",
 	"fastclick" : "",

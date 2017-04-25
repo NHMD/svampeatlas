@@ -528,10 +528,18 @@ angular.module('svampeatlasApp')
 				}
 
 				if (search.databasenumber) {
+					// split if its a commaseperated list
+					var dbnrArr = search.databasenumber.split(",");
+					
+					for(var i= 0; i<dbnrArr.length; i++){
+						// clean prefix
+						var splitted = dbnrArr[i].split("-");
+						var dbnr = (splitted.length > 0) ? splitted[splitted.length - 1] : search.databasenumber;
+						dbnrArr[i] = dbnr;
+					}
 
-					var splitted = search.databasenumber.split("-");
-					var dbnr = (splitted.length > 0) ? splitted[splitted.length - 1] : search.databasenumber;
-					dbQuery.where._id = dbnr;
+					
+					dbQuery.where._id = dbnrArr;
 					dbQuery.include[2].required = false;
 					delete dbQuery.include[0].where.Determination_validation;
 

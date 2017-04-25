@@ -19,7 +19,7 @@
 	   							 <md-input-container>
 	   							           <label translate>År</label>
 	   							           <md-select ng-model="ctrl.selectedYear" ng-change="ctrl.updateYear(ctrl.selectedYear)">
-	   							             <md-option ng-value=""><em>Alle</em></md-option>
+	   							             <md-option ng-value="" ng-if="ctrl.currentController ==='speciescount' || ctrl.currentController ==='numberofmobileobservations' ||  ctrl.currentController ==='numberofobservations' "><em>Alle</em></md-option>
 	   							             <md-option ng-repeat="y in ctrl.years" ng-value="y" >
 	   							               {{y}}
 	   							             </md-option>
@@ -36,8 +36,8 @@
 						  		   <user-avatar class="useravatar md-avatar" user="elm" ></user-avatar> 
 	   
 									<div class="md-list-item-text" layout="column">
-									            <h3><strong>{{ elm.count }}</strong></h3>
-									            <h4><a ng-href="/userprofile/{{elm._id}}">{{ elm.name }} ({{elm.Initialer}})</a></h4>
+									            <div><h3><a ng-click="ctrl.gotoSearchResult(ctrl.currentController, elm._id, ctrl.selectedYear)"><strong>{{ elm.count }}</strong></a></h3></div>
+									           <div> <h4><a ng-href="/userprofile/{{elm._id}}">{{ elm.name }} ({{elm.Initialer}})</a></h4></div>
 									          </div>
  	        
 			 

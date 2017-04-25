@@ -39,6 +39,12 @@ angular.module('svampeatlasApp')
         authenticate: function(Auth){
 		  	return Auth.isLoggedIn();
 		  }
+      })
+      .state('forgot', {
+        url: '/forgot?token',
+
+        templateUrl: 'app/account/forgot/forgot.html',
+        controller: 'ForgotCtrl'
       });
   })
   .run(function($rootScope) {

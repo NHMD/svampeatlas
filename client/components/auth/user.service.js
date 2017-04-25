@@ -14,6 +14,12 @@ angular.module('svampeatlasApp')
           controller:'password'
         }
       },
+      resetPassword: {
+        method: 'POST',
+        params: {
+          controller:'password'
+        }
+      },
       get: {
         method: 'GET',
         params: {
