@@ -106,18 +106,48 @@ if(req.query.persontype === "finder"){
 
 };
 
+exports.showNewTaxonCountOnPersonalListObservationIds = function(req, res) {
+	
+	var sql = `SELECT b._id FROM 
+(SELECT o._id, d.Taxon_FullName , d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Observation o WHERE u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND u.user_id = :userid AND YEAR(observationDate) = :year
+) b
+LEFT JOIN
+(SELECT  dx.Taxon_id FROM Observation ox, ObservationUsers ux, DeterminationView2 dx WHERE ux.observation_id = ox._id AND  ux.user_id = :userid AND dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= :acceptedScore) AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) < :year AND  dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id) a 
+ON a.Taxon_id = b.Taxon_id WHERE a.Taxon_id IS NULL;`;
+	
+	
+return models.sequelize.query(sql, {
+	replacements: {
+		year: req.params.year,
+		userid: req.params.userid,
+		acceptedScore: crowdSourcedIdentificationConstants.ACCEPTED_SCORE
+	},
+	type: models.sequelize.QueryTypes.SELECT
+})
+
+.then(function(result) {
+	
+	
+		return res.status(200).json(result)
+	
+	
+}).catch(handleError(res));
+
+}
+
 // (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+') '
 
 exports.showSpeciesCount = function(req, res) {
 	var sql;
 	var redlistsql = (req.query.redlisted) ? "d.Taxon_redlist_status IS NOT NULL AND " : "";
+	var yearsql = (req.params.year) ? 'AND YEAR(o.observationDate) = :year ' : '';
 	if(req.query.persontype = "finder"){
 	sql = 'SELECT COUNT(distinct d.Taxon_id) as count, us._id, us.name, us.Initialer, us.facebook FROM  DeterminationView2 d, ObservationUsers u, Users us, Observation o ' +
-		' WHERE '+redlistsql+'us._id=u.user_id AND u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+') AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(o.observationDate) = :year GROUP BY u.user_id HAVING count > 0 ORDER BY count DESC LIMIT 100' ;
+		' WHERE '+redlistsql+'us._id=u.user_id AND u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+') AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL '+yearsql+'GROUP BY u.user_id HAVING count > 0 ORDER BY count DESC LIMIT 100' ;
 	
 	} else {
 	sql = 'SELECT COUNT(distinct d.Taxon_id) as count, us._id, us.name , us.Initialer, us.facebook FROM  DeterminationView2 d,  Users us, Observation o ' +
-		' WHERE '+redlistsql+'us._id=o.primaryuser_id_id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+') AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(o.observationDate) = :year GROUP BY us._id HAVING count > 0 ORDER BY count DESC LIMIT 100' ;
+		' WHERE '+redlistsql+'us._id=o.primaryuser_id_id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+') AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL '+yearsql+'GROUP BY us._id HAVING count > 0 ORDER BY count DESC LIMIT 100' ;
 		
 	}
 		
@@ -280,5 +310,45 @@ exports.showNewTaxonInAreaCountRedlisted = function(req, res){
 	exports.showNewTaxonInAreaCount(req, res);
 }
 
+exports.showNewTaxonInAreaForUser = function(req, res) {
+var sql;	
+var redlistsql = (req.query.redlisted) ? "d.Taxon_redlist_status IN ('RE', 'CR', 'EN', 'VU', 'NT') AND " : "";
+
+if(req.query.persontype === "finder"){
+	sql = `	SELECT b.observation_id as _id FROM 
+	(SELECT o._id as observation_id, oa.area_id, usr._id, usr.name, usr.Initialer, usr.facebook, d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Users usr, Observation o, ObservationAreas oa, Areas ar WHERE `+redlistsql+`u.user_id=usr._id AND usr._id= :userid AND ar._id=oa.area_id AND ar.type="UTM10" AND oa.observation_id=o._id AND u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(observationDate) = :year ) b
+	LEFT JOIN  
+(SELECT oax.area_id, dx.Taxon_id FROM Observation ox, DeterminationView2 dx, ObservationAreas oax, Areas arx WHERE arx._id=oax.area_id AND arx.type="UTM10" AND oax.observation_id=ox._id AND dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= :acceptedScore) AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) < :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id,  oax.area_id) a 
+ON a.Taxon_id = b.Taxon_id AND a.area_id = b.area_id WHERE a.Taxon_id IS NULL;`;
+} else {
+	sql = `	SELECT b.observation_id as _id  FROM 
+	(SELECT o._id as observation_id, oa.area_id, usr._id, usr.name, usr.Initialer,usr.facebook, d.Taxon_id FROM DeterminationView2 d,  Users usr, Observation o, ObservationAreas oa, Areas ar WHERE `+redlistsql+`usr._id=o.primaryuser_id AND usr._id= :userid  AND ar._id=oa.area_id AND ar.type="UTM10" AND oa.observation_id=o._id  AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(observationDate) = :year ) b
+	LEFT JOIN  
+(SELECT oax.area_id, dx.Taxon_id FROM Observation ox, DeterminationView2 dx, ObservationAreas oax, Areas arx WHERE arx._id=oax.area_id AND arx.type="UTM10" AND oax.observation_id=ox._id AND dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= :acceptedScore) AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) < :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id, oax.area_id) a 
+ON a.Taxon_id = b.Taxon_id AND a.area_id = b.area_id WHERE a.Taxon_id IS NULL;`;
+}
 
 
+	return models.sequelize.query(sql, {
+		replacements: {
+			year: req.params.year,
+			acceptedScore: crowdSourcedIdentificationConstants.ACCEPTED_SCORE,
+			userid: req.params.userid
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+
+			return res.status(200).json(result)
+		
+	}).catch(handleError(res));
+
+
+};
+
+exports.showNewRedlistedTaxonInAreaForUser = function(req, res){
+	req.query.redlisted = true;
+	exports.showNewTaxonInAreaForUser(req, res);
+}

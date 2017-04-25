@@ -55,7 +55,7 @@ const DEFAULT_HIGHER_TAXON_WEIGHT = 25;
 // What defines a higher taxon (10000 = species rank)
 const DEFAULT_HIGHER_TAXON_RANK_LIMIT = 10000;
 // in order to pick a determination to higher taxon rather than to species the higher taxon determintion must have twice the score (factor 0.5) of the species determination
-const DEFAULT_HIGHER_TAXON_FACTOR = 0.5;
+const DEFAULT_HIGHER_TAXON_FACTOR = 0.75;
 // If the user says its only a possible id, degrade the user impact
 const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_POSSIBLE = 0.5;
 

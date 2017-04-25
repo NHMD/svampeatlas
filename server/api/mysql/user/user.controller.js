@@ -5,6 +5,7 @@ var models = require('../');
 var User = models.User;
 var passport = require('passport');
 var config = require('../../../config/environment');
+var mail = require('../../../components/mail/mail.service');
 var jwt = require('jsonwebtoken');
 var determinationController = require('../Determination/Determination.controller');
 
@@ -305,9 +306,41 @@ exports.changePassword = function(req, res, next) {
 					.then(respondWith(res, 200))
 					.catch(validationError(res));
 			} else {
-				return res.send(403);
+				return res.sendStatus(403);
 			}
 		});
+};
+
+
+exports.resetPassword = function(req, res, next) {
+	var userId = req.user._id;
+	
+	if(!(req.body.Initialer === req.user.Initialer && req.body.email === req.user.email)){
+		return res.sendStatus(403);
+	} else {
+		
+		var newPass = String(req.body.newPassword);
+
+		User.find({
+				where: {
+					_id: userId,
+					Initialer: req.body.Initialer,
+					email: req.body.email
+				}
+			})
+			.then(function(user) {
+				if (user) {
+					user.password = newPass;
+					return user.save()
+						.then(respondWith(res, 200))
+						.catch(validationError(res));
+				} else {
+					return res.sendStatus(404);
+				}
+			});
+	}
+	
+
 };
 
 /**
@@ -616,3 +649,5 @@ exports.showRecentlyChangedObservations = function(req, res) {
 
 
 };
+
+

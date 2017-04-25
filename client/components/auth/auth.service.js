@@ -70,6 +70,14 @@ angular.module('svampeatlasApp')
 					}.bind(this));
 			},
 			
+			forgot: function(email){
+				
+				return $http.post('/auth/forgot', {
+					email: email
+					
+				})
+			},
+			
 			refreshUser: function(){
 				currentUser = User.get();
 				currentUser.$promise.then(mapRoles);
@@ -142,6 +150,16 @@ angular.module('svampeatlasApp')
 					return safeCb(callback)(null, user);
 				}, function(err) {
 					return safeCb(callback)(err);
+				}).$promise;
+			},
+			
+			resetPassword: function(usr, newPassword) {
+				return User.resetPassword({
+					id: usr._id
+				}, {
+					newPassword: newPassword,
+					Initialer: usr.Initialer,
+					email: usr.email
 				}).$promise;
 			},
 

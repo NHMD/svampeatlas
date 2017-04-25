@@ -1,0 +1,73 @@
+		<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
+		<md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
+		<md-content   flex md-scroll-y layout-padding>
+		
+	    <md-card layout-fill>
+	    <md-card-header>
+	             <md-card-avatar class="profile-page-avatar">
+	               <user-avatar class="useravatar md-avatar" size="'large'" user="User" ></user-avatar>
+	             </md-card-avatar>
+	             <md-card-header-text>
+	               <span class="md-headline" translate>User profile</span>
+	               <span class="md-subhead">{{User.name}} ({{User.Initialer}})</span>
+	             </md-card-header-text>
+	           </md-card-header>
+	          
+			  <md-card-content class="profile-page-card-content">
+			 <form name="pwform"> 
+			  <md-input-container class="md-block md-icon-float" >
+			  <md-icon><ng-md-icon icon="lock"></ng-md-icon></md-icon>
+			 
+			          
+			          <input  ng-model="newPass" type="password" placeholder="{{'Nyt password' | translate}}" required>
+					  
+					  
+					 
+					  
+			        </md-input-container>
+  			  <md-input-container class="md-block md-icon-float" >
+  			  <md-icon><ng-md-icon icon="lock"></ng-md-icon></md-icon>
+			 
+			          
+ 					<input name="confirmPassword" ng-model="newPassRepeat" type="password" placeholder="{{'Gentag nyt password' | translate}}"  required>
+  			         
+					 
+						<span class="md-warn" ng-if="newPassRepeat.length >0 && newPassRepeat !== newPass">{{'Password confirmation must match' | translate}}</span>
+						
+					  
+					 
+					  
+  			        </md-input-container>	
+				</form>
+					
+			  <md-button  ng-click="resetPassword()" ng-show="newPass === newPassRepeat && newPass.length > 6"><ng-md-icon icon="save"></ng-md-icon> <span translate>Gem nyt password</span></md-button>
+			 
+			
+		  </md-card-content>
+	          
+	         </md-card>
+			
+				<!--<div>
+					<h1 translate>
+						User profile
+					</h1>
+					<p>
+						<span translate>Name:</span> {{getCurrentUser().name}}
+					</p>
+					<p>
+						<span translate>Initials:</span> {{getCurrentUser().Initialer}}
+					</p>
+					<p>
+						<span translate>Email:</span> {{getCurrentUser().email}}
+					</p>
+					
+					
+					
+				</div> -->
+			
+			
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+    
+	      </div>		
+		</md-content>
+	

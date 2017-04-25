@@ -13,20 +13,20 @@
     </md-toolbar>
       
     <md-dialog-content layout-padding layout-align="center center" layout='row'>
-      <form  name="form" ng-submit="login(form)" novalidate flex='66'>
+      <form  name="form" ng-submit="login(form)" novalidate flex='66' ng-show="!forgotPw">
 
-        <div class="form-group">
+        <div class="form-group" >
           <label translate>Initialer</label>
 
           <input type="text" name="initialer" class="form-control" ng-model="user.Initialer" required autofocus>
         </div>
-
+       
         <div class="form-group">
           <label>Password</label>
 
           <input type="password" name="password" class="form-control" ng-model="user.password" required>
         </div>
-
+		
         <div class="form-group has-error">
           <p class="help-block" ng-show="form.initialer.$error.required && form.password.$error.required && submitted">
              Indtast initialer og password.
@@ -34,12 +34,15 @@
           
 
           <p class="help-block">{{ errors.other | translate}}</p>
+		  <p ng-show="forgotResponse"><strong>{{forgotResponse}}</strong></p>
         </div>
-
-        <div>
-          <button class="btn btn-inverse btn-lg btn-login" type="submit">
+		
+        <div layout-row>
+          <button  class="btn btn-inverse btn-lg btn-login" type="submit">
             Login
           </button>
+        
+	<a href="#" ng-click="forgotPw = !forgotPw"  >{{'Glemt password?' | translate}}</a>
          <!-- <a class="btn btn-default btn-lg btn-register" ui-sref="signup">
             Register
           </a> -->
@@ -61,6 +64,29 @@
 	  
 	  </div>
       </form>
+        <form  name="forgotform"  novalidate flex='66' ng-show="forgotPw">
+        <div class="form-group" ng-if="forgotPw">
+          <label>Email</label>
+
+          <input type="email" name="email" class="form-control" ng-model="$parent.forgotPwEmail">
+          <p class="help-block" >
+             {{'Der udsendes en email med link til nulstilling af password.' | translate}}
+          </p>
+        </div>
+
+
+	  <div layout-row>
+		  
+		  <p  ng-show="forgotError" md-theme="default" md-colors="{color:'warn'}">{{forgotError}}</p>
+        <button ng-if="forgotPw" class="btn btn-inverse btn-lg btn-login" ng-click="sendForgotPwMail()">
+          {{'Send email for nulstilling af password'}}
+        </button>
+	  
+	 
+	  </div>
+
+        </form>
+	 
 		  
 	
      

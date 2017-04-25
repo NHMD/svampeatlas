@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('LoginController', ['$scope', 'Auth', '$state', '$window', '$location', '$cookies', '$translate', 'PlutoF', 'ssSideNav', '$mdDialog', '$mdMedia', function($scope, Auth, $state, $window, $location, $cookies, $translate, PlutoF, ssSideNav, $mdDialog, $mdMedia) {
+  .controller('LoginController', ['$scope', 'Auth', '$state', '$window', '$location', '$cookies', '$translate', 'PlutoF', 'ssSideNav', '$mdDialog', '$mdMedia','ErrorHandlingService', function($scope, Auth, $state, $window, $location, $cookies, $translate, PlutoF, ssSideNav, $mdDialog, $mdMedia, ErrorHandlingService) {
     $scope.user = {};
     $scope.errors = {};
 	$scope.$mdMedia = $mdMedia;
@@ -10,7 +10,7 @@ angular.module('svampeatlasApp')
 	};
 	
 	$scope.fberror = $location.search().fberror;
-	
+	$scope.forgotPw = false;
     $scope.login = function(form) {
       $scope.submitted = true;
 
@@ -55,6 +55,21 @@ angular.module('svampeatlasApp')
         });
       }
     };
+	
+	$scope.sendForgotPwMail = function(){
+		
+		Auth.forgot($scope.forgotPwEmail)
+		.then(function(){
+			$scope.forgotResponse = $translate.instant("Der er sendt en email til")+" "+$scope.forgotPwEmail+"."
+			$scope.forgotPw = false;
+		})
+		.catch(function(err){
+			if(err.status === 404){
+				$scope.forgotError = $translate.instant("Emailen findes ikke i systemet")+".";
+			}
+			else ErrorHandlingService.handle500();
+		})
+	}
 
     $scope.loginOauth = function(provider) {
       $window.location.href = '/auth/' + provider;

@@ -16,6 +16,19 @@ angular.module('svampeatlasApp')
 	  		},
 			isArray: true
 	      },
+	      getObservationIdsForUser: {
+	        method: 'GET',
+	  		params: {
+	  			controller: '@_controller',
+	  			year: '@_year',
+				userid: '@_userid'
+	  		},
+			url: '/api/competitions/:controller/:year/user/:userid',
+			isArray: true
+	      },
 	    });
    
   });
+
+
+

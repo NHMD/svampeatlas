@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('CompetitionsCtrl',function ($scope,$mdMedia, appConstants,  $translate, Competition, $stateParams) {
+  .controller('CompetitionsCtrl',function ($scope,$mdMedia, appConstants,  $translate, Competition, $stateParams, ObservationSearchService, $state) {
    
 	  var that = this;
 	  this.$mdMedia = $mdMedia;
@@ -31,13 +31,11 @@ angular.module('svampeatlasApp')
 		  that.isLoading = true;
 		  delete that.serverData;
 		  var params = {year : year, controller: $stateParams.controller};
-		  if($stateParams.controller === "speciescount"){
-		  	params.redlisted = true
-		  }
+		  
 		  if($stateParams.controller === "speciescount" || $stateParams.controller === "numberofobservations" || $stateParams.controller === "pioneer" || $stateParams.controller === "highjumper"  || $stateParams.controller === "pioneerredlisted"){
 			  params.persontype  = "finder";
 		  }
-		  params.cachekey = that.currentController + that.selectedYear;
+		  params.cachekey = (that.selectedYear) ? (that.currentController + that.selectedYear) : that.currentController;
 	   Competition.get(params).$promise
 		  .then(function(data){
 	   		  that.serverData = data;
@@ -47,5 +45,93 @@ angular.module('svampeatlasApp')
    
 	  this.updateYear(currentYear);
 	
+  	this.gotoSearchResult = function(controller, user_id, year) {
+  		ObservationSearchService.reset();
+  		var search = ObservationSearchService.getSearch()
+  		search.wasInitiatedOutsideSearchForm = true;
+  		
+		
+		if(controller === 'numberofobservations'){
+			if(year){
+				search.where = {observationDate: {$between: [year+'-01-01', year+'-12-31']}}
+			}
+  			
+  			search.include[4].where = {
+  				user_id: user_id
+  			} 
+  			search.include[4].required = true;
+			search.include[2].required = false;
+  			
+  			$state.go('search-list')
+  		} else if(controller === 'speciescount'){
+			if(year){
+				search.where = {observationDate: {$between: [year+'-01-01', year+'-12-31']}}
+			}
+  			search.include[0].where = {
+  				$or: {
+  					Determination_validation: "Godkendt",
+  					Determination_score: {$gte: appConstants.AcceptedDeterminationScore}
+  				},
+				
+  				Taxon_RankID : { $gt: 9950}
+  			} 
+  			search.include[4].where = {
+  				user_id: user_id
+  			} 
+  			search.include[4].required = true;
+  			$state.go('search-specieslist')
+  		} else if(controller === 'numberofmobileobservations'){
+			search.where = {
+				primaryuser_id : user_id, 
+				os: ["IOS", "Android"]
+			};
+			if(year){
+				search.where.observationDate = {$between: [year+'-01-01', year+'-12-31']}
+			}
+  			
+  			
+			search.include[2].required = false;
+  			
+  			$state.go('search-list')
+  		} else if(controller === 'numberofarchiveobservations'){
+			search.where = {
+				primaryuser_id : user_id, 
+				observationDate: {$lt: year+'-01-01'},
+				createdAt: {$between: [year+'-01-01', year+'-12-31']}
+			};
+			
+			search.include[2].required = false;
+  			
+  			$state.go('search-list')
+  		} else {
+  			
+			var params = {controller: controller, year: year, userid: user_id, persontype: 'finder'};
+			that.isLoading = true;
+			Competition.getObservationIdsForUser(params).$promise
+			.then(function(data){
+				var obsIds = _.map(data, function(e){
+					return e._id;
+				})
+				
+				search.where = {
+					_id : obsIds
+				};
+			
+				search.include[2].required = false;
+				
+				that.isLoading = false;
+				
+  				if(controller === 'highjumper'){
+  			$state.go('search-specieslist')
+  					
+  				} else {
+	  			$state.go('search-list')
+  					
+  				}
+				
+			})
+  		}
+	
+  	}
 
   })

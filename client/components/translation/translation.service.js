@@ -299,7 +299,11 @@ angular.module('svampeatlasApp')
 			'Bestemmelsens sikkerhed' : 'Identification certainty',
 			'Antal stemmer' : 'Number of votes',
 			'Nuværende bestemmelse' : 'Current identification',
-			'Ny bestemmelse' : 'New identification'
+			'Ny bestemmelse' : 'New identification',
+			'Nyt password' : 'New password',
+			'Gentag nyt password' : 'Repeat new password',
+			'Gem nyt password' : 'Save new password',
+			'Der er sendt en email til': 'An email has been sent to'
 			
 			
 		});
@@ -450,7 +454,8 @@ angular.module('svampeatlasApp')
 			'highjumper' : 'Årets højdespringer',
 			'numberofmobileobservations' : 'Årets mobilrapportør',
 			'numberofarchiveobservations' : 'Årets arkivar',
-			'pioneer' : 'Årets fornyer'
+			'pioneer' : 'Årets fornyer',
+			'Password confirmation must match' : 'De to passwords skal være ens'
 			
 
 
