@@ -24,6 +24,7 @@
   		<th st-sort="Initialer">Initials</th>
   		<th st-sort="name">Name</th>
   		<th st-sort="email">email</th>
+		<th st-sort="createdAt">Oprettet</th>
 		<th>Photo permission</th>
 		<th ng-if="Auth.hasRole('validator')">Morphogroups</th>
 		<th>Roles</th>
@@ -33,6 +34,7 @@
   		<th><input st-search="Initialer"></th>
   		<th><input st-search="name"></th>
   		<th><input st-search="email"></th>
+		<th></th>
 		<th></th>
   		<th></th>
 		<th ng-if="Auth.hasRole('validator')"></th>
@@ -45,6 +47,7 @@
   		<td>{{row.Initialer}}</td>
   		<td>{{row.name}}</td>
   		<td>{{row.email}}</td>
+		<td>{{row.createdAt | date: 'd/M/yy h:mm a'}}</td>
 		<td><md-switch   ng-model="row.photopermission" aria-label="Photopermission" ng-change="User.setPhotopermission({id: row._id}, {photopermission : row.photopermission})">
 					          
 					        </md-switch></td>
@@ -64,7 +67,7 @@
   	</tbody>
   	<tfoot>
   	<tr>
-  		<td class="text-center" st-pagination="" st-items-by-page="50" colspan="5">
+  		<td class="text-center" st-pagination="" st-items-by-page="50" colspan="7">
   		</td>
   	</tr>
   	</tfoot>

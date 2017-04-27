@@ -1,100 +1,125 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
+		<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
+		<md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
+		<md-content   flex md-scroll-y layout-padding>
+		
 
-<div class="container">
-  <div class="row">
     <div class="col-sm-12">
-      <h1>Sign up</h1>
+      <h1 translate>Create user account</h1>
     </div>
-    <div class="col-sm-12">
-      <form class="form" name="form" ng-submit="register(form)" novalidate>
+  	<p ng-show="registrationSuccess">{{'An email has been sent to' | translate}} {{user.email}}.<br> {{'The email contains further instructions on how to activate your account' | translate}}.</p>
+      <form class="form" name="form" ng-submit="register(form)" novalidate ng-show="!registrationSuccess">
 
-        <div class="form-group" ng-class="{ 'has-success': form.name.$valid && submitted,
-                                            'has-error': form.name.$invalid && submitted }">
-          <label>Name</label>
+        <div class="form-group" ng-class="{ 'has-success': !form.name.$error.required,
+                                            'has-error': form.name.$error.required && form.name.$touched}">
+          <label translate>Name</label>
 
           <input type="text" name="name" class="form-control" ng-model="user.name"
                  required/>
-          <p class="help-block" ng-show="form.name.$error.required && submitted">
+          <p class="help-block" ng-show="form.name.$error.required && form.name.$touched" translate>
             A name is required
           </p>
         </div>
 		
-        <div class="form-group" ng-class="{ 'has-success': form.name.$valid && submitted && !form.Initialer.$error.mongoose,
-                                            'has-error': (form.name.$invalid && submitted) || form.Initialer.$error.mongoose }">
-          <label>Initials</label>
+		<div class="form-group" ng-class="{ 'has-success': form.Initialer.$valid , 'has-error': form.Initialer.$invalid && form.Initialer.$touched}">
 
-          <input type="text" ng-minlength="2" ng-maxlength="6" name="Initialer" class="form-control" ng-model="user.Initialer"
+          <label translate>Initials</label>
+
+          <input type="text" ng-minlength="2" ng-maxlength="5" name="Initialer" class="form-control" ng-model="user.Initialer" initials
                  required
-				 mongoose-error/>
-        <p class="help-block" ng-show="form.Initialer.$error.maxlength">
-          Too long
+				 />
+        <p class="help-block" ng-show="form.Initialer.$error.maxlength" translate>
+          Too long (max 5 characters)
         </p>
-        <p class="help-block" ng-show="form.Initialer.$error.minlength">
-          Too short
+        <p class="help-block" ng-show="form.Initialer.$error.minlength" translate>
+          Too short (min 2 characters)
         </p>
-          <p class="help-block" ng-show="form.Initialer.$error.required">
+          <p class="help-block" ng-show="form.Initialer.$error.required && form.Initialer.$touched" translate>
             Initials are required
           </p>
-          <p class="help-block" ng-show="form.Initialer.$error.mongoose">
+        <!--  <p class="help-block" ng-show="form.Initialer.$error">
             {{ errors.Initialer }}
-          </p>
+          </p> -->
+		  <span ng-show="form.Initialer.$pending.uniqueInitials" translate>Checking if these initials is available...</span>
+		    <span ng-show="form.Initialer.$error.uniqueInitials" translate>These initials is already taken!</span>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-success': form.email.$valid && submitted,
-                                            'has-error': form.email.$invalid && submitted }">
-          <label>Email</label>
+        <div class="form-group" ng-class="{ 'has-success': form.email.$valid ,
+                                            'has-error': form.email.$invalid && form.email.$touched }">
+          <label translate>Email</label>
 
-          <input type="email" name="email" class="form-control" ng-model="user.email"
+          <input type="email" name="email" class="form-control" ng-model="user.email" unique-email
                  required
-                 mongoose-error/>
-          <p class="help-block" ng-show="form.email.$error.email && submitted">
-            Doesn't look like a valid email.
+                  />
+          <p class="help-block" ng-show="form.email.$error.email" translate>
+            Doesnt look like a valid email.
           </p>
-          <p class="help-block" ng-show="form.email.$error.required && submitted">
-            What's your email address?
+          <p class="help-block" ng-show="form.email.$error.required  && form.email.$touched" translate>
+            Enter your email address.
           </p>
-          <p class="help-block" ng-show="form.email.$error.mongoose">
-            {{ errors.email }}
-          </p>
+		  <span ng-show="form.email.$pending.uniqueEmail" translate>Checking if this email is already in use...</span>
+		    <span ng-show="form.email.$error.uniqueEmail" translate>This email is already in use! <a href="#" ng-click="showLogin()" translate>Lost password?</a></span>
         </div>
 
-        <div class="form-group" ng-class="{ 'has-success': form.password.$valid && submitted,
-                                            'has-error': form.password.$invalid && submitted }">
-          <label>Password</label>
+        <div class="form-group" ng-class="{ 'has-success': form.password.$valid && user.password === user.repeatPassword ,
+                                            'has-error': (form.password.$invalid || (user.password !== user.repeatPassword  && user.password.length > 5)) &&  form.password.$touched}">
+          <label translate>Password</label>
 
           <input type="password" name="password" class="form-control" ng-model="user.password"
-                 ng-minlength="3"
+                 ng-minlength="6"
                  required
-                 mongoose-error/>
+             		/>
           <p class="help-block"
-             ng-show="(form.password.$error.minlength || form.password.$error.required) && submitted">
-            Password must be at least 3 characters.
+             ng-show="(form.password.$error.minlength || form.password.$error.required) && form.password.$touched" translate>
+            Password must be at least 6 characters.
           </p>
-          <p class="help-block" ng-show="form.password.$error.mongoose">
-            {{ errors.password }}
-          </p>
+      		<label >{{'Gentag password' | translate}}</label>
+			<input name="confirmPassword" class="form-control" ng-model="user.repeatPassword" type="password"   required>
+	         
+             <p class="help-block"
+                ng-show="user.repeatPassword.length >0 && user.repeatPassword !== user.password" >
+              {{'Password confirmation must match' | translate}}
+             </p>
         </div>
 
         <div>
-          <button class="btn btn-inverse btn-lg btn-register" type="submit">
-            Sign up
+          <button class="btn btn-inverse btn-lg btn-register" type="submit" translate>
+            Create user account
           </button>
-          <a class="btn btn-default btn-lg btn-login" ui-sref="login">
+      <!--    <a class="btn btn-default btn-lg btn-login" ui-sref="login">
             Login
-          </a>
+          </a> -->
         </div>
 
-        <hr>
-        <div>
-          <a class="btn btn-facebook" href="" ng-click="loginOauth('facebook')">
-            <i class="fa fa-facebook"></i> Connect with Facebook
-          </a>
-          <a class="btn btn-google-plus" href="" ng-click="loginOauth('google')">
-            <i class="fa fa-google-plus"></i> Connect with Google+
-          </a>
-        </div>
+      
       </form>
-    </div>
+    
   </div>
   <hr>
-</div>
+
+
+	        
+			
+				<!--<div>
+					<h1 translate>
+						User profile
+					</h1>
+					<p>
+						<span translate>Name:</span> {{getCurrentUser().name}}
+					</p>
+					<p>
+						<span translate>Initials:</span> {{getCurrentUser().Initialer}}
+					</p>
+					<p>
+						<span translate>Email:</span> {{getCurrentUser().email}}
+					</p>
+					
+					
+					
+				</div> -->
+			
+			
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+    
+	     		
+		</md-content>
+	

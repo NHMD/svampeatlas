@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('ForgotCtrl', function($scope, User, Auth, $stateParams, $cookies, $state ) {
+  .controller('ForgotCtrl', function($scope, User, Auth, $stateParams, $cookies, $state, ErrorHandlingService ) {
 	  
 	  if($stateParams.token){
 		var exp = new Date();
@@ -24,7 +24,8 @@ angular.module('svampeatlasApp')
 			$state.go('main', {openLogin: true})
 		})
 		.catch(function(err){
-			alert("Ooops")
+			ErrorHandlingService.handle500();
+			
 		})
 		
 	}

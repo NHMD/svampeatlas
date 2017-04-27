@@ -16,6 +16,11 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
+    createdAt: {
+    	type: DataTypes.DATE,
+    	allowNull: false,
+    	defaultValue: DataTypes.NOW
+    },
     name: DataTypes.STRING,
     email: {
       type: DataTypes.STRING,

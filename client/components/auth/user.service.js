@@ -153,6 +153,21 @@ angular.module('svampeatlasApp')
 		url: '/api/users/:id/morphogroups',
 		isArray: true
     },
+	validateEmail: {
+		method: 'POST',
+		url: '/api/users/validate/email'
+	},
+	validateInitials: {
+		method: 'POST',
+		url: '/api/users/validate/initials'
+	},
+    getPending: {
+      method: 'GET',
+		params: {
+			id: '@_token'
+		},
+		url: '/api/users/pending/:token'
+    },
 	  });
   });
 

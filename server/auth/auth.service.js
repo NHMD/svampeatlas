@@ -9,7 +9,7 @@ var User = require('../api/mysql').User;
 var Role = require('../api/mysql').Role;
 var models = require('../api/mysql')
 var _ = require('lodash');
-
+var shortid = require('shortid');
 var mailService = require('../components/mail/mail.service');
 
 var validateJwt = expressJwt({
@@ -246,6 +246,58 @@ return	models.User.findAll({where: {email: req.body.email}})
 		console.log(err)
 		return (err.message === 'not found') ? res.status(404).json(err.message) : res.status(500).json(err)
 	})
+	
+}
+
+exports.createPendingUser = function(req, res){
+	
+	var redisClient = req.redis;
+	
+	
+	var token = shortid.generate();
+	var key = "pending_user_"+token;
+	
+	
+	return redisClient.setAsync(key, JSON.stringify(req.body))
+		.then(function() {
+			return redisClient.expireAsync(key, 60 * 60 * 24)
+		})
+		.then(function(){
+			return  mailService.sendNewUserConfirmationEmail(req.body, token)
+
+		})
+		.then(function(){
+			return  res.sendStatus(200)
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			res.sendStatus(500)
+		})
+	
+	
+/*	
+return	models.User.findAll({where: {email: req.body.email}})
+	.then(function(users){
+		if(users.length === 0){
+			throw new Error('not found')
+		}
+		var promises = [];
+		for(var i =0; i< users.length; i++){
+			var token = signToken(users[i]._id, 60 * 60 * 1);
+			promises.push(mailService.sendRestPassWordMail(users[i].email,users[i].Initialer, token ));
+		}
+		
+		return Promise.all(promises);
+	})
+	.then(function(){
+		
+		return res.sendStatus(200)
+	})
+	.catch(function(err){
+		console.log(err)
+		return (err.message === 'not found') ? res.status(404).json(err.message) : res.status(500).json(err)
+	})
+	*/
 	
 }
 

@@ -45,6 +45,12 @@ angular.module('svampeatlasApp')
 
         templateUrl: 'app/account/forgot/forgot.html',
         controller: 'ForgotCtrl'
+      })
+      .state('confirm', {
+        url: '/confirm?token',
+
+        templateUrl: 'app/account/confirm/confirm.html',
+        controller: 'ConfirmCtrl'
       });
   })
   .run(function($rootScope) {

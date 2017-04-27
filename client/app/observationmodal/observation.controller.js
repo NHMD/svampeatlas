@@ -367,7 +367,7 @@ angular.module('svampeatlasApp')
 
 
 				// Check currentusers vote status on determinations:
-
+				if(Auth.isLoggedIn()){
 				for (var i = 0; i < obs.Determinations.length; i++) {
 
 					for (var j = 0; j < obs.Determinations[i].Votes.length; j++) {
@@ -380,8 +380,8 @@ angular.module('svampeatlasApp')
 
 						}
 					}
-				}
-
+				};
+			};
 				$scope.mapsettings.paths.circle = {
 					type: "circle",
 					radius: obs.accuracy,
