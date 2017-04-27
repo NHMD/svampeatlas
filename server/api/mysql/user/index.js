@@ -3,6 +3,7 @@
 var express = require('express');
 var controller = require('./user.controller');
 var auth = require('../../../auth/auth.service');
+var redisClient = require('../../../components/hooks/redisClient');
 
 var router = express.Router();
 
@@ -39,5 +40,10 @@ router.put('/:id/photopermission', auth.hasRole('useradmin'), controller.changeP
 //router.post('/forgot',  controller.forgot);
 
 router.post('/',auth.hasRole('useradmin'),  controller.create);
+
+router.post('/validate/email',  controller.validateEmail);
+router.post('/validate/initials',  controller.validateInitials);
+
+router.get('/pending/:token', redisClient.use(), controller.getPendingUser);
 
 module.exports = router;

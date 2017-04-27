@@ -131,6 +131,15 @@ angular.module('svampeatlasApp')
 						return safeCb(callback)(err);
 					}.bind(this)).$promise;
 			},
+			
+			createPendingUser: function(user){
+				return $http.post('/auth/pendingusers', {
+					Initialer: user.Initialer,
+					password: user.password,
+					email: user.email,
+					name: user.name
+				})
+			},
 
 			/**
 			 * Change password

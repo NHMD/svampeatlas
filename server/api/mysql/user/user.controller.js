@@ -55,7 +55,8 @@ exports.index = function(req, res) {
 			'email',
 			'provider',
 			'Initialer',
-			'photopermission'
+			'photopermission',
+			'createdAt'
 		],
 		include: [{
 			model: models.Role
@@ -412,6 +413,43 @@ exports.me = function(req, res, next) {
 		});
 };
 
+
+exports.getPendingUser = function(req, res){
+	var redisClient = req.redis;
+redisClient.getAsync("pending_user_"+req.params.token)
+		.then(function(usr) {
+			if(!usr){
+				throw new Error("not found")
+			} else {
+				
+				
+				var newUser = User.build(JSON.parse(usr));
+				newUser.setDataValue('provider', 'local');
+				// newUser.setDataValue('role', 'user');
+				return newUser.save()
+					
+				
+				//return res.status(200).send(usr)
+			}
+			
+		})
+		.then(function(user) {
+			return [redisClient.delAsync("pending_user_"+req.params.token), user]
+		})
+		.spread(function(deleteFromRedisSuccess, user) {
+			
+		return	res.status(200).json(user);
+		})
+		.catch(function(err){
+			console.log(err)
+			if(err.message === "not found") {
+				res.sendStatus(404)
+			} else {
+				res.sendStatus(500)
+			}
+		})
+}
+
 /**
  * Authentication callback
  */
@@ -650,4 +688,39 @@ exports.showRecentlyChangedObservations = function(req, res) {
 
 };
 
+exports.validateEmail = function(req, res){
+	
+	var sql = "SELECT COUNT(*) as count FROM Users WHERE email=:email"
+	return models.sequelize.query(sql, {
+		replacements: {
+			email: req.body.email
+			
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result[0]);
+	}).catch(handleError(res));
+	
+}
+
+exports.validateInitials = function(req, res){
+	
+	var sql = "SELECT COUNT(*) as count FROM Users WHERE Initialer=:initialer"
+	return models.sequelize.query(sql, {
+		replacements: {
+			initialer: req.body.Initialer
+			
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result[0]);
+	}).catch(handleError(res));
+	
+}
 

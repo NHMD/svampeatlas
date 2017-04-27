@@ -28,6 +28,9 @@ $scope.states =
 	  'validation': {name: "Validering", icon: 'microscope'},
 	  'utm': {name: "UTM felter", icon: 'grid_on'},
 	  'competitions': {name: "Konkurrencer", icon: 'trophy'},
+	  'signup' : {name: 'Opret brugerprofil', icon: 'person_add'},
+	  'confirm' : {name: 'Opret brugerprofil', icon: 'person_add'},
+	  'forgot' : {name: 'Glemt password', icon: 'lock_open'}
 	  
 	};
 	/*

@@ -303,7 +303,9 @@ angular.module('svampeatlasApp')
 			'Nyt password' : 'New password',
 			'Gentag nyt password' : 'Repeat new password',
 			'Gem nyt password' : 'Save new password',
-			'Der er sendt en email til': 'An email has been sent to'
+			'Der er sendt en email til': 'An email has been sent to',
+			'Gentag password' : 'Repeat password',
+			'Opret brugerprofil' : 'Create user account'
 			
 			
 		});
@@ -455,7 +457,28 @@ angular.module('svampeatlasApp')
 			'numberofmobileobservations' : 'Årets mobilrapportør',
 			'numberofarchiveobservations' : 'Årets arkivar',
 			'pioneer' : 'Årets fornyer',
-			'Password confirmation must match' : 'De to passwords skal være ens'
+			'Password confirmation must match' : 'De to passwords skal være ens',
+			'Activating account' : 'Aktiverer brugerprofil',
+			'Account activated succesfully' : 'Brugerprofil aktiveret',
+			'Account activation failed': 'Aktivering af brugerprofil mislykkedes',
+			'Click to login' : 'Klik for at logge ind',
+			'There was an error activating your account. The link might have expired.' : 'Der opstod en fejl under aktivering af din profil. Måske er linket udløbet.',
+			'Create user account' : 'Opret brugerprofil',
+			'Name' : 'Navn',
+			'A name is required' : 'Navn er obligatorisk',
+			'Too long (max 5 characters)': 'For langt (max 5 karakterer)',
+			'Too short (min 2 characters)': 'For kort (min 2 karakterer)',
+			'Initials are required' : 'Initialer er obligatisk',
+			'Checking if these initials is available...' : 'Checker om disse initialer er ledige...',
+			'These initials is already taken!' : 'Disse initialer er optaget!',
+			'Doesnt look like a valid email.' : 'Ligner ikke en gyldig email',
+			'Enter your email address.' : 'Indtast din email adresse',
+			'Checking if this email is already in use...' : 'Checker om denne email allerede er i brug...',
+			'This email is already in use!' : 'Denne email er allerede i brug!',
+			'Lost password?' : 'Har du mistet dit password?',
+			'Password must be at least 6 characters.' : 'Dit password skal være på mindst 6 tegn.',
+			'An email has been sent to' : 'Der er sendt en email til',
+			'The email contains further instructions on how to activate your account' : 'Emailen indeholder yderligere information om hvordan du aktiverer din brugerprofil.'
 			
 
 

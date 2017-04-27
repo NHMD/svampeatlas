@@ -3,6 +3,8 @@ var nodemailer = require('nodemailer');
 var Promise = require('bluebird')
 var config = require('../../config/environment');
 
+//var url = "http://localhost:9000";
+var url = "https://svampe.databasen.org";
 
 // create reusable transporter object using the default SMTP transport
 var transporter = nodemailer.createTransport({
@@ -21,8 +23,7 @@ Promise.promisifyAll(transporter);
 
 
 exports.sendRestPassWordMail = function(email, initials, token){
-	//var url = "http://localhost:9000";
-	var url = "https://svampe.databasen.org";
+	
 	var mailOptions = {
 	    from: '"Svampedatabasen 🍄" <'+config.mail.address+'>', // sender address
 	    to: email, // list of receivers
@@ -45,4 +46,20 @@ exports.sendRestPassWordMail = function(email, initials, token){
 }
 
 
-// SELECT Initialer, name, email FROM Users WHERE email IN (select  email  FROM Users GROUP BY email HAVING COUNT(distinct name) >1) AND email IS NOT NULL AND email != '' ORDER BY email;
+exports.sendNewUserConfirmationEmail = function(usr, token){
+	
+	var mailOptions = {
+	    from: '"Svampedatabasen 🍄" <'+config.mail.address+'>', // sender address
+	    to: usr.email, // list of receivers
+	    subject: 'Bekræft brugeroprettelse på svampe.databasen.org', // Subject line
+	    text: `Kære ${usr.name} \n For at aktivere din brugerprofil "${usr.Initialer}" på svampe.databasen.org skal du åbne dette link og følge instruktionerne:\n ${url}/confirm?token=${token} \n Linket er gyldigt i 12 timer. \n Denne mail kan ikke besvares. \n \n \n ---------------------------
+		Dear ${usr.name} \n To activate your user account "${usr.Initialer}" on svampe.databasen.org open this link and follow the instructions: ${url}/confirm?token=${token} \n The link is valid for 12 hours.\n Do not reply to this email.`, // plain text body
+	    html: `<p>Kære ${usr.name} </p><p>For at aktivere din brugerprofil "${usr.Initialer}" på svampe.databasen.org skal du åbne dette link og følge instruktionerne: <br><a href="${url}/confirm?token=${token}"> Aktivér brugerprofil</a> </p><p> Linket er gyldigt i 12 timer.<br>
+		Du kan finde introduktionsvideoer <a href="${url}/demos">her.</a> <br>
+		Du kan læse om godkendelse (validering) af fund <a href="${url}/validation">her.</a> <br>
+		<br> Denne mail kan ikke besvares.</p><br><br> --------------------------- 
+		<p>Dear ${usr.name} </p><p> To activate your user account "${usr.Initialer}" on svampe.databasen.org open this link and follow the instructions: <br><a href="${url}/confirm?token=${token}"> Activate account</a> </p><p>The link is valid for 12 hours.<br> Do not reply to this email. </p>` // html body
+	};
+	return	transporter.sendMailAsync(mailOptions);
+	
+}

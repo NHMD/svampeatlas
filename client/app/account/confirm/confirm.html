@@ -1,0 +1,51 @@
+		<!--<div ng-include="'components/navbar/navbar.html'"></div>-->
+		<md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" > </md-toolbar>
+		<md-content   flex md-scroll-y layout-padding>
+		
+	    <md-card layout-fill>
+	    <md-card-header>
+	            
+	             <md-card-header-text>
+	               <span ng-if="pending" class="md-headline" translate>Activating account</span>
+	               <span ng-if="!pending && activationSuccess" class="md-headline" translate>Account activated succesfully</span>
+				   <span ng-if="!pending && !activationSuccess" class="md-headline" translate>Account activation failed</span>
+	             </md-card-header-text>
+	           </md-card-header>
+	          
+			  <md-card-content   layout="row">
+			<span ng-if="pending || activationSuccess" flex layout-fill></span>
+			<md-progress-circular ng-if="pending"></md-progress-circular>
+			<md-button  ng-click="showLogin()" ng-if="!pending && activationSuccess"><span translate>Click to login</span></md-button>
+			<span ng-if="pending || activationSuccess" flex layout-fill></span>
+			<span ng-if="!pending && !activationSuccess" translate>There was an error activating your account. The link might have expired.</span>
+		  
+			
+			
+		  </md-card-content>
+	          
+	         </md-card>
+			
+				<!--<div>
+					<h1 translate>
+						User profile
+					</h1>
+					<p>
+						<span translate>Name:</span> {{getCurrentUser().name}}
+					</p>
+					<p>
+						<span translate>Initials:</span> {{getCurrentUser().Initialer}}
+					</p>
+					<p>
+						<span translate>Email:</span> {{getCurrentUser().email}}
+					</p>
+					
+					
+					
+				</div> -->
+			
+			
+	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
+    
+	      </div>		
+		</md-content>
+	

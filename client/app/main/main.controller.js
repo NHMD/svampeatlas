@@ -13,7 +13,8 @@ angular.module('svampeatlasApp')
 	  $scope.showLogin = function(){
   		var useFullScreen = $mdMedia('xs');
   		    $mdDialog.show({
-  		    //  controller: LoginController,
+  		      controller: 'LoginController',
+				locals: {forgotPw : false, forgotPwEmail: ""},
   		      templateUrl: 'app/account/login/login-modal.tpl.html',
   		    //  parent: angular.element(document.body),
   		     // targetEvent: ev,

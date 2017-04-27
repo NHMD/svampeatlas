@@ -55,7 +55,7 @@
 	   			          </md-menu>
 	   
 	   </th>
-			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="6" st-template="app/searchresultlist/pagination.tpl.html">
+			<th st-pagination=""  st-items-by-page="stItemsPrPage" colspan="7" st-template="app/searchresultlist/pagination.tpl.html">
 			</th>
 		</tr> 
 
@@ -149,7 +149,7 @@
 
 	</tbody>
 	<tbody ng-show="!displayed &&  isLoading">
-		<tr><td colspan="9" ><div layout="row" layout-align="center center"><md-progress-circular  md-diameter="48"></md-progress-circular></div></td></tr>
+		<tr><td colspan="11" ><div layout="row" layout-align="center center"><md-progress-circular  md-diameter="48"></md-progress-circular></div></td></tr>
 		  
 	</tbody>	
 	<tbody ng-show="displayed && displayed.length===0 &&  !isLoading">
@@ -159,7 +159,7 @@
 
 	<tfoot  ng-show="displayed && !isLoading">
 	<tr>
-		<td st-pagination=""  st-items-by-page="stItemsPrPage" colspan="9" st-template="app/searchresultlist/pagination.tpl.html">
+		<td st-pagination=""  st-items-by-page="stItemsPrPage" colspan="11" st-template="app/searchresultlist/pagination.tpl.html">
 		</td>
 	</tr>
 	</tfoot> 
