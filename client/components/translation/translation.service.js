@@ -288,7 +288,6 @@ angular.module('svampeatlasApp')
 			'Samarbejdspartnere': 'Partners',
 			'Seneste aktivitet' : 'Latest activity',
 			'Fund i dag' : 'Sightings today',
-			
 			'Seneste uge' : 'Past week',
 			'Nyheder fra svampeatlas' : 'News from the Atlas of Danish Fungi',
 			'Opdatér' : 'Refresh',
@@ -305,7 +304,13 @@ angular.module('svampeatlasApp')
 			'Gem nyt password' : 'Save new password',
 			'Der er sendt en email til': 'An email has been sent to',
 			'Gentag password' : 'Repeat password',
-			'Opret brugerprofil' : 'Create user account'
+			'Opret brugerprofil' : 'Create user account',
+			'Din notifikation er sendt til validator': 'Your notification has been sent to a validator',
+			'Kontakt validator angående' : 'Contact validator regarding',
+			'Brug denne kontaktformular hvis du mener der er behov for at en validator vurderer denne observation.': 'Use this contact form if you think a validator needs to evaluate this observation.',
+			'Skriv besked til validator' : 'Write a message to the validator',
+			'Send besked til validator' : 'Send message to the validator',
+			'Kontakt validator' : 'Contact validator'
 			
 			
 		});

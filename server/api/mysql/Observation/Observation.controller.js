@@ -25,7 +25,119 @@ var PDFdocument = require('pdfkit');
 var request = require("request");
 var requestPromise = require("request-promise");
 
+var mail = require('../../../components/mail/mail.service');
 
+
+
+function getDefaulQuery(req){
+	return {
+		where: {
+			_id: req.params.id
+		},
+		include: [{
+				model: models.Determination,
+				as: "PrimaryDetermination",
+				include: [{
+					model: models.Taxon,
+					as: "Taxon",
+					include: [{
+						model: models.Taxon,
+						as: "acceptedTaxon",
+						include: [{
+							model: models.TaxonDKnames,
+							as: "Vernacularname_DK"
+						}]
+					}]
+				}, {
+					model: models.User,
+					as: 'User',
+					attributes: ['_id', 'email', 'Initialer', 'name']
+				}, {
+					model: models.User,
+					as: 'Validator',
+					attributes: ['_id', 'Initialer', 'name']
+				}]
+			}, {
+				model: models.Determination,
+				as: 'Determinations',
+				include: [{
+					model: models.Taxon,
+					as: "Taxon",
+					include: [{
+						model: models.Taxon,
+						as: "acceptedTaxon",
+						include: [{
+							model: models.TaxonDKnames,
+							as: "Vernacularname_DK"
+						}]
+					}]
+				}, {
+					model: models.User,
+					as: 'User',
+					attributes: ['_id', 'email', 'Initialer', 'name']
+				}, {
+					model: models.User,
+					as: 'Validator',
+					attributes: ['_id', 'Initialer', 'name']
+				},
+				{
+									model: models.DeterminationVote,
+									as: 'Votes',
+									attributes: ['_id','user_id', 'createdAt',  'score']
+								},
+			
+			]
+
+			},
+
+			{
+				model: models.User,
+				as: 'PrimaryUser',
+				attributes: ['Initialer', 'name']
+			}, {
+				model: models.Locality,
+				as: 'Locality'
+			}, {
+				model: models.GeoNames,
+				as: 'GeoNames'
+			},
+
+			{
+				model: models.ObservationImage,
+				as: 'Images',
+				include: [{
+					model: models.User,
+					as: "Photographer",
+					attributes: ['name', 'Initialer', 'photopermission']
+				}]
+			}, {
+				model: models.ObservationForum,
+				as: 'Forum',
+				include: [{
+					model: models.User,
+					as: "User",
+					attributes: ['name', 'Initialer', 'facebook']
+				}]
+			}, {
+				model: models.PlantTaxon,
+				as: 'associatedTaxa'
+			}, {
+				model: models.User,
+				as: 'users',
+				attributes: ['_id', 'email', 'Initialer', 'name']
+			}, {
+				model: models.Substrate,
+				as: 'Substrate'
+			}, {
+				model: models.VegetationType,
+				as: 'VegetationType'
+			}
+
+		]
+	};
+
+} 
+	 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
 	return function(err) {
@@ -527,111 +639,7 @@ function validationStatusUpdatedSince(user, since) {
 exports.show = function(req, res) {
 	var userIsValidator = (req.user) ? userTool.hasRole(req.user, 'validator') : false;
 
-	var query = {
-		where: {
-			_id: req.params.id
-		},
-		include: [{
-				model: models.Determination,
-				as: "PrimaryDetermination",
-				include: [{
-					model: models.Taxon,
-					as: "Taxon",
-					include: [{
-						model: models.Taxon,
-						as: "acceptedTaxon",
-						include: [{
-							model: models.TaxonDKnames,
-							as: "Vernacularname_DK"
-						}]
-					}]
-				}, {
-					model: models.User,
-					as: 'User',
-					attributes: ['_id', 'email', 'Initialer', 'name']
-				}, {
-					model: models.User,
-					as: 'Validator',
-					attributes: ['_id', 'Initialer', 'name']
-				}]
-			}, {
-				model: models.Determination,
-				as: 'Determinations',
-				include: [{
-					model: models.Taxon,
-					as: "Taxon",
-					include: [{
-						model: models.Taxon,
-						as: "acceptedTaxon",
-						include: [{
-							model: models.TaxonDKnames,
-							as: "Vernacularname_DK"
-						}]
-					}]
-				}, {
-					model: models.User,
-					as: 'User',
-					attributes: ['_id', 'email', 'Initialer', 'name']
-				}, {
-					model: models.User,
-					as: 'Validator',
-					attributes: ['_id', 'Initialer', 'name']
-				},
-				{
-									model: models.DeterminationVote,
-									as: 'Votes',
-									attributes: ['_id','user_id', 'createdAt',  'score']
-								},
-			
-			]
-
-			},
-
-			{
-				model: models.User,
-				as: 'PrimaryUser',
-				attributes: ['Initialer', 'name']
-			}, {
-				model: models.Locality,
-				as: 'Locality'
-			}, {
-				model: models.GeoNames,
-				as: 'GeoNames'
-			},
-
-			{
-				model: models.ObservationImage,
-				as: 'Images',
-				include: [{
-					model: models.User,
-					as: "Photographer",
-					attributes: ['name', 'Initialer', 'photopermission']
-				}]
-			}, {
-				model: models.ObservationForum,
-				as: 'Forum',
-				include: [{
-					model: models.User,
-					as: "User",
-					attributes: ['name', 'Initialer', 'facebook']
-				}]
-			}, {
-				model: models.PlantTaxon,
-				as: 'associatedTaxa'
-			}, {
-				model: models.User,
-				as: 'users',
-				attributes: ['_id', 'email', 'Initialer', 'name']
-			}, {
-				model: models.Substrate,
-				as: 'Substrate'
-			}, {
-				model: models.VegetationType,
-				as: 'VegetationType'
-			}
-
-		]
-	};
+	var query = getDefaulQuery(req);
 
 	if (!userIsValidator) {
 		query.attributes = {
@@ -1204,76 +1212,28 @@ exports.deleteUserFromObs = function(req, res) {
 	});
 }
 
+exports.notifyValidator = function(req, res){
+	var query = getDefaulQuery(req);
+	
+Observation.find(query)
+	.then(handleEntityNotFound(res))
+	.then(function(obs){
+		
+		return mail.notifyValidator(req.user, obs, req.body.message)
+	})
+	.then(function(){
+		res.sendStatus(200);
+	})
+	.
+catch(handleError(res));
+
+	
+}
 
 exports.generateCapsule = function(req, res) {
 	
 	
-	var query = {
-		where: {
-			_id: req.params.id
-		},
-		include: [{
-				model: models.Determination,
-				as: "PrimaryDetermination",
-				include: [{
-					model: models.Taxon,
-					as: "Taxon",
-					include: [{
-						model: models.Taxon,
-						as: "acceptedTaxon",
-						include: [{
-							model: models.TaxonDKnames,
-							as: "Vernacularname_DK"
-						}]
-					}]
-				}, {
-					model: models.User,
-					as: 'User',
-					attributes: ['_id', 'email', 'Initialer', 'name']
-				}, {
-					model: models.User,
-					as: 'Validator',
-					attributes: ['_id', 'Initialer', 'name']
-				}]
-			},
-
-			{
-				model: models.User,
-				as: 'PrimaryUser',
-				attributes: ['Initialer', 'name']
-			}, {
-				model: models.Locality,
-				as: 'Locality'
-			}, {
-				model: models.GeoNames,
-				as: 'GeoNames'
-			},
-
-			{
-				model: models.ObservationImage,
-				as: 'Images',
-				include: [{
-					model: models.User,
-					as: "Photographer",
-					attributes: ['name', 'Initialer', 'photopermission']
-				}]
-			}, {
-				model: models.PlantTaxon,
-				as: 'associatedTaxa'
-			}, {
-				model: models.User,
-				as: 'users',
-				attributes: ['_id', 'email', 'Initialer', 'name']
-			}, {
-				model: models.Substrate,
-				as: 'Substrate'
-			}, {
-				model: models.VegetationType,
-				as: 'VegetationType'
-			}
-
-		]
-	};
+var query = getDefaulQuery(req);
 
 
 	Observation.find(query)
@@ -1451,30 +1411,6 @@ return	requestPromise({
 	console.log(err)
 	doc.end();
 })
-
-
-
-
-
-/*
-request({
-    url: 'https://maps.googleapis.com/maps/api/staticmap?center='+obs.decimalLatitude+','+obs.decimalLongitude+'&zoom=10&size=415x125&maptype=roadmap&markers='+obs.decimalLatitude+','+obs.decimalLongitude+"&key=ABQIAAAAmvU52RJtOyI0zz81Y8BBoxTKSL5fUtutPPWazSqe5GsLCeoYoBTi9Ghh98xADiRWIM1h2ZY1Koe6Cg",
-    // Prevents Request from converting response to string
-    encoding: null
-
-}, function (err, response, body) {
-	
-	if(err){
-		doc.end();
-	}
-	
-    doc.image(body, 70, 90, {width: 415})
-	
-	doc.end();
-}) */
-
-//
-
 
 
 	

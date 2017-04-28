@@ -48,7 +48,7 @@ router.put('/:id', auth.isAuthenticated(),  controller.update);
 //router.delete('/:id',auth.hasRole('validator'),  controller.destroy);
 router.delete('/:id', auth.isAuthenticated(),  controller.destroy);
 
-
+router.post('/:id/notifications', auth.isAuthenticated(), controller.notifyValidator); 
 
 
 module.exports = router;

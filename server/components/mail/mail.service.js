@@ -63,3 +63,19 @@ exports.sendNewUserConfirmationEmail = function(usr, token){
 	return	transporter.sendMailAsync(mailOptions);
 	
 }
+
+exports.notifyValidator = function(usr, obs, message){
+	var subject = obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName +" DMS-"+obs._id;
+	
+	var mailOptions = {
+	    from: '"'+usr.name+'" <'+config.mail.address+'>', // sender address
+		to: config.mail.validatoraddress,
+	    replyTo: usr.email, // list of receivers
+	    subject: subject, // Subject line
+	    text: `Besked fra ${usr.name} (${usr.Initialer}) angående: ${url}/observations/${obs._id} \n \n ${message}`, // plain text body
+	    html: `<p>Besked fra ${usr.name} (${usr.Initialer}) angående:<br> <a href="${url}/observations/${obs._id}">${url}/observations/${obs._id}</a> </p>
+		<p>${message}</p>` // html body
+	};
+	console.log(JSON.stringify(mailOptions))
+	return	transporter.sendMailAsync(mailOptions);
+}

@@ -7,7 +7,7 @@ angular.module('svampeatlasApp')
 	$scope.getCurrentUser = Auth.getCurrentUser;
 	$scope.isLoggedIn = Auth.isLoggedIn;
 	$scope.oldEmail = $scope.getCurrentUser().email;
-	
+	$scope.oldName = $scope.getCurrentUser().name;
 	$scope.useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
 	
 	$scope.$watch('useLichenFilter', function(newval, oldval){
@@ -33,6 +33,19 @@ angular.module('svampeatlasApp')
 			return Auth.refreshUser();
 		}).then(function(){
 			$scope.oldEmail = $scope.getCurrentUser().email;
+		})
+		.catch(function(err){
+			alert(err.message)
+		})
+		
+	}
+	
+	$scope.saveName = function(){
+		
+		User.setName({name:$scope.getCurrentUser().name}).$promise.then(function(){
+			return Auth.refreshUser();
+		}).then(function(){
+			$scope.oldName = $scope.getCurrentUser().name;
 		})
 		.catch(function(err){
 			alert(err.message)

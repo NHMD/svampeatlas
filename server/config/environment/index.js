@@ -85,6 +85,7 @@ var all = {
 	  server: 'asmtp.unoeuro.com',
 	  port: 587,
 	  address: 'svampe.databasen@svampe.dk',
+	  validatoraddress: 'validator@svampe.dk',
 	  password: 'WQ53hryTGB8957'
   }
 };

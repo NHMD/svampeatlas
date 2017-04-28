@@ -10,12 +10,12 @@
    </div>
  </md-toolbar>
 
-      <md-content  class="demo-dialog-content">
-		  
-									   <form layout-fill name="validator-contact-form">
+      <md-content  class="demo-dialog-content" layout-padding>
+		  <p translate>Brug denne kontaktformular hvis du mener der er behov for at en validator vurderer denne observation.</p>
+									   <form layout-fill name="validator-contact-form" layout-margin>
 									   <md-input-container class="md-block">
-									             <label>{{'Skriv kommentar' | translate}}</label>
-									             <textarea ng-model="ctrl.newComment"  rows="5" md-select-on-focus ng-disabled="ctrl.sendingComment"></textarea>
+									             <label>{{'Skriv besked til validator' | translate}}</label>
+									             <textarea ng-model="ctrl.newNotification"  rows="5" md-select-on-focus ng-disabled="ctrl.sendingNotification"></textarea>
 									           </md-input-container>
 					   
 										   </form>
@@ -27,8 +27,8 @@
   <div class="demo-dialog-button" layout="row">
 	  
 	  <span flex></span>
-    <md-button   class="md-primary" style="margin-right:20px;" ng-click="ctrl.closeDialog()" >
-      {{'Luk' | translate}}
+    <md-button   class="md-primary" style="margin-right:20px;" ng-click="ctrl.postNotification(ctrl.newNotification)" ng-disabled="ctrl.sendingNotification">
+      {{'Send besked til validator' | translate}}
     </md-button>
    
   </div>
