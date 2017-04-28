@@ -63,6 +63,13 @@ angular.module('svampeatlasApp')
 		controller:'email'
       }
     },
+    setName: {
+      method: 'PUT',
+      params: {
+        id:'me',
+		controller:'name'
+      }
+    },
     getFirstFindings: {
       method: 'GET',
 		params: {

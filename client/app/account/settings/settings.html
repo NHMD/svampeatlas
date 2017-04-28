@@ -26,6 +26,18 @@
 			        </md-input-container>
 			  <md-button  ng-click="saveEmail()" ng-show="oldEmail !== getCurrentUser().email"><ng-md-icon icon="save"></ng-md-icon> <span translate>Gem email</span></md-button>
 			  <md-button  ng-click="restoreEmail()" ng-show="oldEmail !== getCurrentUser().email"><ng-md-icon icon="refresh"></ng-md-icon> <span translate>Fortryd</span></md-button>
+			  
+			  <md-input-container class="md-block md-icon-float" >
+			  <md-icon><ng-md-icon icon="person"></ng-md-icon></md-icon>
+			 
+			          
+			          <input ng-model="getCurrentUser().name" type="text" placeholder="Navn" >
+					  
+					 
+					  
+			        </md-input-container>
+			  <md-button  ng-click="saveName()" ng-show="oldName !== getCurrentUser().name"><ng-md-icon icon="save"></ng-md-icon> <span translate>Gem navn</span></md-button>
+			  <md-button  ng-click="restoreName()" ng-show="oldName !== getCurrentUser().name"><ng-md-icon icon="refresh"></ng-md-icon> <span translate>Fortryd</span></md-button>
 			 
 			
 		  </md-card-content>

@@ -378,6 +378,20 @@ exports.changeEmail = function(req, res, next) {
 		.catch(validationError(res));
 };
 
+exports.changeName = function(req, res, next) {
+	var userId = req.user._id;
+
+	return User.update({
+			name: req.body.name
+		}, {
+			where: {
+				_id: userId
+			}
+		})
+		.then(respondWith(res, 204))
+		.catch(validationError(res));
+};
+
 /**
  * Get my info
  */

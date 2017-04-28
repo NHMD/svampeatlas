@@ -18,6 +18,8 @@ router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.post('/:id/password', auth.isAuthenticated(), controller.resetPassword);
 router.put('/me/language', auth.isAuthenticated(), controller.changeLanguage);
 router.put('/me/email', auth.isAuthenticated(), controller.changeEmail);
+router.put('/me/name', auth.isAuthenticated(), controller.changeName);
+
 router.get('/:id',/* auth.isAuthenticated(),*/ controller.show);
 router.get('/:id/morphogroups', auth.hasRole('validator'), controller.showUserMorphoGroups);
 router.get('/:id/morphogroups/:morphogroupid', auth.hasRole('validator'), controller.showUserMorphoGroup);

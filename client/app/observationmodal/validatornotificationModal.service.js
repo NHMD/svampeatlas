@@ -1,6 +1,6 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('ValidatorNotificationModalService', function($mdPanel, appConstants, $mdMedia, $mdToast, $translate, ErrorHandlingService, $filter) {
+	.factory('ValidatorNotificationModalService', function($mdPanel, appConstants, $mdMedia, $mdToast, $translate, ErrorHandlingService, $filter, Observation) {
 
 		return {
 			show: function(ev, obs) {
@@ -18,7 +18,7 @@ angular.module('svampeatlasApp')
   			    disableParentScroll: false,
   			    templateUrl: 'app/observationmodal/validatornotification-panel.tpl.html',
   			    hasBackdrop: true,
-  			    panelClass: 'demo-dialog-example',
+  			    panelClass: 'validator-form',
 				/*
   			    position: $mdPanel.newPanelPosition()
 		      .center(),
@@ -44,7 +44,36 @@ angular.module('svampeatlasApp')
 			  
 			this.$translate = $translate;
 			
-			  
+			this.postNotification = function(message) {
+				that.sendingNotification = true;
+				Observation.postNotification({
+						id: that.obs._id
+					}, {
+						message: message
+					})
+					.$promise.then(function() {
+						
+
+						that.sendingNotification = false;
+		   			 mdPanelRef.close().then(function() {
+ 						$mdToast.show(
+ 							$mdToast.simple()
+ 							.textContent($translate.instant('Din notifikation er sendt til validator'))
+ 							.position("top right")
+ 							.hideDelay(3000)
+ 						);
+		   			    mdPanelRef.destroy();
+		   			  });
+					  
+						
+
+					})
+					.catch(function(err) {
+						that.sendingNotification = false;
+						ErrorHandlingService.handle500();
+					})
+
+			};
   			
 			this.closeDialog = function() {
 			 mdPanelRef.close().then(function() {
