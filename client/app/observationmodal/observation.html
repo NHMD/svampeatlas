@@ -48,7 +48,7 @@
 	       </md-button>
 	   </span>
 	  <md-menu md-position-mode="target-right target" >
-	            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+	            <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
 	               <ng-md-icon icon="more_vert" ></ng-md-icon>
 	            </md-button>
 	            <md-menu-content width="4" >
@@ -82,6 +82,13 @@
 		  	           <p flex> {{'Klon fund' | translate}}</p>
 		  	          </md-button>
 	              </md-menu-item>
+  				  <md-menu-item ng-if="Auth.isLoggedIn()">
+		  		
+  		  	    <md-button  aria-label="Kopiér fund" ng-click="ctrl.ValidatorNotificationModalService.show($event, obs)">
+  		  	           <p flex> {{'Kontakt validator' | translate}}</p>
+  		  	          </md-button>
+  	              </md-menu-item>
+				  
 	            </md-menu-content>
 	          </md-menu>
       </div>
