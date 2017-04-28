@@ -30,6 +30,7 @@
 			  			  
 			  <span ng-if="obs.PrimaryDetermination.validation === 'Godkendt' && obs.PrimaryDetermination.Validator">{{'Dette fund er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}}<br> <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a> <ng-md-icon icon="microscope"></ng-md-icon></span>
 		  </div>
+		  
 		
 	  		<div class="validator-button-container" ng-if="Auth.hasRole('validator')" ng-include="'app/observationmodal/validatorbutton.tpl.html'">
 		

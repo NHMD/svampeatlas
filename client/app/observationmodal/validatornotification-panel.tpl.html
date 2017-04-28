@@ -1,0 +1,47 @@
+<div role="dialog" aria-label="Other determinations" layout="column" layout-align="center center" flex>
+ <md-toolbar>
+   <div class="md-toolbar-tools">
+     
+	<h2>{{'Kontakt validator angående' | translate}} DMS-{{ctrl.obs._id}}</h2>
+     <span flex></span>
+     <md-button class="md-icon-button" ng-click="ctrl.closeDialog()">
+       <ng-md-icon icon="close"></ng-md-icon>
+     </md-button>
+   </div>
+ </md-toolbar>
+
+      <md-content  class="demo-dialog-content">
+		  
+									   <form layout-fill name="validator-contact-form">
+									   <md-input-container class="md-block">
+									             <label>{{'Skriv kommentar' | translate}}</label>
+									             <textarea ng-model="ctrl.newComment"  rows="5" md-select-on-focus ng-disabled="ctrl.sendingComment"></textarea>
+									           </md-input-container>
+					   
+										   </form>
+		  
+
+	
+      </md-content>
+
+  <div class="demo-dialog-button" layout="row">
+	  
+	  <span flex></span>
+    <md-button   class="md-primary" style="margin-right:20px;" ng-click="ctrl.closeDialog()" >
+      {{'Luk' | translate}}
+    </md-button>
+   
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+ 
