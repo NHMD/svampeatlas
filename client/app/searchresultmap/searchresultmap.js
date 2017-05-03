@@ -11,6 +11,7 @@ angular.module('svampeatlasApp')
 		    },
         url: '/search/:searchid/result/map',
         templateUrl: 'app/searchresultmap/searchresultmap.html',
-        controller: 'SearchResultMapCtrl'
+        controller: 'SearchResultMapCtrl',
+			 controllerAs : 'ctrl'
       });
   });

@@ -310,7 +310,8 @@ angular.module('svampeatlasApp')
 			'Brug denne kontaktformular hvis du mener der er behov for at en validator vurderer denne observation.': 'Use this contact form if you think a validator needs to evaluate this observation.',
 			'Skriv besked til validator' : 'Write a message to the validator',
 			'Send besked til validator' : 'Send message to the validator',
-			'Kontakt validator' : 'Contact validator'
+			'Kontakt validator' : 'Contact validator',
+			'Skriv art, slægt, familie, orden etc' : 'Type species, genus, family, order etc'
 			
 			
 		});

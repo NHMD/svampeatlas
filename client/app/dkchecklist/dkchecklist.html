@@ -1,14 +1,118 @@
 <!--<div ng-include="'components/navbar/navbar.html'"></div> -->
-<md-toolbar ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
+ <md-toolbar class="searchtabs"  ng-controller="SpeciesSearchTabsCtrl" ng-include="'app/speciessearchtabs/speciessearchtabs.html'" > </md-toolbar>
 	
    
 
 <md-content flex md-scroll-y layout-padding ng-cloak>
 	   
-  	  <md-switch ng-if="mdMedia('xs')"  ng-model="acceptedTaxaOnly" aria-label="Only accepted taxa" >
-  	         {{ 'Omit synonyms' | translate}}
-  	        </md-switch>
-			   
+			   		<div layout-gt-xs="row">
+	        <md-chips ng-model="search.selectedHigherTaxa" md-autocomplete-snap  class="md-block" flex-gt-xs>
+
+	          <md-autocomplete
+			  md-delay = "500"
+	    	  	md-min-length="4"
+	    		md-no-cache="false"
+				md-input-id="taxon-autocomplete"
+				md-select-on-match="true"
+				md-match-case-insensitive="true"
+	              md-selected-item="selectedItem"
+	              md-search-text="searchText"
+	              md-items="item in querySearch(searchText)"
+	              md-item-text="item"
+	              placeholder="{{$translate.instant('Skriv art, slægt, familie, orden etc')}}"
+	 			 ng-disabled="newTaxon.length >0"
+				 md-menu-class="autocomplete-custom-template"
+	 			flex class="taxon-autocomplete">
+	            
+				
+				<md-item-template>
+				          <span class="item-title">
+							  
+						<span ng-if="item.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">
+				            <span ng-if="10000 > item.RankID"> {{(item.RankID === 5000)? 'Arter af ':''}}{{(5000 > item.RankID )? 'Arter i ':''}} {{item.Vernacularname_DK.vernacularname_dk}} </span>
+							<span ng-if="item.RankID > 9999"> {{item.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
+						</span>
+						<span ng-if="!item.Vernacularname_DK || $cookies.get('preferred_language') === 'en'">
+				            <span ng-if="10000 > item.RankID" class="item-emphasis"> {{item.FullName}} {{(5001 > item.RankID ) ? 'spp.' : ''}}</span>
+							<span ng-if="item.RankID > 9999" class="item-emphasis"> {{item.FullName}} </span>
+							<span ng-if="item.RankID > 9999" class="item-author"> {{item.Author}} </span>
+						</span>
+				          </span>
+				          <span class="item-metadata" ng-if="$cookies.get('preferred_language') !== 'en' && item.DanishNames.length >0 && item.DanishNames[0]._id !== item.vernacularname_dk_id">
+							   <span class="item-metastat" > = {{item.DanishNames[0].vernacularname_dk}}</span>
+						   </span>
+				          <span class="item-metadata" ng-if="item.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">
+							   
+				            <span class="item-metastat item-emphasis" ng-if="10000 > item.RankID"> {{item.FullName}}</span>
+							<span class="item-metastat item-emphasis" ng-if="item.RankID > 9999"> {{item.FullName}} </span>
+				           	<span class="item-metastat" ng-if="item.RankID > 9999"> {{item.Author}} </span>
+				          </span>
+						  <span class="item-metadata" ng-if="(item._id !== item.acceptedTaxon._id) ">
+							  <span class="item-emphasis" ng-if="item._id !== item.acceptedTaxon._id">{{'Syn. til' | translate}} {{item.acceptedTaxon.FullName}}</span>
+							  <span class="item-metastat"> {{item.Author}} </span>
+						  </span>
+						 <span class="item-metadata" ng-if="item.probability === 0 && item.acceptedTaxon.attributes.PresentInDK === false && item.RankID > 9999"> 
+						  <ng-md-icon icon="error_outline" size="20"></ng-md-icon> {{'Ikke kendt fra Danmark' | translate}}</span>
+				        </md-item-template>
+
+	          </md-autocomplete>
+	          <md-chip-template>
+			  <span ng-if="!$chip._id"><strong>{{$chip}}</strong></span>
+			  <span ng-if="$chip._id">
+	            <span ng-if="$chip.RankID > 5000">
+	 			   <strong ng-if="$chip.Vernacularname_DK">{{$chip.Vernacularname_DK.vernacularname_dk | capitalize}} (</strong>
+	              <strong><em>{{$chip.FullName}}</em> {{$chip.Author}}</strong>
+				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
+	            </span>
+	            <span ng-if="5000 >= $chip.RankID">
+	 			   <strong ng-if="$chip.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">{{($chip.RankID === 5000)? 'Arter af ':''}}{{(5000 > $chip.RankID)? 'Arter i ':''}} {{$chip.Vernacularname_DK.vernacularname_dk}} (</strong>
+	              <strong><em>{{$chip.FullName}}</em></strong>
+				  <strong ng-if="$cookies.get('preferred_language') === 'en'"><em>spp.</em></strong>
+				  <strong ng-if="$chip.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">)</strong>
+	            </span>
+				</span>
+	          </md-chip-template>
+		
+	        </md-chips>
+			     </div>
+			     <div>
+					 <md-chips ng-model="search.selectedMorphoGroup" md-autocomplete-snap
+					               md-require-match="true" >
+					       <md-autocomplete
+					           md-selected-item="selectedItem"
+					           md-search-text="searchText"
+					           md-items="mg in findMorphoGroup(searchText)"
+					           md-item-text="mg.name_dk"
+					           placeholder="{{$translate.instant('Filtrér til artsgruppe(r)')}}">
+					         <span md-highlight-text="searchText">{{mg.name_dk}}</span>
+					       </md-autocomplete>
+					       <md-chip-template>
+					         <span>
+					           <strong>{{$chip.name_dk}}</strong>
+         
+					         </span>
+					       </md-chip-template>
+					     </md-chips>
+				 </div>
+				<div layout-gt-xs="row"> 
+	  		   	 <md-input-container >	
+	  		   	<label translate>Rødlistestatus</label>  
+	  		   <md-select aria-label="rødlistestatus" id="redlist" ng-model="search.redliststatus">
+	    		 	<md-option value=""></md-option>
+	  		     <md-option ng-value="{{['RE','CR', 'EN', 'VU', 'NT']}}" ng-selected="search.redliststatus.length > 2">{{'Alle rødlistede' | translate}}</md-option>
+	  		     <md-option value="RE">RE - {{'Forsvundet' | translate}}</md-option>
+	  		     <md-option value="CR">CR - {{'Kritisk truet' | translate}}</md-option>
+	  		     <md-option value="EN">EN - {{'Moderat truet' | translate}}</md-option>
+	  		     <md-option value="VU">VU - {{'Sårbar' | translate}}</md-option>
+	  		     <md-option value="NT">NT - {{'Næsten truet' | translate}}</md-option>
+	  		     <md-option value="LC">LC - {{'Ikke truet' | translate}}</md-option>
+	  		     <md-option value="DD">DD - {{'Utilstrækkelige data' | translate}}</md-option>
+	  		     <md-option value="NA">NA - {{'Ikke mulig' | translate}}</md-option>
+	  		     <md-option value="NE">NE - {{'Ikke bedømt' | translate}}</md-option>
+	  		             </md-select>
+	  		   	  </md-input-container><span flex></span>
+				  <md-button>opdatér</md-button>
+			  </div> 
 	<div class="table-responsive-vertical shadow-z-1">
 
 
@@ -32,31 +136,11 @@
 	            
 	           </th>
 			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
-			    <!--<md-radio-group ng-model="group">
-			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
-			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
-			         <md-radio-button value="lichens">kun laver</md-radio-button>
-			       </md-radio-group> -->
-				<md-input-container class="md-block th-filter-container" >
-        <label>Latinsk navn</label>
-		<md-icon id="reset-table-state" md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
-        <input st-search="FullName"  ng-model="ctrl.uiFullName" ng-model-options="{ debounce: 500 }">
-		
-      </md-input-container> </th>
+	<md-icon id="reset-table-state" md-font-icon="fa fa-refresh fa-lg" class="material-icons md-light md-48 md-primary"  st-reset-search></md-icon>
+	</th>
 			<th colspan="{{mdMedia('xs') ? 2 : 1}}">
-			    <!--<md-radio-group ng-model="group">
-			         <md-radio-button value="all" >Svampe og laver</md-radio-button>
-			         <md-radio-button value="fungi">Kun svampe </md-radio-button>
-			         <md-radio-button value="lichens">kun laver</md-radio-button>
-			       </md-radio-group> -->
-				<md-input-container class="md-block th-filter-container">
-        <label>Dansk navn</label>
-        <input st-search="Vernacularname_DK.vernacularname_dk" ng-model="ctrl.uiDkName" ng-model-options="{ debounce: 500 }">
-		
-      </md-input-container> </th>
-	  <th ng-show="mdMedia('gt-xs')"><md-switch  ng-model="acceptedTaxaOnly" aria-label="Only accepted taxa" >
-	         {{ 'Omit synonyms' | translate}}
-	        </md-switch></th>
+	</th>
+	  <th ng-show="mdMedia('gt-xs')"></th>
 			<th ng-if="mdMedia('gt-xs')" st-pagination=""  st-items-by-page="stItemsPrPage" colspan="8" st-template="app/searchresultlist/pagination.tpl.html">
 			</th>
 		</tr>

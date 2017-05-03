@@ -220,6 +220,11 @@ module.exports = function(sequelize, DataTypes) {
     					foreignKey: "taxon_id",
     					as: "images"
     				});
+    		models.Taxon
+    				.hasMany(models.TaxonImages, {
+    					foreignKey: "taxon_id",
+    					as: "Images"
+    				});
 			models.Taxon
 					.belongsTo(models.TaxonDKnames, {
 						foreignKey: "vernacularname_dk_id" ,

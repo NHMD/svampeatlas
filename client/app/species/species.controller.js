@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth, preloader) {
+	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth, preloader, SpeciesModalService) {
 
 		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 		$scope.Auth = Auth;
@@ -10,22 +10,25 @@ angular.module('svampeatlasApp')
 		$scope.$state = $state;
 		$scope.baseUrl = appConstants.baseurl;
 		$scope.isModal = $stateParams.isModal;
-		$scope.cancel = function(){
+		$scope.cancel = function() {
 			$mdDialog.cancel()
 		}
 
 		$scope.ObservationModalService = ObservationModalService;
-		
-		$scope.getBackgroundStyle = function(tile){
-			
+
+		$scope.getBackgroundStyle = function(tile) {
+
 			var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
-			
-	  
-			
-		    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
+
+
+
+			return {
+				'background-image': 'url(' + url + ')',
+				'background-size': 'cover'
+			};
 		}
-		
-		
+
+
 		var capitalizeFirstLetter = function(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		}
@@ -36,20 +39,43 @@ angular.module('svampeatlasApp')
 
 
 		$scope.showRecords = function(resulttype) {
-			$state.go('search-' + resulttype, {
-				taxon_id: $stateParams.id || 10000
-			})
+			if ($stateParams.isModal === true) {
+
+
+				var stateParams = {
+					locality_id: null,
+					date: null,
+					taxon_id: $scope.taxon._id,
+					searchid: null,
+					searchterm: null
+				}
+				$mdDialog.cancel().then(function() {
+					$state.go('search-' + resulttype, stateParams)
+				})
+
+			} else {
+				$state.go('search-' + resulttype, stateParams)
+			}
+
 		}
 
-
-
-			/*
-			for (var key in decadesMap){
-				if (decadesMap.hasOwnProperty(key)) {
-				$scope.decades.push([key+"-"+(parseInt(key)+9), decadesMap[key]]);
-			}
+		$scope.gotoTaxon = function($event, id){
+			if ($scope.isModal === true) { 
+				$mdDialog.cancel().then(function() {
+					SpeciesModalService.show($event, id);
+				})
+			} else {
+				$state.go('species', { id: id})
 			};
-			 */
+		}
+
+		/*
+		for (var key in decadesMap){
+			if (decadesMap.hasOwnProperty(key)) {
+			$scope.decades.push([key+"-"+(parseInt(key)+9), decadesMap[key]]);
+		}
+		};
+		 */
 
 
 		$scope.taxon = Taxon.getAcceptedTaxon({
@@ -63,8 +89,16 @@ angular.module('svampeatlasApp')
 			$scope.higherTaxa = Taxon.higherTaxa({
 				id: $scope.taxon._id
 			});
-			
-			SimilarTaxa.query({where: {$or: [{taxon1_id: $scope.taxon._id}, {taxon2_id: $scope.taxon._id}]}}).$promise.then(function(similarTaxa){
+
+			SimilarTaxa.query({
+				where: {
+					$or: [{
+						taxon1_id: $scope.taxon._id
+					}, {
+						taxon2_id: $scope.taxon._id
+					}]
+				}
+			}).$promise.then(function(similarTaxa) {
 				$scope.taxon.similarTaxa = similarTaxa;
 			})
 		})
@@ -83,17 +117,19 @@ angular.module('svampeatlasApp')
 			});
 			$scope.loadTiles($scope.tileOffset, $scope.tileLimit);
 		})
-		
+
 		$scope.tiles = [];
-		
+
 		$scope.loadTiles = function(offset, limit) {
 
-			
+
 			$scope.tileLimit = limit;
 
-			 Observation.query({
+			Observation.query({
 				offset: $scope.tileOffset,
-				order: 'observationDate DESC',
+				_order: JSON.stringify([
+					['observationDate', 'DESC']
+				]),
 				limit: $scope.tileLimit,
 
 
@@ -104,12 +140,16 @@ angular.module('svampeatlasApp')
 							as: "DeterminationView",
 							where: {
 								Taxon_id: $scope.taxon.accepted_id,
-								$or : {
-								Determination_validation: 'Godkendt',
-									Determination_score: {$gte: appConstants.AcceptedDeterminationScore}	
-									
-								}
-								
+								$or: [{
+										Determination_validation: 'Godkendt'
+									}, {
+										Determination_score: {
+											$gte: appConstants.AcceptedDeterminationScore
+										}
+									}
+
+								]
+
 							}
 						}),
 						JSON.stringify({
@@ -136,9 +176,9 @@ angular.module('svampeatlasApp')
 				)
 
 			}, function(result, headers) {
-				
+
 				preloader.preloadImages(result).then(
-					function(missingImages){
+					function(missingImages) {
 						$scope.isLoading = false;
 						// returns an array of _id´s of failed images. May ne posted to server to flag missing images
 					}
@@ -152,7 +192,7 @@ angular.module('svampeatlasApp')
 
 
 
-	
+
 		$scope.getImageUrl = function(tile) {
 
 			return appConstants.imageurl + tile.Images[0].name + ".JPG";
@@ -163,7 +203,7 @@ angular.module('svampeatlasApp')
 
 	})
 	.filter('httpToHttps', function() {
-	    return function(url) {
-	      return url = url.replace(/^http:\/\//i, 'https://');;
-	    }
+		return function(url) {
+			return url = url.replace(/^http:\/\//i, 'https://');;
+		}
 	})

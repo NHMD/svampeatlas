@@ -1,0 +1,49 @@
+
+ <md-toolbar class="searchtabs"  ng-controller="SpeciesSearchTabsCtrl" ng-include="'app/speciessearchtabs/speciessearchtabs.html'" > </md-toolbar>
+	
+
+		   
+   
+<md-content flex md-scroll-y layout-padding ng-cloak>
+<md-progress-linear  md-mode="indeterminate" ng-show="isLoading !== false"></md-progress-linear>
+
+
+	 <md-grid-list
+	         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
+	        md-row-height="1:1"  md-row-height-gt-sm="3:2"
+	         md-gutter="12px" md-gutter-gt-sm="8px" flex>
+
+	 <md-grid-tile ng-repeat="tile in displayed"
+                 
+	                   md-colspan-sm="1"
+					   ng-if="!tile.Images[0].imageLoadError"
+					   ng-style="getBackgroundStyle(tile)"
+					   ng-click="SpeciesModalService.show($event,tile._id)"
+					   
+					   >
+	 		<div class="progress-container" flex layout-fill layout="center center" ng-if="tile.Images.length > 0 && !tile.Images[0].imageLoadSuccess">
+	 			<div flex="33"></div>
+	 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
+	 			<div flex="33"></div>
+	 		</div>
+				
+	       <md-grid-tile-footer class="img-footer footer-full-width">
+		   <span ng-if="tile.Images.length > 1" class="footer-img-count">{{tile.Images.length}} {{'billeder' | translate}}</span>
+		   <span ng-if="tile.Vernacularname_DK ">{{tile.Vernacularname_DK.vernacularname_dk | capitalize}}</span>
+		   <br ng-if="tile.Vernacularname_DK"><em >{{tile.FullName}}</em> <span ng-if="tile.redlistdata[0] && tile.redlistdata[0].status"> ({{tile.redlistdata[0].status}})</span>
+		   <br ng-if="!tile.Vernacularname_DK">
+		   <br>
+		   <span class="footer-img-count" ng-if="tile.Images.length > 0 && tile.Images[0].photographer">&copy; {{tile.Images[0].photographer}}, {{tile.Images[0].collectionNumber}}</span>
+	   <span class="info"></span>
+	   </md-grid-tile-footer>
+	   </md-grid-tile>
+	   </md-grid-list>
+	   
+	   <div layout-row layout-padding>
+		   <md-button ng-if="totalCount > offset" ng-click="loadTiles(limit, offset)" layout-fill>{{'Vis flere' | translate}}</md-button>
+	   </div>
+	   
+</md-content>
+
+
+

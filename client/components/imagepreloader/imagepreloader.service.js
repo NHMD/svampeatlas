@@ -118,7 +118,12 @@ angular.module('svampeatlasApp')
 						
 						if(this.observations.length > 1){
 							_.each(this.observations, function(obs){
-								that.loadimage(obs.Images[0])
+								if(obs.Images.length > 0){
+									that.loadimage(obs.Images[0]);
+								} else {
+									that.errorCount++;
+									that.continueOrResolve();
+								};
 							})
 						} else if(this.observations[0] && this.observations[0].Images) {
 							_.each(this.observations[0].Images, function(img){
@@ -193,7 +198,8 @@ angular.module('svampeatlasApp')
 					loadimage: function loadimage( imgref ) {
 
 						var preloader = this;
-
+						
+						var uri = (imgref.name) ? (appConstants.imageurl + imgref.name + ".JPG") : imgref.uri;
 						// When it comes to creating the image object, it is critical that
 						// we bind the event handlers BEFORE we actually set the image
 						// source. Failure to do so will prevent the events from proper
@@ -239,7 +245,7 @@ angular.module('svampeatlasApp')
 
 								}
 							)
-							.prop( "src", appConstants.imageurl + imgref.name + ".JPG" )
+							.prop( "src",uri )
 						;
 
 					}
