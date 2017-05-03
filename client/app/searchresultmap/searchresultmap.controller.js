@@ -38,19 +38,7 @@ angular.module('svampeatlasApp')
 								attribution: 'Tiles &copy; opentopomap.org'
 							}
 
-						},
-						mapbox_outdoors: {
-							name: 'Mapbox Outdoors',
-							url: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/256/{z}/{x}/{y}?access_token=' + MapBox.getTicket(),
-							type: 'xyz'
-
-						},
-						mapbox_satelite: {
-							name: 'Mapbox Satelite',
-							url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token=' + MapBox.getTicket(),
-							type: 'xyz'
-
-						},
+						}
 						
 
 
@@ -59,7 +47,24 @@ angular.module('svampeatlasApp')
 				}
 			};
 			
+			MapBox.getTicket().then(function(ticket){
+				
+				$scope.mapsettings.layers.baselayers.mapbox_outdoors = {
+							name: 'Mapbox Outdoors',
+							url: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/256/{z}/{x}/{y}?access_token=' + ticket,
+							type: 'xyz'
+
+						},
+						$scope.mapsettings.layers.baselayers.mapbox_satelite = {
+							name: 'Mapbox Satelite',
+							url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token=' + ticket,
+							type: 'xyz'
+
+						};
+			});
+			
 			KMS.getTicket().then(function(ticket){
+				
 				$scope.mapsettings.layers.baselayers.topo_25 = {
 							name: "DK 4cm kort",
 							type: 'wms',

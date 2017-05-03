@@ -51,7 +51,10 @@ angular.module('svampeatlasApp', [
 			})
 			.accentPalette('pink');
 
-
+			$mdThemingProvider.enableBrowserColor({
+			      theme: 'default', // Default is 'default'
+			      palette: 'blue-grey'
+			    });
 
 		ssSideNavSectionsProvider.initWithTheme($mdThemingProvider);
 
@@ -393,7 +396,6 @@ angular.module('svampeatlasApp', [
 		"imageurl": "/uploads/",
 		"Fungi_id": 60212,
 		"baseurl": "https://svampe.databasen.org",
-		"MapBoxToken": "pk.eyJ1Ijoic3ZhbXBlYXRsYXMiLCJhIjoiY2l0ZWMzemh4MDBjYTJ4dG9iZW0yZGh2dSJ9.kZHV0dNh7o0_ifC6hWzHEQ",
 		"AcceptedDeterminationScore": 80,
 		"ProbableDeterminationScore": 50,
 

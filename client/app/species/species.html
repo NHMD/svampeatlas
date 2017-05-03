@@ -110,8 +110,8 @@
 		<p ng-if="taxon.attributes.forvekslingsmuligheder || taxon.similarTaxa.length > 0"><strong>Forvekslingsmuligheder: </strong> 
 			<span ng-repeat="simTax in taxon.similarTaxa ">
 			
-			<a ng-if="simTax.Taxon2.acceptedTaxon._id === taxon._id" ng-href="/taxon/{{simTax.Taxon1.acceptedTaxon._id}}">{{(simTax.Taxon1.acceptedTaxon.Vernacularname_DK) ? (simTax.Taxon1.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) : simTax.Taxon1.acceptedTaxon.FullName}}</a>
-			<a ng-if="simTax.Taxon1.acceptedTaxon._id === taxon._id" ng-href="/taxon/{{simTax.Taxon2.acceptedTaxon._id}}">{{(simTax.Taxon2.acceptedTaxon.Vernacularname_DK) ? (simTax.Taxon2.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) : simTax.Taxon2.acceptedTaxon.FullName}}</a>{{((!$last) ? ', ' : '. ')}} 
+			<a ng-if="simTax.Taxon2.acceptedTaxon._id === taxon._id" ng-click="gotoTaxon($event, simTax.Taxon1.acceptedTaxon._id)">{{(simTax.Taxon1.acceptedTaxon.Vernacularname_DK) ? (simTax.Taxon1.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) : simTax.Taxon1.acceptedTaxon.FullName}}</a>
+			<a ng-if="simTax.Taxon1.acceptedTaxon._id === taxon._id" ng-click="gotoTaxon($event, simTax.Taxon2.acceptedTaxon._id)">{{(simTax.Taxon2.acceptedTaxon.Vernacularname_DK) ? (simTax.Taxon2.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize) : simTax.Taxon2.acceptedTaxon.FullName}}</a>{{((!$last) ? ', ' : '. ')}} 
 		</span></br>
 			
 			{{taxon.attributes.forvekslingsmuligheder}}</p>
