@@ -118,14 +118,11 @@
 		
 	</span>
 	<div ng-if="taxon.redlistdata.length > 0">
-	<h4 class="md-title">Rødlistedata (ukritisk gengivet fra Den Danske Rødliste 2009):</h4>
-		<p><strong>Kategori: </strong>{{taxon.redlistdata[0].Status
+	
+		<p><strong>Rødlistekategori ({{taxon.redlistdata[0].year}}): </strong>{{taxon.redlistdata[0].Status
 	}}</p>
-	<p><strong>National status: </strong>{{taxon.redlistdata[0].roedlisteNationalStatus
-}}</p>
-	<p><strong>Bestandsudvikling: </strong>{{taxon.redlistdata[0].roedlisteBestandsudvikling
-}}</p>
-	<p><strong>Udbredelse: </strong>{{taxon.redlistdata[0].Udbredelse
+
+	<p><strong>Global udbredelse: </strong>{{taxon.redlistdata[0].Udbredelse
 }}</p>
 
 

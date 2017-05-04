@@ -94,6 +94,29 @@
 					       </md-chip-template>
 					     </md-chips>
 				 </div>
+			   <div  >
+				  
+			      <md-chips ng-model="search.selectedMycokeyCharacters" md-autocomplete-snap md-require-match="true">
+
+			        <md-autocomplete
+			  	  	md-min-length="1"
+			  		md-no-cache="true"
+			            md-selected-item="selectedMycokeyCharacter"
+			            md-search-text="searchMycokeyCharacterText"
+			            md-items="item in mycokeySearch(searchMycokeyCharacterText)"
+			            md-item-text="item['description DK']"
+			            placeholder="{{'Enter characters' | translate}}"
+						class="taxon-autocomplete">
+			          <span md-highlight-text="searchMycokeyCharacterText">{{($translate.use() === 'en') ? item.charactergroup['Start description UK'] : item.charactergroup['Start description DK']}} {{($translate.use() === 'en') ?  item['description UK'] : item['description DK']}}</span>  
+			        </md-autocomplete>
+			        <md-chip-template>
+			          <span>
+			            <strong>{{($translate.use() === 'en') ? $chip.charactergroup['Start description UK'] : $chip.charactergroup['Start description DK']}} {{($translate.use() === 'en') ? $chip['description UK'] : $chip['description DK']}}</strong>
+
+			          </span>
+			        </md-chip-template>
+			      </md-chips>
+				  </div>
 				<div layout-gt-xs="row"> 
 	  		   	 <md-input-container >	
 	  		   	<label translate>Rødlistestatus</label>  
@@ -111,7 +134,7 @@
 	  		     <md-option value="NE">NE - {{'Ikke bedømt' | translate}}</md-option>
 	  		             </md-select>
 	  		   	  </md-input-container><span flex></span>
-				  <md-button>opdatér</md-button>
+				  <md-button class="md-warn" ng-click="resetSearch()">{{'nulstil' | translate}}</md-button>
 			  </div> 
 	<div class="table-responsive-vertical shadow-z-1">
 

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('DkCheckListGalleryCtrl', ['$scope',  'Auth', 'Taxon', '$mdMedia', '$mdDialog',  '$stateParams', '$state',  'ErrorHandlingService',  '$cookies', 'appConstants','preloader','$translate', 'SpeciesModalService',
-		function($scope, Auth, Taxon, $mdMedia, $mdDialog,  $stateParams, $state,  ErrorHandlingService, $cookies, appConstants, preloader, $translate, SpeciesModalService) {
+	.controller('DkCheckListGalleryCtrl', ['$scope',  'Auth', 'Taxon', '$mdMedia', '$mdDialog',  '$stateParams', '$state',  'ErrorHandlingService',  '$cookies', 'appConstants','preloader','$translate', 'SpeciesModalService', '$filter',
+		function($scope, Auth, Taxon, $mdMedia, $mdDialog,  $stateParams, $state,  ErrorHandlingService, $cookies, appConstants, preloader, $translate, SpeciesModalService, $filter ) {
 
 			$scope.moment = moment;
 			$scope.translate = $translate;
@@ -36,7 +36,7 @@ angular.module('svampeatlasApp')
 				
 				var missingimg = ($mdMedia('xs')) ? "assets/images/missing-img-1-1.png": "assets/images/missing-img-4-3.png";
 				
-				var uri = (tile.Images.length > 0) ? tile.Images[0].uri : missingimg;
+				var uri = (tile.Images.length > 0) ? $filter('httpToHttps')(tile.Images[0].uri) : missingimg;
 				
 			    return {'background-image':  'url('+uri+')', 'background-size': 'cover'};
 			}
@@ -156,8 +156,38 @@ angular.module('svampeatlasApp')
 			} 
 			
 			
+			if($scope.search.selectedMycokeyCharacters.length > 0){
+				for (var i = 0; i < $scope.search.selectedMycokeyCharacters.length; i++) {
+
+					$scope.query.include.push({
+						model: "MycokeyCharacterView",
+						as: "character" + i,
+						required: true,
+						where: JSON.stringify({
+							CharacterID: $scope.search.selectedMycokeyCharacters[i].CharacterID
+						})
+					})
+
+				}
+			}
 			
-			
+			if($scope.search.indexLetter && $scope.search.indexLetter !== 'any'){
+				
+				//$state.go($state.current, {indexLetter: $scope.search.indexLetter})
+				$state.transitionTo('checklist-gallery', {indexLetter: $scope.search.indexLetter}, {
+				    location: true,
+				    inherit: true,
+				    relative: $state.$current,
+				    notify: false
+				})
+				//$stateParams.indexLetter = $scope.search.indexLetter;
+				$scope.query.where.FullName = {
+					like: $scope.search.indexLetter + "%"
+				
+			}
+		} else {
+			delete $scope.query.where.FullName;
+		}
 				
 				$scope.isLoading = true;
 

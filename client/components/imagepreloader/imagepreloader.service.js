@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
 	.factory(
 			"preloader",
-			function( $q, $rootScope, appConstants ) {
+			function( $q, $rootScope, appConstants, $filter ) {
 
 				// I manage the preloading of image objects. Accepts an array of image URLs.
 				function Preloader( observations ) {
@@ -199,7 +199,7 @@ angular.module('svampeatlasApp')
 
 						var preloader = this;
 						
-						var uri = (imgref.name) ? (appConstants.imageurl + imgref.name + ".JPG") : imgref.uri;
+						var uri = (imgref.name) ? (appConstants.imageurl + imgref.name + ".JPG") : $filter('httpToHttps')(imgref.uri);
 						// When it comes to creating the image object, it is critical that
 						// we bind the event handlers BEFORE we actually set the image
 						// source. Failure to do so will prevent the events from proper

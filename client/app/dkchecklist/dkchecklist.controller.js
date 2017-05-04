@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('DkCheckListCtrl', ['$scope', 'Auth', 'Taxon', '$timeout', '$q', '$translate', 'TaxonomyTags', '$mdMedia', '$mdDialog', '$stateParams', '$state','SearchService',
-		function($scope, Auth, Taxon, $timeout, $q, $translate, TaxonomyTags, $mdMedia, $mdDialog, $stateParams, $state, SearchService) {
+	.controller('DkCheckListCtrl', ['$scope', 'Auth', 'Taxon', '$timeout', '$q', '$translate', 'TaxonomyTags', '$mdMedia', '$mdDialog', '$stateParams', '$state','SearchService', 'MycokeyCharacters',
+		function($scope, Auth, Taxon, $timeout, $q, $translate, TaxonomyTags, $mdMedia, $mdDialog, $stateParams, $state, SearchService, MycokeyCharacters) {
 			var that = this;
 			$scope.$translate = $translate;
 			var storedState = localStorage.getItem('dkchecklist_table_search');
@@ -12,6 +12,7 @@ angular.module('svampeatlasApp')
 				$scope.search = {};
 				$scope.search.selectedHigherTaxa = [];
 				$scope.search.selectedMorphoGroup = [];	
+				$scope.search.selectedMycokeyCharacters = [];
 			}
 			
 			$scope.querySearch = function(query) {
@@ -32,6 +33,26 @@ angular.module('svampeatlasApp')
 		
 			}
 			
+			$scope.mycokeySearch = function(query) {
+
+				var where = ($translate.use() === "en") ? {
+					"description UK": {
+						like: "%" + query + "%"
+					}
+				} : {
+					"description DK": {
+						like: "%" + query + "%"
+					}
+				};
+
+				var results = query ? MycokeyCharacters.query({
+					where: where,
+					limit: 30
+				}).$promise : [];
+
+				return results;
+			}
+			
 			$scope.Auth = Auth;
 			$scope.stItemsPrPage = 100;
 			$scope.$state = $state;
@@ -41,16 +62,7 @@ angular.module('svampeatlasApp')
 			if ($stateParams.indexLetter) {
 				$scope.search.indexLetter = $stateParams.indexLetter;
 			}
-			$scope.$watch('search.indexLetter', function(newVal, oldVal){
-				if(newVal && newVal !== oldVal){
-					if(newVal ==="any"){
-						$state.go($state.current, {indexLetter: undefined})
-					} else {
-						$state.go($state.current, {indexLetter: newVal})
-					}
-					
-				} 
-			})
+			
 			
 			
 			$scope.query  = {
@@ -145,7 +157,45 @@ angular.module('svampeatlasApp')
 					})
 				} 
 				
+				_.remove($scope.query.include, function(e){
+					return e.model === "MycokeyCharacterView";
+				})
 				
+				if(newVal.selectedMycokeyCharacters.length > 0){
+					for (var i = 0; i < newVal.selectedMycokeyCharacters.length; i++) {
+
+						$scope.query.include.push({
+							model: "MycokeyCharacterView",
+							as: "character" + i,
+							required: true,
+							where: JSON.stringify({
+								CharacterID: newVal.selectedMycokeyCharacters[i].CharacterID
+							})
+						})
+
+					}
+				}
+				
+				if($scope.search.indexLetter && $scope.search.indexLetter !== 'any'){
+					$state.transitionTo('checklist', {indexLetter: $scope.search.indexLetter}, {
+					    location: true,
+					    inherit: true,
+					    relative: $state.$current,
+					    notify: false
+					});
+					$scope.query.where.FullName = {
+						like: $scope.search.indexLetter + "%"
+					
+				}
+			}  else {
+				$state.transitionTo('checklist', {indexLetter: undefined}, {
+				    location: true,
+				    inherit: true,
+				    relative: $state.$current,
+				    notify: false
+				})
+				delete $scope.query.where.FullName;
+			}
 				
 				localStorage.setItem('dkchecklist_table_search', JSON.stringify($scope.search))
 				
@@ -157,7 +207,15 @@ angular.module('svampeatlasApp')
 			}, true)
 
 
-			
+			$scope.resetSearch = function(){
+				$scope.search = {};
+				$scope.search.selectedHigherTaxa = [];
+				$scope.search.selectedMorphoGroup = [];	
+				$scope.search.selectedMycokeyCharacters = [];
+				$timeout(function() {
+						$("#reset-table-state").trigger('click');
+					})
+			}
 
 			$scope.callServer = function(tableState) {
 				var query = angular.copy($scope.query);
@@ -174,58 +232,10 @@ angular.module('svampeatlasApp')
 				offset = parseInt(offset);
 				limit = parseInt(limit)
 
-				var where = (tableState.search.predicateObject) ? _.merge(query.where, _.mapValues(_.omit(tableState.search.predicateObject, ['Vernacularname_DK', 'synonyms', 'indexLetter']), function(value, key) {
-					 
-	
-					 
-					return {
-						like: "%" +value + "%"
-					};
-
-				})) : undefined;
-
-				if (!where) {
-					where = {
-						RankID: {
-							gt: 5000
-						}
-					}
-				} else {
-					_.merge(where, {
-						RankID: {
-							gt: 5000
-						}
-					});
-				};
+				var where = query.where;
 				
-				if($scope.search.indexLetter){
-					if(where.FullName){
-						where.FullName = { $and: [ where.FullName, {
-						like: $scope.search.indexLetter + "%"
-					}]
-					}
-				} else {
-					where.FullName = {
-						like: $scope.search.indexLetter + "%"
-					}
-				}
-			}
 				
-			if($scope.uiDkName === "*"){
-				query.include[2].required = true;
-			} else {
-				var dkNameWhere = (tableState.search.predicateObject && tableState.search.predicateObject.Vernacularname_DK) ? _.mapValues(tableState.search.predicateObject.Vernacularname_DK, function(value, key) {
 
-
-					return {
-						like: "%" + value + "%"
-					};
-				}) : undefined;
-
-				if(dkNameWhere){
-					query.include[2].where = JSON.stringify(dkNameWhere)
-				}
-			}
 
 				var order = tableState.sort.predicate;
 				var _order = [[order]];
