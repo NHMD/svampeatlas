@@ -311,7 +311,10 @@ angular.module('svampeatlasApp')
 			'Skriv besked til validator' : 'Write a message to the validator',
 			'Send besked til validator' : 'Send message to the validator',
 			'Kontakt validator' : 'Contact validator',
-			'Skriv art, slægt, familie, orden etc' : 'Type species, genus, family, order etc'
+			'Skriv art, slægt, familie, orden etc' : 'Type species, genus, family, order etc',
+			'Antal danske fund' : 'Number of Danish records',
+			'Seneste danske fund' : 'Lateset Danish record',
+			'nulstil' : 'reset'
 			
 			
 		});
