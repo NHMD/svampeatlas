@@ -12,6 +12,11 @@ angular.module('svampeatlasApp')
 				method: 'GET',
 				url: '/api/mycokeycharacters/groups',
 				isArray: true
+			},
+			queryView : {
+				method: 'GET',
+				url: '/api/mycokeycharacters/view',
+				isArray: true
 			}
 	    });
    

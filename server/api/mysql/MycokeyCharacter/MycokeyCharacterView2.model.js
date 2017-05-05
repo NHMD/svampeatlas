@@ -2,8 +2,15 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-	var MycokeyCharacterGroupView = sequelize.define('MycokeyCharacterGroupView', {
-
+	var MycokeyCharacterView = sequelize.define('MycokeyCharacterView', {
+		taxon_id: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+  		  references: {
+  		        model: "DeterminationView",
+  		        key: "Taxon_id"
+  		      }
+		},
 		CharacterID: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
@@ -27,14 +34,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-		"Group Full text UK": {
-			type: DataTypes.STRING,
-			allowNull: false
-		},
-		"Group Full text DK": {
-			type: DataTypes.STRING,
-			allowNull: false
-		},
+
 		"Name": {
 			type: DataTypes.STRING,
 			allowNull: false
@@ -43,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER
 		},
 	}, {
-		tableName: 'CharacterView2',
+		tableName: 'CharacterView',
 		timestamps: false,
 		freezeTableName: true,
     	classMethods: {
@@ -60,5 +60,5 @@ module.exports = function(sequelize, DataTypes) {
 
 	});
 
-	return MycokeyCharacterGroupView;
+	return MycokeyCharacterView;
 };

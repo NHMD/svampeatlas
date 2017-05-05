@@ -34,18 +34,28 @@ angular.module('svampeatlasApp')
 			}
 			
 			$scope.mycokeySearch = function(query) {
-
-				var where = ($translate.use() === "en") ? {
+				var where = {};
+				where.$or = ($translate.use() === "en") ? [{
 					"description UK": {
 						like: "%" + query + "%"
 					}
-				} : {
+				}, {
+					"Group Full text UK": {
+						like: "%" + query + "%"
+					}
+				}] : [{
 					"description DK": {
 						like: "%" + query + "%"
 					}
-				};
+				},  {
+					"Group Full text DK": {
+						like: "%" + query + "%"
+					}
+				}
+				]
+				;
 
-				var results = query ? MycokeyCharacters.query({
+				var results = query ? MycokeyCharacters.queryView({
 					where: where,
 					limit: 30
 				}).$promise : [];
@@ -106,7 +116,7 @@ angular.module('svampeatlasApp')
 				})
 			}
 			
-			$scope.acceptedTaxaOnly = true;
+			
 			
 
 
@@ -251,11 +261,8 @@ angular.module('svampeatlasApp')
 				query.limit = limit;
 				query._order = _order;
 				query.where = where;
+				query.acceptedTaxaOnly = true;
 				
-				if($scope.acceptedTaxaOnly === true){
-					query.acceptedTaxaOnly = $scope.acceptedTaxaOnly;
-					
-				}
 
 				Taxon.query(query, function(result, headers) {
 

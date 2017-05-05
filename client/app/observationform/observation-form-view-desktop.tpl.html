@@ -34,6 +34,35 @@
 				  				              <label>{{'Præcision' | translate}}</label>
 				  				              <input type="number" ng-model="ctrl.precision">
 				  				            </md-input-container>
+			  </div>
+			  <div  layout="row" ng-if="showLatLngFields">
+				  
+				  <md-input-container class="md-block" flex-gt-sm>
+				              <label>{{'UTM northing' | translate}}</label>
+				              <input type="number" ng-model="ctrl.inputposition.northing" >
+				            </md-input-container>
+		  				  <md-input-container class="md-block" flex-gt-sm>
+		  				              <label>{{'UTM easting' | translate}}</label>
+		  				              <input type="number" ng-model="ctrl.inputposition.easting">
+		  				            </md-input-container>
+				  				  <md-input-container class="md-block" flex-gt-sm>
+				  				              <label>{{'UTM zone' | translate}}</label>
+				  				              <input type="number" ng-model="ctrl.inputposition.utmzone">
+				  				            </md-input-container>
+					 	 				   <md-input-container>
+					 	 				           
+					 	 				           <md-select ng-model="ctrl.inputposition.southernHemisphere" >
+					 	 				             <md-option  ng-value="{{false}}" >
+					 								  N
+	 				              
+					 	 				             </md-option>
+					 	 				             <md-option  ng-value="{{true}}" >
+					 								  S
+	 				              
+					 	 				             </md-option>
+					 	 				           </md-select>
+							   
+					 	 				         </md-input-container>
 			  </div>	 
 	 
 	 </md-card>

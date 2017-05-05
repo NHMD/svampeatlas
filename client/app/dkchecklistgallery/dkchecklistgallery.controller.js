@@ -210,6 +210,7 @@ angular.module('svampeatlasApp')
 					query.limit = limit;
 				query.include = JSON.stringify(query.include)
 					
+					query.acceptedTaxaOnly = true;
 					
 			
 				

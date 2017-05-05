@@ -62,6 +62,12 @@ module.exports = function(sequelize, DataTypes) {
 					foreignKey: "CharacterGroup",
 					as: "charactergroup"
 				});
+				
+		models.MycokeyCharacterGroupView
+				.belongsTo(models.MycokeyCharacterGroup, {
+					foreignKey: "CharacterGroup",
+					as: "charactergroup"
+				});
 
 
 			

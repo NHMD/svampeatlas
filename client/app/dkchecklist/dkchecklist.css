@@ -4,3 +4,6 @@
 }
 
 
+.wide-autocomplete {
+	min-width: 400px;
+}

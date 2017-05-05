@@ -84,8 +84,8 @@ exports.index = function(req, res) {
 	} else {
 		query['include'] = [{model: models.MycokeyCharacterGroup, as: "charactergroup" }]
 	}
-	
-MycokeyCharacter.findAndCount(query)
+	var model = (req.path === "/view") ? models.MycokeyCharacterGroupView : 	models.MycokeyCharacter;
+model.findAndCount(query)
 	.then(function(character) {
 		res.set('count', character.count);
 		if (req.query.offset) {

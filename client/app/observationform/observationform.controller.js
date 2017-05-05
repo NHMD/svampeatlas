@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog',  'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData',  '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService','ValidatorToolsService','DeterminationLogModalService','WMSservice',
-		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData,  $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, WMSservice) {
+	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog',  'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData',  '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService','ValidatorToolsService','DeterminationLogModalService','WMSservice', 'UTMConverterService',
+		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData,  $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, WMSservice, UTMConverterService) {
 			var row = ObservationStateService.get();
 			
 			$scope.$cookies = $cookies;
@@ -332,11 +332,16 @@ angular.module('svampeatlasApp')
 		
 		initObservation();
 			// End timeout
-			this.inputposition = { };
+			this.inputposition = { 
+				southernHemisphere: false, 
+				utmzone: 32 
+			};
 			$scope.$watch(angular.bind(this, function() {
 				return this.inputposition; // `this` IS the `this` above!!
 			}), function(newVal, oldVal) {
 				
+				//if(newVal.northing && )
+				var updated = false;
 				if(newVal.lat && newVal.lng){
 					$scope.mapsettings.markers.position = {
 						lat: newVal.lat,
@@ -348,9 +353,33 @@ angular.module('svampeatlasApp')
 					$scope.mapsettings.center.lat = newVal.lat;
 					$scope.mapsettings.center.lng = newVal.lng;
 
+					var utm = UTMConverterService.latLngToUtm(newVal.lat, newVal.lng);
+					newVal.easting = Math.round(utm.easting);
+					newVal.northing = Math.round(utm.northing);
+					newVal.utmzone = utm.zone;
+					newVal.southernHemisphere = utm.southernHemisphere;
+					
+					updated = true;
+					
+				
+				} else if(newVal.easting !== undefined && newVal.northing !== undefined && newVal.utmzone !== undefined && newVal.southernHemisphere !== undefined){
+					
+					var latLong = UTMConverterService.utmToLatLng(newVal.easting, newVal.northing, newVal.utmzone, newVal.southernHemisphere);
+					
+					$scope.mapsettings.markers.position = {
+						lat: latLong.lat,
+						lng: latLong.lng,
+						layer: 'position'
 
+					}
 
-
+					$scope.mapsettings.center.lat = latLong.lat;
+					$scope.mapsettings.center.lng = latLong.lng;
+					updated = true;
+					
+				}
+				
+				if(updated){
 					if ($scope.mapsettings.center.zoom < 10) {
 						$scope.mapsettings.center.zoom = 10
 					} else if ($scope.mapsettings.center.zoom >= 10 && $scope.mapsettings.center.zoom < 14) {
@@ -360,18 +389,15 @@ angular.module('svampeatlasApp')
 					if ($scope.showLocalitiesOnMap || $scope.useNearestLocalityOnClick) {
 						$scope.setNearbyLocalities();
 					}
-					/*
-					leafletData.getMap('observationformmap').then(function(map) {
-
-						$timeout(function() {
-							map.invalidateSize();
-						});
-					});
-					*/
+					
+					if(!that.precision){
+						that.precision = 100;
+					}
 				}
 				
 
 			}, true);
+
 			
 			$scope.getForeignLocality = function(position){
 				$http({

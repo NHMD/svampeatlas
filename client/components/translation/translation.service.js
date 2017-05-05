@@ -487,7 +487,9 @@ angular.module('svampeatlasApp')
 			'Lost password?' : 'Har du mistet dit password?',
 			'Password must be at least 6 characters.' : 'Dit password skal være på mindst 6 tegn.',
 			'An email has been sent to' : 'Der er sendt en email til',
-			'The email contains further instructions on how to activate your account' : 'Emailen indeholder yderligere information om hvordan du aktiverer din brugerprofil.'
+			'The email contains further instructions on how to activate your account' : 'Emailen indeholder yderligere information om hvordan du aktiverer din brugerprofil.',
+			'UTM northing' : 'UTM nord',
+			'UTM easting' : 'UTM øst'
 			
 
 

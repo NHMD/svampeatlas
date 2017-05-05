@@ -8,6 +8,8 @@ var router = express.Router();
 router.get('/groups', controller.indexGroups);
 
 router.get('/', controller.index);
+router.get('/view', controller.index);
+
 router.get('/:id', controller.show);
 // router.post('/',auth.hasRole('taxonomyadmin'), controller.create);
 // router.delete('/:id',auth.hasRole('taxonomyadmin'), controller.destroy);
