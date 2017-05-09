@@ -80,7 +80,11 @@
               {{'Password confirmation must match' | translate}}
              </p>
         </div>
-
+<div class="form-group" >
+	<md-switch ng-model="user.photopermission" aria-label="Tilladelse til brug af billeder">
+	 {{'Jeg giver tilladelse til at mine fotos må bruges på artspræsentationer på svampe.databasen.org'}}
+	</md-switch>
+ </div>
         <div>
           <button class="btn btn-inverse btn-lg btn-register" type="submit" translate>
             Create user account

@@ -27,7 +27,8 @@ angular.module('svampeatlasApp')
           name: $scope.user.name,
           email: $scope.user.email,
 		  Initialer:  $scope.user.Initialer,
-          password: $scope.user.password
+          password: $scope.user.password,
+			photopermission: $scope.user.photopermission	
         })
         .then(function() {
           // Account created, redirect to home

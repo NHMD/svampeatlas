@@ -137,7 +137,8 @@ angular.module('svampeatlasApp')
 					Initialer: user.Initialer,
 					password: user.password,
 					email: user.email,
-					name: user.name
+					name: user.name,
+					photopermission : user.photopermission
 				})
 			},
 
