@@ -176,7 +176,7 @@ angular.module('svampeatlasApp')
 
 				var results = query ? $http({
 					method: 'GET',
-					url: 'http://api.gbif.org/v1/species/suggest',
+					url: 'https://api.gbif.org/v1/species/suggest',
 					params: {
 						datasetKey: '046bbc50-cae2-47ff-aa43-729fbf53f7c5',
 						q: query,

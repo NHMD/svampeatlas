@@ -1378,7 +1378,7 @@ doc
 	.moveDown(0.5)	
 doc
 	
-	.text("http://svampe.databasen.org/observations/"+obs._id,  -480, -235)
+	.text("https://svampe.databasen.org/observations/"+obs._id,  -480, -235)
 
 
 	

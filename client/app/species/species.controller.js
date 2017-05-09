@@ -39,16 +39,19 @@ angular.module('svampeatlasApp')
 
 
 		$scope.showRecords = function(resulttype) {
+			
+			var stateParams = {
+				locality_id: null,
+				date: null,
+				taxon_id: $scope.taxon._id,
+				searchid: null,
+				searchterm: null
+			}
+			
 			if ($stateParams.isModal === true) {
 
 
-				var stateParams = {
-					locality_id: null,
-					date: null,
-					taxon_id: $scope.taxon._id,
-					searchid: null,
-					searchterm: null
-				}
+				
 				$mdDialog.cancel().then(function() {
 					$state.go('search-' + resulttype, stateParams)
 				})

@@ -36,7 +36,7 @@ angular.module('svampeatlasApp', [
 			// Allow loading from our assets domain.  Notice the difference between * and **.
 			'http://svampe.dk/**',
 			'https://www.facebook.com/',
-			'http://api.gbif.org/',
+			'https://api.gbif.org/',
 			'http://quick.as/**'
 		]);
 		$logProvider.debugEnabled(false);
