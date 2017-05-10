@@ -314,7 +314,10 @@ angular.module('svampeatlasApp')
 			'Skriv art, slægt, familie, orden etc' : 'Type species, genus, family, order etc',
 			'Antal danske fund' : 'Number of Danish records',
 			'Seneste danske fund' : 'Lateset Danish record',
-			'nulstil' : 'reset'
+			'nulstil' : 'reset',
+			'Fjern fra forsiden' : 'Remove from frontpage',
+			'På forsiden i 30 dage' : 'On the front page 30 days',
+			'På forsiden i 7 dage' : 'On the front page 7 days'
 			
 			
 		});

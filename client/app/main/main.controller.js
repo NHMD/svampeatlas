@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainCtrl', function($scope, $http, $translate,  $mdMedia,  Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth, $location, preloader, SearchService) {
+  .controller('MainCtrl', function($scope, $http, $translate,  $mdMedia,  Observation, Locality, appConstants, $mdDialog, leafletData, $timeout, ObservationModalService, ObservationFormService, $state, $stateParams , Auth, $location, preloader, SearchService, $q) {
 	 
 	//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 	  $scope.Auth = Auth;
@@ -261,12 +261,11 @@ angular.module('svampeatlasApp')
 	
 		query.cachekey = ($scope.useLichenFilter) ? 'latestlichens': 'latestredlisted';
 	 
-	
-
-					
-	Observation.query(query).$promise.then(function(observations) {
-		
-		$scope.tiles = _.filter(observations, function(u) {
+		$q.all([Observation.getObservationsFlaggedForFrontpage().$promise, Observation.query(query).$promise]).then(function(data) {
+			var observations = data[1];
+			var flaggedObservations = data[0];
+			var tileData = ($scope.useLichenFilter) ? observations : flaggedObservations.concat(observations);
+		$scope.tiles = _.filter(tileData, function(u) {
 			return u.Images.length > 0;
 		});
 		

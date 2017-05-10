@@ -1212,6 +1212,92 @@ exports.deleteUserFromObs = function(req, res) {
 	});
 }
 
+exports.addObservationToFrontPage = function(req,res){
+	var redisClient = req.redis;
+	var now = Date.now();
+		var ttl = parseInt(req.body.ttl) *1000 * 60 * 60 * 24; // ttl in days calculated as millisec
+	//var ttl = parseInt(req.body.ttl) * 60 * 10 * 1000; // 10 min for testing
+	var score = now +ttl;
+	
+	
+	
+	return redisClient.zaddAsync('selected_frontpage_observations', score, req.params.id)
+		.then(function() {
+			// clean up expired keys
+			return redisClient.zremrangebyscoreAsync('selected_frontpage_observations', '-inf', now )
+			//return true;
+		})
+		.then(function() {
+			// clean up expired keys
+			res.sendStatus(200);
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			return res.sendStatus(500);
+		}) 
+	
+}
+
+exports.removeObservationFromFrontPage = function(req,res){
+	var redisClient = req.redis;
+
+	
+	return redisClient.zremAsync('selected_frontpage_observations',  req.params.id)
+	
+		.then(function() {
+			// clean up expired keys
+			res.sendStatus(200);
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			return res.sendStatus(500);
+		}) 
+	
+}
+
+exports.getObservationFromFrontPage = function(req,res){
+	var redisClient = req.redis;
+	var now = Date.now();
+	
+	return redisClient.zremrangebyscoreAsync('selected_frontpage_observations', '-inf', now ).then(function(){
+			return redisClient.zscoreAsync('selected_frontpage_observations',  req.params.id)
+	})
+	
+	
+		.then(function(obs) {
+			
+			if(obs){
+				res.status(200).json(obs);
+			} else {
+				res.sendStatus(404);
+			}
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			return res.sendStatus(500);
+		}) 
+	
+}
+
+exports.getObservationIdsSelectedForFrontpage = function(req, res){
+	var redisClient = req.redis;
+	
+	var now = Date.now();
+ redisClient.zrangebyscoreAsync('selected_frontpage_observations', now, '+inf')
+	.then(function(obsids) {
+		req.query.where = JSON.stringify({_id: obsids})
+		//return res.status(200).json(obsids);
+		return exports.index(req, res)
+	})
+	.catch(function(err) {
+		console.log("error: " + err)
+		return res.sendStatus(500);
+	}) 
+}
+
+
+
+
 exports.notifyValidator = function(req, res){
 	var query = getDefaulQuery(req);
 	

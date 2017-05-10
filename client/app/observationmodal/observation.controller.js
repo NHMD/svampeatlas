@@ -337,7 +337,36 @@ angular.module('svampeatlasApp')
 					//map.invalidateSize(false)
 
 				})
+				
+				if(Auth.hasRole('validator')){
+					Observation.isOnFrontpage({
+				id: $scope.obs._id
+			}).$promise.then(function(obs){
+				that.isAlreadyOnFrontpage = true;
+			}).catch(function(err){
+				// The observation is not on the frontpage
+			})
+				}
 
+			};
+			
+			this.addToFrontPage = function(ttl){
+				Observation.flagObservationForFrontpage({
+				id: $scope.obs._id
+			}, {ttl: ttl}).$promise.then(function(obs){
+				that.isAlreadyOnFrontpage = true;
+				$scope.showSimpleToast($translate.instant('Operation succeeded.'))
+			}).catch(function(err){
+				ErrorHandlingService.handle500();
+			})
+			};
+			this.deleteFromFrontPage = function(){
+				Observation.removeObservationFromFrontpage({
+				id: $scope.obs._id
+			}).$promise.then(function(obs){
+				$scope.showSimpleToast($translate.instant('Operation succeeded.'))
+				that.isAlreadyOnFrontpage = false;
+			})
 			};
 			$rootScope.$on('observation_updated', function(evt, obs) {
 				if (obs._id === $scope.obs._id) {

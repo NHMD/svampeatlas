@@ -15,6 +15,8 @@ var nocache = require('../../../components/hooks/nocache');
 
 var router = express.Router();
 
+router.get('/frontpage', redisClient.use(), controller.getObservationIdsSelectedForFrontpage); 
+
 router.get('/', auth.appendUser(), redisClient.use(), controller.index);
 
 router.get('/count',  redisClient.use(), controller.getCount);
@@ -49,6 +51,15 @@ router.put('/:id', auth.isAuthenticated(),  controller.update);
 router.delete('/:id', auth.isAuthenticated(),  controller.destroy);
 
 router.post('/:id/notifications', auth.isAuthenticated(), controller.notifyValidator); 
+
+
+router.post('/frontpage/:id',  auth.hasRole('validator'), redisClient.use(), controller.addObservationToFrontPage); 
+router.get('/frontpage/:id',   redisClient.use(), controller.getObservationFromFrontPage);
+router.delete('/frontpage/:id',  auth.hasRole('validator'), redisClient.use(), controller.removeObservationFromFrontPage); 
+
+
+
+
 
 
 module.exports = router;

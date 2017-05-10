@@ -62,6 +62,23 @@
 	    		  	           <p flex> {{'Kontakt validator' | translate}}</p>
 	    		  	          </md-button>
 	    	              </md-menu-item>
+ 	    		  	  
+					   <md-menu-item ng-if="Auth.hasRole('validator') && !ctrl.isAlreadyOnFrontpage">
+    		  	    <md-button  aria-label="Forside i 7 dage" ng-click="ctrl.addToFrontPage(7)">
+    		  	           <p flex> {{'På forsiden i 7 dage' | translate}}</p>
+    		  	          </md-button>
+						  </md-menu-item>
+						  <md-menu-item ng-if="Auth.hasRole('validator') && !ctrl.isAlreadyOnFrontpage">
+    		  	    <md-button  aria-label="Forside i 30 dage" ng-click="ctrl.addToFrontPage(30)">
+    		  	           <p flex> {{'På forsiden i 30 dage' | translate}}</p>
+    		  	          </md-button>
+ 	    	              </md-menu-item>
+	  					   <md-menu-item ng-if="Auth.hasRole('validator') && ctrl.isAlreadyOnFrontpage">
+	      		  	    <md-button  aria-label="Fjern fra forside" ng-click="ctrl.deleteFromFrontPage()">
+	      		  	           <p flex> {{'Fjern fra forsiden' | translate}}</p>
+	      		  	          </md-button>
+	  						  </md-menu-item>
+						  
 		            </md-menu-content>
 		          </md-menu>
 	   

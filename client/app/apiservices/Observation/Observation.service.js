@@ -10,6 +10,32 @@ angular.module('svampeatlasApp')
 			update: {
 				method: 'PUT' // this method issues a PUT request
 			},
+			'getObservationsFlaggedForFrontpage': {
+				method: 'GET',
+				url: '/api/observations/frontpage',
+				isArray: true
+			},
+			'isOnFrontpage': {
+				method: 'GET',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/frontpage/:id'
+			},
+			'flagObservationForFrontpage': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/frontpage/:id'
+			},
+			'removeObservationFromFrontpage': {
+				method: 'DELETE',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/frontpage/:id'
+			},
 			'getSpeciesList': {
 				method: 'GET',
 				url: '/api/observations/specieslist',
