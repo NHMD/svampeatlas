@@ -42,8 +42,8 @@
 	
 
 	          <div class="md-list-item-text"  >
-				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(det._id === obs.primarydetermination_id) ? ('('+('Nuværende bestemmelse' | translate)+')') : '' }}</h3>
-	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? ('('+('Nuværende bestemmelse' | translate)+')') : '' }}</h3>
+				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} <a href="/taxon/{{det.Taxon.acceptedTaxon._id}}" target="_BLANK"><i class="fa fa-external-link"></i></a> {{(det._id === obs.primarydetermination_id) ? ('('+('Nuværende bestemmelse' | translate)+')') : '' }} </h3>
+	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} <a href="/taxon/{{det.Taxon.acceptedTaxon._id}}" target="_BLANK"><i class="fa fa-external-link"></i></a> {{(det._id === obs.primarydetermination_id) ? ('('+('Nuværende bestemmelse' | translate)+')') : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
    			
@@ -102,8 +102,8 @@
 	</div>
 
 	          <div class="md-list-item-text"  >
-				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
-	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
+				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} <a href="/taxon/{{det.Taxon.acceptedTaxon._id}}" target="_BLANK"><i class="fa fa-external-link"></i></a> {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
+	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} <a href="/taxon/{{det.Taxon.acceptedTaxon._id}}" target="_BLANK"><i class="fa fa-external-link"></i></a> {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
   				<p ng-if="det.confidence">{{'Bestemmelsens sikkerhed' | translate}}: <span ng-if="User._id !== det.user_id">{{ det.confidence | translate}}</span><a  ng-if="User._id === det.user_id" href="#" editable-select="det.confidence" e-ng-options="(s | translate) for s in ['sikker', 'sandsynlig', 'mulig']" onaftersave="updateConfidence(det, obs)">
