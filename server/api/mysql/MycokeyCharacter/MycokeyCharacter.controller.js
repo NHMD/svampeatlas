@@ -261,13 +261,30 @@ exports.importMycoKeyCharacters = function(req, res){
 
 exports.batchAddMycokeyCharacter = function(req, res) {
 		
-	var promises = [];
+		
+	models.MycokeyCharacter.find({where: {CharacterID:req.params.id  }}).then(function(character){
+		
+		var promises = [];
+		
+		_.each(req.body, function(e){
+			var q = {taxon_id: e._id, Character: req.params.id };
+			if(character.Type === "Real") {
+				q.BoolValue = 0;
+				q.RealValueMin = req.query.RealValueMin;
+				q.RealValueMax = req.query.RealValueMax;
+				console.log(" ############### MycoKey")
+				console.log(" ############### RealValueMin "+req.query.RealValueMin)
+				console.log(" ############### RealValueMax "+req.query.RealValueMax)
+			} else {
+				q.BoolValue = 1;
+			}
+			promises.push(models.MycokeyGenusCharacter.upsert(q));
+		})
 	
-	_.each(req.body, function(e){
-		promises.push(models.MycokeyGenusCharacter.upsert({taxon_id: e._id, Character: req.params.id }));
-	})
-	
-	return Promise.all(promises)
+		return Promise.all(promises)
+		
+	})	
+		
 	.then(function(){
 	  return res.status(201).send()
   })

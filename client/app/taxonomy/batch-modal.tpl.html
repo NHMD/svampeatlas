@@ -99,8 +99,22 @@
         </md-chip-template>
       </md-chips>
 	  
+   
+	  
+	  
 	      </div>
+<div layout="row" layout-margin ng-if="propertyType === 'MycoKeyCharacter' && selectedMycokeyCharacters[0] && selectedMycokeyCharacters[0].Type === 'Real'">
+    <md-input-container >
+            <label>Min {{'value' | translate}} ({{selectedMycokeyCharacters[0].Unit}})</label>
+           <input type="number" ng-model="$parent.RealValueMin">
 
+          </md-input-container>
+ 	     <md-input-container >
+ 	             <label>Max {{'value' | translate}} ({{selectedMycokeyCharacters[0].Unit}})</label>
+ 	            <input type="number" ng-model="$parent.RealValueMax">
+
+ 	           </md-input-container>
+</div>
 
 
 	

@@ -1541,13 +1541,16 @@ exports.showMycoKeyCharacters = function(req, res) {
 
 exports.addMycoKeyCharacter= function(req, res) {
 
+	var BoolValue = (req.body.Type === "Real") ? 0 : 1;
+	var RealValueMin = (req.body.RealValueMin) ? req.body.RealValueMin : 0;
+	var RealValueMax = (req.body.RealValueMax) ? req.body.RealValueMax : 0;
 //return res.status(200).json(req.body);
  var sql = "INSERT INTO GenusCharacters (`Character`, `GenusID`, `xxxx`,`BoolValue`, Probability, mark, CodedForSpecies, `check`, `RealValueMax`, `RealValueMin`, `taxon_id`) "
-+"	SELECT :CharacterID, 0, 1, 1, 100, 0, 0, 0, 0, 0,  t._id "
-+" FROM Taxon t, Taxon tp WHERE tp._id = :id AND t.Path LIKE CONCAT(tp.Path, '%') ON DUPLICATE KEY UPDATE taxon_id=taxon_id";
++"	SELECT :CharacterID, 0, 1, :BoolValue, 100, 0, 0, 0, :RealValueMax, :RealValueMin,  t._id "
++" FROM Taxon t, Taxon tp WHERE tp._id = :id AND t.Path LIKE CONCAT(tp.Path, '%') ON DUPLICATE KEY UPDATE taxon_id=taxon_id, RealValueMin = :RealValueMin, RealValueMax = :RealValueMax";
 
 return models.sequelize.query(sql,
-  { replacements: { CharacterID: req.body.CharacterID, id: req.params.id }, type: models.sequelize.QueryTypes.INSERT }
+  { replacements: { CharacterID: req.body.CharacterID, id: req.params.id , BoolValue: BoolValue, RealValueMin: RealValueMin, RealValueMax: RealValueMax}, type: models.sequelize.QueryTypes.INSERT }
 ).then(function(inserted) {
 
   return models.Taxon.find({where: {_id:req.params.id}})

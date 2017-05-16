@@ -53,13 +53,17 @@ angular.module('svampeatlasApp')
 			    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
 			}
 			
-			$scope.useNearestLocalityOnClick = ObservationFormStateService.getState().useNearestLocalityOnClick || false;
+			$scope.useNearestLocalityOnClick = Boolean(localStorage.getItem('use_nearest_locality_on_click')) || false;
+			
 			$scope.toggleNearestLocalityOnClick = function() {
 				$scope.useNearestLocalityOnClick = !$scope.useNearestLocalityOnClick;
 				
 				if(!$scope.useNearestLocalityOnClick){
 					
 					$scope.removeLocalitiesFromMap();
+					localStorage.removeItem("use_nearest_locality_on_click");
+				} else {
+					localStorage.setItem("use_nearest_locality_on_click", true);
 				}
 			}
 			

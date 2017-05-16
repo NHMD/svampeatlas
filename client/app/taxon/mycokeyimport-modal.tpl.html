@@ -29,10 +29,14 @@
 							<table class="table table-bordered">
 						  	
 															<tbody>
-							 							  <tr ng-repeat="character in $parent.suggestedImportCharacters | filter:{ CharacterGroup : group.CharacterGroupID }"><td class="table-bordered" st-ratio="80">{{ ($translate.use() === 'en') ? character['Short text UK'] : character['Short text DK']}}
-														  </td><td st-ratio="20">
-							  
-															   </td></tr></tbody>
+							 							  <tr ng-repeat="character in $parent.suggestedImportCharacters | filter:{ CharacterGroup : group.CharacterGroupID }:true"><td class="table-bordered" st-ratio="{{(character.Type === 'Bool')? 100 : 60}}">{{ ($translate.use() === 'en') ? character['Short text UK'] : character['Short text DK']}}
+														  </td><td ng-if="character.Type === 'Real'" st-ratio="20">
+							  										{{character.RealValueMin}} {{character.Unit}}
+															   </td>
+														   <td ng-if="character.Type === 'Real'" st-ratio="20">
+							  {{character.RealValueMax}} {{character.Unit}}
+														   															   </td>
+														   </tr></tbody>
 							 							</table>
 					      </div>
 					    </div>

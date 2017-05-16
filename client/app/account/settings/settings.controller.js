@@ -9,6 +9,7 @@ angular.module('svampeatlasApp')
 	$scope.oldEmail = $scope.getCurrentUser().email;
 	$scope.oldName = $scope.getCurrentUser().name;
 	$scope.useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
+	$scope.useNearestLocalityOnClick = Boolean(localStorage.getItem('use_nearest_locality_on_click'));
 	
 	$scope.$watch('useLichenFilter', function(newval, oldval){
 			
@@ -16,6 +17,16 @@ angular.module('svampeatlasApp')
 			localStorage.setItem('use_lichen_filter', newval);
 		} else {
 			localStorage.removeItem("use_lichen_filter");
+		}
+			
+	});
+	
+	$scope.$watch('useNearestLocalityOnClick', function(newval, oldval){
+			
+		if(newval){
+			localStorage.setItem('use_nearest_locality_on_click', newval);
+		} else {
+			localStorage.removeItem("use_nearest_locality_on_click");
 		}
 			
 	});

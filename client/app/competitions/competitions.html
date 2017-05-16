@@ -36,7 +36,7 @@
 						  		   <user-avatar class="useravatar md-avatar" user="elm" ></user-avatar> 
 	   
 									<div class="md-list-item-text" layout="column">
-									            <div><h3><a ng-click="ctrl.gotoSearchResult(ctrl.currentController, elm._id, ctrl.selectedYear)"><strong>{{ elm.count }}</strong></a></h3></div>
+									            <div><h3><a ng-click="ctrl.gotoSearchResult(ctrl.currentController, elm, ctrl.selectedYear)"><strong>{{ elm.count }}</strong></a> <md-progress-linear ng-if="elm.clicked"></md-progress-linear></h3></div>
 									           <div> <h4><a ng-href="/userprofile/{{elm._id}}">{{ elm.name }} ({{elm.Initialer}})</a></h4></div>
 									          </div>
  	        

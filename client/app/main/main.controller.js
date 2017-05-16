@@ -352,9 +352,9 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 		if(searchText === "*"){
 			return $scope.morphoGroup;
 		} else {
-			return _.filter($scope.morphoGroup, function(g){
-				return g.name_dk.indexOf(searchText) > -1;
-			})
+			return $scope.morphoGroup.filter(function(g){
+				   						return g.name_dk.indexOf(searchText) > -1;
+				   					})
 		}
 		
 	}

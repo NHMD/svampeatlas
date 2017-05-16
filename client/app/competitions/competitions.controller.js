@@ -45,7 +45,9 @@ angular.module('svampeatlasApp')
    
 	  this.updateYear(currentYear);
 	
-  	this.gotoSearchResult = function(controller, user_id, year) {
+  	this.gotoSearchResult = function(controller, user, year) {
+		var user_id = user._id;
+		user.clicked = true;
   		ObservationSearchService.reset();
   		var search = ObservationSearchService.getSearch()
   		search.wasInitiatedOutsideSearchForm = true;

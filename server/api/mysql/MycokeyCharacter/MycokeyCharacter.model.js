@@ -10,7 +10,14 @@ module.exports = function(sequelize, DataTypes) {
       
       primaryKey: true
 		},
-
+		"Type": {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
+		"Unit": {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
 		"description UK": {
 			type: DataTypes.STRING,
 			allowNull: false

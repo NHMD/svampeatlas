@@ -37,3 +37,18 @@ update mycokey.Genus mg, svampeatlas.GenusCharacters sg, svampeatlas.Taxon st SE
 	INSERT INTO GenusCharacters (`Character`, `GenusID`, `xxxx`,`BoolValue`, Probability, mark, CodedForSpecies, `check`, `RealValueMax`, `RealValueMin`, `taxon_id`) 
 	SELECT 404, 0, 3, 0, 100, 0, 0, 0, 0, 0,  t._id  FROM lavparasitter t  on duplicate key update taxon_id=taxon_id;
 	
+
+
+
+	-- Final import may 2017
+	
+	-- fix wrong value for Bool on existing data
+	UPDATE GenusCharacters set BoolValue = 1;
+	
+	INSERT INTO svampeatlas.CharacterGroup  SELECT * FROM mycokey.CharacterGroup WHERE CharacterGroupID IN (7, 12, 29, 30, 31, 34, 41, 52);
+	INSERT INTO svampeatlas.Characters SELECT * from mycokey.Characters WHERE CharacterGroup IN (7, 12, 29, 30, 31, 34, 41, 52);
+	
+	SELECT txa._id, txa.FullName, COUNT(sc.Character), sc.SpeciesID FROM mycokey.SpeciesCharacters sc, mycokey.Species ms, svampeatlas.Taxon tx, svampeatlas.Taxon txa WHERE tx.accepted_id = txa._id AND ms.ID = sc.SpeciesID AND ms.IndexFungorumSpecies= tx.FunIndexNumber AND ms.IndexFungorumSpecies > 0  GROUP BY sc.SpeciesID;
+	
+	
+	

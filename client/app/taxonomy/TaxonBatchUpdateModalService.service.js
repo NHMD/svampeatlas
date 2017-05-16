@@ -74,6 +74,7 @@ angular.module('svampeatlasApp')
 										  var method = ($scope.actionType === "Add") ? "POST" : "DELETE";
 										  var baseUrl;
 										  var id;
+										  var params = {};
 										   if($scope.propertyType === "Tag") {
 											   baseUrl = '/api/taxonomytags/' ;
 											   id = $scope.selectedTags[0]._id
@@ -81,6 +82,10 @@ angular.module('svampeatlasApp')
 											   else if($scope.propertyType === "MycoKeyCharacter")  {
 											   baseUrl =	'/api/mycokeycharacters/';
 											   id = $scope.selectedMycokeyCharacters[0].CharacterID
+											   if($scope.selectedMycokeyCharacters[0].Type === "Real" && !isNaN(parseFloat($scope.RealValueMin)) && !isNaN(parseFloat($scope.RealValueMax)) ){
+												   params.RealValueMin = $scope.RealValueMin;
+												    params.RealValueMax = $scope.RealValueMax;
+											   }
 											   } 
 											   else if($scope.propertyType === "MorphoGroup"){
 											   baseUrl =	'/api/morphogroups/';
@@ -91,6 +96,7 @@ angular.module('svampeatlasApp')
 											      method: method,
 											      url: baseUrl+id+'/taxa',
 											      data: markedTaxa,
+												  params: params,
 											      headers: {'Content-Type': 'application/json;charset=utf-8'}
 											  }).then(function() {
 				  								

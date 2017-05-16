@@ -23,12 +23,13 @@ angular.module('svampeatlasApp')
 						
 			})
 			$scope.findMorphoGroup = function(searchText){
-				if(searchText === "*"){
+				if(!searchText || searchText === "*"){
 					return $scope.morphoGroup;
 				} else {
-					return _.filter($scope.morphoGroup, function(g){
-						return g.name_dk.indexOf(searchText) > -1;
-					})
+					return $scope.morphoGroup.filter(function(g){
+				   						return g.name_dk.indexOf(searchText) > -1;
+				   					})
+		
 				}
 		
 			}

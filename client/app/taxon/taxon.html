@@ -252,10 +252,26 @@
 								<table class="table table-bordered">
 							  	
 																<tbody>
-								 							  <tr ng-repeat="character in mycokeyCharacters | filter:{ CharacterGroup : group.CharacterGroupID }"><td class="table-bordered" st-ratio="80">{{ ($translate.use() === 'en') ? character['Short text UK'] : character['Short text DK']}}
-															  </td><td st-ratio="20">
+								 							  <tr ng-repeat="character in mycokeyCharacters | filter:{ CharacterGroup : group.CharacterGroupID }:true"><td class="table-bordered" st-ratio="{{(character.Type === 'Bool') ? 80 : 60}}">{{ ($translate.use() === 'en') ? character['Short text UK'] : character['Short text DK']}}
+															  </td><td st-ratio="20" ng-if="character.Type === 'Bool'">
 								  
-																  <md-checkbox aria-label="character['Short text DK']" ng-model="mycokeyMap[character.CharacterID].isChecked" ng-change="updateMycoKeyCharacter(character.CharacterID)"></md-checkbox> </td></tr></tbody>
+																  <md-checkbox aria-label="character['Short text DK']" ng-model="mycokeyMap[character.CharacterID].isChecked" ng-change="updateMycoKeyCharacter(character.CharacterID)"></md-checkbox> </td>
+																  <td st-ratio="20" ng-if="character.Type === 'Real'">
+								  <!-- <md-checkbox aria-label="character['Short text DK']" ng-model="mycokeyMap[character.CharacterID].isChecked" ng-change="updateMycoKeyCharacter(character.CharacterID)"></md-checkbox> -->
+				    	     <md-input-container >
+				    	             <label>Min {{'value' | translate}} ({{character.Unit}})</label>
+				    	            <input  ng-change="updateMycoKeyCharacter(character.CharacterID)" type="number" ng-model="mycokeyMap[character.CharacterID].RealValueMin">
+
+				    	           </md-input-container>
+							   </td>  <td st-ratio="20" ng-if="character.Type === 'Real'">
+					    	     <md-input-container >
+					    	             <label>Max {{'value' | translate}} ({{character.Unit}})</label>
+					    	            <input ng-change="updateMycoKeyCharacter(character.CharacterID)" type="number" ng-model="mycokeyMap[character.CharacterID].RealValueMax">
+
+					    	           </md-input-container>
+							   </td>
+															  
+															  </tr></tbody>
 								 							</table>
 						      </div>
 						    </div>

@@ -7,7 +7,7 @@ angular.module('svampeatlasApp')
 		return {
 			
 
-			state : {},
+			state : {	},
 			
 			
 			

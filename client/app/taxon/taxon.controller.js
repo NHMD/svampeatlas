@@ -356,6 +356,8 @@ angular.module('svampeatlasApp')
 					
 					_.each($scope.taxon.character1, function(c){
 						$scope.mycokeyMap[c.CharacterID].isChecked = true;
+						$scope.mycokeyMap[c.CharacterID].RealValueMin = c.RealValueMin;
+						$scope.mycokeyMap[c.CharacterID].RealValueMax = c.RealValueMax;
 					})
 					
 					
@@ -372,12 +374,18 @@ angular.module('svampeatlasApp')
 			};
 
 			$scope.updateMycoKeyCharacter = function(characterId){
-				
-				if($scope.mycokeyMap[characterId].isChecked) {
-					Taxon.addMycoKeyCharacter({id: $scope.taxon._id}, $scope.mycokeyMap[characterId]);
-				} else {
-					Taxon.deleteMycoKeyCharacter({id: $scope.taxon._id, characterid: characterId})
+				if($scope.mycokeyMap[characterId].Type === 'Bool'){
+					if($scope.mycokeyMap[characterId].isChecked) {
+						Taxon.addMycoKeyCharacter({id: $scope.taxon._id}, $scope.mycokeyMap[characterId]);
+					} else {
+						Taxon.deleteMycoKeyCharacter({id: $scope.taxon._id, characterid: characterId})
+					}
+				} else if($scope.mycokeyMap[characterId].Type === 'Real') {
+					if(!isNaN(parseFloat($scope.mycokeyMap[characterId].RealValueMin)) && !isNaN(parseFloat($scope.mycokeyMap[characterId].RealValueMax))) {
+						Taxon.addMycoKeyCharacter({id: $scope.taxon._id}, $scope.mycokeyMap[characterId]);
+					} 
 				}
+				
 				
 				
 			}
