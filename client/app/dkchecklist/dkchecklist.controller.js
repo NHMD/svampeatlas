@@ -35,7 +35,7 @@ angular.module('svampeatlasApp')
 			}
 			
 			$scope.mycokeySearch = function(query) {
-				var where = {};
+				var where = { Type: 'Bool'};
 				where.$or = ($translate.use() === "en") ? [{
 					"description UK": {
 						like: "%" + query + "%"
