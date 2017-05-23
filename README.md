@@ -1,4 +1,4 @@
-##Danish Fungal Atlas 
+## Danish Fungal Atlas 
 
 > An online database of georeferenced biodiversity data about Fungi including Lichens.
 
