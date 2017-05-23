@@ -293,6 +293,7 @@ function createDetermination(obs, determination, user, t, logObject) {
 			logObject.Determination.confidence = determination.confidence;
 			if (userIsValidator && determination.validation === "Godkendt") {
 				determination.validation = "Godkendt";
+				determination.validator_id = user._id;
 				logObject.Determination.votingSystemOverRuledByValidator = true;
 			} else {
 
