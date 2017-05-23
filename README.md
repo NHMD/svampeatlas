@@ -1,4 +1,4 @@
-#Danish Fungal Atlas 
+##Danish Fungal Atlas 
 
 > An online database of georeferenced biodiversity data about Fungi including Lichens.
 
@@ -27,6 +27,21 @@ Therefore it is recomended to follow
 
 You will find valuable information about the development setup and application structure in the [angular-fullstack] (https://github.com/DaftMonk/generator-angular-fullstack) git repo.
 
+## Create database in MySQL
+
+
+```bash
+mysql -u <username> -p <password>
+```
+```bash
+mysql> create database svampeatlas;
+```
+```bash
+mysql> exit;
+```
+```bash
+mysql -u <username> -p <password> < svampeatlas.sql
+```
 
 ## Configuration
 
@@ -46,13 +61,6 @@ npm install
 bower install
 ```
 
-## Load data for specify datamodels into mongo
-
-In the root directory (where package.json and bower.json are placed):
-
-```bash
-mongoimport -d dinacollections-dev --collection datamodels --file resources/datamodel.json -vvvvv --jsonArray
-```
 
 ## Run the application
 
