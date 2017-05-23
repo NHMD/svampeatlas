@@ -75,9 +75,9 @@
 		  </md-expansion-panel>  
 		  <div class="md-whiteframe-z3" layout-padding>
 			  <div>
-		<h3 ng-show="taxon.Vernacularname_DK" class="md-display-1">{{taxon.Vernacularname_DK.vernacularname_dk | capitalize}} </h3>
+		<h3 ng-show="taxon.Vernacularname_DK" class="md-display-1"><a ng-if="Auth.hasRole('taxonomyadmin')" class="mycokey-image-link" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a>{{taxon.Vernacularname_DK.vernacularname_dk | capitalize}} </h3>
 		<h4 class="md-subhead" ng-show="taxon.Vernacularname_DK"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h4>
-		<h3 ng-show="!taxon.Vernacularname_DK" class="md-headline"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
+		<h3 ng-show="!taxon.Vernacularname_DK" class="md-headline"><a ng-if="Auth.hasRole('taxonomyadmin')" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a> <em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
 		 <div class="md-caption" layout="column"> <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt navn:'): 'Syn.:'}}  <em> {{syn.FullName}}</em> {{syn.Author}}</span>
 	</div>
 		<!-- <div class="md-caption" layout-gt-xs="row" flex> <div  ng-repeat="tx in higherTaxa"><div ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}{{(!$last) ? ',': ''}}</div>

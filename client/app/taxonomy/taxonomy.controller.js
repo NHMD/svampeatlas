@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'MycokeyCharacters', 'TaxonBatchUpdateModalService', 'SearchService',
-		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters, TaxonBatchUpdateModalService, SearchService) {
+	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'MycokeyCharacters', 'TaxonBatchUpdateModalService', 'SearchService', 'MycoKeyModalService',
+		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters, TaxonBatchUpdateModalService, SearchService, MycoKeyModalService) {
+			
+			$scope.MycoKeyModalService = MycoKeyModalService;
 			
 			$scope.csvSeparator = ",";
 			$scope.setCsvSeparator = function(sep){

@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('DkCheckListCtrl', ['$scope', 'Auth', 'Taxon', '$timeout', '$q', '$translate', 'TaxonomyTags', '$mdMedia', '$mdDialog', '$stateParams', '$state','SearchService', 'MycokeyCharacters',
-		function($scope, Auth, Taxon, $timeout, $q, $translate, TaxonomyTags, $mdMedia, $mdDialog, $stateParams, $state, SearchService, MycokeyCharacters) {
+	.controller('DkCheckListCtrl', ['$scope', 'Auth', 'Taxon', '$timeout', '$q', '$translate', 'TaxonomyTags', '$mdMedia', '$mdDialog', '$stateParams', '$state','SearchService', 'MycokeyCharacters', 'MycoKeyModalService',
+		function($scope, Auth, Taxon, $timeout, $q, $translate, TaxonomyTags, $mdMedia, $mdDialog, $stateParams, $state, SearchService, MycokeyCharacters, MycoKeyModalService) {
 			var that = this;
+			this.MycoKeyModalService = MycoKeyModalService;
 			$scope.$translate = $translate;
 			var storedState = localStorage.getItem('dkchecklist_table_search');
 			if(storedState){
@@ -75,7 +76,6 @@ angular.module('svampeatlasApp')
 			}
 			
 			
-			
 			$scope.query  = {
 				where: { $or: [] },
 				include: [{
@@ -88,25 +88,30 @@ angular.module('svampeatlasApp')
 					})
 				}, {
 					"model": "Taxon",
-					"as": "acceptedTaxon",
-					include: [JSON.stringify({
-					"model": "TaxonAttributes",
-					"as": "attributes",
-					"attributes": ['PresentInDK'],
-					"where": JSON.stringify({
-						PresentInDK: true
-					})
-				})]
-				} , {
+					"as": "acceptedTaxon"
+				} ,
+					{
+										"model": "TaxonAttributes",
+										"as": "attributes",
+										"attributes": ['PresentInDK'],
+										"where": JSON.stringify({
+											PresentInDK: true
+										})
+									},
+					
+					 {
 					"model": "TaxonDKnames",
-					"as": "Vernacularname_DK"
-				}, {
-					"model": "Taxon",
-					"as": "synonyms"
+					"as": "Vernacularname_DK",
+					"required": false
 				},{
 					"model": "TaxonStatistics",
-					"as": "Statistics"
-				}]
+					"as": "Statistics",
+					"required": false
+				}, {
+					"model": "TaxonImages",
+					"as": "Images",
+					"required": false
+				},]
 
 
 			};
@@ -248,7 +253,7 @@ angular.module('svampeatlasApp')
 				
 
 
-				var order = tableState.sort.predicate;
+				var order = tableState.sort.predicate || 'FullName';
 				var _order = [[order]];
 				if (tableState.sort.reverse) {
 					order += " DESC";

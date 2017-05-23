@@ -169,6 +169,16 @@ angular.module('svampeatlasApp', [
 						}
 
 					}, {
+						id: 'needs_validation',
+						name: 'Fund til validering',
+						state: 'search-list',
+						params: {
+							searchterm: 'needsvalidation'
+						},
+						requireLogin: true
+
+					},
+					{
 						id: 'search_foreign',
 						name: 'Udenlandske fund',
 						state: 'search-list',

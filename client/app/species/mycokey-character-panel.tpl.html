@@ -1,0 +1,84 @@
+<div role="dialog" aria-label="Mycokey karakterer" layout="column" layout-align="center center" flex >
+ <md-toolbar class="mycokey-character-toolbar">
+   <div class="md-toolbar-tools">
+     
+	<h2>{{'Mycokey karakterer for' | translate}} {{taxon.FullName}}</h2>
+     <span flex></span>
+     <md-button class="md-icon-button" ng-click="ctrl.closeDialog()">
+       <ng-md-icon icon="close"></ng-md-icon>
+     </md-button>
+   </div>
+ </md-toolbar>
+
+      <md-content class="demo-dialog-content" flex>
+		  
+			    	  
+						
+						<div class="panel-group"  role="tablist" aria-multiselectable="true" start-collapsed="true"  bs-collapse>
+						  <div class="panel panel-default" ng-repeat="group in mycokeyGroups">
+						    <div class="panel-heading" role="tab">
+						      <h4 class="panel-title">
+						        <a bs-collapse-toggle>
+						          {{ ($translate.use() === 'en') ? group['Full text UK'] : group['Full text DK'] }}
+						        </a>
+						      </h4>
+						    </div>
+						    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+						      <div class="panel-body">
+								<table class="table table-bordered">
+							  	
+																<tbody>
+								 							  <tr ng-repeat="character in mycokeyCharacters | filter:{ CharacterGroup : group.CharacterGroupID }:true"><td class="table-bordered" st-ratio="{{(character.Type === 'Bool') ? 80 : 60}}">{{ ($translate.use() === 'en') ? character['Short text UK'] : character['Short text DK']}}
+															  </td><td st-ratio="20" ng-if="character.Type === 'Bool'">
+								  
+																  <md-checkbox aria-label="character['Short text DK']" ng-model="mycokeyMap[character.CharacterID].isChecked" ng-change="updateMycoKeyCharacter(character.CharacterID)"></md-checkbox> </td>
+																  <td st-ratio="20" ng-if="character.Type === 'Real'">
+								  <!-- <md-checkbox aria-label="character['Short text DK']" ng-model="mycokeyMap[character.CharacterID].isChecked" ng-change="updateMycoKeyCharacter(character.CharacterID)"></md-checkbox> -->
+				    	     <md-input-container >
+				    	             <label>Min {{'value' | translate}} ({{character.Unit}})</label>
+				    	            <input  ng-change="updateMycoKeyCharacter(character.CharacterID)" type="number" ng-model="mycokeyMap[character.CharacterID].RealValueMin">
+
+				    	           </md-input-container>
+							   </td>  <td st-ratio="20" ng-if="character.Type === 'Real'">
+					    	     <md-input-container >
+					    	             <label>Max {{'value' | translate}} ({{character.Unit}})</label>
+					    	            <input ng-change="updateMycoKeyCharacter(character.CharacterID)" type="number" ng-model="mycokeyMap[character.CharacterID].RealValueMax">
+
+					    	           </md-input-container>
+							   </td>
+															  
+															  </tr></tbody>
+								 							</table>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+						
+
+				
+		
+
+	
+      </md-content>
+
+  <div class="demo-dialog-button" layout="row">
+	  
+	  <span flex></span>
+    <md-button   class="md-primary" style="margin-right:20px;" ng-click="ctrl.closeDialog()" >
+      {{'Luk' | translate}}
+    </md-button>
+   
+  </div> 
+</div>
+
+
+
+
+
+
+
+
+
+
+
+ 

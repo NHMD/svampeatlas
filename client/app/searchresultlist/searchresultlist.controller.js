@@ -18,6 +18,7 @@ angular.module('svampeatlasApp')
 			$scope.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
 			$scope.SpeciesModalService = SpeciesModalService;
 			
+			
 			$scope.csvSeparator = ",";
 			$scope.setCsvSeparator = function(sep){
 				$scope.csvSeparator= sep;
@@ -266,6 +267,17 @@ angular.module('svampeatlasApp')
 						gt: $filter('date')(moment().startOf('day').subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 
+				} else if ($stateParams.searchterm === "needsvalidation") {
+					
+					search.include[0].where = {
+						
+						$and: [{Determination_validation: { $ne: 'Godkendt'}},{Determination_validation: { $ne: 'Afvist'}} , {Determination_score: {$lt: 80}}]
+					};
+					
+					if(useLichenFilter) {
+						search.include[0].where.lichenized = 1;
+					};
+
 				} else if ($stateParams.searchterm === "foreign") {
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
@@ -428,7 +440,7 @@ angular.module('svampeatlasApp')
 						order += " DESC"
 					};
 					*/
-				var defaultOrder = ($stateParams.searchterm && $stateParams.searchterm === "mine") ? [
+				var defaultOrder = ($stateParams.searchterm && ($stateParams.searchterm === "mine" || $stateParams.searchterm === "needsvalidation")) ? [
 					['createdAt', 'DESC'],
 					['_id', 'DESC']
 				] : [

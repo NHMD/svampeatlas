@@ -171,7 +171,7 @@
 		<th st-ratio="5"></th>
 		
 		<th st-sort="FullName" colspan="3" translate>Art</th>
-		
+		<th ng-if="Auth.hasRole('taxonomyadmin')" translate>MycoKey</th>
 		<th  translate>Antal danske fund</th>
 		<th  translate>Seneste danske fund</th>
 		
@@ -217,7 +217,7 @@
 
 		<span ng-repeat="syn in row.synonyms | synonymsWithoutSelf" class="md-caption"><br>{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt:'): 'Syn.:'}} <em>{{syn.FullName}}</em></span>
 		</td>
-	
+	<th ng-if="Auth.hasRole('taxonomyadmin')" translate> <a ng-click="ctrl.MycoKeyModalService.show($event, row)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a></th>
 	<td ng-if="row.Statistics || mdMedia('gt-xs')" data-title="{{'Antal danske fund' | translate}}">{{row.Statistics.accepted_count}}</td>
 	<td ng-if="row.Statistics || mdMedia('gt-xs')" data-title="{{'Seneste danske fund' | translate}}">{{row.Statistics.last_accepted_record | date : 'dd/MM/yyyy'}}</td>
 		
@@ -236,11 +236,11 @@
 
 	</tbody>
 	<tbody ng-show="!displayed &&  isLoading">
-		<tr><td colspan="6" ><div layout="row" layout-align="center center"><md-progress-circular  md-diameter="96"></md-progress-circular></div></td></tr>
+		<tr><td colspan="7" ><div layout="row" layout-align="center center"><md-progress-circular  md-diameter="96"></md-progress-circular></div></td></tr>
 		  
 	</tbody>	
 	<tbody ng-show="displayed && displayed.length===0 &&  !isLoading">
-		<tr><td colspan="6" ><div layout="row" layout-align="center center" translate>Ingen data fundet</div></td></tr>
+		<tr><td colspan="7" ><div layout="row" layout-align="center center" translate>Ingen data fundet</div></td></tr>
 		  
 	</tbody>
 

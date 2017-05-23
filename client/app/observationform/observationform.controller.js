@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog',  'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData',  '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService','ValidatorToolsService','DeterminationLogModalService','WMSservice', 'UTMConverterService',
-		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData,  $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, WMSservice, UTMConverterService) {
+	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog',  'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData',  '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService','ValidatorToolsService','DeterminationLogModalService','MapBox', 'KMS', 'UTMConverterService',
+		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData,  $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, MapBox, KMS, UTMConverterService) {
 			var row = ObservationStateService.get();
 			
 			$scope.$cookies = $cookies;
@@ -487,10 +487,7 @@ angular.module('svampeatlasApp')
 			if (ObservationFormStateService.getState().mapsettings) {
 				ObservationFormStateService.getState().mapsettings.markers = {};
 			}
-			$scope.mapsettings = {};
-			WMSservice.getBaseLayers().then(function(baseLayers){
-				
-				$scope.mapsettings = (ObservationFormStateService.getState().mapsettings) ? ObservationFormStateService.getState().mapsettings : {
+			$scope.mapsettings = (ObservationFormStateService.getState().mapsettings) ? ObservationFormStateService.getState().mapsettings : {
 
 					center: mapCenter,
 					paths: {},
@@ -519,7 +516,29 @@ angular.module('svampeatlasApp')
 
 
 						},
-						baselayers: baseLayers
+						baselayers: {
+							osm: {
+								name: $translate.instant('Kort'),
+								url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+								type: 'xyz'
+							},
+							OpenTopoMap: {
+								name: 'OpenTopoMap',
+
+								url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+
+								type: 'xyz',
+								layerOptions: {
+
+									attribution: 'Tiles &copy; opentopomap.org'
+								}
+
+							}
+						
+
+
+
+						}
 					
 					
 
@@ -529,17 +548,72 @@ angular.module('svampeatlasApp')
 						}
 
 				};
-				
+
+			
 				leafletData.getMap('observationformmap').then(function(map) {
 	
 					if (ObservationFormStateService.getState().currentMapLayer) {
 						$scope.changeBaseLayer(ObservationFormStateService.getState().currentMapLayer)
 					}
 				});
-			})
 			
-			
+			MapBox.getTicket().then(function(ticket){
+				
+				$scope.mapsettings.layers.baselayers.mapbox_outdoors = {
+							name: 'Mapbox Outdoors',
+							url: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/256/{z}/{x}/{y}?access_token=' + ticket,
+							type: 'xyz'
 
+						},
+						$scope.mapsettings.layers.baselayers.mapbox_satelite = {
+							name: 'Mapbox Satelite',
+							url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token=' + ticket,
+							type: 'xyz'
+
+						};
+			});
+			
+			KMS.getTicket().then(function(ticket){
+				
+				$scope.mapsettings.layers.baselayers.topo_25 = {
+							name: "DK 4cm kort",
+							type: 'wms',
+							visible: true,
+							url: "https://kortforsyningen.kms.dk/topo_skaermkort",
+							layerOptions: {
+								layers: "topo25_klassisk",
+								servicename: "topo25",
+								version: "1.1.1",
+								request: "GetMap",
+								format: "image/jpeg",
+								service: "WMS",
+								styles: "default",
+								exceptions: "application/vnd.ogc.se_inimage",
+								jpegquality: "80",
+								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+								ticket: ticket
+							}
+						};
+						$scope.mapsettings.layers.baselayers.luftfoto = {
+							name: "DK luftfoto",
+							type: 'wms',
+							visible: true,
+							url: "https://kortforsyningen.kms.dk/topo_skaermkort",
+							layerOptions: {
+								layers: "orto_foraar",
+								servicename: "orto_foraar",
+								version: "1.1.1",
+								request: "GetMap",
+								format: "image/jpeg",
+								service: "WMS",
+								styles: "default",
+								exceptions: "application/vnd.ogc.se_inimage",
+								jpegquality: "80",
+								attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+								ticket: ticket
+							}
+						};
+			});
 			
 
 			

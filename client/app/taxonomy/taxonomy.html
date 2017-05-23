@@ -302,9 +302,10 @@
 	<thead>
 	<tr>
 		<th st-sort="_id" st-ratio="10">DkIndexNr</th>
-		<th st-ratio="10">
+		<th st-ratio="5">
 			<button class="btn btn-primary" ng-click="doBatch()" ><i class="fa fa-edit"></i></button>
 		</th>
+		<th st-ratio="5"></th>
 		<th st-sort="FullName" st-ratio="40" translate>Full name</th>
 		
 		<th st-sort="TaxonName" translate>Epithet</th>
@@ -314,10 +315,11 @@
 	</tr>
 	<tr>
 		<th st-ratio="10"><div class="input-group"><span id="reset-table-state" class="input-group-addon" st-reset-search><i class="fa fa-refresh"></i></span><input class="form-control" st-search="_id" ></div></th>
-		<th st-ratio="10"><md-checkbox aria-label="Select All"
+		<th st-ratio="5"><md-checkbox aria-label="Select All"
                          ng-checked="allAreChecked()"
                          md-indeterminate="isIndeterminate()"
                          ng-click="toggleAllForUpdate()"></md-checkbox></th>
+						 <th st-ratio="5"></th>
 		<th st-ratio="40"><input class="form-control" st-search="FullName" ></th>
 		
 		<th><input class="form-control" st-search="TaxonName"></th>
@@ -329,9 +331,10 @@
 	<tbody ng-show="!isLoading">
 	<tr ng-repeat="row in displayed">
 		<td st-ratio="10">{{row._id}}</td>
-		<td st-ratio="10"><md-checkbox ng-checked="existsInMarkedForUpdate(row, markedForUpdate)" ng-click="toggleForUpdate(row, markedForUpdate)" aria-label="select for update">
+		<td st-ratio="5"><md-checkbox ng-checked="existsInMarkedForUpdate(row, markedForUpdate)" ng-click="toggleForUpdate(row, markedForUpdate)" aria-label="select for update">
            
           </md-checkbox></td>
+		  <td   st-ratio="5" translate> <a ng-click="MycoKeyModalService.show($event, row)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a></td>
 		<td st-ratio="40"><a href="/taxonbase/taxon/{{row._id}}">{{row.FullName}}</a> <a href="/taxonbase/taxonbooklayout/{{row._id}}"><i class="fa fa-book"></i></a>
 		</td>
 		

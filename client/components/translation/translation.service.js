@@ -313,11 +313,14 @@ angular.module('svampeatlasApp')
 			'Kontakt validator' : 'Contact validator',
 			'Skriv art, slægt, familie, orden etc' : 'Type species, genus, family, order etc',
 			'Antal danske fund' : 'Number of Danish records',
-			'Seneste danske fund' : 'Lateset Danish record',
+			'Seneste danske fund' : 'Latest Danish record',
 			'nulstil' : 'reset',
 			'Fjern fra forsiden' : 'Remove from frontpage',
 			'På forsiden i 30 dage' : 'On the front page 30 days',
-			'På forsiden i 7 dage' : 'On the front page 7 days'
+			'På forsiden i 7 dage' : 'On the front page 7 days',
+			'Der findes' : 'There are',
+			'bestemmelsesforslag' : 'identification suggestions',
+			'Fund til validering' : 'Needs validation'
 			
 			
 		});

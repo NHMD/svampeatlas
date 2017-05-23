@@ -27,6 +27,8 @@ var requestPromise = require("request-promise");
 
 var mail = require('../../../components/mail/mail.service');
 
+var crowdSourcedIdentificationConstants = determinationController.getCrowsourcedIdentificationConstants();
+
 
 
 function getDefaulQuery(req){
@@ -615,7 +617,7 @@ function recentlyCommented(user, since) {
 
 function validationStatusUpdatedSince(user, since) {
 
-	var sql = 'SELECT o._id from Observation o JOIN Determination d on o.primarydetermination_id = d._id WHERE o.primaryuser_id = :userid AND ((d.validator_id IS NOT NULL AND d.validator_id <> :userid AND d.updatedAt > :fromdate) OR (d.createdByUser IS NOT NULL AND d.createdByUser <> :userid AND d.createdAt > :fromdate) )';
+	var sql = 'SELECT o._id from Observation o JOIN Determination d on o.primarydetermination_id = d._id WHERE o.primaryuser_id = :userid AND ((d.validator_id IS NOT NULL AND d.validator_id <> :userid AND d.updatedAt > :fromdate) OR (d.createdByUser IS NOT NULL AND d.createdByUser <> :userid AND d.createdAt > :fromdate) OR (d.score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+'  AND d.updatedAt > d.createdAt AND d.updatedAt > :fromdate) )';
 
 	return models.sequelize.query(
 		sql, {
@@ -1321,6 +1323,17 @@ exports.generateCapsule = function(req, res) {
 	
 var query = getDefaulQuery(req);
 
+query.include[0].include.push({
+	model: models.DeterminationVote,
+	as: 'Votes',
+	attributes: ['_id', 'user_id', 'createdAt', 'score'],
+	include: [{
+		model: models.User,
+		as: "User",
+		attributes: ['_id', 'name', 'Initialer'],
+	}]
+})
+
 
 	Observation.find(query)
 		.then(handleEntityNotFound(res))
@@ -1339,9 +1352,6 @@ function getPdfCapsule(req, res, obs){
 	var doc = new PDFdocument({layout: 'landscape', size: 'A4'});
 	
 	doc.pipe(res);
-	
-	
-
 
 
 doc.rotate(180, {origin: [doc.x, doc.y]});	
@@ -1420,26 +1430,59 @@ doc
 	.text('Date: '+ obs.observationDate.getDate() + '/' + (obs.observationDate.getMonth() + 1) + '/' +  obs.observationDate.getFullYear() + ' Reported by: '+ obs.PrimaryDetermination.User.name)
 .moveDown(0.5)
 
-	var desc = "";	
-	if (obs.users.length > 0) {
-		desc += _.reduce(obs.users, function(prev, u) {
 
-			var usr = (prev !== "") ? ", " + u.name : u.name;
-
-			return prev + usr;
-		}, "")
-	} else if (obs.verbatimLeg) {
-		desc += obs.verbatimLeg;
-	};
 doc
 	.fontSize(10)
+	.text('Det: '+ obs.PrimaryDetermination.User.name)
+	.moveDown(0.5)
+if (obs.PrimaryDetermination.validation === "Godkendt" && obs.PrimaryDetermination.Validator  && obs.PrimaryDetermination.Validator._id !== obs.PrimaryDetermination.User._id ) {
+	
+
+	
+doc
+	.text('Conf: '+ obs.PrimaryDetermination.Validator.name)
+	.moveDown(0.5)
+
+	
+}
+
+else if (obs.PrimaryDetermination.Votes.length > 0  && parseInt(obs.PrimaryDetermination.score) >= crowdSourcedIdentificationConstants.ACCEPTED_SCORE ) {
+	
+
+	obs.PrimaryDetermination.Votes.sort(function(a, b){
+			return b.score - a.score
+	})
+	
+	var sliced = obs.PrimaryDetermination.Votes.slice(0, 3);
+	
+	var conf = _.reduce(sliced, function(prev, v) {
+
+		var usr = (prev !== "") ? ", " + v.User.name : v.User.name;
+
+		return prev + usr;
+	}, "")
+	
+doc
+	.text('Conf: '+ conf)
+	.moveDown(0.5)
+
+	
+}	;
+var desc = "";	
+if (obs.users.length > 0) {
+	desc += _.reduce(obs.users, function(prev, u) {
+
+		var usr = (prev !== "") ? ", " + u.name : u.name;
+
+		return prev + usr;
+	}, "")
+} else if (obs.verbatimLeg) {
+	desc += obs.verbatimLeg;
+};
+doc
 	.text('Leg: '+ desc)
 	.moveDown(0.5)
-doc
 	
-	.text('Det: '+ obs.PrimaryDetermination.User.name)
-
-	.moveDown(0.5)
 	
 
 	var hosts = (obs.associatedTaxa.length === 1) ? "Host: ": "Hosts: ";	

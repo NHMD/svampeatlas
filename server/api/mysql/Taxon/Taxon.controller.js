@@ -93,9 +93,15 @@ exports.index = function(req, res) {
 	var query = {
 		offset: req.query.offset,
 		limit: req.query.limit,
-		order: req.query.order,
 		where: {}
 	};
+	
+	if (req.query.order) {
+		query.order = req.query.order;
+	}
+	if (req.query._order) {
+		query.order = JSON.parse(req.query._order);
+	}
 
 	if (req.query.acceptedTaxaOnly) {
 		_.merge(query.where, {

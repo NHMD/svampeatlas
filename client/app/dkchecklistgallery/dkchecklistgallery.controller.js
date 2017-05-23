@@ -84,27 +84,29 @@ angular.module('svampeatlasApp')
 					})
 				}, {
 					"model": "Taxon",
-					"as": "acceptedTaxon",
-					include: [JSON.stringify({
-					"model": "TaxonAttributes",
-					"as": "attributes",
-					"attributes": ['PresentInDK'],
-					"where": JSON.stringify({
-						PresentInDK: true
-					})
-				})]
-				} , {
+					"as": "acceptedTaxon"
+				} ,
+					{
+										"model": "TaxonAttributes",
+										"as": "attributes",
+										"attributes": ['PresentInDK'],
+										"where": JSON.stringify({
+											PresentInDK: true
+										})
+									},
+					
+					 {
 					"model": "TaxonDKnames",
-					"as": "Vernacularname_DK"
-				}, {
-					"model": "Taxon",
-					"as": "synonyms"
+					"as": "Vernacularname_DK",
+					"required": false
 				},{
 					"model": "TaxonStatistics",
-					"as": "Statistics"
+					"as": "Statistics",
+					"required": false
 				}, {
 					"model": "TaxonImages",
-					"as": "Images"
+					"as": "Images",
+					"required": false
 				},]
 
 

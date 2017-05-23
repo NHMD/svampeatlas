@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth, preloader, SpeciesModalService) {
+	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth, preloader, SpeciesModalService, MycoKeyModalService) {
 
 		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 		$scope.Auth = Auth;
 		$scope.translate = $translate;
+		$scope.MycoKeyModalService = MycoKeyModalService;
 		$scope.SimilarTaxaModalService = SimilarTaxaModalService;
 		$scope.$state = $state;
 		$scope.baseUrl = appConstants.baseurl;
