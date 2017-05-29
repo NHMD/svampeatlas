@@ -13,9 +13,9 @@
         {{'Artspræsentation' | translate}}
       </h3>
       <span flex></span>
-	  <div>
+	  <div ng-if="Auth.hasRole('taxonomyadmin') || Auth.hasRole('similartaxaadmin')">
 		   <md-tooltip md-direction="bottom" >{{'Add similar taxon' | translate}}</md-tooltip>
- 	 <md-button ng-if="Auth.hasRole('taxonomyadmin')" ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="SimilarTaxaModalService.show($event, taxon)" 
+ 	 <md-button ng-show="taxon._id !== undefined && (taxon._id === taxon.accepted_id || taxon.accepted_id === null)" ng-click="SimilarTaxaModalService.show($event, taxon)" 
  	                  aria-label="Tilføj forveksling"
  	                  class="md-icon-button" >
  	         <ng-md-icon icon="insert_link" ></ng-md-icon>
