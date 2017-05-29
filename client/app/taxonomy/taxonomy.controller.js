@@ -499,7 +499,7 @@ angular.module('svampeatlasApp')
 
 				var offset = pagination.start || 0; // This is NOT the page number, but the index of item in the list that you want to use to display the table.
 				var limit = pagination.number || 50; // Number of entries showed per page.
-				var where = (tableState.search.predicateObject) ? _.mapValues(_.omit(tableState.search.predicateObject, ['Vernacularname_DK']), function(value, key) {
+				var where = (tableState.search.predicateObject) ? _.mapValues(_.omit(tableState.search.predicateObject, ['Vernacularname_DK', 'MorphoGroup']), function(value, key) {
 					return {
 						like: value += "%"
 					};
@@ -616,6 +616,12 @@ angular.module('svampeatlasApp')
 							model: "MorphoGroup",
 							as: "MorphoGroup",
 							where: JSON.stringify({_id: parsedGroups})
+						})
+					} else {
+						include.push({
+							model: "MorphoGroup",
+							as: "MorphoGroup",
+							required: false
 						})
 					}
 

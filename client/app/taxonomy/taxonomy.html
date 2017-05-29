@@ -312,6 +312,7 @@
 		<th st-sort="Author"  translate>Author</th>
 		<th st-sort="RankName" st-ratio="5" translate>Taxon rank</th>
 		<th st-sort="Vernacularname_DK.vernacularname_dk" translate>Dansk navn</th>
+		<th st-sort="MorphoGroup.name_dk" translate>MorphoGroup</th>
 	</tr>
 	<tr>
 		<th st-ratio="10"><div class="input-group"><span id="reset-table-state" class="input-group-addon" st-reset-search><i class="fa fa-refresh"></i></span><input class="form-control" st-search="_id" ></div></th>
@@ -326,6 +327,7 @@
 		<th ><input class="form-control" st-search="Author" ></th>
 		<th st-ratio="5"><input class="form-control" st-search="RankName"></th>
 		<th><input class="form-control" st-search="Vernacularname_DK.vernacularname_dk"></th>
+		<th></th>
 	</tr>
 	</thead>
 	<tbody ng-show="!isLoading">
@@ -342,11 +344,12 @@
 		<td>{{row.Author}}</td>
 		<td st-ratio="10">{{row.RankName}}</td>
 		<td>{{row.Vernacularname_DK.vernacularname_dk}}</td>
+		<td>{{row.MorphoGroup.name_dk}}<i class="fa fa-exclamation-triangle text-danger" ng-show="!row.MorphoGroup" aria-hidden="false"></i></td>
 	</tr>
 	</tbody>
 	<tbody ng-show="isLoading">
 	<tr>
-		<td colspan="4" class="text-center">Loading ... </td>
+		<td colspan="8" class="text-center">Loading ... </td>
 	</tr>
 	</tbody>
 	<tfoot>
