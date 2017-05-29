@@ -250,7 +250,10 @@ angular.module('svampeatlasApp')
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
 					}
-					search.where.observationDate = $filter('date')(moment().startOf('day').toDate(), "yyyy-MM-dd", '+0200')
+					search.where.observationDate = $filter('date')(moment().startOf('day').toDate(), "yyyy-MM-dd", '+0200');
+					
+					// remove this if we don´t want foreign sightings in default searches
+					search.include[2].required = false;
 					
 				} else if ($stateParams.searchterm === "3days") {
 					if(useLichenFilter) {
@@ -259,6 +262,10 @@ angular.module('svampeatlasApp')
 					search.where.observationDate = {
 						gt: $filter('date')(moment().startOf('day').subtract(3, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
+					
+					// remove this if we don´t want foreign sightings in default searches
+					search.include[2].required = false;
+					
 				} else if ($stateParams.searchterm === "7days") {
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
@@ -266,6 +273,9 @@ angular.module('svampeatlasApp')
 					search.where.observationDate = {
 						gt: $filter('date')(moment().startOf('day').subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
+					
+					// remove this if we don´t want foreign sightings in default searches
+					search.include[2].required = false;
 
 				} else if ($stateParams.searchterm === "needsvalidation") {
 					
@@ -277,6 +287,9 @@ angular.module('svampeatlasApp')
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
 					};
+					
+					// remove this if we don´t want foreign sightings in default searches
+					search.include[2].required = false;
 
 				} else if ($stateParams.searchterm === "foreign") {
 					if(useLichenFilter) {
