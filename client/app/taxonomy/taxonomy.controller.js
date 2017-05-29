@@ -171,7 +171,7 @@ angular.module('svampeatlasApp')
 				if (!type) {
 					return undefined;
 				}
-				if (type === "BIT(1)" || type === "TINYINT(1)") {
+				if (type === "BIT(1)" || type === "TINYINT(1)" || type === "TINYINT(2)") {
 					return 'boolean';
 				} else if (type === "DATETIME" || type === "TIMESTAMP") {
 					return 'date';
@@ -228,7 +228,7 @@ angular.module('svampeatlasApp')
 				if (newval && newval !== oldval) {
 					$scope.operators = $scope.getOperators($scope.getAttributeType(newval, $scope.taxonattributes))
 				}
-				if ($scope.getAttributeType(newval) === 'boolean') {
+				if ($scope.getAttributeType(newval,  $scope.taxonattributes) === 'boolean') {
 					$scope.attributequery.selectedOperator = 'equals';
 				}
 			});
@@ -237,7 +237,7 @@ angular.module('svampeatlasApp')
 				if (newval && newval !== oldval) {
 					$scope.statisticsoperators = $scope.getOperators($scope.getAttributeType(newval, $scope.taxonStatistics))
 				}
-				if ($scope.getAttributeType(newval) === 'boolean') {
+				if ($scope.getAttributeType(newval, $scope.taxonattributes) === 'boolean') {
 					$scope.statisticsquery.selectedOperator = 'equals';
 				}
 			});
