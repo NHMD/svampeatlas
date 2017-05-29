@@ -39,7 +39,7 @@
 
 		    <md-expansion-panel-collapsed>
 		      <div class="md-title">Klassifikation</div>
-		      <div class="md-summary"><span  ng-repeat="tx in higherTaxa" ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}{{(!$last) ? ', ': ''}}</span></div>
+		      <div class="md-summary"><span  ng-repeat="tx in higherTaxa" ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.FullName)}}{{(!$last) ? ', ': ''}}</span></div>
 		      <md-expansion-panel-icon></md-expansion-panel-icon>
 		    </md-expansion-panel-collapsed>
 
@@ -48,7 +48,7 @@
 
 		      <md-expansion-panel-header ng-click="$panel.collapse()">
 		        <div class="md-title">Klassifikation</div>
-		         <div class="md-summary"><span  ng-repeat="tx in higherTaxa" ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}{{(!$last) ? ', ': ''}}</span></div>
+		         <div class="md-summary"><span  ng-repeat="tx in higherTaxa" ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.FullName)}}{{(!$last) ? ', ': ''}}</span></div>
 		        <md-expansion-panel-icon ></md-expansion-panel-icon>
 		      </md-expansion-panel-header>
 
