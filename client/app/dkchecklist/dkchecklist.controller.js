@@ -265,7 +265,7 @@ angular.module('svampeatlasApp')
 				query.include = JSON.stringify(query.include)
 				query.offset = offset;
 				query.limit = limit;
-				query._order = _order;
+				query._order = JSON.stringify(_order);
 				query.where = where;
 				query.acceptedTaxaOnly = true;
 				
