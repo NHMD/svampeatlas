@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters', 'Observation', 'ObservationModalService', 'SimilarTaxaModalService', 'SimilarTaxa','SearchService',
-		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters, Observation, ObservationModalService, SimilarTaxaModalService, SimilarTaxa, SearchService) {
+	.controller('TaxonCtrl', ['$q', '$scope', 'Taxon', 'TaxonIntegrationService', 'TaxonTypeaheadService', 'TaxonAttributes', 'NatureTypes', '$state', '$stateParams', '$timeout', '$modal', 'IndexFungorum', 'PlutoF', 'DynTaxa', 'ErrorHandlingService', '$mdDialog', '$translate', 'TaxonomyTags', '$cookies','MycokeyCharacters', 'Observation', 'ObservationModalService', 'SimilarTaxaModalService', 'SimilarTaxa','SearchService', 'appConstants',
+		function($q, $scope, Taxon, TaxonIntegrationService, TaxonTypeaheadService, TaxonAttributes, NatureTypes, $state, $stateParams, $timeout, $modal, IndexFungorum, PlutoF, DynTaxa, ErrorHandlingService, $mdDialog, $translate, TaxonomyTags, $cookies, MycokeyCharacters, Observation, ObservationModalService, SimilarTaxaModalService, SimilarTaxa, SearchService, appConstants) {
 			$scope.$translate = $translate;
 			$scope._ = _;
 			$scope.Taxon = Taxon;
@@ -188,7 +188,9 @@ angular.module('svampeatlasApp')
 					model: "DeterminationView",
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
-							where: { Determination_validation: 'Godkendt', Taxon_id: $scope.taxon.accepted_id}
+							where: { $or: [{Determination_validation: ['Godkendt']}, {Determination_score: {
+											$gte: appConstants.AcceptedDeterminationScore
+										}}], Taxon_id: $scope.taxon.accepted_id}
 				}),
 				JSON.stringify({
 					model: "Locality",
@@ -211,7 +213,9 @@ angular.module('svampeatlasApp')
 					model: "DeterminationView",
 					as: "DeterminationView",
 					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName'],
-							where: { Determination_validation: ['Godkendt'], Taxon_id: $scope.taxon.accepted_id}
+							where: { $or: [{Determination_validation: ['Godkendt']}, {Determination_score: {
+											$gte: appConstants.AcceptedDeterminationScore
+										}}], Taxon_id: $scope.taxon.accepted_id}
 				}),
 				JSON.stringify({
 					model: "Locality",

@@ -444,7 +444,7 @@ angular.module('svampeatlasApp')
 										Determination_score: {
 											$gte: appConstants.AcceptedDeterminationScore
 										},
-										Determination_validation: 'Valideres'
+										Determination_validation: {$ne: 'Afvist'}
 									})
 									// $or.push({$gte: appConstants.AcceptedDeterminationScore});
 								break;
@@ -453,7 +453,7 @@ angular.module('svampeatlasApp')
 										Determination_score: {
 											$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore]
 										},
-										Determination_validation: 'Valideres'
+										Determination_validation: {$ne: 'Afvist'}
 									})
 									//  $or.push( {$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore]});
 								break;
@@ -462,7 +462,7 @@ angular.module('svampeatlasApp')
 										Determination_score: {
 											$lt: appConstants.ProbableDeterminationScore
 										},
-										Determination_validation: 'Valideres'
+										Determination_validation: {$ne: 'Afvist'}
 									})
 									//  $or.push({$lt: appConstants.ProbableDeterminationScore});
 								break;
@@ -471,7 +471,7 @@ angular.module('svampeatlasApp')
 										Determination_score: {
 											$lt: appConstants.ProbableDeterminationScore
 										},
-										Determination_validation: 'Valideres'
+										Determination_validation: {$ne: 'Afvist'}
 									})
 									//  $or.push({$lt: appConstants.ProbableDeterminationScore});
 								break;
