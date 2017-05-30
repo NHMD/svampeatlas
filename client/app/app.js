@@ -16,7 +16,7 @@ angular.module('svampeatlasApp', [
 		'ngMaterial',
 		'ngMdIcons',
 		//'ngMenuSidenav',
-		'sasrio.angular-material-sidenav',
+		'svampeatlas.angular-material-sidenav',
 		'material.components.expansionPanels',
 		'pascalprecht.translate',
 		'leaflet-directive',

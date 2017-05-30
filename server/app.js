@@ -22,7 +22,7 @@ if (config.seedDB) { require('./config/seed'); }
 // Setup server
 var app = express();
 app.use(bodyParser.json({limit: '5mb'}));
-app.use(bodyParser.urlencoded({limit: '5mb'}));
+app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 
 var server = require('http').createServer(app);
 var socketio = require('socket.io')(server, {

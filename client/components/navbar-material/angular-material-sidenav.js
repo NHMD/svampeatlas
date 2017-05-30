@@ -11,7 +11,7 @@
 (function(window, angular, undefined) {
     'use strict';
 
-    angular.module('sasrio.angular-material-sidenav', [])
+    angular.module('svampeatlas.angular-material-sidenav', [])
 
     .provider('ssSideNavSections', function SSSideNavSectionsProvider() {
         var _sections = [],
