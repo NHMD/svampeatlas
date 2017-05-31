@@ -40,7 +40,7 @@ mysql> create database svampeatlas;
 mysql> exit;
 ```
 ```bash
-mysql -u <username> -p <password> svampeatlas < sql/svampeatlas.sql
+mysql -u <username> -p <password> svampeatlas < svampeatlas.sql
 ```
 
 ## Configuration
