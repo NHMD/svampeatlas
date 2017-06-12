@@ -299,10 +299,7 @@ exports.showAcceptedTaxon = function(req, res) {
 				model: models.TaxonImages,
 				as: "images",
 				required: false
-			}, {
-				model: models.TaxonSpeciesHypothesis,
-				as: 'specieshypothesis'
-			},
+			}, 
 			 {
 				model: models.Taxon,
 				as: "Parent"
@@ -318,20 +315,7 @@ exports.showAcceptedTaxon = function(req, res) {
 			}, {
 				model: models.TaxonAttributes,
 				as: "attributes"
-			}, {
-				model: models.Naturtype,
-				as: 'naturtyper'
-			}, {
-				model: models.ErnaeringsStrategi,
-				as: 'nutritionstrategies'
-			}, {
-				model: models.TaxonomyTag,
-				as: 'tags'
-			},
-			{
-							model: models.MycokeyCharacterView,
-							as: 'character1'
-						}
+			}
 
 		]
 	})})
