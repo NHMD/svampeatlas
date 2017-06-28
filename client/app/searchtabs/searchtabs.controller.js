@@ -33,32 +33,15 @@ angular.module('svampeatlasApp')
 			
 			  $scope.$watch('tabs.activeTab', function(newIdx, oldIdx){
 				  if(newIdx !== -1 && newIdx !== oldIdx){
-  					if($state.current.name.split('-')[0] === 'taxonlayout'){
-  						$state.go($scope.tabs[newIdx].state, {id : $stateParams.id});
+  					if($stateParams.searchid){
+  						$state.go($scope.tabs[newIdx].state, {searchid : $stateParams.searchid});
 					
   					} else {
   						$state.go($scope.tabs[newIdx].state);
   					}
 				  }
 			  })
-			 /*	  
-		
-			  $scope.tabs.activeTab = $state.current.name;
-			  $scope.$watch('tabs.activeTab', function(newState, oldState){
-				 
-				  if(newState !== oldState){
-  					if($state.current.name.split('-')[0] === 'taxonlayout'){
-  						$state.go(newState, {id : $stateParams.id});
-					
-  					} else {
-  						$state.go(newState);
-  					}
-				  }
-			  })
-			 
-			 
-*/
-			
+
 		
 		}
 	])
