@@ -77,7 +77,8 @@ angular.module('svampeatlasApp')
 			return d;
 		},
 	
-		gju.exifGpsDataToLatLong = function(GPSLatitude, GPSLongitude) {
+		gju.exifGpsDataToLatLong = function(GPSLatitude,GPSLatitudeRef, GPSLongitude,GPSLongitudeRef ) {
+			
 			
 			var t = !1,
 				n = parseInt(GPSLatitude[0]);
@@ -87,6 +88,9 @@ angular.module('svampeatlasApp')
 			t && (o = -1 * o, a = -1 * a);
 			var l = n + o / 60 + a / 3600;
 			var decimalLatitude = parseFloat(l).toFixed(8), t = !1;
+			if(GPSLatitudeRef === "S"){
+				decimalLatitude = 0-decimalLatitude;
+			}
 			var i = parseInt(GPSLongitude[0]);
 			0 > i && (t = !0);
 			var m = Math.abs(GPSLongitude[1]),
@@ -94,6 +98,9 @@ angular.module('svampeatlasApp')
 			isNumber(i) || (i = 0), isNumber(m) || (m = 0), isNumber(r) || (r = 0), t && (m = -1 * m, r = -1 * r);
 			var d = i + m / 60 + r / 3600;
 			var decimalLongitude = parseFloat(d).toFixed(8);
+			if(GPSLongitudeRef === "W"){
+				decimalLongitude = 0-decimalLongitude;
+			}
 			return [decimalLatitude, decimalLongitude]
 		}
 		

@@ -13,11 +13,11 @@ angular.module('svampeatlasApp')
 			$scope.stateParams = $stateParams;
 			
 			$scope.capitalizeFirstLetter = function (string) {
-				return string.charAt(0).toUpperCase() + string.slice(1);
+				return (typeof string === "string") ? string.charAt(0).toUpperCase() + string.slice(1) : string;
 			}
 
 			$scope.lowerCaseFirstLetter = function (string) {
-				return string.charAt(0).toLowerCase() + string.slice(1);
+				return (typeof string === "string") ? string.charAt(0).toLowerCase() + string.slice(1) : string;
 			}
 			
 			$scope.getTaxonName = function(){

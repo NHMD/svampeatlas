@@ -1001,7 +1001,7 @@ angular.module('svampeatlasApp')
   			 mdPanelRef.close().then(function() {
   			    
   			    mdPanelRef.destroy();
-				var latLon = GeoJsonUtils.exifGpsDataToLatLong(exif.GPSLatitude, exif.GPSLongitude)
+				var latLon = GeoJsonUtils.exifGpsDataToLatLong(exif.GPSLatitude, exif.GPSLatitudeRef, exif.GPSLongitude, exif.GPSLongitudeRef)
 				$scope.mapsettings.markers.position = {
 					lat: parseFloat(latLon[0]),
 					lng: parseFloat(latLon[1]),
