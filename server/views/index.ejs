@@ -7,8 +7,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <base href="/">
-    <title ng-bind="title || 'Danmarks svampeatlas'">Danmarks svampeatlas</title>
-    <meta name="description" content="Danmarks officielle database for svampefund. Du kan indlægge, søge og diskutere fund. Du kan også få eksperthjælp til bestemmelse af svampe.">
+    <title ng-bind="title || 'Danmarks svampeatlas'"><%= title %></title>
+    <meta name="description" content="<%= description %>">
    
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 	
@@ -24,6 +24,7 @@
 	<% } %>
 	<meta property="og:locale" content="da_DK" />
 	<meta property="og:locale:alternate" content="en_GB" />
+	<meta name="google-site-verification" content="aR3ivKsPsPJ2s6oX-xSfmEfg5drDMHsbX9l8rePyXgc" />
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
