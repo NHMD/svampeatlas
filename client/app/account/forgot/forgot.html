@@ -20,7 +20,7 @@
 			 
 			          
 			          <input  ng-model="newPass" type="password" placeholder="{{'Nyt password' | translate}}" required>
-					  
+					 <span class="md-warn" ng-if="newPass.length >0 && 7 > newPass.length">{{'Password must be at least 7 characters' | translate}}</span> 
 					  
 					 
 					  
@@ -33,6 +33,7 @@
   			         
 					 
 						<span class="md-warn" ng-if="newPassRepeat.length >0 && newPassRepeat !== newPass">{{'Password confirmation must match' | translate}}</span>
+						
 						
 					  
 					 

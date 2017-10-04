@@ -1,16 +1,16 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog',  'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData',  '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService','ValidatorToolsService','DeterminationLogModalService','MapBox', 'KMS', 'UTMConverterService',
-		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData,  $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, MapBox, KMS, UTMConverterService) {
+	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog',  'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData',  '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService','$mdPanel', '$cookies', 'preloader','VotingService','ValidatorToolsService','DeterminationLogModalService','MapBox', 'KMS', 'UTMConverterService','SpeciesModalService',
+		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData,  $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, MapBox, KMS, UTMConverterService, SpeciesModalService) {
 			var row = ObservationStateService.get();
 			
 			$scope.$cookies = $cookies;
 			$scope.Determination = Determination;
 			$scope.moment = moment;
 			$scope.vote = VotingService.vote;
+			$scope.SpeciesModalService = SpeciesModalService;
 			
-
 			$scope.openMenu = function($mdOpenMenu, ev) {
 
 				$mdOpenMenu(ev);

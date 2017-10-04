@@ -320,7 +320,8 @@ angular.module('svampeatlasApp')
 			'På forsiden i 7 dage' : 'On the front page 7 days',
 			'Der findes' : 'There are',
 			'bestemmelsesforslag' : 'identification suggestions',
-			'Fund til validering' : 'Needs validation'
+			'Fund til validering' : 'Needs validation',
+			'vis art' : 'show species'
 			
 			
 		});
@@ -495,7 +496,8 @@ angular.module('svampeatlasApp')
 			'An email has been sent to' : 'Der er sendt en email til',
 			'The email contains further instructions on how to activate your account' : 'Emailen indeholder yderligere information om hvordan du aktiverer din brugerprofil.',
 			'UTM northing' : 'UTM nord',
-			'UTM easting' : 'UTM øst'
+			'UTM easting' : 'UTM øst',
+			'Password must be at least 7 characters' : 'Dit password skal være mindst 7 karakterer langt'
 			
 
 

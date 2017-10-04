@@ -65,11 +65,11 @@
 		<th st-sort="createdAt" ng-if="$stateParams.searchterm && ($stateParams.searchterm === 'mine' || $stateParams.searchterm === 'today' || $stateParams.searchterm === '3days')" translate>Indlagt</th>
 		<th st-sort="observationDate"  translate>Dato</th>
 		
-		<th translate>Art</th>
+		<th st-sort="DeterminationView.Taxon_FullName" translate>Art</th>
 	<!--	<th st-sort="DeterminationView.Taxon_FullName"  translate>Art</th> -->
-		<th  translate>Dansk navn</th>
+		<th st-sort="DeterminationView.Taxon_vernacularname_dk" translate>Dansk navn</th>
 		<!--<th st-sort="DeterminationView.Taxon_vernacularname_dk"  translate>Dansk navn</th> -->
-		<th  translate>Lokalitet</th>
+		<th  st-sort="Locality.name" translate>Lokalitet</th>
 		<!--<th st-sort="Locality.name"  translate>Lokalitet</th> -->
 		<th ng-if="!($stateParams.searchterm && $stateParams.searchterm === 'mine')" translate>Rapportør</th>
 		<!--<th st-sort="PrimaryUser.Initialer" >Rapportør</th>-->

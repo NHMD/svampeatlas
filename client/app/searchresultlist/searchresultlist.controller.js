@@ -463,6 +463,7 @@ angular.module('svampeatlasApp')
 				var order = (tableState.sort.predicate) ? [
 					[tableState.sort.predicate]
 				] : defaultOrder;
+				
 				if (tableState.sort.reverse && tableState.sort.predicate) {
 					order[0].push("DESC");
 				} else {

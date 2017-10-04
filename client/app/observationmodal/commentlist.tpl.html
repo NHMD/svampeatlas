@@ -29,7 +29,7 @@
 									   <span ng-if="$mdMedia('gt-xs')" layout-fill flex></span>
 						  			   <p >{{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</p>
 						  		   </div>
-						  			   <p>{{elm.content}}</p>
+						  			   <p ng-bind-html="elm.content | linky"></p>
  	           
           
 						   	         </div>

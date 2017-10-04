@@ -9,6 +9,7 @@ angular.module('svampeatlasApp')
 			$scope.natureTypes = NatureTypes.query();
 			$scope.taxonomyTags = TaxonomyTags.query();
 			$scope.moment = moment;
+			$scope.$state = $state;
 			$scope.ObservationModalService = ObservationModalService;
 			$scope.SimilarTaxaModalService = SimilarTaxaModalService;
 			

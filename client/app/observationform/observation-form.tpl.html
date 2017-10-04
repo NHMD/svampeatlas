@@ -17,6 +17,7 @@
 		  </div>
 			
 			<div ng-if="!obs || (!obs._id && duplicateID)">
+				<md-button class="md-raised md-warn" ng-click="SpeciesModalService.show($event, newTaxon[0]._id)" ng-if="newTaxon.length === 1 && newTaxon[0].RankID > 9949">{{'vis art' | translate}} <i class="fa fa-external-link"></i></md-button>
 	 		<div  layout-margin layout-gt-xs="row">
 	        <md-chips md-max-chips=1 ng-model="newTaxon" md-autocomplete-snap md-require-match="true" class="md-block" flex-gt-xs>
 
@@ -78,10 +79,17 @@
 	              <strong><em>{{$chip.FullName}} sp.</em></strong>
 				  <strong ng-if="$chip.Vernacularname_DK">)</strong>
 	            </span>
+				
 	          </md-chip-template>
 		
 	        </md-chips>
 			<md-button class="md-raised md-warn" ng-click="handleUndetermined()" ng-if="newTaxon.length === 0">{{'Ubestemt svamp'  | translate}}</md-button>
+			
+			
+			
+			
+			
+			
 	 	      </div>
 		 		
 			 <div layout="row" layout-margin>
@@ -107,9 +115,9 @@
 			        </md-select>
 			      </md-input-container>
 			  </div>
-			 <md-whiteframe class="md-whiteframe-2dp valideringsrapport" layout layout-align="center center" layout-padding layout-margin ng-if="taxonAttrs && taxonAttrs.valideringsrapport">
+			 <!--<md-whiteframe class="md-whiteframe-2dp valideringsrapport" layout layout-align="center center" layout-padding layout-margin ng-if="taxonAttrs && taxonAttrs.valideringsrapport">
 			     <span >{{taxonAttrs.valideringsrapport}}</span>
-			   </md-whiteframe>
+			   </md-whiteframe> -->
 			 </div>
 			  <div layout-margin layout-gt-xs="row" >
 	              <md-datepicker ng-if="$mdMedia('xs')" flex-offset-xs="50" ng-model="ctrl.observationDate" md-placeholder="{{'Dato' | translate}}" md-max-date="$parent.$parent.maxDate"> 
