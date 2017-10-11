@@ -122,7 +122,9 @@ angular.module('svampeatlasApp')
 		markers: {
 
 		},
-		
+		paths: {
+
+		},
 		layers: {
 			baselayers: {
 				osm: {
@@ -134,13 +136,31 @@ angular.module('svampeatlasApp')
 		}
 	};
 	
-	
+	function getPath(obs) {
+
+		var path = {
+
+			latlngs: {
+				lat: obs.decimalLatitude,
+				lng: obs.decimalLongitude
+			},
+			type: "circleMarker",
+			radius: 4,
+			weight: 2,
+			opacity: 1,
+
+			fillOpacity: 0.8,
+			name: obs._id,
+			color : "#2196F3"
+
+		};
+		return path;
+	}
 	
 	$scope.latestlocalitydays = 3;
-	
-	$scope.$on('leafletDirectiveMarker.frontpagemap.click', function(e, args) {
+	$scope.$on('leafletDirectivePath.frontpagemap.click', function(e, args) {
 		
-		$state.go('search-list', {locality_id: args.model._id, date: moment().subtract($scope.latestlocalitydays, 'days').toString()})
+		$state.go('search-list', {locality_id: args.modelName, date: moment().subtract($scope.latestlocalitydays, 'days').toString()})
 	})
 	
 	
@@ -157,23 +177,41 @@ angular.module('svampeatlasApp')
 		}
 		
 	 return	Locality.recent(locQuery).$promise.then(function(localities){
+		 
+		 $scope.mapsettings.paths = {};		 
 		 $scope.mapsettings.markers = {};
 			for (var i = 0; i < localities.length; i++) {
+				
+				$scope.mapsettings.paths[localities[i]._id] = getPath(localities[i]);
+				
+				/*
 				$scope.mapsettings.markers[localities[i].name] = {
 					lat: localities[i].decimalLatitude,
 					lng: localities[i].decimalLongitude,
 					_id: localities[i]._id,
 				
 					name: localities[i].name,
+ 				type: "circleMarker",
+ 				radius: 3,
+ 				weight: 2,
+ 				opacity: 1,
+
+ 				fillOpacity: 0.8,
+
 				
+				color : "#2196F3"
+				
+				/*
 					icon: {
 						type: 'awesomeMarker',
 						prefix: 'fa',
 						icon: 'circle',
 						markerColor: 'blue'
 					}
+					*/
+					
 
-				};
+			//	};
 			
 			}
 		
