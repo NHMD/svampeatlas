@@ -324,7 +324,23 @@ module.exports = function(app) {
 
 					return prev + tx;
 				}, "")
-				var img = (taxon.images.length > 0) ? taxon.images[0].uri : 'https://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png';
+				var img; 
+				if(taxon.images.length > 0){
+					img =taxon.images[0].uri
+				} else if(taxon.synonyms.length > 0){
+					for(var i = 0; i<taxon.synonyms.length; i ++ ){
+						if(taxon.synonyms[i].images.length> 0){
+							img = taxon.synonyms[i].images[0].uri;
+							break;
+						}
+					};
+					if(!img){
+						img = 'https://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png';
+					}
+					
+				} else {
+					img = 'https://svampe.databasen.org/assets/images/public/SvampeatlasLogo.png'
+				}
 				var txn = (taxon.Vernacularname_DK) ? capitalizeFirstLetter(taxon.Vernacularname_DK.vernacularname_dk) + " (" + taxon.FullName + ")" : taxon.FullName;
 				var desc = ""
 
