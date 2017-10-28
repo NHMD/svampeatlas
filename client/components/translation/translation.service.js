@@ -417,7 +417,7 @@ angular.module('svampeatlasApp')
 			'New Password': 'Nyt password',
 			'Change password': 'Skift password',
 			'No Facebook account detected.': 'Ingen Facebook konto fundet.',
-			'Login with credentials, then goto user profile and connect your Facebook account.': 'Log ind med initialer og password, gå derefter til "profil" og forbin din Facebook konto',
+			'Login with credentials, then goto user profile and connect your Facebook account.': 'Log ind med initialer og password, gå derefter til "profil" og forbind din Facebook konto',
 			'Please try again later. If the problem persists, contact the system administrator.': 'Prøv venligst igen senere. Kontakt venligst systemadministratoren hvis problemet vedbliver.',
 			'A server error has occurred': 'Der er sket en serverfejl',
 			'Type here': 'Skriv her',
