@@ -33,7 +33,7 @@
 	<tr ng-repeat="row in displayed">
 		<td>{{row.createdAt | date : 'medium'}}</td>
 		<td><strong>{{row.eventname}}</strong></td>
-		<td><span ng-bind-html="formatIndexFungorumLogEvent(row.description)" ng-if="row.eventname === 'Changed Index Fungorum record' || row.eventname === 'Detached Index Fungorum record' || row.eventname === 'Updated taxon attributes'"></span><span ng-if="row.eventname !== 'Changed Index Fungorum record' && row.eventname !== 'Detached Index Fungorum record' && row.eventname !== 'Updated taxon attributes'">{{row.description}}</span></td>
+		<td><span ng-bind-html="row.description | formatIndexFungorumEvent" ng-if="row.eventname === 'Changed Index Fungorum record' || row.eventname === 'Detached Index Fungorum record' || row.eventname === 'Updated taxon attributes'"></span><span ng-if="row.eventname !== 'Changed Index Fungorum record' && row.eventname !== 'Detached Index Fungorum record' && row.eventname !== 'Updated taxon attributes'">{{row.description}}</span></td>
 		<td><a href="/taxonbase/taxon/{{row.Taxon._id}}">{{row.Taxon.FullName}}</a></td>
 		
 		<td>{{row.User.name}}</td>

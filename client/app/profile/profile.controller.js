@@ -226,7 +226,7 @@ angular.module('svampeatlasApp')
 				user_id: $scope.dashboardUserID
 			} 
 			search.include[5].required = true;
-			$state.go('search-list')
+			$state.go('search-gallery')
 		} else if(searchType === 'specieslistyear'){
 			search.where = {observationDate: {$between: [searchProfile.year+'-01-01', searchProfile.year+'-12-31']}}
 			search.include[0].where = {
