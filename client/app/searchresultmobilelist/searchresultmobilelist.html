@@ -1,0 +1,87 @@
+
+
+		 	<span ng-if="MobileList.storedSearch && MobileList.mdMedia('xs')">{{'Aktuel søgning:' | translate}} </span>
+		   <h4 ng-if="MobileList.storedSearch"><span ng-if="MobileList.mdMedia('gt-xs')">{{'Aktuel søgning:' | translate}}</span> {{MobileList.storedSearch.name}} <span ng-if="MobileList.Auth.getCurrentUser()._id !== MobileList.storedSearch.User._id"> - {{'oprettet af' | translate}} {{MobileList.storedSearch.User.name}}</span><sharing mail-subject="'Søgeresultat fra Danmarks Svampeatlas: '+MobileList.storedSearch.name " mail-body="MobileList.baseUrl+'/search/'+MobileList.storedSearch._id+'/result/list/'" sharing-uri="MobileList.baseUrl+'/search/'+MobileList.storedSearch._id+'/result/list/'"> </sharing></h4>
+	 
+	 
+	 
+	 <md-card ng-repeat="tile in MobileList.displayed" >
+	 		<!--    -->
+			<div layout="row" class="mobile-validation">
+			<span flex></span>
+				<ng-md-icon style="fill:wheat" ng-if=" 0 >= tile.DeterminationView.Determination_score  && tile.DeterminationView.Determination_validation !== 'Afvist' && tile.DeterminationView.Determination_validation !== 'Godkendt'" icon="error" ></ng-md-icon>		
+				<ng-md-icon style="fill:red" ng-if="tile.DeterminationView.Determination_validation === 'Afvist'" icon="block" ></ng-md-icon>
+				<ng-md-icon icon="microscope" ng-if="tile.DeterminationView.Determination_validation === 'Godkendt' && tile.DeterminationView.Determination_validator_id"></ng-md-icon>
+			
+			<span class="star-rating" layout="row" ng-if="tile.DeterminationView.Determination_validation !== 'Afvist' && !(tile.DeterminationView.Determination_validation === 'Godkendt' && tile.DeterminationView.Determination_validator_id)">
+				<span flex ng-if="mdMedia('xs')"></span>
+				<ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score > 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= MobileList.ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= MobileList.AcceptedDeterminationScore"></ng-md-icon> </span>
+			</div>
+				
+				<!-- -->
+	         <md-card-title class="mobile-obs-title">
+	           <md-card-title-text class="mobile-obs-header">
+	             <h4 class="mobile-obs-header"><em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || MobileList.translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em>
+					 <span ng-if="tile.DeterminationView.Taxon_redlist_status && (!tile.DeterminationView.Taxon_vernacularname_dk || MobileList.translate.use()==='en')"> ({{tile.DeterminationView.Taxon_redlist_status}})</span>
+					 <span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && MobileList.translate.use() !=='en'">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</span></h4>
+				 <span class="md-subhead" ng-if="tile.DeterminationView.Taxon_vernacularname_dk && MobileList.translate.use()!=='en'">
+					 <em >{{tile.DeterminationView.Taxon_FullName}}</em> 
+					 <span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span>
+				 </span>
+	             <span class="md-subhead">
+			 	   <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{(tile.Locality) ? tile.Locality.name : ""}}{{(tile.GeoNames) ? (tile.GeoNames.name+", "+ tile.GeoNames.countryName) : ""}}<br>
+			 	   {{tile.PrimaryUser.name}}</span><br>
+				   <span ng-if="MobileList.$stateParams.searchterm && (MobileList.$stateParams.searchterm === 'mine' || MobileList.$stateParams.searchterm === 'today' || MobileList.$stateParams.searchterm === '3days')" >{{'Indlagt' | translate}}: {{(moment(tile.createdAt).isSame(moment(), 'day')) ? MobileList.getCreatedAt(tile.createdAt) : (tile.createdAt | date : 'dd/MM/yyyy')}}</span>
+				   
+				 </span>
+				 
+	           </md-card-title-text>
+	           <md-card-title-media >
+	             <div ng-if="tile.Images.length > 0" class="md-media-md card-media" ng-style="MobileList.getBackgroundStyle(tile)"></div>
+	             <div ng-if="tile.Images.length === 0" class="md-media-md card-media">
+	             		<img alt='static Mapbox map of the San Francisco bay area' ng-src='https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/static/pin-s-marker+285A98({{tile.decimalLongitude}},{{tile.decimalLatitude}})/{{tile.decimalLongitude}},{{tile.decimalLatitude}},6,0/112x112@2x?access_token={{MobileList.mapboxToken}}' >
+	             </div>
+				 
+				 
+	           </md-card-title-media>
+	          
+	         </md-card-title>
+	         <md-card-actions layout="row" layout-align="end center" >
+			 
+			<div>
+			 <span class="fa-stack fa-1x has-badge" data-count="{{tile.Images.length}}" ng-if="tile.Images.length > 0">
+			   <i class="fa fa-circle fa-stack-2x"></i>
+			   <i class="fa fa-camera fa-stack-1x fa-inverse"></i>
+			 </span>
+			 <span class="fa-stack fa-1x has-badge" data-count="{{tile.Forum.length}}" ng-if="tile.Forum.length > 0">
+			   <i class="fa fa-circle fa-stack-2x"></i>
+			   <i class="fa fa-comments fa-stack-1x fa-inverse"></i>
+			 </span>
+			 <span class="fa-stack fa-1x has-badge" data-count="{{tile.Determinations.length}}" ng-if="tile.Determinations.length > 1">
+			   <i class="fa fa-circle fa-stack-2x"></i>
+			   <i class="fa fa-tag fa-stack-1x fa-inverse"></i>
+			 </span>
+			</div>
+			 <span flex></span>
+ 			<md-button ng-if="MobileList.Auth.hasRole('validator') && tile.DeterminationView.Determination_validation !== 'Afvist' && tile.DeterminationView.Determination_validation !== 'Godkendt'" class="md-raised md-icon-button" aria-label="Godkend" ng-click="MobileList.updateValidation(tile)" >	
+ 			<ng-md-icon   icon="thumb_up" ></ng-md-icon> </md-button>
+			 
+	           <md-button class="md-raised md-icon-button" aria-label="Ret obs" ng-if="currentUser._id === tile.primaryuser_id" ng-click="MobileList.ObservationFormService.show($event, tile)">		<ng-md-icon icon="edit" ></ng-md-icon> </md-button>
+	          <md-button  class="md-raised show-mobile-obs" aria-label="Vis obs" ng-click="MobileList.ObservationModalService.show($event, tile)" translate="Vis mere"> </md-button> 
+	         </md-card-actions>
+	       </md-card>
+	 
+
+		 <div layout="row" ng-show="MobileList.isLoading !== false">
+		 	<span flex></span>
+			<md-progress-circular  md-mode="indeterminate" ></md-progress-circular>
+			<span flex></span>
+		 </div>  
+	   
+	   <div layout-row layout-padding>
+		   <md-button class="md-raised" ng-if="MobileList.totalCount > MobileList.offset && MobileList.isLoading === false" ng-click="MobileList.loadTiles(MobileList.limit, MobileList.offset)" layout-fill>{{'Vis flere' | translate}}</md-button>
+	   </div>
+	   
+
+
+

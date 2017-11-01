@@ -5,9 +5,11 @@
    <md-button class="md-fab md-warn md-fab-bottom-right" aria-label="Tilføj observation" ng-click="ObservationFormService.show($event)" ng-show="Auth.isLoggedIn() && $stateParams.searchterm && $stateParams.searchterm === 'mine'">
                <ng-md-icon icon="add"></ng-md-icon>
            </md-button>
-		   
+<md-content flex md-scroll-y layout-padding ng-cloak ng-if="mdMedia('max-width: 767px')" ng-include="'app/searchresultmobilelist/searchresultmobilelist.html'" ng-controller="SearchMobileListCtrl as MobileList">
+</md-content>		   
+
    
-<md-content flex md-scroll-y layout-padding ng-cloak>
+<md-content flex md-scroll-y layout-padding ng-cloak ng-if="mdMedia('min-width: 768px')">
 		 	<span ng-if="storedSearch && mdMedia('xs')">{{'Aktuel søgning:' | translate}} </span>
 		   <h4 ng-if="storedSearch"><span ng-if="mdMedia('gt-xs')">{{'Aktuel søgning:' | translate}}</span> {{storedSearch.name}} <span ng-if="Auth.getCurrentUser()._id !== storedSearch.User._id"> - {{'oprettet af' | translate}} {{storedSearch.User.name}}</span><sharing mail-subject="'Søgeresultat fra Danmarks Svampeatlas: '+storedSearch.name " mail-body="baseUrl+'/search/'+storedSearch._id+'/result/list/'" sharing-uri="baseUrl+'/search/'+storedSearch._id+'/result/list/'"> </sharing></h4>
 
