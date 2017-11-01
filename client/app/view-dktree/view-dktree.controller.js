@@ -1,8 +1,8 @@
 'use strict'
 
 angular.module('svampeatlasApp')
-	.controller('ViewDKTreeCtrl', ['Auth', 'User', '$http', '$stateParams', '$state', '$cacheFactory', '$scope', '$filter', '$timeout', '$document', '$mdToast', "$translate",
-		function(Auth, User, $http, $stateParams, $state, $cacheFactory, $scope, $filter, $timeout, $document, $mdToast, $translate) {
+	.controller('ViewDKTreeCtrl', ['Auth', 'User', '$http', '$stateParams', '$state', '$cacheFactory', '$scope', '$filter', '$timeout', '$document', '$mdToast', "$translate", "ErrorHandlingService",
+		function(Auth, User, $http, $stateParams, $state, $cacheFactory, $scope, $filter, $timeout, $document, $mdToast, $translate, ErrorHandlingService) {
 			var that = this;
 			that.Auth = Auth;
 			function buildTree(result){
@@ -41,13 +41,21 @@ angular.module('svampeatlasApp')
 				delete that.treeData;
 				that.loadingFromserver = true;
 				that.statusmsg = $translate.instant("Bygger")+" "+$translate.instant("klassifikation") +" ...";
-				$http.post("/api/taxa/tree/danishtaxa", {cachekey : "taxontreedk", action: "generateDkTree"}).then(function(res) {
+				$http.post("/api/taxa/tree/danishtaxa", {cachekey : "taxontreedk", action: "generateDkTree"})
+				.then(function(res) {
 					
 					that.treeData = buildTree(res.data);
 					that.treeData[0].selected = true;
 					//that.cache.put("tree", JSON.stringify(that.treeData));
 					that.loadingFromserver = false;
 					delete that.statusmsg;
+				})
+				.catch(function(err){
+					that.loadingFromserver = false;
+					delete that.statusmsg;
+					ErrorHandlingService.handle500();
+					
+					
 				})
 				
 			}
@@ -64,6 +72,13 @@ angular.module('svampeatlasApp')
 						//that.cache.put("tree", JSON.stringify(that.treeData));
 						that.loadingFromserver = false;
 						delete that.statusmsg;
+					})
+					.catch(function(err){
+						that.loadingFromserver = false;
+						delete that.statusmsg;
+						ErrorHandlingService.handle500();
+					
+					
 					})
 				}, 250)
 

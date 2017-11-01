@@ -68,7 +68,7 @@
 	 </md-card>
 	  <md-card>
 	  <div layout-margin>
- <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true"  ngf-resize="{width: 1500, height: 1000, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ng-click="$parent.$parent.showProcessingImageStatus()"
+ <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true"  ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ng-click="$parent.$parent.showProcessingImageStatus()"
                   aria-label="Tilføj billeder"
                   class="md-icon-button" >
          <ng-md-icon icon="camera_alt" ></ng-md-icon> {{'Vælg billeder' | translate}}
@@ -77,7 +77,7 @@
 	 <div style="text-align: center">{{'eller' | translate}}</div>
    				      <div  flex layout-margin  ngf-drop="" ng-model="ctrl.files" ngf-keep="'distinct'" class="drop-box" 
      ngf-drag-over-class="'dragover'" ngf-multiple="true"   ngf-pattern="'image/jpeg'"
-     ngf-resize="{width: 1500, height: 1000, quality: .9,  restoreExif: true}"
+     ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}"
 	 ngf-fix-orientation="true" ngf-hide-on-drop-not-available="true"
      ><h3 class="md-title">{{'Træk billeder hertil' | translate}}</h3>
  	<ng-md-icon icon="camera_alt" size="64" style="margin-left: -24px"></ng-md-icon>
@@ -124,7 +124,6 @@
    
      <md-grid-tile ng-repeat="img in obs.Images" 
      md-colspan-sm="1" md-rowspan="{{(img.height > img.width) ? 2: 1}}"
-   ng-if="!img.imageLoadError"
    ng-style="getBackgroundStyle(img)"
   	 ng-click="openImage(img)"
 	 >

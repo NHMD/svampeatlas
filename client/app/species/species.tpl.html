@@ -7,16 +7,15 @@
 	 <md-grid-tile ng-repeat="tile in tiles"
                  
 	                   md-colspan-sm="1"
-					   ng-if="!tile.Images[0].imageLoadError"
 					   ng-style="getBackgroundStyle(tile)"
 					   ng-click="ObservationModalService.show($event, tile)"
 					   
 					   >
-	 		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
+	 	<!--	<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
 	 			<div flex="33"></div>
 	 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
 	 			<div flex="33"></div>
-	 		</div>
+	 		</div> -->
       <md-grid-tile-footer class="img-footer footer-full-width" >
 	  <span ng-if="tile.Images.length > 1" class="footer-img-count">{{tile.Images.length}} {{'billeder' | translate}}</span>
 	  <em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && translate.use() !='en'">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</span><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>

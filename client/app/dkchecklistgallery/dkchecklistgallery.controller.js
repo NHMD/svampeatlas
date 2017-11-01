@@ -35,8 +35,8 @@ angular.module('svampeatlasApp')
 			$scope.getBackgroundStyle = function(tile){
 				
 				var missingimg = ($mdMedia('xs')) ? "assets/images/missing-img-1-1.png": "assets/images/missing-img-4-3.png";
-				
-				var uri = (tile.Images.length > 0) ? $filter('httpToHttps')(tile.Images[0].uri) : missingimg;
+				var thumborUrl  = appConstants.baseurl+appConstants.thumborUrl+"300x0/"
+				var uri = (tile.Images.length > 0) ? thumborUrl+tile.Images[0].uri : missingimg;
 				
 			    return {'background-image':  'url('+uri+')', 'background-size': 'cover'};
 			}

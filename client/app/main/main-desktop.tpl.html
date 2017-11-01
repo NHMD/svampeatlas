@@ -18,15 +18,15 @@
                  
                   md-colspan-sm="1"
                   
-			   ng-if="!tile.Images[0].imageLoadError"
+			   
 			   ng-style="getBackgroundStyle(tile)"
 			   ng-click="ObservationModalService.show($event, tile)"
 				  >
-		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
+	<!--	<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
 			<div flex="33"></div>
 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
 			<div flex="33"></div>
-		</div>
+		</div> -->
     <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
      
       <md-grid-tile-footer class="img-footer footer-full-width" >
@@ -97,11 +97,11 @@
 			   ng-style="getBackgroundStyle(tile)"
 			   ng-click="ObservationModalService.show($event, tile)"
 				  >
-		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
+	<!--	<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
 			<div flex="33"></div>
 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
 			<div flex="33"></div>
-		</div>
+		</div> -->
     <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
       <md-grid-tile-footer class="img-footer footer-full-width" >
 	  <span class="footer-img-count star-rating">

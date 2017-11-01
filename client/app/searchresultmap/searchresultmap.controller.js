@@ -239,7 +239,8 @@ angular.module('svampeatlasApp')
 				popupScope.currentUser = Auth.getCurrentUser();
 				popupScope.moment = moment;
 				popupScope.$translate = $translate ;
-				popupScope.imageurl = $scope.appConstants.imageurl;
+				popupScope.imageurl = appConstants.baseurl+appConstants.thumborUrl+"300x0/"+appConstants.baseurl+appConstants.imageurl;
+				
 				var compiled = $compile(message)(popupScope);
 				
 				if (marker.getPopup()) {

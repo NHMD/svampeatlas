@@ -49,7 +49,6 @@
    
      <md-grid-tile ng-repeat="img in obs.Images" 
      md-colspan-sm="1" md-rowspan="{{(img.height > img.width) ? 2: 1}}"
-   ng-if="!img.imageLoadError"
    ng-style="getBackgroundStyle(img)"
 	 >
       <!-- <img   style="max-width: 100%;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.JPG" ng-click="openImage(img)">-->

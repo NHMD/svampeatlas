@@ -404,6 +404,7 @@ angular.module('svampeatlasApp', [
 	})
 	.constant("appConstants", {
 		"imageurl": "/uploads/",
+		"thumborUrl" : "/unsafe/",
 		"Fungi_id": 60212,
 		"baseurl": "https://svampe.databasen.org",
 		"AcceptedDeterminationScore": 80,

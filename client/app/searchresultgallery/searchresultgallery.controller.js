@@ -36,9 +36,10 @@ angular.module('svampeatlasApp')
 		
 			$scope.getBackgroundStyle = function(tile){
 				
-				var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
-				
-		  
+				var url = appConstants.baseurl+appConstants.thumborUrl+"300x0/"
+		
+				+appConstants.baseurl+appConstants.imageurl + tile.Images[0].name + ".JPG";
+		  	  
 				
 			    return {'background-image':  'url('+url+')', 'background-size': 'cover'};
 			}
@@ -221,13 +222,15 @@ angular.module('svampeatlasApp')
 
 						
 						
-						preloader.preloadImages(result).then(
+						/*preloader.preloadImages(result).then(
 							function(missingImages){
 								$scope.isLoading = false;
 								$scope.displayed = $scope.displayed.concat(result);
 								// returns an array of _id´s of failed images. May ne posted to server to flag missing images
 							}
-						)
+						) */
+						
+						$scope.displayed = $scope.displayed.concat(result);
 						
 						
 						$scope.isLoading = false;

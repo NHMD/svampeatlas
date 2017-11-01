@@ -36,7 +36,9 @@ angular.module('svampeatlasApp')
 	})
 	$scope.getBackgroundStyle = function(tile){
 		
-		var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
+		var url = appConstants.baseurl+appConstants.thumborUrl+"300x0/"
+		
+		+appConstants.baseurl+appConstants.imageurl + tile.Images[0].name + ".JPG";
 		
 
 		return {'background-image':  'url('+url+')', 'background-size': 'cover'};
@@ -307,7 +309,7 @@ angular.module('svampeatlasApp')
 			return u.Images.length > 0;
 		});
 		
-		preloader.preloadImages( $scope.tiles);
+		// preloader.preloadImages( $scope.tiles);
 	})
 
 	
@@ -365,7 +367,7 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 		for(var i = ($scope.validationTileOffset + $scope.validationTileLimit ); i < ($scope.validationTileOffset + $scope.validationTileLimit *2); i++){
 			deepCopiedArraySlice.push($scope.validationNeededtiles[i])
 		}
-		preloader.preloadImages(deepCopiedArraySlice);
+		// preloader.preloadImages(deepCopiedArraySlice);
 		
 	}
 	
@@ -467,7 +469,7 @@ $http.jsonp('https://svampeatlasnyheder.blogspot.com/feeds/posts/default?alt=jso
 		for(var i = $scope.validationTileOffset; i < ($scope.validationTileLimit *2); i++){
 			deepCopiedArraySlice.push($scope.validationNeededtiles[i])
 		}
-		preloader.preloadImages(deepCopiedArraySlice);
+		// preloader.preloadImages(deepCopiedArraySlice);
 			
 			$scope.selectedMorphoGroupChanged = false;
 		})

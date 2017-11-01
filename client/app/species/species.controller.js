@@ -10,6 +10,7 @@ angular.module('svampeatlasApp')
 		$scope.SimilarTaxaModalService = SimilarTaxaModalService;
 		$scope.$state = $state;
 		$scope.baseUrl = appConstants.baseurl;
+		$scope.appConstants = appConstants;
 		$scope.isModal = $stateParams.isModal;
 		$scope.cancel = function() {
 			$mdDialog.cancel()
@@ -19,9 +20,10 @@ angular.module('svampeatlasApp')
 
 		$scope.getBackgroundStyle = function(tile) {
 
-			var url = appConstants.imageurl + tile.Images[0].name + ".JPG";
-
-
+			var url = appConstants.baseurl+appConstants.thumborUrl+"300x0/"
+	
+			+appConstants.baseurl+appConstants.imageurl + tile.Images[0].name + ".JPG";
+			
 
 			return {
 				'background-image': 'url(' + url + ')',
@@ -181,12 +183,6 @@ angular.module('svampeatlasApp')
 
 			}, function(result, headers) {
 
-				preloader.preloadImages(result).then(
-					function(missingImages) {
-						$scope.isLoading = false;
-						// returns an array of _id´s of failed images. May ne posted to server to flag missing images
-					}
-				)
 				$scope.tileCount = headers('count');
 				$scope.tileOffset = $scope.tileOffset + $scope.tileLimit;
 				$scope.tiles = $scope.tiles.concat(result);

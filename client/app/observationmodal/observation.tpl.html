@@ -148,7 +148,6 @@
    
 		       <md-grid-tile ng-repeat="img in obs.Images" 
 		       md-colspan-sm="1" md-rowspan="{{(img.height > img.width) ? 2: 1}}"
-		     ng-if="!img.imageLoadError"
 		     ng-style="getBackgroundStyle(img)"
 		    	 ng-click="openImage(img)"
 		  	 >

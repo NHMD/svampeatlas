@@ -91,7 +91,7 @@
 	</div>
       <div layout="row" flex><carousel disable-ng-animate interval="" ng-if="taxon.images.length>0">
         <slide disable-ng-animate  ng-repeat="slide in taxon.images" active="slide.active">
-          <img ng-src="{{slide.uri | httpToHttps}}" style="margin:auto;">
+          <img ng-src="{{appConstants.baseurl+appConstants.thumborUrl+'700x0/'+slide.uri }}" style="margin:auto;">
           <div class="carousel-caption">
 
             &copy; {{slide.photographer}}, {{slide.collectionNumber}}

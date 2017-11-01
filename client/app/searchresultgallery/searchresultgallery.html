@@ -17,16 +17,15 @@
 	 <md-grid-tile ng-repeat="tile in displayed"
                  
 	                   md-colspan-sm="1"
-					   ng-if="!tile.Images[0].imageLoadError"
 					   ng-style="getBackgroundStyle(tile)"
 					   ng-click="ObservationModalService.show($event, tile)"
 					   
 					   >
-	 		<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
+	 	<!--	<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
 	 			<div flex="33"></div>
 	 			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
 	 			<div flex="33"></div>
-	 		</div>
+	 		</div> -->
 				<!--<div layout-fill ng-style="{'background-image':  'url({{getImageUrl(tile)}})', 'background-size': 'cover'}"></div> -->
 	       <!--<img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}"  imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name, tile)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
 	       <md-grid-tile-footer class="img-footer"><em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em><span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && translate.use() !='en'">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</span><span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span><br>

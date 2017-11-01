@@ -16,7 +16,6 @@
 	 <md-grid-tile ng-repeat="tile in displayed"
                  
 	                   md-colspan-sm="1"
-					   ng-if="!tile.Images[0].imageLoadError"
 					   ng-style="getBackgroundStyle(tile)"
 					   ng-click="SpeciesModalService.show($event,tile._id)"
 					   
