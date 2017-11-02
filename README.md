@@ -77,5 +77,6 @@ grunt serve:dist
 ```
 This will build and package the app into the dist folder.
 
-## Copyright
-Copyright (c) 2017 Natural History of Denmark
+## License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
