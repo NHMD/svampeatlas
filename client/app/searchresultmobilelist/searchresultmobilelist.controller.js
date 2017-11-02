@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchMobileListCtrl', ['$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants','preloader','StoredSearch', 'MapBox',  
-		function( $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, preloader, StoredSearch, MapBox) {
+	.controller('SearchMobileListCtrl', ['$scope','$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants','preloader','StoredSearch', 'MapBox',  
+		function( $scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, preloader, StoredSearch, MapBox) {
 			
 			var vm = this;
 			MapBox.getTicket().then(function(ticket){
@@ -280,7 +280,71 @@ angular.module('svampeatlasApp')
 					
 				})
 
-			
+				$scope.$on('new_observation', function(ev, obs) {
+
+					var singleObsSearch = ObservationSearchService.getNewSearch();
+					singleObsSearch.where = {
+						_id: obs._id
+					};
+					singleObsSearch.include[2].required = false;
+					var include = _.map(singleObsSearch.include, function(n) {
+						return JSON.stringify(n);
+					});
+					Observation.query({
+						where: {
+							_id: obs._id
+						},
+						include: JSON.stringify(include)
+					}, function(result, headers) {
+						vm.displayed.unshift(result[0])
+						vm.displayed.pop();
+					})
+				});
+
+				$scope.$on('observation_updated', function(ev, obs) {
+
+				
+					
+						var singleObsSearch = ObservationSearchService.getNewSearch();
+						singleObsSearch.where = {
+							_id: obs._id
+						};
+						singleObsSearch.include[2].required = false;
+						var include = _.map(singleObsSearch.include, function(n) {
+							return JSON.stringify(n);
+						});
+
+						Observation.query({
+							where: {
+								_id: obs._id
+							},
+							include: JSON.stringify(include)
+						}, function(result, headers) {
+
+							var index = _.indexOf($scope.displayed, _.find(vm.displayed, {
+								_id: obs._id
+							}));
+
+
+
+							vm.displayed[index] = result[0];
+							vm.displayed[index].isSelected = true;
+
+
+
+						})
+				
+				});
+
+
+				$scope.$on('observation_deleted', function(ev, obs) {
+
+					var index = _.indexOf(vm.displayed, _.find(vm.displayed, {
+						_id: obs._id
+					}));
+
+					vm.displayed.splice(index, 1);
+				});
 
 
 

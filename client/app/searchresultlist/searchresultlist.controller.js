@@ -165,6 +165,8 @@ angular.module('svampeatlasApp')
 
 			$scope.$on('new_observation', function(ev, obs) {
 
+				if(!$scope.displayed) return;
+				
 				var singleObsSearch = ObservationSearchService.getNewSearch();
 				singleObsSearch.where = {
 					_id: obs._id
@@ -186,7 +188,7 @@ angular.module('svampeatlasApp')
 
 			$scope.$on('observation_updated', function(ev, obs) {
 
-				
+				if(!$scope.displayed) return;
 					
 					var singleObsSearch = ObservationSearchService.getNewSearch();
 					singleObsSearch.where = {
@@ -221,7 +223,8 @@ angular.module('svampeatlasApp')
 
 
 			$scope.$on('observation_deleted', function(ev, obs) {
-
+				if(!$scope.displayed) return;
+				
 				var index = _.indexOf($scope.displayed, _.find($scope.displayed, {
 					_id: obs._id
 				}));

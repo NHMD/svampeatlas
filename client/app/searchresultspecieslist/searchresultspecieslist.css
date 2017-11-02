@@ -12,3 +12,10 @@
 	color: #757575;
 }
 
+@media screen and (max-width: 767px) {
+	button.show-obs {
+		margin-right: -15px !important;
+	}
+}
+
+
