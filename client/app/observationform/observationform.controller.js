@@ -22,6 +22,7 @@ angular.module('svampeatlasApp')
 			
 			$scope.$translate = $translate;
 			$scope.imageurl = appConstants.imageurl;
+			$scope.appConstants = appConstants;
 			$scope.maxDate = new Date();
 			$scope.$mdMedia = $mdMedia;
 			$scope.newTaxon = [];

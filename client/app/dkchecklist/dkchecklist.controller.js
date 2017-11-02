@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('DkCheckListCtrl', ['$scope', 'Auth', 'Taxon', '$timeout', '$q', '$translate', 'TaxonomyTags', '$mdMedia', '$mdDialog', '$stateParams', '$state','SearchService', 'MycokeyCharacters', 'MycoKeyModalService',
-		function($scope, Auth, Taxon, $timeout, $q, $translate, TaxonomyTags, $mdMedia, $mdDialog, $stateParams, $state, SearchService, MycokeyCharacters, MycoKeyModalService) {
+	.controller('DkCheckListCtrl', ['$scope', 'Auth', 'Taxon', '$timeout', '$q', '$translate', 'TaxonomyTags', '$mdMedia', '$mdDialog', '$stateParams', '$state','SearchService', 'MycokeyCharacters', 'MycoKeyModalService','appConstants',
+		function($scope, Auth, Taxon, $timeout, $q, $translate, TaxonomyTags, $mdMedia, $mdDialog, $stateParams, $state, SearchService, MycokeyCharacters, MycoKeyModalService, appConstants) {
 			var that = this;
 			this.MycoKeyModalService = MycoKeyModalService;
+			this.appConstants = appConstants;
 			$scope.$translate = $translate;
 			var storedState = localStorage.getItem('dkchecklist_table_search');
 			if(storedState){

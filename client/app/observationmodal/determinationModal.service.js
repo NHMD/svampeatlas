@@ -42,6 +42,7 @@ angular.module('svampeatlasApp')
 			  this._mdPanelRef = mdPanelRef;
 			  this.obs = obs;
 			  this.moment = moment;
+			  this.appConstants = appConstants;
 			  
 			this.$translate = $translate;
 			this.newTaxon = [];

@@ -1,37 +1,48 @@
 'use strict';
 angular.module('svampeatlasApp')
 	.factory('SearchService', function($http, Locality, Taxon, PlantTaxon, User, Substrate, VegetationType, Area, DataSet, MorphoGroup) {
-		
+
 		var substrate = Substrate.query();
 		var vegetationType = VegetationType.query();
-		var municipalities = Area.query({where: {type: 'kommune'}});
-		var utm10polygons = Area.query({where: {type: 'UTM10'}, includeGeom: true})
-		var dataSet = DataSet.query({cachekey : 'dataSet'});
+		var municipalities = Area.query({
+			where: {
+				type: 'kommune'
+			}
+		});
+		var utm10polygons = Area.query({
+			where: {
+				type: 'UTM10'
+			},
+			includeGeom: true
+		})
+		var dataSet = DataSet.query({
+			cachekey: 'dataSet'
+		});
 		var morphoGroup = MorphoGroup.query();
 		return {
-			getDataSet : function(){
+			getDataSet: function() {
 				return dataSet.$promise;
 			},
-			getSubstrate : function(){
+			getSubstrate: function() {
 				return substrate.$promise;
 			},
-			getVegetationType : function(){
+			getVegetationType: function() {
 				return vegetationType.$promise;
 			},
-			getMunicipalities : function(){
+			getMunicipalities: function() {
 				return municipalities.$promise;
 			},
-			getUTM10 : function(){
+			getUTM10: function() {
 				return utm10polygons.$promise;
 			},
-			getMorphoGroup : function(){
+			getMorphoGroup: function() {
 				return morphoGroup.$promise;
 			},
-			reloadMorphoGroup : function(){
-				 morphoGroup = MorphoGroup.query();
-				 return morphoGroup.$promise;
+			reloadMorphoGroup: function() {
+				morphoGroup = MorphoGroup.query();
+				return morphoGroup.$promise;
 			},
-			querySearchLocality : function(query, leafletBounds) {
+			querySearchLocality: function(query, leafletBounds) {
 
 				var q = {
 					where: {
@@ -42,7 +53,7 @@ angular.module('svampeatlasApp')
 					include: JSON.stringify([JSON.stringify({
 						model: "Area",
 						as: 'Municipality',
-						attributes:['name']
+						attributes: ['name']
 					})]),
 					limit: 30,
 					order: "probability DESC, name ASC"
@@ -67,20 +78,20 @@ angular.module('svampeatlasApp')
 
 				return results;
 			},
-			
-			querySearchTaxon : function(query, onlyHigherTaxa) {
+
+			querySearchTaxon: function(query, onlyHigherTaxa) {
 
 				var RankID;
-				
-				 if (typeof onlyHigherTaxa === 'boolean') {
-				 	RankID = (onlyHigherTaxa) ? {
-					lt: 5000
-				} : {
-					gt: 4999
-				};
-				 } else if(onlyHigherTaxa){
-					 RankID: onlyHigherTaxa
-				 }
+
+				if (typeof onlyHigherTaxa === 'boolean') {
+					RankID = (onlyHigherTaxa) ? {
+						lt: 5000
+					} : {
+						gt: 4999
+					};
+				} else if (onlyHigherTaxa) {
+					RankID: onlyHigherTaxa
+				}
 
 				var q = {
 
@@ -90,20 +101,22 @@ angular.module('svampeatlasApp')
 						model: "Taxon",
 						as: 'acceptedTaxon',
 						include: JSON.stringify({
-						model: "TaxonAttributes",
-						as: "attributes",
-						attributes: ["PresentInDK"],
-						where: JSON.stringify({})
-					})
+							model: "TaxonAttributes",
+							as: "attributes",
+							attributes: ["PresentInDK"],
+							where: JSON.stringify({})
+						})
 
 					}, {
 						model: "TaxonDKnames",
 						as: "Vernacularname_DK"
-					},
-					{
-																model: "TaxonDKnames",
-																as: "DanishNames"
-															}]
+					}, {
+						model: "TaxonDKnames",
+						as: "DanishNames"
+					},{
+						model: "TaxonImages",
+						as: "images"
+					}]
 				};
 
 				var parts = query.split(' ');
@@ -146,7 +159,7 @@ angular.module('svampeatlasApp')
 
 			},
 
-			querySearchPlantTaxon :function(query) {
+			querySearchPlantTaxon: function(query) {
 
 
 				var results = query ? PlantTaxon.query({
@@ -160,7 +173,7 @@ angular.module('svampeatlasApp')
 								like: query + "%"
 							}
 						}]
-						
+
 
 					},
 					limit: 30,
@@ -171,7 +184,7 @@ angular.module('svampeatlasApp')
 
 			},
 
-			querySearchGBIFPlantTaxon : function(query, rank) {
+			querySearchGBIFPlantTaxon: function(query, rank) {
 
 
 				var results = query ? $http({
@@ -190,7 +203,7 @@ angular.module('svampeatlasApp')
 
 			},
 
-			querySearchUser : function(query) {
+			querySearchUser: function(query) {
 
 				var results = query ? User.query({
 					where: {
@@ -212,5 +225,5 @@ angular.module('svampeatlasApp')
 
 			}
 		}
-			
-			})
+
+	})

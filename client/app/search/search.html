@@ -81,6 +81,8 @@
 	            
 				
 				<md-item-template>
+				<div layout="row">
+				<div>
 				          <span class="item-title">
 							  
 						<span ng-if="item.Vernacularname_DK && $cookies.get('preferred_language') !== 'en'">
@@ -108,6 +110,10 @@
 						  </span>
 						 <span class="item-metadata" ng-if="item.probability === 0 && item.acceptedTaxon.attributes.PresentInDK === false && item.RankID > 9999"> 
 						  <ng-md-icon icon="error_outline" size="20"></ng-md-icon> {{'Ikke kendt fra Danmark' | translate}}</span>
+						  </div>
+						  <span flex></span>
+						  <div class="m-left-4" ng-if="item.images.length > 0">
+							  <img ng-src="{{appConstants.baseurl+appConstants.thumborUrl}}60x60/{{item.images[0].uri}}"> </div></div>
 				        </md-item-template>
 
 	          </md-autocomplete>

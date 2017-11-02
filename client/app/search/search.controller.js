@@ -3,7 +3,8 @@
 angular.module('svampeatlasApp')
 	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter', 'Area','StoredSearch', 'StoredSearchModalService', '$stateParams', 'appConstants', '$cookies', 'KMS', 'MapBox',
 		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter, Area, StoredSearch, StoredSearchModalService, $stateParams, appConstants, $cookies, KMS, MapBox) {
-			$scope.baseUrl = appConstants.baseurl
+			$scope.baseUrl = appConstants.baseurl;
+			$scope.appConstants = appConstants;
 			$scope.Auth = Auth;
 			$scope.state = $state;
 			$scope.$cookies = $cookies;
