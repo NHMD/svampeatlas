@@ -86,6 +86,10 @@ Behind NGINX we use the [PM2](http://pm2.keymetrics.io/) process manager to mana
 
 [Deployment architecture diagram here](https://github.com/NHMD/svampeatlas/blob/master/docs/Svampeatlas_arkitektur.pdf)
 
+## Funding
+
+This project is funded by [Aage V. Jensen Naturfond](http://www.avjf.dk/avjnf/)
+
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
