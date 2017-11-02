@@ -320,7 +320,7 @@ angular.module('svampeatlasApp')
 			'På forsiden i 7 dage' : 'On the front page 7 days',
 			'Der findes' : 'There are',
 			'bestemmelsesforslag' : 'identification suggestions',
-			'Fund til validering' : 'Needs validation',
+			'Fund til validering' : 'Pending validation',
 			'vis art' : 'show species',
 			'Se alle til validering' : 'See all pending validation'
 			
