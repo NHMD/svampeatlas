@@ -83,7 +83,21 @@ angular.module('svampeatlasApp')
 						gt: $filter('date')(moment().startOf('day').subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
 					}
 
-				} else if ($stateParams.searchterm === "foreign") {
+				} else if ($stateParams.searchterm === "needsvalidation") {
+					
+									search.include[0].where = {
+						
+										$and: [{Determination_validation: { $ne: 'Godkendt'}},{Determination_validation: { $ne: 'Afvist'}} , {Determination_score: {$lt: 80}}]
+									};
+					
+									if(useLichenFilter) {
+										search.include[0].where.lichenized = 1;
+									};
+					
+									// remove this if we don´t want foreign sightings in default searches
+									search.include[2].required = false;
+
+					} else if ($stateParams.searchterm === "foreign") {
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
 					}

@@ -107,3 +107,7 @@ md-list-item > img {
 .news-subheader {
 	margin-bottom: 14px;
 }
+
+.m-left-24 {
+	margin-left: 24px !important;
+}

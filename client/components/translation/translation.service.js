@@ -321,7 +321,8 @@ angular.module('svampeatlasApp')
 			'Der findes' : 'There are',
 			'bestemmelsesforslag' : 'identification suggestions',
 			'Fund til validering' : 'Needs validation',
-			'vis art' : 'show species'
+			'vis art' : 'show species',
+			'Se alle til validering' : 'See all pending validation'
 			
 			
 		});

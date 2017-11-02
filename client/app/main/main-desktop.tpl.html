@@ -1,7 +1,7 @@
 <div layout="row" layout-xs="column" layout-sm="column" flex>
 <div layout="column" flex-gt-sm="66">
 <md-whiteframe class="md-whiteframe-5dp newsfeed" ng-if="Auth.isLoggedIn()">
-<span class="validation-needed-sub-header">{{'Hjælp med at validere fund' | translate }}:</span>
+<span class="validation-needed-sub-header m-left-24">{{'Fund til validering' | translate }} </span>
 <div flex layout-fill layout="center center" ng-if="validationTilesLoading"><md-progress-linear></md-progress-linear></div>
 <div layout="row" >
 	<span ng-if="validationNeededtiles && validationNeededtiles.length ===0" class="validation-needed-sub-header">{{'Ingen data fundet' | translate}}</span>
@@ -42,6 +42,8 @@
 	        </md-button>
 
 </div>
+<div layout="row" layout-margin class="m-left-24">
+<div>
 <md-chips ng-model="selectedMorphoGroup" md-autocomplete-snap
               md-require-match="true" ng-if="!useLichenFilter">
       <md-autocomplete
@@ -60,6 +62,8 @@
       </md-chip-template>
     </md-chips>
 	<md-button ng-if="selectedMorphoGroupChanged" ng-click="loadValidationTiles()">{{'Opdatér' | translate}}</md-button>
+</div><div flex></div><div layout-align="end bottom"><a href="" ng-href="/search/result/gallery/needsvalidation">{{'Se alle til validering' | translate}}...</a></div>
+</div>
 		 <!--   <md-input-container >
 		           <label>{{'MorphoGroups' | translate}}</label>
 		           <md-select name="MorphoGroups" ng-model="selectedMorphoGroup" multiple>
