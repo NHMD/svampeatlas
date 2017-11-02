@@ -73,9 +73,18 @@ grunt serve
 To build and run the application in prod mode:
 
 ```bash
+
 grunt serve:dist 
 ```
 This will build and package the app into the dist folder.
+
+## Deploy to production
+
+In production we use [NGINX](https://www.nginx.com/resources/wiki/) as webserver. It handles static file serving and is set up to use SSL with [letsencrypt](https://letsencrypt.org/). 
+
+Behind NGINX we use the [PM2](http://pm2.keymetrics.io/) process manager to manage the nodejs processes and [Thumbor](http://thumbor.org/) is used for image optimizations / caching.
+
+[Deployment architecture diagram here](https://github.com/NHMD/svampeatlas/blob/master/docs/Svampeatlas_arkitektur.pdf)
 
 ## License
 
