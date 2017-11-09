@@ -56,6 +56,21 @@ angular.module('svampeatlasApp')
 					}, "")
 				}
 				
+				function getValidationStatus(row){
+					
+					if(row.DeterminationView.Determination_validation === 'Godkendt' && row.DeterminationView.Determination_validator_id) {
+						return $translate.instant('VALIDATION_STATUS_EXPERT')
+					} else if (row.DeterminationView.Determination_validation === 'Godkendt' && !row.DeterminationView.Determination_validator_id){
+						return $translate.instant('VALIDATION_STATUS_COMMUNITY_LEVEL_3')
+					} else if (row.DeterminationView.Determination_validation === 'Afvist'){
+						return $translate.instant('Afvist')
+					} else if (row.DeterminationView.Determination_score >= $scope.AcceptedDeterminationScore){
+						return $translate.instant('VALIDATION_STATUS_COMMUNITY_LEVEL_3')
+					} else  {
+						return $translate.instant('Afventer')
+					}
+				}
+				
 				if(parseInt($scope.totalCount) > 10000){
 					$mdToast.show(
 						$mdToast.simple()
@@ -116,7 +131,7 @@ angular.module('svampeatlasApp')
 							_id: "DMS-"+e._id,
 							observationDate: e.observationDate,
 						//	createdDate: e.createdAt,
-							validationStatus: e.DeterminationView.Determination_validation,
+							validationStatus: getValidationStatus(e),
 							taxon_id: e.DeterminationView.Taxon_id,
 							taxonFullName: e.DeterminationView.Taxon_FullName,
 							taxonDanishName: e.DeterminationView.Taxon_vernacularname_dk,

@@ -41,7 +41,7 @@ angular.module('svampeatlasApp')
 						FullName: e.FullName,
 						Author: e.Author,
 						MorphoGroup: (e.MorphoGroup) ? e.MorphoGroup.name_dk : "",
-						RedlistCategory: (e.redlistdata && e.redlistdata.length >0) ? e.redlistdata[0].status : "",
+						RedlistCategory: (e.redlistdata && e.redlistdata.length >0) ? e.redlistdata[0].Status : "",
 						DanishName : (e.Vernacularname_DK) ? e.Vernacularname_DK.vernacularname_dk : "",
 						RankName : e.RankName,
 						PresentInDK : (e.attributes) ? e.attributes.PresentInDK : "",

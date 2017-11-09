@@ -68,7 +68,7 @@
 	 </md-card>
 	  <md-card>
 	  <div layout-margin>
- <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true"  ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ng-click="$parent.$parent.showProcessingImageStatus()"
+ <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true"  ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ngf-before-model-change="$parent.$parent.showProcessingImageStatus()"
                   aria-label="Tilføj billeder"
                   class="md-icon-button" >
          <ng-md-icon icon="camera_alt" ></ng-md-icon> {{'Vælg billeder' | translate}}
@@ -78,6 +78,7 @@
    				      <div  flex layout-margin  ngf-drop="" ng-model="ctrl.files" ngf-keep="'distinct'" class="drop-box" 
      ngf-drag-over-class="'dragover'" ngf-multiple="true"   ngf-pattern="'image/jpeg'"
      ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}"
+	 ngf-before-model-change="$parent.$parent.showProcessingImageStatus()"
 	 ngf-fix-orientation="true" ngf-hide-on-drop-not-available="true"
      ><h3 class="md-title">{{'Træk billeder hertil' | translate}}</h3>
  	<ng-md-icon icon="camera_alt" size="64" style="margin-left: -24px"></ng-md-icon>
@@ -150,3 +151,17 @@
 
  
  </div>
+ <div class="grayout" ng-show="ctrl.processingImage || ctrl.savingObservation || fileUploadInProgress" >
+	
+ </div>
+ <div class="status-overlay" layout="column"    layout-align="center center" ng-show="ctrl.processingImage || ctrl.savingObservation || fileUploadInProgress" >
+ 	<h3 class="md-title" ng-if="statusMsg">{{statusMsg}}</h3>
+ 	<div layout="row"    layout-align="center">
+ 		<span flex></span>
+ 		<md-progress-circular ng-if="fileUploadInProgress" md-mode="determinate" value="{{fileProgress}}"></md-progress-circular>
+ 	    <md-progress-circular ng-if="ctrl.savingObservation || ctrl.processingImage" md-mode="indeterminate"></md-progress-circular>
+ 		<span flex></span>
+ 	</div>
+
+		
+ 	</div>

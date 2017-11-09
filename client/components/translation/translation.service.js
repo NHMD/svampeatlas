@@ -67,6 +67,7 @@ angular.module('svampeatlasApp')
 			'Valideres': 'To be validated',
 			'Afventer': 'Validation in progress',
 			'Afviste': 'Rejected',
+			'Afvist': 'Rejected',
 			'Dette fund er under godkendelse og bør ikke refereres før det er godkendt': 'This sighting is under review and should not be referenced before it has been accepted',
 			'Dette fund er på de givne oplysninger afvist da bestemmelsen er for usikker': 'This sighting has been rejected based on the information given since the identification is too uncertain',
 			'Henter': 'Fetching',

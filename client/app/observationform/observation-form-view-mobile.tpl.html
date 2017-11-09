@@ -8,9 +8,7 @@
 	        </md-tab>
 	        <md-tab label="Kort">
 	          <md-content class="md-padding"  md-scroll-y layout-fill flex>
-			 <md-button id="position-button" class="md-fab md-warn md-fab-bottom-right" aria-label="Brug position" ng-click="useLocation()" >
-			 		                  <ng-md-icon icon="gps_fixed"></ng-md-icon>
-			 		              </md-button>
+			 
 		 <md-subheader class="md-no-sticky" ng-if="selectedLocality.length === 1 || (ctrl.precision && !foreignLocality )">{{selectedLocality[0].name}} <span ng-if="ctrl.precision">{{'Præcision' | translate}}: {{ctrl.precision}} m</span></md-subheader>
 	   	 <md-subheader class="md-no-sticky" ng-if="foreignLocality">{{foreignLocalityString}} <span ng-if="ctrl.precision">{{'Præcision' | translate}}: {{ctrl.precision}} m</span></md-subheader>
 	   	 
@@ -68,3 +66,17 @@
 		  
 	        </md-tab>
 	      </md-tabs>
+<div class="grayout" ng-show="ctrl.processingImage || ctrl.savingObservation || fileUploadInProgress" >
+	
+</div>
+<div class="status-overlay" layout="column"    layout-align="center center" ng-show="ctrl.processingImage || ctrl.savingObservation || fileUploadInProgress" >
+	<h3 class="md-title" ng-if="statusMsg">{{statusMsg}}</h3>
+	<div layout="row"    layout-align="center">
+		<span flex></span>
+		<md-progress-circular ng-if="fileUploadInProgress" md-mode="determinate" value="{{fileProgress}}"></md-progress-circular>
+	    <md-progress-circular ng-if="ctrl.savingObservation || ctrl.processingImage" md-mode="indeterminate"></md-progress-circular>
+		<span flex></span>
+	</div>
+
+		
+	</div>
