@@ -13,6 +13,9 @@ var _ = require('lodash');
 
 var models = require('../')
 var ObservationForum = models.ObservationForum;
+var ObservationEvent = models.ObservationEvent;
+var ObservationEventMention = models.ObservationEventMention;
+var ObservationSubscriber = models.ObservationSubscriber;
 var Promise = require("bluebird");
 
 var nestedQueryParser = require("../nestedQueryParser")
@@ -194,11 +197,39 @@ exports.showForumForObs = function(req, res) {
 
 exports.addCommentToObs = (req, res) => {
 	var comment = req.body;
+	var postedmentions = (req.body.mentions) ? req.body.mentions : [];
 	comment.observation_id = req.params.id;
 	comment.user_id = req.user._id;
 
 ObservationForum.create(comment)
 	.then(function(comment){
+		return [comment, ObservationEvent.create({
+			eventType: 'COMMENT_ADDED',
+			user_id: req.user._id,
+			observation_id: req.params.id
+		}), ObservationSubscriber.upsert({
+			user_id: req.user._id,
+			observation_id: req.params.id,
+			updatedAt: models.sequelize.fn('NOW')
+		})]
+	})
+	.spread(function(comment, event, subscriber){
+		
+		var mentions = _.map(_.uniqBy(postedmentions, '_id') , function(u){
+			
+			return {observationevent_id: event._id, user_id: u._id, observation_id: req.params.id};
+		})
+	
+		
+		return [comment, ObservationEventMention.bulkCreate(mentions)]
+			.concat(_.map(mentions, function(m){
+				return ObservationSubscriber.upsert({
+			user_id: m.user_id,
+			observation_id: req.params.id
+		})
+			}))
+	})
+	.spread(function(comment){
 		return ObservationForum.find({
 		where: {
 			_id: comment._id

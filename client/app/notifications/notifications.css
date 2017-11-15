@@ -1,0 +1,33 @@
+.notification-body {
+    padding: 10px;
+}
+
+.logo-comment-list {
+	width: 60px;
+	height: 60px;
+}
+
+.avatar-comment-list {
+	
+	top: -8px;
+	    width: 60px;
+	    height: 60px;
+	    background-size: contain;
+	    border-radius: 60px;
+	    position: absolute;
+}
+
+.notification-icon {
+	height: 16px !important;
+	width: 16px !important;
+	min-width: 0px !important;
+	color: rgb(96,125,139);
+}
+
+.not-read {
+	background-color: #edf2fa;
+}
+
+.notification-card {
+	max-width: 800px;
+}

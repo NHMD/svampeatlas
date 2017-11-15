@@ -9,7 +9,6 @@ angular.module('svampeatlasApp')
 	  $scope.ObservationFormService = ObservationFormService;
 	  $scope.translate = $translate;
 	  $scope.useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
-	 
 	  $scope.showLogin = function(){
   		var useFullScreen = $mdMedia('xs');
   		    $mdDialog.show({

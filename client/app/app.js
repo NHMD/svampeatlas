@@ -25,7 +25,8 @@ angular.module('svampeatlasApp', [
 		'highcharts-ng',
 		'ngCsv',
 		'ivh.treeview',
-		'jsonFormatter'
+		'jsonFormatter',
+		'ui.mention'
 	])
 	.config(function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider, $sceDelegateProvider, $translateProvider, $mdThemingProvider, ssSideNavSectionsProvider, $logProvider) {
 		$urlRouterProvider

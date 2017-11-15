@@ -1,13 +1,16 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('NavbarCtrl', function ($scope, $state, ssSideNav, $mdMedia, $mdSidenav, $stateParams, $translate) {
+  .controller('NavbarCtrl', function ($scope, $state, ssSideNav, $mdMedia, $mdSidenav, $stateParams, $translate, User, Auth) {
 	 /*
 	  $scope.mdMedia = $mdMedia;
 	  $scope.mdSidenav = $mdSidenav;
 	  $scope.menu = ssSideNav;
 	  */
 	  $scope.state = $state;
+	  $scope.currentUser = Auth.getCurrentUser();
+  	
+	  
 	  if($stateParams.controller){
 		  $scope.ctrlparam = $translate.instant($stateParams.controller);
 	  }
@@ -30,9 +33,11 @@ $scope.states =
 	  'competitions': {name: "Konkurrencer", icon: 'trophy'},
 	  'signup' : {name: 'Opret brugerprofil', icon: 'person_add'},
 	  'confirm' : {name: 'Opret brugerprofil', icon: 'person_add'},
+	  'notifications' : {name: 'Notifikationer', icon: 'notifications_active'},
 	  'forgot' : {name: 'Glemt password', icon: 'lock_open'}
 	  
 	};
+	
 	/*
 	$scope.openSideNav = function(){
 	

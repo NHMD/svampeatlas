@@ -702,6 +702,129 @@ exports.showRecentlyChangedObservations = function(req, res) {
 
 };
 
+exports.showNewsFeed = function(req, res) {
+	//SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country
+	
+	var sql = `SELECT o._id as observation_id, o.observationDate, o.observationDateAccuracy, o.decimalLatitude, o.decimalLongitude, o.verbatimLocality, l.name as locality,  pd.validation, pd.score, t.FullName, t.Author,
+oi.name as img, eventType, os.updatedAt as lastRead, oe.createdAt, u._id as user_id, u.name as username, u.Initialer as Initialer, u._id as user_id, u.facebook as user_facebook, om.user_id as mentioned_id, d._id as new_determination_id , d.taxon_id as new_taxon_id , st.FullName as suggested_name
+FROM ObservationSubscriber os JOIN ObservationEvents oe JOIN Users u JOIN Observation o JOIN Determination pd JOIN Taxon t ON os.observation_id=o._id AND o.primarydetermination_id=pd._id AND pd.taxon_id = t._id AND os.observation_id=oe.observation_id  AND os.user_id = :userid  AND oe.user_id <> :userid  AND oe.user_id = u._id
+LEFT JOIN Locality l ON o.locality_id= l._id
+LEFT JOIN ObservationImages oi ON
+ oi._id = (
+  SELECT oi1._id FROM ObservationImages oi1
+  WHERE oi1.observation_id = o._id LIMIT 1
+ )
+LEFT JOIN ObservationEventMentions om ON om.observationevent_id= oe._id AND om.user_id = :userid 
+LEFT JOIN (Determination d JOIN Taxon st ON d.taxon_id=st._id) ON oe.determination_id = d._id ORDER BY oe.createdAt DESC, oe.observation_id LIMIT :limit OFFSET :offset`;
+
+var offset = (req.query.offset) ? parseInt(req.query.offset) : 0;
+var limit = (req.query.limit) ? parseInt(req.query.limit) : 25;
+
+ 
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			userid: req.user._id,
+			offset: offset ,
+			limit: limit +1 
+			
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+		var endOfRecords = true;
+		
+		if(result.length > limit){
+			result.pop();
+			endOfRecords = false;
+		}
+		return res.status(200).json({endOfRecords: endOfRecords, results: result});
+	}).catch(handleError(res));
+
+
+};
+
+exports.showNewsCount = function(req, res) {
+	//SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country
+	
+	var sql = `SELECT COUNT(*) as count
+FROM ObservationSubscriber os JOIN ObservationEvents oe ON os.observation_id=oe.observation_id AND os.user_id=:userid AND oe.user_id <> :userid AND oe.createdAt >= os.updatedAt `;
+
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			userid: req.user._id
+			//,fromdate: req.query.since
+			
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result[0]);
+	}).catch(handleError(res));
+
+
+};
+
+exports.markFeedAsRead = function(req, res) {
+	//SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country
+	
+	var sql = `UPDATE ObservationSubscriber SET updatedAt = NOW() WHERE user_id = :userid AND observation_id = :observationid`;
+
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			userid: req.user._id,
+			observationid: req.params.id
+			
+		},
+		type: models.sequelize.QueryTypes.UPDATE
+	})
+	.then(function(result) {
+		return models.sequelize.query('SELECT updatedAt FROM ObservationSubscriber WHERE user_id = :userid AND observation_id = :observationid', {
+			replacements: {
+				userid: req.user._id,
+				observationid: req.params.id
+			
+			},
+			type: models.sequelize.QueryTypes.SELECT
+		})
+	})
+	.then(function(result) {
+
+		return res.status(200).json(result[0]);
+	}).catch(handleError(res));
+
+
+};
+
+exports.unsubscribe = function(req, res) {
+	//SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country
+	
+	var sql = `DELETE FROM ObservationSubscriber  WHERE user_id = :userid AND observation_id = :observationid`;
+
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			userid: req.user._id,
+			observationid: req.params.id
+			
+		},
+		type: models.sequelize.QueryTypes.DELETE
+	})
+	.then(function(result) {
+
+		return res.sendStatus(204);
+	}).catch(handleError(res));
+
+
+};
+
+
+
 exports.validateEmail = function(req, res){
 	
 	var sql = "SELECT COUNT(*) as count FROM Users WHERE email=:email"

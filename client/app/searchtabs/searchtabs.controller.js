@@ -6,7 +6,7 @@ angular.module('svampeatlasApp')
 			$scope.mdMedia = $mdMedia;
 			$scope.hasRole = Auth.hasRole;
 			$scope.state = $state;
-			
+			$scope.currentUser = Auth.getCurrentUser();
 
 	
 			$scope.tabs = [

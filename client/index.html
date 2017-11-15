@@ -54,6 +54,7 @@
       <link rel="stylesheet" href="app/funindex/funindex.css">
       <link rel="stylesheet" href="app/main/main.css">
       <link rel="stylesheet" href="app/news/news.css">
+      <link rel="stylesheet" href="app/notifications/notifications.css">
       <link rel="stylesheet" href="app/observationform/observationform.css">
       <link rel="stylesheet" href="app/observationmodal/observationmodal.css">
       <link rel="stylesheet" href="app/profile/profile.css">
@@ -75,6 +76,7 @@
       <link rel="stylesheet" href="app/view-tree/view-tree.css">
       <link rel="stylesheet" href="components/navbar-material/angular-material-sidenav.css">
       <link rel="stylesheet" href="components/navbar-material/navbarMaterial.css">
+      <link rel="stylesheet" href="components/ui-mention/atlas-mention.css">
       <link rel="stylesheet" href="components/userAvatar/userAvatar.css">
       <!-- endinjector -->
     <!-- endbuild -->
@@ -155,6 +157,8 @@
       <script src="bower_components/exif-js/exif.js"></script>
       <script src="bower_components/angular-ivh-treeview/dist/ivh-treeview.js"></script>
       <script src="bower_components/json-formatter/dist/json-formatter.js"></script>
+      <script src="bower_components/ment.io/dist/mentio.js"></script>
+      <script src="bower_components/angular-ui-mention/dist/mention.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -222,6 +226,9 @@
           <script src="app/main/main.js"></script>
           <script src="app/news/news.controller.js"></script>
           <script src="app/news/news.js"></script>
+          <script src="app/notifications/notificationlist.controller.js"></script>
+          <script src="app/notifications/notifications.controller.js"></script>
+          <script src="app/notifications/notifications.js"></script>
           <script src="app/observationform/geojsonutils.service.js"></script>
           <script src="app/observationform/observationForm.service.js"></script>
           <script src="app/observationform/observationform.controller.js"></script>
@@ -298,12 +305,15 @@
           <script src="components/navbar-material/navbarMaterial.controller.js"></script>
           <script src="components/navbar/navbar.controller.js"></script>
           <script src="components/ngDisableAnimate/ngDisableAnimate.directive.js"></script>
+          <script src="components/notification/notification.component.js"></script>
           <script src="components/sharing/sharing.component.js"></script>
           <script src="components/st-persist/stPersist.directive.js"></script>
           <script src="components/translation/da.js"></script>
           <script src="components/translation/moment.service.js"></script>
           <script src="components/translation/translation.service.js"></script>
           <script src="components/ui-bootstrap/ui-bootstrap-custom-tpls-0.13.3.directive.js"></script>
+          <script src="components/ui-mention/atlas-mention.directive.js"></script>
+          <script src="components/ui-mention/mention-link.filter.js"></script>
           <script src="components/userAvatar/userAvatar.directive.js"></script>
           <script src="components/useragentfactory/useragentfactory.service.js"></script>
           <script src="components/utmconverter/utmconverter.service.js"></script>

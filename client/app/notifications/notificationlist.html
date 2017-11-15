@@ -1,0 +1,75 @@
+ 
+	 <md-card flex-gt-md="60" ng-repeat="tile in NotificationList.displayed" ng-class="{'not-read': NotificationList.moment(tile.lastRead).isSameOrBefore(NotificationList.moment(tile.createdAt))}" class="notification-card">
+			<div layout="row" class="mobile-validation" ng-if="NotificationList.mdMedia('gt-xs')">
+			<span flex></span>
+				<ng-md-icon style="fill:wheat" ng-if=" 0 >= tile.score  && tile.validation !== 'Afvist' && tile.validation !== 'Godkendt'" icon="error" ></ng-md-icon>		
+				<ng-md-icon style="fill:red" ng-if="tile.validation === 'Afvist'" icon="block" ></ng-md-icon>
+				<ng-md-icon icon="microscope" ng-if="tile.validation === 'Godkendt' && tile.validator_id"></ng-md-icon>
+			
+			<span class="star-rating" layout="row" ng-if="tile.validation !== 'Afvist' && !(tile.validation === 'Godkendt' && tile.validator_id)">
+				<span flex ng-if="mdMedia('xs')"></span>
+				<ng-md-icon size="12" icon="star" ng-if="tile.score > 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.score >= NotificationList.ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.score >= NotificationList.AcceptedDeterminationScore"></ng-md-icon> </span>
+			</div>
+				
+	         <md-card-title class="mobile-obs-title">
+			 <user-avatar ng-if="tile.eventType !=='DETERMINATION_APPROVED'" class="useravatar md-avatar"  size="'large'" user="{Initialer: tile.Initialer, _id: tile.user_id, facebook: tile.user_facebook}" ></user-avatar>
+			 <img class="logo-comment-list" src="assets/images/LogoSmallest.png" ng-if="tile.eventType ==='DETERMINATION_APPROVED'">
+	           <md-card-title-text class="notification-body">
+			   
+			  <span ng-if="tile.eventType !=='DETERMINATION_APPROVED'"> <a ng-href="/userprofile/{{tile.user_id}}" >{{tile.username}}</a> 
+			   <span ng-if="tile.eventType === 'COMMENT_ADDED' && tile.mentioned_id === NotificationList.currentUser._id" translate>nævnte dig i en kommentar på</span>
+			   <span ng-if="tile.eventType === 'COMMENT_ADDED' && tile.mentioned_id !== NotificationList.currentUser._id" translate>har kommenteret på</span> 
+			   <span ng-if="tile.eventType ==='DETERMINATION_EXPERT_APPROVED'" translate>har ekspertgodkendt</span>
+			   <span ng-if="tile.eventType ==='DETERMINATION_ADDED'" translate>har tilføjet en bestemmelse til</span> 
+			    
+			   <a  ng-click="NotificationList.gotoObservation($event, tile)">DMS-{{tile.observation_id}}</a></span>
+			   <span ng-if="tile.eventType ==='DETERMINATION_APPROVED'"><a  ng-click="NotificationList.gotoObservation($event, tile)">DMS-{{tile.observation_id}}</a> {{'er blevet valideret og godkendt som' | translate}} <a ng-click="NotificationList.SpeciesModalService.show($event, tile.new_taxon_id)"><strong><em>{{tile.suggested_name}}</em></strong></a></span>
+			   <br>
+			   <span ><ng-md-icon size="16" class="notification-icon" icon="message" ng-if="tile.eventType === 'COMMENT_ADDED'"></ng-md-icon>
+				   <ng-md-icon size="16" class="notification-icon"  icon="thumb_up" ng-if="tile.eventType === 'DETERMINATION_APPROVED'"></ng-md-icon>
+				   <ng-md-icon size="16" class="notification-icon"  icon="microscope" ng-if="tile.eventType === 'DETERMINATION_EXPERT_APPROVED'"></ng-md-icon>
+				   <md-icon ng-if="tile.eventType === 'DETERMINATION_ADDED'" md-font-icon="fa fa-tag" class="notification-icon">
+				   		     </md-icon>
+				   {{(NotificationList.moment(tile.createdAt).isSame(moment(), 'day')) ? (((NotificationList.lang === "da") ? "For ": "") + NotificationList.moment(tile.createdAt).locale(NotificationList.lang).fromNow()) : NotificationList.moment(tile.createdAt).calendar()}}</span>
+			  <!-- <span >{{(moment(tile.createdAt).isSame(moment(), 'day')) ? NotificationList.getCreatedAt(tile.createdAt) : (tile.createdAt | date : 'dd/MM/yyyy')}}</span> -->
+			   
+				 
+	           </md-card-title-text>
+			   
+			
+	           <md-card-title-media ng-if="NotificationList.mdMedia('gt-xs')">
+	             <div ng-if="tile.img" class="md-media-md card-media" ng-click="NotificationList.gotoObservation($event, tile)" ng-style="NotificationList.getBackgroundStyle(tile)"></div>
+				 
+	             <div ng-if="!tile.img" class="md-media-md card-media" ng-click="NotificationList.gotoObservation($event, tile)">
+	             		<img alt='static Mapbox map'  ng-src='https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/static/pin-s-marker+285A98({{tile.decimalLongitude}},{{tile.decimalLatitude}})/{{tile.decimalLongitude}},{{tile.decimalLatitude}},6,0/112x112@2x?access_token={{NotificationList.mapboxToken}}' >
+	             </div>
+				
+				 
+	           </md-card-title-media>
+	          <md-button ng-if="NotificationList.mdMedia('xs')" class="md-raised md-icon-button" ng-click="NotificationList.stopNotifications(tile)"><ng-md-icon icon="notifications_off"></ng-md-icon></md-button>
+	         </md-card-title>
+			 <md-card-actions layout="row" layout-align="end center" ng-if="NotificationList.mdMedia('gt-xs')">
+	   				 <strong><em >{{tile.FullName}}</em></strong>, 
+	   		 	   <span class="info">{{(tile.observationDateAccuracy === 'day') ? (tile.observationDate | date : 'dd/MM/yyyy') : getDate(tile.observationDate, tile.observationDateAccuracy)}}, {{(tile.locality) ? tile.locality : tile.verbatiomLocality }}<br>
+	   		 	   {{tile.PrimaryUser.name}}</span>
+				   <div>
+				   <md-tooltip md-direction="bottom" >{{'Slå notifikationer fra for dette fund' | translate}}</md-tooltip>
+				   <md-button class="md-raised md-icon-button" ng-click="NotificationList.stopNotifications(tile)"><ng-md-icon icon="notifications_off"></ng-md-icon></md-button></div>
+			        </md-card-actions>
+
+	       </md-card>
+	 
+
+		 <div layout="row" ng-show="NotificationList.isLoading !== false">
+		 	<span flex></span>
+			<md-progress-circular  md-mode="indeterminate" ></md-progress-circular>
+			<span flex></span>
+		 </div>  
+	   
+	   <div layout-row layout-padding>
+		   <md-button class="md-raised" ng-if="NotificationList.endOfRecords === false && NotificationList.isLoading === false" ng-click="NotificationList.loadTiles(NotificationList.limit, NotificationList.offset)" layout-fill>{{'Vis flere' | translate}}</md-button>
+	   </div> 
+	   
+
+
+

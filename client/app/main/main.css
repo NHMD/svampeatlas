@@ -120,3 +120,15 @@ md-list-item > img {
 	margin-top: 0px !important;
 }
 
+md-badge{
+  margin: 0 0 0 -8px;
+  background-color: red;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 25%;
+}
+
+.feed-button {
+	min-width: 0px !important; 
+}
+

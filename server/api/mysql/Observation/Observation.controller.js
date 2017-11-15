@@ -706,12 +706,15 @@ exports.create = function(req, res) {
 							user_id: u._id
 						}
 					})
+					
 					return [obs.save({
 						transaction: t
 					}), det,
 					 models.ObservationPlantTaxon.bulkCreate(associated, {
 						transaction: t
 					}), models.ObservationUser.bulkCreate(finders, {
+						transaction: t
+					}), models.ObservationSubscriber.bulkCreate(finders, {
 						transaction: t
 					})];
 				})

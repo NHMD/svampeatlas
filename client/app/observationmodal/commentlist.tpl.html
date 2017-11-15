@@ -15,7 +15,7 @@
 		        <md-expansion-panel-icon ></md-expansion-panel-icon>
 		      </md-expansion-panel-header>
 
-		      <md-expansion-panel-content>
+		      <md-expansion-panel-content class="p-0">
 		        
 						   	     <md-list>
 		  		
@@ -29,7 +29,7 @@
 									   <span ng-if="$mdMedia('gt-xs')" layout-fill flex></span>
 						  			   <p >{{elm.createdAt | date : 'dd/MM/yyyy HH:mm'}}</p>
 						  		   </div>
-						  			   <p ng-bind-html="elm.content | linky"></p>
+						  			   <p ng-bind-html="elm.content | linky | linkMentions"></p>
  	           
           
 						   	         </div>
@@ -47,18 +47,33 @@
 
 				flex>
 									   <form layout-fill>
-									   <md-input-container class="md-block">
+						   		         
+							
+														 
 									             <label>{{'Skriv kommentar' | translate}}</label>
-									             <textarea ng-model="ctrl.newComment"  rows="5" md-select-on-focus ng-disabled="ctrl.sendingComment"></textarea>
-									           </md-input-container>
+												 <div class="mention-container">
+									             <textarea id="newComment" class="form-control" ng-model="ctrl.newComment" ui-mention atlas-mention  md-select-on-focus ng-disabled="ctrl.sendingComment" autocomplete="off"></textarea>
+												 <div class="mention-highlight"></div>
+												 
+										   		<ul ng-if="$mention.choices.length" class="mention-dropdown">
+										   		       <li ng-repeat="choice in $mention.choices" ng-class="{active:$mention.activeChoice==choice}">
+										   		         <a ng-click="$mention.select(choice); focusNewComment() " >
+										   		           {{::choice.name}} {{::choice.Initialer}}
+										   		         </a>
+										   		       </li>
+										   		     </ul>
+												 </div>
 					   
 										   </form>
-										   <md-button class="comment-submit" ng-show="ctrl.newComment" ng-click="postComment()" ng-disabled="ctrl.sendingComment">{{'Send' | translate}}</md-button>
+										 
+										   <md-button class="md-icon-button comment-submit" ng-show="ctrl.newComment" ng-click="postComment($mention.mentions)" ng-disabled="ctrl.sendingComment"><ng-md-icon icon="send" ></ng-md-icon></md-button>
+  						   		         
 							   	        </div>
+										
 	  				
-          
+		
 						 	         </div>
-                
+	   		 
 						 	       </md-list-item>
 						   	     </md-list>
 	
@@ -72,7 +87,6 @@
 		    </md-expansion-panel-expanded>
 
 		  </md-expansion-panel>  
-
 
 
 

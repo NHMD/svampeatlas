@@ -23,7 +23,8 @@
    }
    
    .comment-submit {
-   	margin-bottom: 42px;
+   	color: blue;
+	margin-bottom: -3px !important;
    }
    
    .validator-button-container {
@@ -166,6 +167,10 @@ table.log-table > tbody {
 .obs-img-grid {
 	top: 40px;
 	margin-bottom: 24px;
+}
+
+.p-0 {
+	padding: 0px !important;
 }
 
 

@@ -482,7 +482,7 @@ angular.module('svampeatlasApp')
 			$scope.querySearchGBIFPlantTaxon = SearchService.querySearchGBIFPlantTaxon;
 
 			$scope.querySearchUser = SearchService.querySearchUser;
-
+			
 
 			var mapCenter = (ObservationFormStateService.getState().mapCenter) ? ObservationFormStateService.getState().mapCenter : {
 				lat: 56,
@@ -963,12 +963,13 @@ angular.module('svampeatlasApp')
 			};
 
 
-			$scope.postComment = function() {
+			$scope.postComment = function(mentions) {
 				that.sendingComment = true;
 				Observation.postComment({
 						id: $scope.obs._id
 					}, {
-						content: that.newComment
+						content: that.newComment,
+						mentions: mentions
 					})
 					.$promise.then(function(comment) {
 						$scope.obs.Forum.push(comment);

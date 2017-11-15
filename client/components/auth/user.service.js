@@ -175,6 +175,37 @@ angular.module('svampeatlasApp')
 		},
 		url: '/api/users/pending/:token'
     },
+    getFeed: {
+        method: 'GET',
+
+		url: '/api/users/me/feed',
+		isArray: false
+    },
+    getFeedCount: {
+        method: 'GET',
+
+		url: '/api/users/me/feed/count',
+		isArray: false
+    },
+    markFeedAsRead: {
+      method: 'PUT',
+		params: {
+			
+			observationid: '@_observationid'
+		},
+		url: '/api/users/me/feed/:observationid/lastread',
+		isArray: false
+			
+    },
+    stopNotifications: {
+      method: 'DELETE',
+		params: {
+			
+			observationid: '@_observationid'
+		},
+		url: '/api/users/me/feed/:observationid'
+			
+    }
 	  });
   });
 

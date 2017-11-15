@@ -14,6 +14,11 @@ router.delete('/:id/roles/:roleid', auth.hasRole('useradmin'), controller.remove
 router.post('/:id/roles/:roleid', auth.hasRole('useradmin'), controller.addRole);
 
 router.get('/me', auth.isAuthenticated(), controller.me);
+router.get('/me/feed', auth.isAuthenticated(), controller.showNewsFeed);
+router.get('/me/feed/count', auth.isAuthenticated(), controller.showNewsCount);
+router.put('/me/feed/:id/lastread', auth.isAuthenticated(), controller.markFeedAsRead);
+router.delete('/me/feed/:id', auth.isAuthenticated(), controller.unsubscribe);
+
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.post('/:id/password', auth.isAuthenticated(), controller.resetPassword);
 router.put('/me/language', auth.isAuthenticated(), controller.changeLanguage);

@@ -187,7 +187,7 @@ exports.addVoteToDetermination = (req, res) => {
 	
 	var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'VOTE ADDED'};
 // Calculation of determination score is wrapped in a transaction
-
+	var prevScore;
 	return models.sequelize.transaction(function(t) {
 			
 		return models.Determination.find({
@@ -213,7 +213,8 @@ exports.addVoteToDetermination = (req, res) => {
 		})
 
 		.then(function(det) {
-
+				
+			prevScore = det.score;
 				if (det.user_id === req.user._id) {
 					throw new Error("You are not allowed to vote on your own identifications");
 				}
@@ -276,7 +277,21 @@ exports.addVoteToDetermination = (req, res) => {
 				})
 				.spread(function(obs, result, det) {
 					result.newPrimaryDeterminationId = obs.primarydetermination_id
-					return [result, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: obs._id, logObject: JSON.stringify(logObject)}, {transaction: t})]
+					var promises = [result, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: obs._id, logObject: JSON.stringify(logObject)}, {transaction: t})];
+					if(det.score >= determinationController.Constants.ACCEPTED_SCORE && prevScore < determinationController.Constants.ACCEPTED_SCORE){
+						
+											promises.push( models.ObservationEvent.create({
+									eventType: 'DETERMINATION_APPROVED',
+									user_id: req.user._id,
+									observation_id: det.observation_id,
+									determination_id: det._id		
+								}, {
+											transaction: t
+										}))
+										
+					}
+					
+					return promises;
 				})
 				.spread(function(result, determinationLogSavePromise) {
 					

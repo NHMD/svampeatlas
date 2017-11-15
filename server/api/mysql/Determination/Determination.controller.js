@@ -496,7 +496,7 @@ exports.updateValidation = (req, res) => {
 			})
 			.then((det) => {
 
-				return [det, models.DeterminationLog.create({
+				var promises = [det, models.DeterminationLog.create({
 					eventType: logObject._eventType,
 					user_id: req.user._id,
 					determination_id: det._id,
@@ -505,6 +505,20 @@ exports.updateValidation = (req, res) => {
 				}, {
 					transaction: t
 				})]
+				
+				if(det.validation === "Godkendt"){
+					promises.push( models.ObservationEvent.create({
+			eventType: 'DETERMINATION_EXPERT_APPROVED',
+			user_id: req.user._id,
+			observation_id: det.observation_id,
+			determination_id: det._id		
+		}, {
+					transaction: t
+				}))
+				}
+				
+				return promises;
+				
 			})
 			.spread(function(det, determinationLogSavePromise) {
 
@@ -572,9 +586,22 @@ exports.addDeterminationToObs = (req, res) => {
 					logObject: JSON.stringify(logObject)
 				}, {
 					transaction: t
+				}), models.ObservationEvent.create({
+			eventType: 'DETERMINATION_ADDED',
+			user_id: req.user._id,
+			observation_id: obs._id,
+			determination_id: det._id		
+		}, {
+					transaction: t
+				}), models.ObservationSubscriber.upsert({
+			user_id: req.user._id,
+			observation_id: obs._id,
+			updatedAt: models.sequelize.fn('NOW')
+		}, {
+					transaction: t
 				})]
 			})
-			.spread(function(det, determinationLogSavePromise) {
+			.spread(function(det, determinationLogSavePromise, observationEventPromise) {
 
 				return det
 			})
@@ -781,6 +808,9 @@ function addConstantsToLogObject(logObject) {
 	logObject.Constants.IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY = IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY;
 
 }
+
+// expose constants to other controllers:
+addConstantsToLogObject(exports);
 
 exports.getCrowsourcedIdentificationConstants = function() {
 

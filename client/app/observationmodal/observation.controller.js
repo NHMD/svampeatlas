@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog',  'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'MapBox', 'KMS','$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService','ValidatorNotificationModalService',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog,  Observation, Determination, $mdMedia, $mdToast, leafletData, MapBox, KMS, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, ValidatorNotificationModalService) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog',  'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'MapBox', 'KMS','$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService','ValidatorNotificationModalService', 'SearchService',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog,  Observation, Determination, $mdMedia, $mdToast, leafletData, MapBox, KMS, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, ValidatorNotificationModalService, SearchService) {
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
 			this.DeterminationLogModalService = DeterminationLogModalService;
@@ -138,21 +138,28 @@ angular.module('svampeatlasApp')
 			$scope.deleteDetermination = ValidatorToolsService.deleteDetermination;
 			$scope.updateConfidence = ValidatorToolsService.updateConfidence;
 			
-
-
-			$scope.postComment = function() {
+			
+			$scope.focusNewComment = function(){
+				
+				angular.element( document.querySelector( '#newComment' ) ).focus()
+				
+			}
+		
+			$scope.postComment = function(mentions) {
 				that.sendingComment = true;
 				Observation.postComment({
 						id: $scope.obs._id
 					}, {
-						content: that.newComment
+						content: that.newComment,
+						mentions: mentions
+						
 					})
 					.$promise.then(function(comment) {
 						$scope.obs.Forum.push(comment);
 						delete that.newComment;
 
 						that.sendingComment = false;
-
+						
 
 						$rootScope.$broadcast('observation_updated', $scope.obs);
 					})
