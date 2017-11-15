@@ -21,9 +21,9 @@
 				<!-- -->
 	         <md-card-title class="mobile-obs-title">
 	           <md-card-title-text class="mobile-obs-header">
-	             <h4 class="mobile-obs-header"><em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || MobileList.translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em>
+	             <h4 class="mobile-obs-header"><a ng-click="MobileList.SpeciesModalService.show($event, tile.DeterminationView.Taxon_id)"><em ng-if="!tile.DeterminationView.Taxon_vernacularname_dk || MobileList.translate.use()==='en'">{{tile.DeterminationView.Taxon_FullName}}</em></a>
 					 <span ng-if="tile.DeterminationView.Taxon_redlist_status && (!tile.DeterminationView.Taxon_vernacularname_dk || MobileList.translate.use()==='en')"> ({{tile.DeterminationView.Taxon_redlist_status}})</span>
-					 <span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && MobileList.translate.use() !=='en'">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</span></h4>
+					 <span ng-if="tile.DeterminationView.Taxon_vernacularname_dk && MobileList.translate.use() !=='en'"><a ng-click="MobileList.SpeciesModalService.show($event, tile.DeterminationView.Taxon_id)">{{tile.DeterminationView.Taxon_vernacularname_dk | capitalize}}</a></span></h4>
 				 <span class="md-subhead" ng-if="tile.DeterminationView.Taxon_vernacularname_dk && MobileList.translate.use()!=='en'">
 					 <em >{{tile.DeterminationView.Taxon_FullName}}</em> 
 					 <span ng-if="tile.DeterminationView.Taxon_redlist_status"> ({{tile.DeterminationView.Taxon_redlist_status}})</span>

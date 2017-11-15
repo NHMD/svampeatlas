@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchMobileListCtrl', ['$scope','$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants','preloader','StoredSearch', 'MapBox',  
-		function( $scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, preloader, StoredSearch, MapBox) {
+	.controller('SearchMobileListCtrl', ['$scope','$rootScope', '$filter', 'Auth', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'Observation', '$mdMedia', '$mdDialog', 'ObservationSearchService', 'ObservationStateService', '$stateParams', '$state', 'ObservationModalService', 'ObservationFormService', 'ErrorHandlingService', 'Determination', '$cookies', 'appConstants','preloader','StoredSearch', 'MapBox', 'SpeciesModalService', 
+		function( $scope, $rootScope, $filter, Auth, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, Observation, $mdMedia, $mdDialog, ObservationSearchService, ObservationStateService, $stateParams, $state, ObservationModalService, ObservationFormService, ErrorHandlingService, Determination, $cookies, appConstants, preloader, StoredSearch, MapBox, SpeciesModalService) {
 			
 			var vm = this;
 			MapBox.getTicket().then(function(ticket){
@@ -21,6 +21,8 @@ angular.module('svampeatlasApp')
 			vm.baseUrl = appConstants.baseurl;
 			vm.AcceptedDeterminationScore = appConstants.AcceptedDeterminationScore;
 			vm.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
+			
+			vm.SpeciesModalService = SpeciesModalService;
 			
 			vm.displayed = [];
 			// Only use table state for correct pagination when a row update has occurred - otherwise delete state 
@@ -155,7 +157,6 @@ angular.module('svampeatlasApp')
 			}
 			var storedSearchDeferred = $q.defer();
 			if($stateParams.searchid){
-				console.log($stateParams.searchid)
 				
 				StoredSearch.get({id: $stateParams.searchid}).$promise.then(function(ss){
 					
