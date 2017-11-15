@@ -611,7 +611,7 @@ angular.module('svampeatlasApp')
 
 
 					var parsedGroups = JSON.parse(storedMorphoGroups);
-					if(parsedGroups.length > 0){
+					if(parsedGroups && parsedGroups.length > 0){
 						include.push({
 							model: "MorphoGroup",
 							as: "MorphoGroup",
