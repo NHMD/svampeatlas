@@ -327,7 +327,8 @@ angular.module('svampeatlasApp')
 			'har tilføjet en bestemmelse til' : 'suggested an identification to',
 			'nævnte dig i en kommentar på' : 'mentioned you in a comment on',
 			'er blevet valideret og godkendt som' : 'was validated and approved as',
-			'har ekspertgodkendt' : 'has expert-approved'
+			'har ekspertgodkendt' : 'has expert-approved',
+			'Du har ingen notifikationer' : 'You have no notifications'
 			
 			
 		});

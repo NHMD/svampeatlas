@@ -1,4 +1,5 @@
- 
+
+<md-card ng-if="NotificationList.displayed.length === 0"><md-card-title><h3 translate>Du har ingen notifikationer</h3></md-card-title></md-card>
 	 <md-card flex-gt-md="60" ng-repeat="tile in NotificationList.displayed" ng-class="{'not-read': NotificationList.moment(tile.lastRead).isSameOrBefore(NotificationList.moment(tile.createdAt))}" class="notification-card">
 			<div layout="row" class="mobile-validation" ng-if="NotificationList.mdMedia('gt-xs')">
 			<span flex></span>
