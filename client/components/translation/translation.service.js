@@ -323,7 +323,11 @@ angular.module('svampeatlasApp')
 			'bestemmelsesforslag' : 'identification suggestions',
 			'Fund til validering' : 'Pending validation',
 			'vis art' : 'show species',
-			'Se alle til validering' : 'See all pending validation'
+			'Se alle til validering' : 'See all pending validation',
+			'har tilføjet en bestemmelse til' : 'suggested an identification to',
+			'nævnte dig i en kommentar på' : 'mentioned you in a comment on',
+			'er blevet valideret og godkendt som' : 'was validated and approved as',
+			'har ekspertgodkendt' : 'has expert-approved'
 			
 			
 		});
