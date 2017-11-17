@@ -56,6 +56,7 @@
 												 <div class="mention-highlight"></div>
 												 
 										   		<ul ng-if="$mention.choices.length" class="mention-dropdown">
+														<li ng-show="$mention.loading" layout="row"><span flex></span><md-progress-circular></md-progress-circular><span flex></span></li>
 										   		       <li ng-repeat="choice in $mention.choices" ng-class="{active:$mention.activeChoice==choice}">
 										   		         <a ng-click="$mention.select(choice); focusNewComment() " >
 										   		           {{::choice.name}} {{::choice.Initialer}}

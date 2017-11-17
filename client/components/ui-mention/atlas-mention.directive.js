@@ -23,9 +23,10 @@ angular.module('svampeatlasApp')
        */
       uiMention.findChoices = function(match, mentions) {
 		  
-		  
+		   uiMention.loading = true;
 		  
 		  return SearchService.querySearchUser(match[1]).then(function(users){
+			  uiMention.loading = false;
 			  for(var i = 0; i < users.length; i++){
 			  	users[i].id = users[i]._id
 			  }
