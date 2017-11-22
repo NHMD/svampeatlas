@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('LoginController',  function($scope, Auth, $state, $window, $location, $cookies, $translate, PlutoF, ssSideNav, $mdDialog, $mdMedia, ErrorHandlingService, forgotPw, forgotPwEmail) {
+  .controller('LoginController',  function($scope, Auth, $state, $window, $location, $cookies, $translate, PlutoF, ssSideNav, $mdDialog, $mdMedia, ErrorHandlingService, forgotPw, forgotPwEmail, $rootScope) {
     $scope.user = {};
     $scope.errors = {};
 	$scope.$mdMedia = $mdMedia;
@@ -27,6 +27,7 @@ angular.module('svampeatlasApp')
 				$location.search('fberror', null)
 				if(usr){
 					ssSideNav.setVisible('Logout', true);
+					$rootScope.$broadcast('open_sidemenu');
 				}
 				if(Auth.hasRole('taxonomyadmin')){
 					ssSideNav.setVisible('TaxonBase', true);

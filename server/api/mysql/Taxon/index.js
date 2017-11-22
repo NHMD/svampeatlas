@@ -80,7 +80,7 @@ router.post('/:id/dknames/current/',auth.hasRole('taxonomyadmin'),  controller.s
 router.put('/:id/dknames/:nameid',auth.hasRole('taxonomyadmin'),  dkNamesController.updateName);
 router.delete('/:id/dknames/:nameid',auth.hasRole('taxonomyadmin'),  dkNamesController.deleteName);
 
-router.get('/:id/danishspecies/count', controller.numberOfDanishSpecies);
+router.get('/:id/danishspecies/count', redisClient.use(),controller.numberOfDanishSpecies);
 
 
 module.exports = router;

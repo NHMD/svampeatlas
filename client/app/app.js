@@ -75,6 +75,13 @@ angular.module('svampeatlasApp', [
 					requireLogin: true,
 				}]
 			}, {
+					id: 'Signup',
+					name: 'Sign up',
+					state: 'signup',
+					type: 'link',
+					icon: 'person_add',
+					ifNotLoggedIn: true
+				}, {
 				id: 'Settings',
 				name: 'Bruger',
 				type: 'heading',
@@ -129,7 +136,7 @@ angular.module('svampeatlasApp', [
 					type: 'link',
 					icon: 'logout',
 					requireLogin: true
-				}]
+				}] 
 			}, {
 				id: 'SearchAtlas',
 				name: 'Søg i Svampeatlas',
@@ -296,7 +303,7 @@ angular.module('svampeatlasApp', [
 					}, {
 						id: 'id_circles',
 						icon: 'pie_chart',
-						name: 'Bestemmelshjul',
+						name: 'Bestemmelseshjul',
 						uri: 'http://svampeatlas.dk/bestemmelseshjul.html',
 						type: 'external_link',
 						requireLogin: false,
@@ -457,6 +464,10 @@ angular.module('svampeatlasApp', [
 
 .run(function($rootScope, $state, Auth, editableOptions, editableThemes, $translate, $cookies, ngMdIconService, $http) {
 	// ngMdIconService.addShape('taxonomy', '<g fill="#008"><circle cy="150" cx="33" r="31"/><circle cy="72" cx="144" r="31"/><circle cy="228" cx="144" r="31"/><circle cy="33" cx="267" r="31"/><circle cy="111" cx="267" r="31"/><circle cy="189" cx="267" r="31"/><circle cy="267" cx="267" r="31"/></g><path  d="M267,33l-123,39 123,39m0,78l-123,39 123,39m-127-195l-111,78 111,78"/> ')
+	if($cookies.get('preferred_language') === 'dk'){
+		$cookies.put("preferred_language", 'da')
+	}
+	
 	window.fbAsyncInit = function() {
 		FB.init({
 			appId: '332165895643',

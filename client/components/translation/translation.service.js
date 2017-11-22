@@ -185,7 +185,7 @@ angular.module('svampeatlasApp')
 			'Klassifikation' : 'Classification',
 			'Bygger' : 'Building',
 			'Gendan' : 'Rebuild',
-			'Bestemmelshjul' : 'Identification circles',
+			'Bestemmelseshjul' : 'Identification circles',
 			'I dag' : 'Today',
 			'Udenlandske fund': 'Global sightings',
 			'Svampebog' : 'Fungi book',
@@ -290,7 +290,7 @@ angular.module('svampeatlasApp')
 			'Seneste aktivitet' : 'Latest activity',
 			'Fund i dag' : 'Sightings today',
 			'Seneste uge' : 'Past week',
-			'Nyheder fra svampeatlas' : 'News from the Atlas of Danish Fungi',
+			'Nyheder fra svampeatlas' : 'News from the Fungal Atlas',
 			'Opdatér' : 'Refresh',
 			'Bestemmelsens sikkerhed ændret til' : 'Identification certainty changed to',
 			'mulig' : 'possible',
@@ -328,13 +328,21 @@ angular.module('svampeatlasApp')
 			'nævnte dig i en kommentar på' : 'mentioned you in a comment on',
 			'er blevet valideret og godkendt som' : 'was validated and approved as',
 			'har ekspertgodkendt' : 'has expert-approved',
-			'Du har ingen notifikationer' : 'You have no notifications'
-			
+			'Du har ingen notifikationer' : 'You have no notifications',
+			'Statens Naturhistoriske Museum' : 'the Natural History Museum of Denmark',
+			'Foreningen til svampekundskabens fremme' : 'the Danish Mycological Society',
+			'Aage V. Jensens naturfond' : 'Aage V. Jensen Nature Foundation',
+			'og' : 'and',
+			'svampefund' : 'fungal records',
+			'arter af svampe' : 'species of fungi',
+			'svampebilleder' : 'images of fungi',
+			'rapportører' : 'reporters',
+			'Søg viden om Danmarks vilde svampe og bidrag med dine egne fund' : 'Explore the Fungi of Denmark and share your own observations'	
 			
 		});
 		
 
-		$translateProvider.translations('dk', {
+		$translateProvider.translations('da', {
 			
 			'Logout': 'Log ud',
 			'Home': 'Hjem',
@@ -467,7 +475,7 @@ angular.module('svampeatlasApp')
 			'Morpho groups': 'Morfo-grupper',
 			'Morpho group missing': 'Morfo-gruppe mangler',
 			'Login' : 'Log ind',
-			'Sign up': 'Tilmeld',
+			'Sign up': 'Opret profil',
 		  'num_users' : 'Antal rapportører', 
 		  'num_obs' : 'Antal observationer', 
 		  'num_days' : 'Antal feltdage', 

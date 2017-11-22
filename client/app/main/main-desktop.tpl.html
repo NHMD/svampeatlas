@@ -1,7 +1,42 @@
-<div layout="row" layout-xs="column" layout-sm="column" flex>
+<div class="image-header" ng-style="getHeaderImgBackgroundStyle()" ng-if="!Auth.isLoggedIn()">
+	    
+	
+		
+	<div class="main-page-header" layout="column" layout-align="end">
+		
+		<h1 class="md-display-3" translate>Danmarks svampeatlas</h1>
+		<div layout="row">
+			<p class="md-subhead main-tagline" translate>Søg viden om Danmarks vilde svampe og bidrag med dine egne fund</p>
+	
+	</div>
+		
+		<div layout="row" layout-align="space-between center">
+			<div ng-click="openSideMenu(); $state.go('search')" class="cursor-pointer">
+			<h2 ng-bind="observationCount | localNumber">650.000</h2>
+			<h3 translate>svampefund</h3>
+		</div>
+			<div ng-click="openSideMenu(); $state.go('checklist')" class="cursor-pointer">
+			<h2 ng-bind="speciesCount | localNumber">7100</h2>
+			<h3>{{($parent.preferred_language ==='en') ? 'danish ': ''}}{{'arter af svampe' | translate}}</h3>
+		</div>
+			<div ng-click="openSideMenu(); $state.go('search-gallery')" class="cursor-pointer">
+			<h2 ng-bind="imageCount | localNumber">90.000</h2>
+			<h3 translate>svampebilleder</h3>
+		</div>
+			<div>
+			<h2 ng-bind="userCount | localNumber">1700</h2>
+			<h3 translate>rapportører</h3>
+		</div>
+		</div>
+	</div>
+	
+</div>
+<div>
+<div ng-class="{'main-content' : !Auth.isLoggedIn()}" layout="row" layout-xs="column" layout-sm="column" flex>
 <div layout="column" flex-gt-sm="66">
-<md-whiteframe class="md-whiteframe-5dp newsfeed" ng-if="Auth.isLoggedIn()">
-<span class="validation-needed-sub-header m-left-24">{{'Fund til validering' | translate }} </span>
+	<h3 ng-if="Auth.isLoggedIn()" class="validation-needed-sub-header">{{'Fund til validering' | translate }} </h3>
+<md-whiteframe class="md-whiteframe-3dp newsfeed" ng-if="Auth.isLoggedIn()">
+
 <div flex layout-fill layout="center center" ng-if="validationTilesLoading"><md-progress-linear></md-progress-linear></div>
 <div layout="row" >
 	<span ng-if="validationNeededtiles && validationNeededtiles.length ===0" class="validation-needed-sub-header">{{'Ingen data fundet' | translate}}</span>
@@ -22,12 +57,7 @@
 			   ng-style="getBackgroundStyle(tile)"
 			   ng-click="ObservationModalService.show($event, tile)"
 				  >
-	<!--	<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
-			<div flex="33"></div>
-			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
-			<div flex="33"></div>
-		</div> -->
-    <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
+
      
       <md-grid-tile-footer class="img-footer footer-full-width" >
 	  <span  class="footer-img-count star-rating"><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= 0"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= ProbableDeterminationScore"></ng-md-icon><ng-md-icon size="12" icon="star" ng-if="tile.DeterminationView.Determination_score >= AcceptedDeterminationScore"></ng-md-icon></span>
@@ -76,9 +106,9 @@
 		           </md-select>
 				    </md-input-container > -->
 </md-whiteframe>
+<h3 class="validation-needed-sub-header">{{'Seneste aktivitet' | translate }}</h3>
+<md-whiteframe class="md-whiteframe-3dp newsfeed" >
 
-<md-whiteframe class="md-whiteframe-5dp newsfeed" >
-<span class="validation-needed-sub-header">{{'Seneste aktivitet' | translate }}:</span>
 <md-grid-list
         md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
         md-row-height="200px"
@@ -101,12 +131,7 @@
 			   ng-style="getBackgroundStyle(tile)"
 			   ng-click="ObservationModalService.show($event, tile)"
 				  >
-	<!--	<div class="progress-container" flex layout-fill layout="center center" ng-if="!tile.Images[0].imageLoadSuccess">
-			<div flex="33"></div>
-			<md-progress-circular layout-fill flex="33" md-mode="indeterminate" ></md-progress-circular> 
-			<div flex="33"></div>
-		</div> -->
-    <!--  <img ng-click="ObservationModalService.show($event, tile)" ng-src="{{getImageUrl(tile)}}" imageonload="imageHasLoaded(tile.Images[0].name)" imageonload="imageHasLoaded(tile.Images[0].name)" imageonerror="imageHasFailed(tile.Images[0].name)" ng-show="loaded[tile.Images[0].name] === true && failed[tile.Images[0].name] !== true"> -->
+
       <md-grid-tile-footer class="img-footer footer-full-width" >
 	  <span class="footer-img-count star-rating">
 	  <ng-md-icon icon="microscope" size="18" ng-if="tile.DeterminationView.Determination_validation === 'Godkendt'"></ng-md-icon>
@@ -119,25 +144,11 @@
   </md-grid-list>
   </md-whiteframe>
 </div>
- <div layout="column" flex-gt-sm="33" layout ng-if="mdMedia('gt-sm')">
+ <div layout="column" flex-gt-sm="33" layout ng-if="mdMedia('gt-sm')" >
 
-   <md-whiteframe class="md-whiteframe-5dp newsfeed" >
+    <h3 class="validation-needed-sub-header">{{'Nyheder fra svampeatlas' | translate }}</h3>
+   <md-whiteframe class="md-whiteframe-3dp newsfeed" >
  
- 
- <span class="validation-needed-sub-header news-subheader">{{'Samarbejdspartnere' | translate }}:</span>
-   <div flex layout="row" layout-align="space-around center" >
-    
-
-       <img src="assets/images/logo.png" height="60" alt="Svampeforeningen">
-    
-      <img src="assets/images/avj_w_text.jpg"  height="30" alt="Aage v. Jensen naturfond">
-     
-    
-       <img src="assets/images/ku_logo_dk_v.png" height="60" alt="Københavns universitet">
- 
-   </div>
-  <md-divider layout-margin layout-padding></md-divider>
-  <span class="validation-needed-sub-header news-subheader">{{'Nyheder fra svampeatlas' | translate }}:</span>
     <md-list layout-fill layout-padding>
 	
       
@@ -149,11 +160,41 @@
           <p ng-bind-html='item.content.$t | limitHtml: 100'></p><a ng-click='showNews($event, item)'>Læs mere</a>
 		 
         </div>
-		 <img ng-if="item.media$thumbnail" ng-src="{{item.media$thumbnail.url}}"  alt="{{item.media$thumbnail.url}}" />
+		 <img ng-if="item.media$thumbnail" ng-src="{{item.media$thumbnail.url}}"  alt="{{item.media$thumbnail.url}}" >
 		 
       </md-list-item>
      
     </md-list>
 	 </md-whiteframe >
+
 	 </div>
+	 
+
+
+
 	</div>
+</div>
+<div class="footer-wrapper">
+	<md-divider></md-divider>
+	    <div flex class="main-footer" layout="row" layout-align="space-around center" layout-margin >
+	<div layout="column" layout-align="center  center">
+		<div>
+	      <a href="http://www.avjf.dk/avjnf/"> <img src="assets/images/AVJNF1.png"  height="60" alt="Aage v. Jensen naturfond"></a>
+	   </div>
+		   <span class="footer-partner md-body-1">Aage v. Jensen Naturfond</span>
+     </div>
+			<div layout="column" layout-align="center  center">
+				<div>
+	       <a href="http://www.svampe.dk/"> <img src="assets/images/logo.png" height="60" alt="Svampeforeningen"></a>
+		</div>
+			<span class="footer-partner md-body-1">Foreningen til Svampekudskabens Fremme</span>
+    </div>
+
+ 	<div layout="column" layout-align="center center">
+    	<div>
+	       <a href="http://snm.ku.dk/">  <img src="assets/images/ku_logo_dk_v.png" height="60" alt="Københavns universitet"></a>
+		</div>
+			<span class="footer-partner md-body-1">Statens Naturhistoriske Museum</span>
+ </div>
+	    </div>
+			    </div>

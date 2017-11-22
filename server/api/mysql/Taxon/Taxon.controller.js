@@ -1306,16 +1306,34 @@ exports.setParent = function(req, res) {
 
 exports.numberOfDanishSpecies = function(req, res){
 	
-	
-	return models.sequelize.query(
-		"SELECT tc._id, tc.FullName, COUNT(*) as count FROM Taxon tc, Taxon t, TaxonAttributes ta WHERE t._id=ta.taxon_id AND ta.PresentInDK =1 AND t.Path LIKE CONCAT((SELECT Path FROM Taxon where _id=:taxon_id), '%')" 
+	var sql;
+	if(req.params.id !=="all"){
+		sql = "SELECT tc._id, tc.FullName, COUNT(*) as count FROM Taxon tc, Taxon t, TaxonAttributes ta WHERE t._id=ta.taxon_id AND ta.PresentInDK =1 AND t.Path LIKE CONCAT((SELECT Path FROM Taxon where _id=:taxon_id), '%')" 
 +"AND tc.parent_id= :taxon_id AND t.Path LIKE CONCAT(tc.Path, '%')"
-+"AND t.RankID = 10000 GROUP BY tc.FullName",
+		+"AND t.RankID = 10000 GROUP BY tc.FullName";
+	} else {
+	/*	sql= `SELECT SUM(y.numTaxa) as count FROM (SELECT GREATEST(CAST(ta.PresentInDK  AS UNSIGNED), IF(x.childCount IS NULL, 0, x.childCount)) AS numTaxa FROM 
+(Taxon t JOIN
+TaxonAttributes ta ON ta.taxon_id=t._id AND t.RankID=10000 AND t.accepted_id=t._id )
+LEFT JOIN
+	(SELECT p._id, COUNT(c._id) as childCount FROM Taxon p, Taxon c, TaxonAttributes ca  WHERE ca.taxon_id = c._id AND c.parent_id=p._id AND ca.PresentInDK =1 AND c._id=c.accepted_id AND p.RankID=10000 GROUP BY p._id) x ON t._id = x._id ) y`;
+		*/
+		sql="SELECT COUNT(*) as count FROM Taxon t, TaxonAttributes ta where t.RankID = 10000 AND t._id=ta.taxon_id AND t.accepted_id=t._id AND ta.PresentInDK =1 ";
+	}
+	return models.sequelize.query(
+		sql,
   { replacements: { taxon_id: req.params.id }, type: models.sequelize.QueryTypes.SELECT }
-).then(function(stats) {
+).then(function(result) {
 	
-	return res.status(200).json(stats);
- 
+	if (req.query.cachekey && req.query.cachekey === "speciesCount" &&  req.params.id ==="all") {
+		return cacheResult(req, JSON.stringify(result)).then(function() {
+			return res.status(200).json(result)
+		})
+	} else {
+		return res.status(200).json(result)
+	}
+	
+	 
 })
 
 }

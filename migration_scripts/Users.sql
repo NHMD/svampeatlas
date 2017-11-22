@@ -8,3 +8,11 @@ INSERT INTO `svampeatlas`.`Role` (`_id`, `createdAt`, `updatedAt`, `name`) VALUE
 INSERT INTO `svampeatlas`.`Role` (`_id`, `createdAt`, `updatedAt`, `name`) VALUES (NULL, CURRENT_TIMESTAMP, NULL, 'downvotedetermination');
 
 INSERT INTO `svampeatlas`.`Role` (`_id`, `createdAt`, `updatedAt`, `name`) VALUES (NULL, CURRENT_TIMESTAMP, NULL, 'similartaxaadmin');
+
+ALTER TABLE Users
+MODIFY COLUMN preferred_language ENUM('dk','en', 'da') NOT NULL DEFAULT 'da';
+
+UPDATE Users SET preferred_language = 'da' WHERE preferred_language = 'dk';
+
+ALTER TABLE Users
+MODIFY COLUMN preferred_language ENUM('da', 'en') NOT NULL DEFAULT 'da';

@@ -4,12 +4,16 @@ var express = require('express');
 var controller = require('./ObservationImage.controller');
 
 var auth = require('../../../auth/auth.service');
+var redisClient = require('../../../components/hooks/redisClient');
 
 var router = express.Router();
 
 router.get('/', controller.index);
 
+router.get('/count', redisClient.use(),controller.getCount);
 router.get('/:id', controller.show);
+
+
 
 
 //router.post('/', auth.hasRole('taxonomyadmin'), controller.create);

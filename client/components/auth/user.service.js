@@ -7,7 +7,12 @@ angular.module('svampeatlasApp')
     },
 	
     {
-
+		'getCount': {
+			method: 'GET',
+			url: '/api/users/count',
+			isArray: true
+		},
+	    
       changePassword: {
         method: 'PUT',
         params: {

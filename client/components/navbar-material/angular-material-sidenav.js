@@ -205,6 +205,8 @@
 						return Auth.hasRole(item.requireRole)
 					} else if(item.requireLogin){
 						return Auth.isLoggedIn()
+					} else if(item.ifNotLoggedIn){
+						return !Auth.isLoggedIn()
 					} else {
 						return true;
 					}

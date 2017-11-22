@@ -334,3 +334,27 @@ exports.destroy = function(req, res) {
 };
 
 
+exports.getCount = function(req, res) {
+
+
+	var sql =  'select count(*) as count from ObservationImages ';
+
+
+	return models.sequelize.query(sql, {
+
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		if (req.query.cachekey ) {
+			return cacheResult(req, JSON.stringify(result)).then(function() {
+				return res.status(200).json(result)
+			})
+		} else {
+			return res.status(200).json(result)
+		}
+	}).catch(handleError(res));
+
+
+};

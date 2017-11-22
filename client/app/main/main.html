@@ -6,24 +6,182 @@
       <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" >
         <div class="md-toolbar-tools">
           
-		  <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() && !mdSidenav('left').isLockedOpen()" aria-label="Menu" ng-controller="SideNavBtnCtrl">
+		  <md-button class="md-icon-button" ng-click="openSideNav()" ng-show="!mdSidenav('left').isOpen() " aria-label="Menu" ng-controller="SideNavBtnCtrl">
             <ng-md-icon icon="menu"></ng-md-icon>
           </md-button>
+		  
+		  <!--    -->
+		  
+		  
+		  
+		  
+		  
+		  <md-menu-bar ng-if="!Auth.isLoggedIn() && mdMedia('gt-sm')" class="homepage-horisontal-menu">
+		            <md-menu>
+		              <button ng-click="$mdMenu.open()">
+		                {{'Søg i Svampeatlas' | translate}}
+		              </button>
+		              <md-menu-content>
+					 
+		                <md-menu-item>
+		                  <md-button ng-click="openSideMenu(); $state.go('search')">
+		                    {{'Søgeformular' | translate}}
+		                  </md-button>
+		                </md-menu-item>
+		                <md-menu-divider></md-menu-divider>
+                      <md-menu-item><md-button ng-click="openSideMenu(); $state.go('search-list', {searchterm:'today'})" >{{'I dag' | translate}}</md-button></md-menu-item>
+                      <md-menu-item><md-button ng-click="openSideMenu(); $state.go('search-list', {searchterm:'3days'})" >{{'Seneste 3 dage' | translate}}</md-button></md-menu-item>
+                      <md-menu-item><md-button ng-click="openSideMenu(); $state.go('search-list', {searchterm:'7days'})" >{{'Seneste 7 dage' | translate}}</md-button></md-menu-item>
+					  
+                      <md-menu-item><md-button ng-click="openSideMenu(); $state.go('search-list', {searchterm:'foreign'})" >{{'Udenlandske fund' | translate}}</md-button></md-menu-item>
+					  <md-menu-divider></md-menu-divider>
+						
+						
+		                <md-menu-item >
+		                  <md-menu>
+		                    <md-button ng-click="$mdMenu.open()" translate>{{'Konkurrencer' | translate}}</md-button>
+		                    <md-menu-content >
+	                         <md-menu-item><md-button ng-click="openSideMenu(); $state.go('competitions', {controller:'speciescount'})" >{{'speciescount' | translate}}</md-button></md-menu-item>
+							 <md-menu-item><md-button ng-click="openSideMenu(); $state.go('competitions', {controller:'pioneerredlisted'})" >{{'pioneerredlisted' | translate}}</md-button></md-menu-item>
+	                         <md-menu-item><md-button ng-click="openSideMenu(); $state.go('competitions', {controller:'numberofobservations'})" >{{'numberofobservations' | translate}}</md-button></md-menu-item>
+							 <md-menu-item><md-button ng-click="openSideMenu(); $state.go('competitions', {controller:'highjumper'})" >{{'highjumper' | translate}}</md-button></md-menu-item>
+	                         
+	                         <md-menu-item><md-button ng-click="openSideMenu(); $state.go('competitions', {controller:'numberofmobileobservations'})" >{{'numberofmobileobservations' | translate}}</md-button></md-menu-item>
+							  <md-menu-item><md-button ng-click="openSideMenu(); $state.go('competitions', {controller:'numberofarchiveobservations'})" >{{'numberofarchiveobservations' | translate}}</md-button></md-menu-item>
+							   <md-menu-item><md-button ng-click="openSideMenu(); $state.go('competitions', {controller:'pioneer'})" >{{'pioneer' | translate}}</md-button></md-menu-item>
+		                    </md-menu-content>
+		                  </md-menu>
+		                </md-menu-item>
+		                <md-menu-item>
+		                  <md-button ng-click="openSideMenu(); $state.go('utm')" >
+		                    {{'UTM felter' | translate}}
+		                  </md-button>
+		                </md-menu-item>
+						
+		   
+		              </md-menu-content>
+		            </md-menu>
+		            <md-menu>
+		              <button ng-click="$mdMenu.open()" >
+		                {{'Svampebog' | translate}}
+		              </button>
+		              <md-menu-content>
+		                <md-menu-item >
+		                  <md-button ng-click="openSideMenu(); $state.go('checklist')" >
+		                    {{'Danske arter' | translate}}
+		                    
+		                  </md-button>
+		                </md-menu-item>
+		                <md-menu-item >
+		                  
+		                  <md-button ng-click="openSideMenu(); $state.go('taxon-tree-dk')" >
+		                    {{'Klassifikation' | translate}}
+		                   
+		                  </md-button>
+		                </md-menu-item>
+		                
+		                <md-menu-item >
+		                  
+		                  <md-button ng-href="http://svampeatlas.dk/bestemmelseshjul.html" >
+		                    {{'Bestemmelseshjul' | translate}}
+		                  </md-button>
+		                </md-menu-item>
+		           
+		              </md-menu-content>
+		            </md-menu>
+		            <md-menu>
+		              <button ng-click="$mdMenu.open()" >
+		                {{'Om svampeatlas' | translate}}
+		              </button>
+  		              <md-menu-content>
+  		                <md-menu-item >
+  		                  <md-button ng-click="openSideMenu(); $state.go('news')" >
+  		                    {{'Nyheder' | translate}}
+		                    
+  		                  </md-button>
+  		                </md-menu-item>
+  		                <md-menu-item >
+		                  
+  		                  <md-button ng-click="openSideMenu(); $state.go('validation')" >
+  		                    {{'Validering' | translate}}
+		                   
+  		                  </md-button>
+  		                </md-menu-item>
+		                
+  		                <md-menu-item >
+		                  
+  		                  <md-button ng-click="openSideMenu(); $state.go('about')" >
+  		                    {{'Projektbeskrivelse' | translate}}
+  		                  </md-button>
+  		                </md-menu-item>
+		           
+  		             
+		              </md-menu-content>
+		            </md-menu>
+		           
+		          </md-menu-bar>
+		  
+		  
+		  
+		  
+		  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+		  
+		  <!---->
+		  
+		  
 		 	 
           <span flex></span>
+		<md-menu >
+		            <md-button aria-label="Open demo menu" ng-click="$mdMenu.open($event)">
+		              <ng-md-icon icon="language"></ng-md-icon> {{preferred_language}}
+		            </md-button>
+		            <md-menu-content width="2">
+		              <md-menu-item ng-repeat="item in ['da', 'en']">
+		                <md-button ng-click="changeLanguage(item)">  {{item}} </md-button>
+		              </md-menu-item>
+		            </md-menu-content>
+		          </md-menu> 
+		 <!-- <md-button ng-if="!Auth.isLoggedIn()" ng-click="changeLanguage()"><ng-md-icon icon="language"></ng-md-icon> {{($parent.preferred_language ==='dk') ? 'en': 'da'}}</md-button> -->
+        <md-button ng-if="!Auth.isLoggedIn() && mdMedia('gt-xs')"  ng-click="showLogin()">
+         <ng-md-icon icon="login"></ng-md-icon>{{'Login' | translate}}
+        </md-button>
+        <md-button  ng-if="!Auth.isLoggedIn()" ng-click="openSideMenu(); $state.go('signup')">
+         <ng-md-icon icon="person_add"></ng-md-icon>{{'Sign up' | translate }}
+        </md-button>
+		   
 		  <notification ng-if="currentUser"></notification>
-		 <span layout-margin ng-if="mdMedia('gt-xs')"> <h1 class="md-display-1" translate>Danmarks svampeatlas</h1></span>
+		 
 		   <a href="/"><img class="logo-upper-right" src="assets/images/LogoSmallest.png"></a>
         </div>
 
       </md-toolbar>	
 	
-<md-content ng-if="mdMedia('gt-xs')" layout="column" md-scroll-y  ng-include="'app/main/main-desktop.tpl.html'" flex></md-content> 
-<md-content ng-if="mdMedia('xs')" layout="column" md-scroll-y  ng-include="'app/main/main-mobile.tpl.html'" flex></md-content> 
+<md-content ng-if="mdMedia('gt-xs')" layout="column" md-scroll-y  ng-include="'app/main/main-desktop.tpl.html'" ng-controller="MainDesktopCtrl" flex></md-content> 
+<md-content ng-if="mdMedia('xs')" layout="column" md-scroll-y  ng-controller="MainMobileCtrl as vm"  ng-include="'app/main/main-mobile.tpl.html'" flex></md-content> 
+
+<div ng-if="mdMedia('xs')" flex layout="row" layout-align="space-around end" class="mobile-footer">
+    
+
+       <img src="assets/images/logo.png" height="50" alt="Svampeforeningen">
+    
+      <img src="assets/images/AVJNF1.png"  height="50" alt="Aage v. Jensen naturfond">
+     
+    
+       <img src="assets/images/ku_logo_dk_v.png" height="50" alt="Københavns universitet">
+ 
+   </div>
 
 	
 	        
-	      </div>
+		  
 	  
 <!--<header class="hero-unit" id="banner" >
   <div class="container">

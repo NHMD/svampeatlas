@@ -8,6 +8,8 @@ var redisClient = require('../../../components/hooks/redisClient');
 var router = express.Router();
 
 router.get('/', controller.index);
+router.get('/count', redisClient.use(), controller.getCount);
+
 router.delete('/:id', auth.hasRole('useradmin'), controller.destroy);
 router.delete('/:id/roles/:roleid', auth.hasRole('useradmin'), controller.removeRole);
 

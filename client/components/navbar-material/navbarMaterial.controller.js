@@ -8,7 +8,9 @@ angular.module('svampeatlasApp')
 	  $scope.mdMedia = $mdMedia;
 	  var that = this;
 	  this.$state = $state;
-	  $scope.User = Auth.getCurrentUser();
+	 $scope.User = Auth.getCurrentUser();
+	  
+	 
 	              $scope.menu = ssSideNav;
 
 	              // Listen event SS_SIDENAV_CLICK_ITEM to close menu
@@ -24,7 +26,6 @@ angular.module('svampeatlasApp')
 					
 				  };
 				  
-	$scope.languages = [{"value":"dk","label":"<img src=\"assets/images/flags/flags/shiny/16/Denmark.png\" >"},{"value":"en","label":"<img src=\"assets/images/flags/flags/shiny/16/United-Kingdom.png\">"}];
 	Auth.getCurrentUser(function(usr){
 		
 			
@@ -41,8 +42,12 @@ angular.module('svampeatlasApp')
 				ssSideNav.setVisible('Logout', false);
 			}
 		})
-	
-	
+		$rootScope.$on('open_sidemenu', function(){
+			that.closed = false;
+		})
+		$rootScope.$on('close_sidemenu', function(){
+			that.closed = true;
+		})
 	$rootScope.$on('userHasOpenedMenu', function(){
 		that.closed = false;
 	})
@@ -66,36 +71,38 @@ angular.module('svampeatlasApp')
 	
 	
 	
-	$scope.$watch('preferred_language', function(newval, oldval){
-		if(newval){
+	$scope.preferred_language = $cookies.get('preferred_language') || 'da';
+	$scope.changeLanguage = function(newval){
+		
+		if(newval === 'dk'){
+			 moment.locale('da');
+		} else if(newval === 'en'){
+			moment.locale('en');
+		}
+		setCalendarLanguage();
+		if(Auth.isLoggedIn()){
 			
-			if(newval === 'dk'){
-				 moment.locale('da');
-			} else if(newval === 'en'){
-				moment.locale('en');
-			}
-			setCalendarLanguage();
-			if(Auth.isLoggedIn()){
-				
-				User.setLanguage({language: newval }).$promise.then(function(){
-					$scope.getCurrentUser().preferred_language = newval;
-					$cookies.put("preferred_language",newval)
-					$translate.use(newval);
-				})
-			} else {
+			User.setLanguage({language: newval }).$promise.then(function(){
+				$scope.getCurrentUser().preferred_language = newval;
 				$cookies.put("preferred_language",newval)
 				$translate.use(newval);
-				$rootScope.$broadcast("preferred_language_changed", newval)
-				
-			}
-			
+			})
+		} else {
+			$cookies.put("preferred_language",newval)
+			$translate.use(newval);
+			$rootScope.$broadcast("preferred_language_changed", newval)
 			
 		}
-	});
+		$timeout(function(){
+			$scope.preferred_language = $cookies.get('preferred_language') || 'da';
+		})
+	}
 	
-	$timeout(function(){
-		$scope.preferred_language = $cookies.get('preferred_language') || 'dk';
-	})
+  $scope.$on("preferred_language_changed", function(evt, newval){
+	  $scope.preferred_language = newval;
+  })
+	
+
 	
 	$scope.sendNewUserRequestByEmail = function(){
 		

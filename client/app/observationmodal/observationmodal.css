@@ -173,6 +173,9 @@ table.log-table > tbody {
 	padding: 0px !important;
 }
 
+#newComment {
+	min-height: 24px;
+}
 
 
 
