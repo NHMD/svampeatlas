@@ -35,11 +35,12 @@
 		  <div layout-gt-xs="row" layout-margin>  
 			 
 		<div>	
+			
 		  <md-expansion-panel md-component-id="panelOne">
 
 		    <md-expansion-panel-collapsed>
 		      <div class="md-title">Klassifikation</div>
-		      <div class="md-summary"><span  ng-repeat="tx in higherTaxa" >{{capitalizeFirstLetter(tx.FullName)}}{{(!$last) ? ', ': ''}}</span></div>
+		      <div class="md-summary classification-string"><span  ng-repeat="tx in higherTaxa" >{{capitalizeFirstLetter(tx.FullName)}}{{(!$last) ? ', ': ''}}</span></div>
 		      <md-expansion-panel-icon></md-expansion-panel-icon>
 		    </md-expansion-panel-collapsed>
 
@@ -48,7 +49,7 @@
 
 		      <md-expansion-panel-header ng-click="$panel.collapse()">
 		        <div class="md-title">Klassifikation</div>
-		         <div class="md-summary"><span  ng-repeat="tx in higherTaxa" >{{capitalizeFirstLetter(tx.FullName)}}{{(!$last) ? ', ': ''}}</span></div>
+		         <div class="md-summary classification-string"><span  ng-repeat="tx in higherTaxa" >{{capitalizeFirstLetter(tx.FullName)}}{{(!$last) ? ', ': ''}}</span></div>
 		        <md-expansion-panel-icon ></md-expansion-panel-icon>
 		      </md-expansion-panel-header>
 

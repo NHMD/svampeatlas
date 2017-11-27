@@ -10,6 +10,7 @@
 'use strict';
 
 var _ = require('lodash');
+var config = require('../../../config/environment');
 
 var models = require('../')
 var DeterminationVote = models.DeterminationVote;
@@ -18,6 +19,8 @@ var determinationController = require('../Determination/Determination.controller
 
 var nestedQueryParser = require("../nestedQueryParser")
 var userTool = require("../userTool");
+
+var request = require('request');
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -64,6 +67,19 @@ function removeEntity(res) {
 				});
 		}
 	};
+}
+
+function cacheResult(req, value) {
+	var redisClient = req.redis;
+	var ttl = req.ttl;
+	return redisClient.setAsync(req.originalUrl, value)
+		.then(function() {
+			return redisClient.expireAsync(req.originalUrl, ttl)
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+		})
+
 }
 
 // Get list of taxons
@@ -416,8 +432,8 @@ exports.deleteVoteFromDetermination = function(req, res){
 						logObject.Determination.sumOfVotes = SumAndAbsSum.sum;
 						logObject.Determination.absoluteSumOfVotes = SumAndAbsSum.absSum;
 						
-						console.log("########")
-						console.log(JSON.stringify(SumAndAbsSum));
+					//	console.log("########")
+					//	console.log(JSON.stringify(SumAndAbsSum));
 
 						/*
 						console.log("######### absSumCalc "+JSON.stringify(absSumCalc))
@@ -429,7 +445,7 @@ exports.deleteVoteFromDetermination = function(req, res){
 					
 							// extend to use det.baseScore
 						det.score = determinationController.getDeterminationScore(SumAndAbsSum.sum + det.baseScore, taxonWeight, SumAndAbsSum.absSum + det.baseScore);
-						console.log("####### score: "+det.score)
+					//	console.log("####### score: "+det.score)
 						logObject.Determination.newCalculatedScore = det.score;
 						
 						return [det.save({
@@ -511,3 +527,53 @@ exports.destroy = function(req, res) {
 		.
 	catch(handleError(res));
 };
+
+
+exports.count = function(req, res) {
+	
+	
+		
+	if(['WEEK', 'MONTH', 'YEAR', 'YEARWEEK'].indexOf(req.query.timeIntervalType) === -1 ){
+		return res.sendStatus(400);
+	}
+	var sql;
+	if (!req.query.groupByUser ) {
+		
+		if (req.query.communityApproved){
+			sql = `SELECT ${req.query.timeIntervalType}(v.createdAt) as ${req.query.timeIntervalType}, count(v._id) as votecount, count(distinct v.user_id) as usercount  FROM DeterminationVotes v, Determination d WHERE v.determination_id=d._id AND d.baseScore < ${determinationController.Constants.ACCEPTED_SCORE} AND d.score >= ${determinationController.Constants.ACCEPTED_SCORE} AND d.validation <> "Godkendt" AND v.createdAt > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(v.createdAt)`
+		} else if (req.query.expertApproved) {
+			sql = `SELECT ${req.query.timeIntervalType}(v.createdAt) as ${req.query.timeIntervalType}, count(v._id) as votecount, count(distinct v.user_id) as usercount  FROM DeterminationVotes v, Determination d WHERE v.determination_id=d._id AND d.validation = "Godkendt" AND v.createdAt > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(v.createdAt)`
+		} else if (req.query.notApproved){
+			sql = `SELECT ${req.query.timeIntervalType}(v.createdAt) as ${req.query.timeIntervalType}, count(v._id) as votecount, count(distinct v.user_id) as usercount  FROM DeterminationVotes v, Determination d WHERE v.determination_id=d._id AND  d.score < ${determinationController.Constants.ACCEPTED_SCORE} AND d.validation <> "Godkendt" AND v.createdAt > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(v.createdAt)`
+		} else {
+			sql = `SELECT ${req.query.timeIntervalType}(v.createdAt) as ${req.query.timeIntervalType}, count(v._id) as votecount, count(distinct v.user_id) as usercount  FROM DeterminationVotes v WHERE  v.createdAt > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(v.createdAt)`
+		}
+		
+		
+	} else {
+		//TODO : show breakdown of votes grouped by user
+	}
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			timeIntervalType: req.query.timeIntervalType,
+			timeAgo: req.query.timeAgo 
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+		
+		if (req.query.cached) {
+			return cacheResult(req, JSON.stringify(result)).then(function() {
+				return res.status(200).json(result)
+			})
+		} else {
+			return res.status(200).json(result)
+		}
+
+	}).catch(handleError(res));
+
+
+};
+

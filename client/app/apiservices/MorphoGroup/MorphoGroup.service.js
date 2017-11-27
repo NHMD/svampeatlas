@@ -7,7 +7,15 @@ angular.module('svampeatlasApp')
 	  return $resource('/api/morphogroups/:id', { id: '@_id' }, {
 	      update: {
 	        method: 'PUT' // this method issues a PUT request
-	      }
+	      },
+		getUsers: {
+			method: 'GET',
+			params: {
+				id: '@_id'
+			},
+			url: '/api/morphogroups/:id/users',
+			isArray: true
+		},
 	    });
    
   });

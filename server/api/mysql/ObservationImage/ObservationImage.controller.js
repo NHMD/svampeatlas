@@ -21,6 +21,7 @@ Promise.promisifyAll(fs);
 var nestedQueryParser = require("../nestedQueryParser");
 var userTool = require("../userTool")
 var moment = require('moment');
+var config = require('../../../config/environment');
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -56,6 +57,19 @@ function saveUpdates(updates) {
 				return updated;
 			});
 	};
+}
+
+function cacheResult(req, value) {
+	var redisClient = req.redis;
+	var ttl = req.ttl;
+	return redisClient.setAsync(req.originalUrl, value)
+		.then(function() {
+			return redisClient.expireAsync(req.originalUrl, ttl)
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+		})
+
 }
 
 function removeEntity(res) {
@@ -347,13 +361,14 @@ exports.getCount = function(req, res) {
 
 	.then(function(result) {
 
-		if (req.query.cachekey ) {
+		if (req.query.cached) {
 			return cacheResult(req, JSON.stringify(result)).then(function() {
 				return res.status(200).json(result)
 			})
 		} else {
 			return res.status(200).json(result)
 		}
+		
 	}).catch(handleError(res));
 
 

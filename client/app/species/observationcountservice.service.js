@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
 	.factory('ObservationCountService', function(Observation) {
 
-		var count = Observation.getCount({group: 'Decade', cacheKey: 'count'});
+		var count = Observation.getCount({group: 'Decade', cached: true});
 		return {
 
 			getCount: function() {

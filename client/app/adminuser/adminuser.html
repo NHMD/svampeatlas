@@ -1,0 +1,91 @@
+<md-toolbar    ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'">	
+	
+</md-toolbar>	
+<md-content flex md-scroll-y layout-padding layout="row">
+
+<div flex></div>
+<div>
+			<div>
+			
+			<div layout-gt-xs="row">
+				<div layout="column" layout-align="start center">
+				<user-avatar class="useravatar md-avatar" size="'large'" user="ctrl.user_" ></user-avatar>
+				
+				<h2 class="morphogroup-username-header">{{ctrl.user_.name}} ({{ctrl.user_.Initialer}})</h2>
+			</div>
+			<div class="md-whiteframe-2dp">
+			  			<div  layout="column" layout-padding>
+							<label>Set max and min impact on Morphogroup:
+							    <select class="form-control"  ng-model="ctrl.selectedMorphoGroup" ng-options="morphogroup.name_dk for morphogroup in ctrl.Positions ">
+									{{morphogroup.name_dk}}
+							    </select>
+							  </label>	
+			  			    <md-slider-container ng-show="ctrl.selectedMorphoGroup">
+			  			      <span>Min </span>
+			  			      <md-slider flex="66" min="1" max="100" ng-model="ctrl.selectedMorphoGroup.min_impact" aria-label="min" id="min-slider">
+			  			      </md-slider>
+			  			      <md-input-container>
+			  			        <input flex type="number" ng-model="ctrl.selectedMorphoGroup.min_impact" aria-label="min" aria-controls="min-slider">
+			  			      </md-input-container>
+			  			    </md-slider-container>
+
+			  			    <md-slider-container ng-show="ctrl.selectedMorphoGroup" >
+			  			      <span>Max </span>
+			  			      <md-slider flex="66" ng-model="ctrl.selectedMorphoGroup.max_impact" min="1" max="100" aria-label="max" id="max-slider" class="md-accent">
+			  			      </md-slider>
+			  			      <md-input-container>
+			  			        <input flex type="number" ng-model="ctrl.selectedMorphoGroup.max_impact" aria-label="max" aria-controls="max-slider">
+			  			      </md-input-container>
+			  			    </md-slider-container>
+				
+			  </div>
+			  <div layout="row" layout-align="end end">
+				  
+			  <md-button  ng-show="ctrl.selectedMorphoGroup" class="md-primary md-raised" ng-click="ctrl.saveUserMorphoGroupImpact($event, ctrl.selectedMorphoGroup)">Save settings</md-button></div>
+		  </div>
+		  </div>
+			
+		
+
+			
+			
+		</div>
+		
+			
+		<table  class='table table-bordered table-condensed morpho-group' st-table="ctrl.Positions" >
+			<thead>
+
+			<tr>
+				<th st-ratio="50">Morphogroup</th>
+				<th st-ratio="20">Position </th>
+				<th st-ratio="10">Impact</th>
+				<th st-ratio="10">Min impact</th>
+				<th st-ratio="10">Max impact</th>
+		
+		
+			</tr>
+			</thead>
+			<tbody >
+			<tr ng-repeat="pos in ctrl.Positions" ng-class="{'alert-warning': pos.min_impact > pos.impact || pos.impact > pos.max_impact}" >
+				<td st-ratio="50"><a ng-click="ctrl.selectedMorphoGroup = pos;">{{pos.name_dk}}</a></td>
+				<td class="graphicMedals" st-ratio="20">
+					<strong class="md-display-2"><a ng-href="/taxonbase/morphogroups/{{pos.morphogroup_id}}">{{pos.position}}</a></strong>
+					<span ng-if="pos.position === 1" class="gold"></span>
+					<span ng-if="pos.position === 2" class="silver"></span>
+					<span ng-if="pos.position === 3" class="bronze"></span>
+				</td>
+				<td st-ratio="10"><strong>{{pos.impact}}</strong></td>
+				<td st-ratio="10">{{pos.min_impact}}</td>
+				<td st-ratio="10">{{pos.max_impact}}</td>
+			
+			</tr>
+			</tbody>
+			
+
+		</table>
+		
+			
+		</div>
+		<div flex></div>
+</md-content>
+

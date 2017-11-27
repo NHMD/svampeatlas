@@ -22,24 +22,24 @@ angular.module('svampeatlasApp')
 	
 	
 	function loadCounts(){
-		$scope.observationCount = 650000;
-		$scope.imageCount = 95000;
-		$scope.userCount = 1700;
-		$scope.speciesCount = 7100;
-		Observation.getCount({cacheKey: 'count'}).$promise.then(function(res){
+		$scope.observationCount = 700000;
+		$scope.imageCount = 140000;
+		$scope.userCount = 2300;
+		$scope.speciesCount = 7300;
+		Observation.getCount({cached: true}).$promise.then(function(res){
 			$scope.observationCount = res[0].count;
 		})
 	
-		ObservationImage.getCount({cacheKey: 'imageCount'}).$promise.then(function(res){
+		ObservationImage.getCount({cached: true}).$promise.then(function(res){
 			$scope.imageCount = res[0].count;
 		})
-		User.getCount({cacheKey: 'userCount'}).$promise.then(function(res){
+		User.getCount({cached: true}).$promise.then(function(res){
 			$scope.userCount = res[0].count;
 		})
 	
 		Taxon.getNumberOfDanishSpecies({
 			id: 'all',
-			cacheKey: 'speciesCount'
+			cachekey: 'speciesCount'
 		}).$promise.then(function(res){
 			$scope.speciesCount = res[0].count;
 		})

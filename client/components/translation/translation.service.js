@@ -337,7 +337,21 @@ angular.module('svampeatlasApp')
 			'arter af svampe' : 'species of fungi',
 			'svampebilleder' : 'images of fungi',
 			'rapportører' : 'reporters',
-			'Søg viden om Danmarks vilde svampe og bidrag med dine egne fund' : 'Explore the Fungi of Denmark and share your own observations'	
+			'Søg viden om Danmarks vilde svampe og bidrag med dine egne fund' : 'Explore the Fungi of Denmark and share your own observations',
+			'Stemmer': 'Votes',
+			'Uge' : 'Week',
+			'uge' : 'week',
+			'Stemmer pr uge' : 'Votes / week',
+			'På observationer som er blevet godkendt' : 'On observations that has been approved',
+			'På observationer som er blevet ekspert-godkendt' : 'On observations that has been expert approved',
+			'På observationer som ikke er blevet godkendt' : 'On observations that has not been approved',
+			'Antal fund pr uge' : 'Observations / week',
+			'Arter fundet pr uge' : 'Species / week',
+			'Antal brugervaliderede arter' : 'Peer validated species',
+			'Aktive brugere pr uge' : 'Active users / week',
+			'Antal brugere' : 'Users',
+			'Aktive rapportører' : 'Active reporters',
+			'Aktive i validering' : 'Participating in validation'
 			
 		});
 		

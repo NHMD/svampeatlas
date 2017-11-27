@@ -25,7 +25,8 @@ angular.module('svampeatlasApp')
 				'taxonlayout-taxonbooklayout': 'Book layout',
 				'taxonlog' : 'Log',
 				'taxontags' : 'Tags',
-			  'taxonmorphogroups': 'Morphogroups'
+			  'taxonmorphogroups': 'Morphogroups',
+			  'taxonmorphogroupusers': 'Morphogroup impact'
 			};
 			
 	

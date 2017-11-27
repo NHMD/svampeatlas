@@ -45,15 +45,20 @@
   	<tbody>
   	<tr ng-repeat="row in safeUsers">
   		<td>{{row.Initialer}}</td>
-  		<td>{{row.name}}</td>
+  		<td><a ng-href="/admin/user/{{row._id}}">{{row.name}}</a></td>
   		<td>{{row.email}}</td>
 		<td>{{row.createdAt | date: 'd/M/yy h:mm a'}}</td>
 		<td><md-switch   ng-model="row.photopermission" aria-label="Photopermission" ng-change="User.setPhotopermission({id: row._id}, {photopermission : row.photopermission})">
 					          
 					        </md-switch></td>
-							  		<td ng-if="Auth.hasRole('validator')"><button type="button" class="btn btn-small btn-primary" ng-click="editUserMorphoGroups(row)">Morphogroups
+							  		<td ng-if="Auth.hasRole('validator')">
+										<button type="button" class="btn btn-small btn-primary" ng-click="editUserMorphoGroups(row)">Morphogroups
   
-							</button></td>
+							</button> 
+										
+						
+						
+						</td>
   		<td><button type="button" class="btn btn-small btn-primary" ng-click="editUser(row)">Roles
   
 </button></td>

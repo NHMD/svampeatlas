@@ -242,6 +242,7 @@ module.exports = function(grunt) {
 						'<%= yeoman.dist %>/client/{,*/}*.js',
 						'<%= yeoman.dist %>/client/{,*/}*.css',
 						'<%= yeoman.dist %>/client/assets/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+						'<%= yeoman.dist %>/client/assets/svg/{,*/}*.{svg}',
 						'!<%= yeoman.dist %>/client/assets/images/public/*.{png,jpg,jpeg,gif,webp,svg}',
 						//   '<%= yeoman.dist %>/client/assets/fonts/*',
 						'!<%= yeoman.dist %>/client/bower_components/*.{css,js}'
@@ -271,6 +272,7 @@ module.exports = function(grunt) {
 					'<%= yeoman.dist %>/client',
 					'<%= yeoman.dist %>/client/assets',
 					'<%= yeoman.dist %>/client/assets/images',
+					'<%= yeoman.dist %>/client/assets/svg',
 					'<%= yeoman.dist %>/client/assets/fonts'
 				],
 				// This is so we update image references in our ng-templates
@@ -281,11 +283,12 @@ module.exports = function(grunt) {
 					],
 					css: [
 						[/(images\/.*?\.(?:gif|jpeg|jpg|png|webp|svg))/gm, 'Update the CSS to reference our revved images',
-							function(match) {
+							 function(match) {
 
 								return match.replace('images', '/assets/images');
-							}
+							} 
 						],
+						[/(assets\/svg\/.*?\.(?:svg))/gm, 'Update the CSS to reference our revved images'],
 						[/(..\/fonts\/)/g, 'Fix webfonts path',
 							function(match) {
 								return match.replace('../fonts/', '../assets/fonts/');
@@ -342,6 +345,11 @@ module.exports = function(grunt) {
 					cwd: '<%= yeoman.client %>/assets/images',
 					src: '{,*/}*.svg',
 					dest: '<%= yeoman.dist %>/client/assets/images'
+				},{
+					expand: true,
+					cwd: '<%= yeoman.client %>/assets/svg',
+					src: '{,*/}*.svg',
+					dest: '<%= yeoman.dist %>/client/assets/svg'
 				}]
 			}
 		},
@@ -408,6 +416,7 @@ module.exports = function(grunt) {
 						//    'bower_components/**/*',
 						'assets/images/{,*/}*.{webp}',
 						'assets/fonts/**/*',
+						'assets/svg/*',
 						'index.html'
 					]
 				}, {

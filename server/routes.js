@@ -69,6 +69,8 @@ module.exports = function(app) {
 	app.use('/api/search', require('./api/mysql/StoredSearch'));
 	app.use('/api/morphogroups', intparser.parseLimitOffset(), require('./api/mysql/MorphoGroup'));
 	app.use('/api/competitions', require('./api/mysql/Competition'));
+	app.use('/api/votes', require('./api/mysql/DeterminationVotes'));
+	
 	
 	app.use('/auth', require('./auth'));
 

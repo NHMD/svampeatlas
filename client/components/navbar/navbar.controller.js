@@ -17,6 +17,7 @@ angular.module('svampeatlasApp')
 	  
 $scope.states = 
     { 'admin': { name: "Useradmin", icon: 'group'},
+	  'adminuser': { name: "Useradmin", icon: 'settings'},
 	  'login': { name: "Login", icon: 'login'},
 	  'settings': { name: "Indstillinger", icon: 'settings'},
 	  'dashboard' :{name: "Dashboard", icon: "dashboard"},
@@ -34,7 +35,11 @@ $scope.states =
 	  'signup' : {name: 'Opret brugerprofil', icon: 'person_add'},
 	  'confirm' : {name: 'Opret brugerprofil', icon: 'person_add'},
 	  'notifications' : {name: 'Notifikationer', icon: 'notifications_active'},
-	  'forgot' : {name: 'Glemt password', icon: 'lock_open'}
+	  'forgot' : {name: 'Glemt password', icon: 'lock_open'},
+	  'metrics' : {name: 'Statistik', icon: 'insert_chart'}
+	  
+
+	  
 	  
 	};
 	

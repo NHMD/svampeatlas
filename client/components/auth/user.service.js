@@ -165,6 +165,14 @@ angular.module('svampeatlasApp')
 		url: '/api/users/:id/morphogroups',
 		isArray: true
     },
+    getMorphoGroupPositions: {
+      method: 'GET',
+		params: {
+			id: '@_id'
+		},
+		url: '/api/users/:id/morphogrouppositions',
+		isArray: true
+    },
 	validateEmail: {
 		method: 'POST',
 		url: '/api/users/validate/email'

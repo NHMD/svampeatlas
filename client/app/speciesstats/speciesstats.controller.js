@@ -321,7 +321,6 @@ angular.module('svampeatlasApp')
 					name: "Antal fund",
 					data: $scope.months
 				}];
-
 				$scope.hostChartOptions.series = [{
 					name: "Antal fund",
 					data: $scope.hosts

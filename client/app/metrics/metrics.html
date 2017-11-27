@@ -1,0 +1,39 @@
+<md-toolbar   ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'">	
+	
+</md-toolbar>	
+<md-content flex md-scroll-y layout-padding layout="column" >
+<div layout-gt-xs="row" layout-align="center center" layout-margin>
+
+<div class="md-whiteframe-3dp">
+	<highchart id="speciesChart" config="ctrl.speciesChartOpts" ></highchart>
+	
+</div>
+<div class="md-whiteframe-3dp">
+	<highchart id="observationChart" config="ctrl.observationChartOpts" ></highchart>
+	
+</div>
+</div>
+<div layout-gt-xs="row" layout-align="center center" layout-margin>
+<div class="md-whiteframe-3dp">
+	
+	<highchart id="voteChart" config="ctrl.voteChartOpts" ></highchart>
+	
+</div>
+
+<div class="md-whiteframe-3dp">
+	
+	<highchart id="userChart" config="ctrl.userChartOpts" ></highchart>
+	
+</div>
+</div>
+<!--<div layout-gt-xs="row" layout-align="center center" layout-margin>
+<div>
+<div class="md-whiteframe-3dp">
+	<highchart id="speciesByYearChart" config="ctrl.speciesByYearChartOpts" ></highchart>
+	
+</div>
+</div> -->
+
+</div>
+</md-content>
+

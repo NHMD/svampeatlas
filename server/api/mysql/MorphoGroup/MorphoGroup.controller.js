@@ -200,3 +200,25 @@ exports.batchUpdateMorphoGroup = function(req, res) {
 			return res.status(statusCode).send(err.message)
 		});
 }
+
+exports.getUsers = function(req, res) {
+	
+	
+		var sql = `SELECT m.name_dk, m.name_uk, m.taxonCount, u._id, u.name, um.impact, um.min_impact, um.max_impact 
+					FROM Users u, 
+					(SELECT mx._id, mx.name_dk, mx.name_uk, count(t._id) as taxonCount FROM MorphoGroup mx LEFT JOIN Taxon t ON t.morphogroup_id=mx._id WHERE t.accepted_id= t._id GROUP BY mx._id) m, 
+					UserMorphoGroupImpact um 
+					WHERE m._id=um.morphogroup_id AND um.user_id=u._id AND m._id=:id ORDER BY LEAST(GREATEST(um.impact, um.min_impact), um.max_impact) DESC`
+	
+		return models.sequelize.query(sql, {
+		replacements: {
+			id: req.params.id
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result);
+	}).catch(handleError(res));
+}

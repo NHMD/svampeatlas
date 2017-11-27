@@ -1,0 +1,62 @@
+.graphicMedals {
+  display: block;
+  color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+.graphicMedals > span {
+  display: inline-block;
+  background-color: transparent;
+  background-image: url(/assets/svg/trophysprite.svg);
+  background-repeat: no-repeat;
+  height: 35px;
+  width: 35px;
+}
+.graphicMedals > .gold.wait-for-animation,
+.graphicMedals > .silver.wait-for-animation,
+.graphicMedals > .bronze.wait-for-animation {
+  opacity: 0;
+}
+.graphicMedals > .gold.wait-for-animation.animate,
+.graphicMedals > .silver.wait-for-animation.animate,
+.graphicMedals > .bronze.wait-for-animation.animate {
+  opacity: 1;
+  transition: opacity .2s;
+  transition-timing-function: ease-in-out;
+  animation: swing-medal 2s;
+}
+.graphicMedals > .trophy {
+  margin-right: 5px;
+}
+.graphicMedals > .trophy + .trophy {
+  margin-left: -9px;
+}
+.graphicMedals > .trophy.wait-for-animation {
+  opacity: 0;
+}
+.graphicMedals > .trophy.wait-for-animation.animate {
+  opacity: 1;
+  transition: opacity .2s;
+  animation: bounce-medal 1s;
+}
+.graphicMedals > .gold {
+  background-position: -70px 0;
+}
+.graphicMedals > .gold + .gold {
+  margin-left: -17px;
+}
+.graphicMedals > .silver {
+  background-position: -140px 0;
+}
+.graphicMedals > .silver + .silver {
+  margin-left: -17px;
+}
+.graphicMedals > .bronze {
+  background-position: -210px 0;
+}
+.graphicMedals > .bronze + .bronze {
+  margin-left: -17px;
+}
+
+.morphogroup-placement {
+	margin-left: 14px;
+}

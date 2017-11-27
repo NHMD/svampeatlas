@@ -1,0 +1,47 @@
+<md-toolbar    ng-controller="TaxonTabsCtrl" ng-include="'app/taxontabs/taxontabs.html'">	
+	
+</md-toolbar>	
+<md-content flex md-scroll-y layout-padding layout="row">
+<div flex></div>
+<div >
+<h1 class="md-display-1">{{vm.Users[0].name_dk | capitalize}}</h1>	
+
+<table class="table" ng-class="{'table-bordered table-condensed': vm.mdMedia('min-width: 768px')}"  st-table="vm.Users" >
+	<thead>
+
+	<tr>
+		<th>Placering</th>
+		<th translate>Bruger </th>
+		<th >Impact</th>
+		<th>Min impact</th>
+		<th>Max impact</th>
+		
+		
+	</tr>
+	</thead>
+	<tbody ng-show="!vm.isLoading">
+	<tr ng-repeat="usr in vm.Users" ng-class="{'alert-warning': usr.min_impact > usr.impact || usr.impact > usr.max_impact}">
+		<td class="graphicMedals">
+			<strong ng-if="$index > 2 " class="morphogroup-placement">{{$index +1}}</strong>
+			<span ng-if="$index === 0" class="gold"></span>
+			<span ng-if="$index === 1" class="silver"></span>
+			<span ng-if="$index === 2" class="bronze"></span>
+		</td>
+		<td >{{usr.name}}</td>
+		<td ><strong>{{usr.impact}}</strong></td>
+		<td>{{usr.min_impact}}</td>
+		<td>{{usr.max_impact}}</td>
+			
+	</tr>
+	</tbody>
+	<tbody ng-show="vm.isLoading">
+	<tr>
+		<td colspan="4" class="text-center">Loading ... </td>
+	</tr>
+	</tbody>
+
+</table>
+</div>
+<div flex></div>
+</md-content>
+

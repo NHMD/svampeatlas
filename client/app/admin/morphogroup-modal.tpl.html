@@ -8,15 +8,7 @@
 			
 			
 				<div class="modal-body">
-					
-		  		<!--		   <md-input-container>
-		  				    <label>{{'Set max and min impact on Morphogroup' | translate}}</label>
-		   			 	  <md-select ng-change="selectMorphoGroup(selectedMorphoGroup)" ng-model="selectedMorphoGroup">
-		  	             <md-option ng-repeat="morphogroup in morphoGroups" value="{{morphogroup._id}}" >
-		  	               {{morphogroup.name_dk}}
-		  	             </md-option>
-		  			  </md-select>
-		  		  </md-input-container> -->
+		
 					<div layout-gt-xs="row">
 					
 					<label>Set max and min impact on Morphogroup:
@@ -28,9 +20,7 @@
 					 <span flex></span> <label> Calculated impact: {{currentMorphogroup.impact}}</label>
 				  </div>
 					
-					<!--<button type="button" class="btn btn-default" ng-model="selectedRole" data-html="1" bs-options="role.name for role in roles | filter:filterAlreadyAddedRoles" placeholder="Choose role" bs-select>
-					  Action <span class="caret"></span>
-					</button>-->
+				
 						
 					    <md-slider-container ng-show="selectedMorphoGroup">
 					      <span>Min </span>
@@ -50,34 +40,7 @@
 					      </md-input-container>
 					    </md-slider-container>
 						
-						
-					<!--	<form name="impactForm">
-	   			   <div layout-gt-xs="row">
-	     				   <md-input-container class="md-block" flex-gt-sm>
-	     				            <label>{{'Minimum impact' | translate}}</label>
-	     				            <input name="minImpact" type="number" min="1" max="100" ng-model="minImpact" />
-	  						<div ng-messages="$parent.impactForm.minImpact.$error" role="alert" >
-						              
-	  						          <span class="error" ng-show="$parent.impactForm.minImpact.$error">    {{'Tallet skal være mellem 1 og 100'}}</span>
-						             
-	  						            </div>
-			         
-	     				          </md-input-container>
-    				   <md-input-container class="md-block" flex-gt-sm>
-    				            <label>{{'Maximum impact' | translate}}</label>
-    				            <input name="maxImpact" type="number" min="1" max="100" ng-model="maxImpact" />
- 						<div ng-messages="impactForm.maxImpact.$error" role="alert" >
-					          <span class="error" ng-show="impactForm.minImpact.$error">    {{'Tallet skal være mellem 1 og 100'}}</span>
-				             
-					            </div>
- 						              
-				             
- 						            </div>
-	         
-    				          </md-input-container>
- 	   				   
-	   			   </div>
-			   </form> -->
+
 					<button type="button" ng-show="currentMorphogroup" class="btn btn-default" ng-click="saveUserMorphoGroupImpact(currentMorphogroup)">Save settings</button>
 					
 				

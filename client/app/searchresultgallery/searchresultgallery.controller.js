@@ -208,6 +208,7 @@ angular.module('svampeatlasApp')
 		
 				
 				$scope.loadTiles = function(limit, offset){
+					$scope.isLoading = true;
 					var query = {
 						//order: order || 'observationDate DESC',
 						_order: JSON.stringify(order),
@@ -251,7 +252,7 @@ angular.module('svampeatlasApp')
 						$scope.offset = offset +limit;
 					}, function(err) {
 						console.log(err, status)
-
+						$scope.isLoading = false;
 						if (err.status === 504) {
 							ErrorHandlingService.handle504();
 						}

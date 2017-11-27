@@ -21,6 +21,8 @@ exports.use = function () {
     return compose()
         // Attach user to request
         .use(function(req, res, next) {
+			console.log("######")
+			console.log(req.originalUrl)
 			req.redis = redisClient;
             if (req.query.cachekey) {
 				redisClient.getAsync(req.query.cachekey)
@@ -45,6 +47,36 @@ exports.use = function () {
 				next()
 				
 			}
+			
+           
+        });
+}
+
+exports.cache = function (ttl) {
+    return compose()
+        // Attach user to request
+        .use(function(req, res, next) {
+			
+			req.redis = redisClient;
+       	 	req.ttl = ttl;
+				redisClient.getAsync(req.originalUrl)
+				.then(function(reply){
+					
+					if(reply){
+					
+						return res.status(200).send(reply)
+					} else {
+			           
+						next()
+					}
+				})
+				.catch(function(err){
+					console.log("#### ERR "+err)
+					next()
+				})
+	
+             
+           
 			
            
         });

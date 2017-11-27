@@ -38,7 +38,8 @@ angular.module('svampeatlasApp', [
 			'http://svampe.dk/**',
 			'https://www.facebook.com/',
 			'https://api.gbif.org/',
-			'http://quick.as/**'
+			'http://quick.as/**',
+			'https://svampe.databasen.org/'
 		]);
 		$logProvider.debugEnabled(false);
 		$locationProvider.html5Mode(true);
@@ -273,7 +274,16 @@ angular.module('svampeatlasApp', [
 
 
 					]
-				}, {
+				}, 
+				{
+					id: 'metrics',
+					icon: 'insert_chart',
+					name: 'Statistik',
+					state: 'metrics',
+					type: 'link',
+					requireLogin: false,
+				}, 
+				{
 					id: 'utm',
 					icon: 'grid_on',
 					name: 'UTM felter',

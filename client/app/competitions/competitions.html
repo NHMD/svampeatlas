@@ -32,7 +32,11 @@
 			<div layout-margin	> 			     
 		  		<md-list>
 						   	       <md-list-item class="md-3-line" ng-repeat="elm in ctrl.serverData">
-		   						<div layout-margin><h1>{{$index+1}}</h1></div>
+						   		
+		   						<div layout-margin class="graphicMedals competition-medal"><h1 ng-if="$index > 2 " class="morphogroup-placement">{{$index +1}}</h1>
+						   			<span ng-if="$index === 0" class="gold"></span>
+						   			<span ng-if="$index === 1" class="silver"></span>
+						   			<span ng-if="$index === 2" class="bronze"></span></div>
 						  		   <user-avatar class="useravatar md-avatar" user="elm" ></user-avatar> 
 	   
 									<div class="md-list-item-text" layout="column">

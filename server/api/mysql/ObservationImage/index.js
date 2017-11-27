@@ -10,7 +10,7 @@ var router = express.Router();
 
 router.get('/', controller.index);
 
-router.get('/count', redisClient.use(),controller.getCount);
+router.get('/count', redisClient.cache(60 * 60 * 24), controller.getCount);
 router.get('/:id', controller.show);
 
 

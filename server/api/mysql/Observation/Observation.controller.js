@@ -200,6 +200,19 @@ function cacheResult(req, value) {
 
 }
 
+function cacheResultByUrl(req, value) {
+	var redisClient = req.redis;
+	var ttl = req.ttl;
+	return redisClient.setAsync(req.originalUrl, value)
+		.then(function() {
+			return redisClient.expireAsync(req.originalUrl, ttl)
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+		})
+
+}
+
 // Get list of Observations
 exports.index = function(req, res) {
 
@@ -1101,20 +1114,97 @@ exports.getCount = function(req, res) {
 
 	var groups = {
 		'Year': 'select year(observationDate) as year, count(*) as count from Observation group by year(observationDate)',
-		'Decade': 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation group by decade'
+		'Decade': 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation group by decade',
+		'YEARWEEK' : 'SELECT YEARWEEK(observationDate) as YEARWEEK, COUNT(_id) as count FROM Observation WHERE observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo WEEK) GROUP BY YEARWEEK(observationDate)'
 	}
 	var sql = (req.query.group) ? groups[req.query.group] : 'select count(*) as count from Observation ';
 
 
 	return models.sequelize.query(sql, {
-
+		replacements: {
+			timeAgo: req.query.timeAgo || ""
+		},
 		type: models.sequelize.QueryTypes.SELECT
 	})
 
 	.then(function(result) {
 
-		if (req.query.cachekey && (!req.query.group || (req.query.cachekey.indexOf(req.query.group) > -1))) {
-			return cacheResult(req, JSON.stringify(result)).then(function() {
+		if (req.query.cached) {
+			return cacheResultByUrl(req, JSON.stringify(result)).then(function() {
+				
+				return res.status(200).json(result)
+			})
+		} else {
+			return res.status(200).json(result)
+		}
+	}).catch(handleError(res));
+
+
+};
+
+exports.getSpeciesCount = function(req, res) {
+	
+	if(['WEEK', 'MONTH', 'YEAR', 'YEARWEEK'].indexOf(req.query.timeIntervalType) === -1 ){
+		return res.sendStatus(400);
+	}
+
+	var sql;
+			if (req.query.communityApproved){
+				sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score >= ${determinationController.Constants.ACCEPTED_SCORE} AND d.validation <> "Godkendt") AND d.baseScore < ${determinationController.Constants.ACCEPTED_SCORE} AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
+			} else if (req.query.expertApproved) {
+				sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND  d.validation = "Godkendt" AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
+			} else if (req.query.notApproved){
+				sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score < ${determinationController.Constants.ACCEPTED_SCORE} AND d.validation <> "Godkendt") AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
+			} else {
+				sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score >= ${determinationController.Constants.ACCEPTED_SCORE} OR d.validation = "Godkendt") AND o.observationDate BETWEEN DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) AND DATE_SUB(NOW(), INTERVAL :limit ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`			
+			}
+		
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			timeAgo: req.query.timeAgo,
+			limit:  (req.query.limit) ? parseInt(req.query.timeAgo) - parseInt(req.query.limit) : 0
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		if (req.query.cached) {
+			return cacheResultByUrl(req, JSON.stringify(result)).then(function() {
+				
+				return res.status(200).json(result)
+			})
+		} else {
+			return res.status(200).json(result)
+		}
+	}).catch(handleError(res));
+
+
+};
+
+exports.getUserCount = function(req, res) {
+	
+	if(['WEEK', 'MONTH', 'YEAR', 'YEARWEEK'].indexOf(req.query.timeIntervalType) === -1 ){
+		return res.sendStatus(400);
+	}
+
+
+	var sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct o.primaryuser_id) as usercount  FROM Observation o WHERE  o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
+
+	return models.sequelize.query(sql, {
+		replacements: {
+			timeIntervalType: req.query.timeIntervalType,
+			timeAgo: req.query.timeAgo 
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+		
+		if (req.query.cached) {
+			return cacheResultByUrl(req, JSON.stringify(result)).then(function() {
+				
 				return res.status(200).json(result)
 			})
 		} else {

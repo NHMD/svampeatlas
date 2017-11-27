@@ -3,7 +3,7 @@
 angular.module('svampeatlasApp')
   .controller('TaxonMorphoGroupCtrl',['$scope','MorphoGroup', '$mdDialog', 'Auth',  '$state','SearchService', function ($scope, MorphoGroup, $mdDialog, Auth, $state, SearchService) {
 	  $scope.getCurrentUser = Auth.getCurrentUser;
-	  
+	  $scope.$state = $state;
 	  
 	  $scope.viewTaxa = function(mg){
 		localStorage.removeItem('taxonomy_attribute_conditions');

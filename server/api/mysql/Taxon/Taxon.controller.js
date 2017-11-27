@@ -1625,7 +1625,7 @@ exports.importMycoKeyCharacters = function(req, res){
 	
 	
 	.then(function(inserted) {
-		console.log("###### 1")
+		
 	  return models.Taxon.find({
 		where: {
 			_id: req.params.id

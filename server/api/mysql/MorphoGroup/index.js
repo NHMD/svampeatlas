@@ -10,6 +10,8 @@ var router = express.Router();
 
 router.get('/', controller.index);
 
+router.get('/:id/users',  auth.hasRole('validator'),  controller.getUsers);
+
 router.post('/',auth.hasRole('taxonomyadmin'), controller.create);
 router.delete('/:id',auth.hasRole('taxonomyadmin'), controller.destroy);
 router.put('/:id', auth.hasRole('taxonomyadmin'),  controller.update);

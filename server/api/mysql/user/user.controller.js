@@ -42,6 +42,18 @@ function handleEntityNotFound(res) {
 	};
 }
 
+function cacheResult(req, value) {
+	var redisClient = req.redis;
+
+	return redisClient.setAsync(req.query.cachekey, value)
+		.then(function() {
+			return redisClient.expireAsync(req.query.cachekey, config.redisTTL[req.query.cachekey])
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+		})
+
+}
 /**
  * Get list of users
  * restriction: 'admin'
@@ -140,7 +152,7 @@ exports.getCount = function(req, res) {
 
 	.then(function(result) {
 
-		if (req.query.cachekey ) {
+		if (req.query.cachekey &&  req.query.cachekey === "userCount") {
 			return cacheResult(req, JSON.stringify(result)).then(function() {
 				return res.status(200).json(result)
 			})
@@ -884,5 +896,51 @@ exports.validateInitials = function(req, res){
 		return res.status(200).json(result[0]);
 	}).catch(handleError(res));
 	
+}
+
+
+exports.recent = function(req, res){
+	
+	var sql = "SELECT u.name, count(o._id) FROM Users u, Observation o where u.createdAt >  DATE_SUB(NOW(), INTERVAL :fromDaysAgo day) AND o.primaryuser_id=u._id AND o.dataSource IS NULL  GROUP BY u._id"
+	return models.sequelize.query(sql, {
+		replacements: {
+			fromDaysAgo: req.query.offset
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result);
+	}).catch(handleError(res));
+	
+}
+
+
+exports.showUserMorphoGroupPositions = function(req, res){
+	
+		var sql = `SELECT u.morphogroup_id, m.name_dk,m.name_uk,m.taxonCount,  COUNT(*) as position, u.impact, u.min_impact, u.max_impact FROM 
+UserMorphoGroupImpact um, 
+(SELECT mx._id, mx.name_dk, mx.name_uk, count(t._id) as taxonCount FROM MorphoGroup mx LEFT JOIN Taxon t ON t.morphogroup_id=mx._id WHERE t.accepted_id= t._id GROUP BY mx._id) m,
+(SELECT morphogroup_id, impact, min_impact, max_impact FROM UserMorphoGroupImpact WHERE user_id= :userid) u
+WHERE um.morphogroup_id = m._id AND um.morphogroup_id = u.morphogroup_id AND m.taxonCount > 0 AND um.impact >=u.impact AND u.impact>1 GROUP BY um.morphogroup_id ORDER BY position ASC`
+		return models.sequelize.query(sql, {
+		replacements: {
+			userid: req.params.id
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result);
+	}).catch(handleError(res));
+	
+ };
+
+exports.showMyMorphoGroupPositions = function(req, res){
+	
+	req.params.id = req.user._id;
+	exports.showUserMorphoGroupPositions(req, res)
 }
 

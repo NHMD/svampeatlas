@@ -97,6 +97,16 @@ angular.module('svampeatlasApp')
 				url: '/api/observations/count',
 				isArray: true
 			},
+			'getSpeciesCount': {
+				method: 'GET',
+				url: '/api/observations/count/species',
+				isArray: true
+			},
+			'getUserCount': {
+				method: 'GET',
+				url: '/api/observations/count/users',
+				isArray: true
+			},
 			'removeUser': {
 				method: 'DELETE',
 				params: {

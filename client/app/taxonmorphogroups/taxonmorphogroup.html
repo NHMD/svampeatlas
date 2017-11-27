@@ -42,12 +42,12 @@
 	<tbody ng-show="!isLoading">
 	<tr ng-repeat="mg in displayed">
 		<td st-ratio="10">{{mg._id}}</td>
-		<td st-ratio="10"><button type="button" class="btn btn-default" ng-click="viewTaxa(mg)">View taxa</button></td>
+		<td st-ratio="10"><button type="button" class="btn btn-default" ng-click="viewTaxa(mg)">View taxa</button><button type="button" class="btn btn-default" ng-click="$state.go('taxonmorphogroupusers', {id: mg._id})">Show user impacts</button></td>
 		<td>{{mg.createdAt | date : 'medium'}}</td>
 		<td>
 			<span editable-text="mg.name_dk" e-name="name_dk" e-form="rowform">
 			          {{ mg.name_dk }}
-			        </span>
+			        </span></td>
 			
 		<td><span editable-text="mg.name_uk" e-name="name_uk" e-form="rowform">
 			          {{ mg.name_uk }}
@@ -89,8 +89,4 @@
 </div>	
 	
 </md-content>
-
-	<div layout="row" id="footer"  layout-align="space-around center" layout-margin ng-include="'components/footer/footer.html'">
-	        
-	      </div>
 

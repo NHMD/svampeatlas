@@ -19,7 +19,12 @@ router.get('/frontpage', redisClient.use(), controller.getObservationIdsSelected
 
 router.get('/', auth.appendUser(), redisClient.use(), controller.index);
 
-router.get('/count',  redisClient.use(), controller.getCount);
+router.get('/count',  redisClient.cache(60 * 60 * 24), controller.getCount);
+
+router.get('/count/species',  redisClient.cache(60 * 60 * 24), controller.getSpeciesCount);
+
+router.get('/count/users',  redisClient.cache(60 * 60 * 24), controller.getUserCount);
+
 
 router.get('/specieslist', auth.appendUser(), controller.indexSpeciesList)
 

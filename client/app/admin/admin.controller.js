@@ -5,7 +5,6 @@ angular.module('svampeatlasApp')
 	 
 	  $scope.User = User;
 	  $scope.Auth = Auth;
-
 	  $scope.getUserListCsv = function(){
 
 
