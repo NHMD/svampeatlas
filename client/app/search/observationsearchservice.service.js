@@ -444,7 +444,13 @@ angular.module('svampeatlasApp')
 										Determination_score: {
 											$gte: appConstants.AcceptedDeterminationScore
 										},
-										Determination_validation: {$ne: 'Afvist'}
+										Determination_validation: {$notIn: ['Afvist', 'Godkendt']}
+									})
+									dbQuery.include[0].where.$and.$or.push({
+										Determination_validation: "Godkendt",
+										Determination_validator_id: {
+											$eq: null
+										}
 									})
 									// $or.push({$gte: appConstants.AcceptedDeterminationScore});
 								break;
@@ -453,7 +459,7 @@ angular.module('svampeatlasApp')
 										Determination_score: {
 											$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore]
 										},
-										Determination_validation: {$ne: 'Afvist'}
+										Determination_validation: {$notIn: ['Afvist', 'Godkendt']}
 									})
 									//  $or.push( {$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore]});
 								break;
@@ -462,19 +468,11 @@ angular.module('svampeatlasApp')
 										Determination_score: {
 											$lt: appConstants.ProbableDeterminationScore
 										},
-										Determination_validation: {$ne: 'Afvist'}
+										Determination_validation: {$notIn: ['Afvist', 'Godkendt']}
 									})
 									//  $or.push({$lt: appConstants.ProbableDeterminationScore});
 								break;
-							case 'VALIDATION_STATUS_COMMUNITY_LEVEL_1':
-								dbQuery.include[0].where.$and.$or.push({
-										Determination_score: {
-											$lt: appConstants.ProbableDeterminationScore
-										},
-										Determination_validation: {$ne: 'Afvist'}
-									})
-									//  $or.push({$lt: appConstants.ProbableDeterminationScore});
-								break;
+
 							case 'VALIDATION_STATUS_EXPERT':
 								dbQuery.include[0].where.$and.$or.push({
 										Determination_validation: "Godkendt",
