@@ -457,7 +457,7 @@ angular.module('svampeatlasApp')
 							case 'VALIDATION_STATUS_COMMUNITY_LEVEL_2':
 								dbQuery.include[0].where.$and.$or.push({
 										Determination_score: {
-											$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore]
+											$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore -1]
 										},
 										Determination_validation: {$notIn: ['Afvist', 'Godkendt']}
 									})
