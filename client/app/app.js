@@ -453,6 +453,11 @@ angular.module('svampeatlasApp', [
 				if ($cookies.get('dyntaxatoken')) {
 					config.headers.DynTaxaAuthorization = $cookies.get('dyntaxatoken');
 				}
+				
+				if($cookies.get('preferred_language') === 'dk' ){
+					$cookies.put("preferred_language", 'da')
+				};
+				
 				return config;
 			},
 
@@ -543,7 +548,7 @@ angular.module('svampeatlasApp', [
 	//  editableOptions.theme = 'angular-material';
 	// Redirect to login if route requires auth and you're not logged in
 	$rootScope.$on('$stateChangeStart', function(event, next) {
-		var lang = $cookies.get("preferred_language") || "dk";
+		var lang = $cookies.get("preferred_language") || "da";
 		$translate.use(lang);
 
 		Auth.isLoggedIn(function(loggedIn) {

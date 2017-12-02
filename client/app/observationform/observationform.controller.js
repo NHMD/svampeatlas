@@ -1228,7 +1228,8 @@ angular.module('svampeatlasApp')
 				}
 
 				if (!$scope.mapsettings.markers.position && $scope.selectedLocality.length === 1) {
-
+					
+					if(!confirm($translate.instant('Du har ikke angivet en nøjagtig position på kortet, gem alligevel?'))) return;
 					// if the locality was chosen from the map - it is a leaflet marker with lat and lng, other wise it is a resource with decimalLatitude and decimalLongitude
 					if ($scope.selectedLocality[0].layer === 'localities') {
 						obs.decimalLatitude = $scope.selectedLocality[0].lat;

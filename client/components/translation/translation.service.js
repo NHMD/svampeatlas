@@ -342,6 +342,7 @@ angular.module('svampeatlasApp')
 			'Uge' : 'Week',
 			'uge' : 'week',
 			'Stemmer pr uge' : 'Votes / week',
+			'Fund pr uge' : 'Observations / week',
 			'På observationer som er blevet godkendt' : 'On observations that has been approved',
 			'På observationer som er blevet ekspert-godkendt' : 'On observations that has been expert approved',
 			'På observationer som ikke er blevet godkendt' : 'On observations that has not been approved',
@@ -351,8 +352,14 @@ angular.module('svampeatlasApp')
 			'Aktive brugere pr uge' : 'Active users / week',
 			'Antal brugere' : 'Users',
 			'Aktive rapportører' : 'Active reporters',
-			'Aktive i validering' : 'Participating in validation'
-			
+			'Aktive i validering' : 'Participating in validation',
+			'Antal brugervaliderede fund pr uge' : 'Peer validated observations / week',
+			'Det samlede antal godkendte arter sammenlignet med antallet af arter som er blevet valideret og godkendt gennem det interaktive valideringssystem' : 'Total of accepted species compared with number of species validated and accepted through the interactive validation system',
+			'Det samlede antal fund sammenlignet med antallet af fund som er blevet valideret og godkendt gennem det interaktive valideringssystem' : 'Total of observations compared with number of observations validated and accepted through the interactive validation system',
+			'Antallet af stemmer afgivet på bestemmelser som nu er godkendt, bestemmelser som er blevet ekspert-godkendt samt på bestemmelser som endnu ikke er godkendt': 'Number of votes given on determinations that has now been approved, on determinations that has been expert-approved and on determinations that has not yet been approved',
+			'Antallet af rapportører sammenlignet med antallet af brugere som har været aktive i validering af fund' : 'Number of reporters compared to number of users active in validation of determinations',
+			'Du har ikke angivet en nøjagtig position på kortet, gem alligevel?' : 'You did not speciy a position on the map, save anyway?',
+			'Notifikationer er slået fra for' : 'Notifications turned off for'
 		});
 		
 

@@ -2,27 +2,30 @@
 	
 </md-toolbar>	
 <md-content flex md-scroll-y layout-padding layout="column" >
-<div layout-gt-xs="row" layout-align="center center" layout-margin>
+<div style="min-height: 800px">
+<div layout-gt-xs="row" layout-align="center start"  layout-margin>
 
-<div class="md-whiteframe-3dp">
+<div class="md-whiteframe-3dp metrics-chart-container">
 	<highchart id="speciesChart" config="ctrl.speciesChartOpts" ></highchart>
+	<p class="chart-expl" translate>Det samlede antal godkendte arter sammenlignet med antallet af arter som er blevet valideret og godkendt gennem det interaktive valideringssystem</p>
 	
 </div>
-<div class="md-whiteframe-3dp">
+<div class="md-whiteframe-3dp metrics-chart-container">
 	<highchart id="observationChart" config="ctrl.observationChartOpts" ></highchart>
-	
+	<p class="chart-expl" translate>Det samlede antal fund sammenlignet med antallet af fund som er blevet valideret og godkendt gennem det interaktive valideringssystem</p>
 </div>
 </div>
 <div layout-gt-xs="row" layout-align="center center" layout-margin>
-<div class="md-whiteframe-3dp">
+<div class="md-whiteframe-3dp metrics-chart-container">
 	
 	<highchart id="voteChart" config="ctrl.voteChartOpts" ></highchart>
-	
+	<p class="chart-expl" translate>Antallet af stemmer afgivet på bestemmelser som nu er godkendt, bestemmelser som er blevet ekspert-godkendt samt på bestemmelser som endnu ikke er godkendt</p>
 </div>
 
-<div class="md-whiteframe-3dp">
+<div class="md-whiteframe-3dp metrics-chart-container">
 	
 	<highchart id="userChart" config="ctrl.userChartOpts" ></highchart>
+	<p class="chart-expl" translate>Antallet af rapportører sammenlignet med antallet af brugere som har været aktive i validering af fund</p>
 	
 </div>
 </div>
@@ -34,6 +37,7 @@
 </div>
 </div> -->
 
+</div>
 </div>
 </md-content>
 

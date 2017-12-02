@@ -1112,12 +1112,13 @@ exports.destroy = function(req, res) {
 
 exports.getCount = function(req, res) {
 
+	var commSql = (req.query.communityApproved) ? ' AND (d.score >= '+determinationController.Constants.ACCEPTED_SCORE+' AND d.validation <> "Godkendt") AND d.baseScore < '+determinationController.Constants.ACCEPTED_SCORE : "";
 	var groups = {
-		'Year': 'select year(observationDate) as year, count(*) as count from Observation group by year(observationDate)',
-		'Decade': 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation group by decade',
-		'YEARWEEK' : 'SELECT YEARWEEK(observationDate) as YEARWEEK, COUNT(_id) as count FROM Observation WHERE observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo WEEK) GROUP BY YEARWEEK(observationDate)'
+		'Year': 'select year(observationDate) as year, count(*) as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id'+commSql+' group by year(observationDate)',
+		'Decade': 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id'+commSql+' group by decade',
+		'YEARWEEK' : 'SELECT YEARWEEK(observationDate) as YEARWEEK, COUNT(o._id) as count FROM Observation o, Determination d WHERE o.primarydetermination_id=d._id'+commSql+' AND observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo WEEK) GROUP BY YEARWEEK(observationDate)'
 	}
-	var sql = (req.query.group) ? groups[req.query.group] : 'select count(*) as count from Observation ';
+	var sql = (req.query.group) ? groups[req.query.group] : 'select count(*) as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id'+commSql;
 
 
 	return models.sequelize.query(sql, {

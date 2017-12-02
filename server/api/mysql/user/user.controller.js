@@ -54,6 +54,19 @@ function cacheResult(req, value) {
 		})
 
 }
+
+function cacheResultByUrl(req, value) {
+	var redisClient = req.redis;
+	var ttl = req.ttl;
+	return redisClient.setAsync(req.originalUrl, value)
+		.then(function() {
+			return redisClient.expireAsync(req.originalUrl, ttl)
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+		})
+
+}
 /**
  * Get list of users
  * restriction: 'admin'
@@ -142,7 +155,7 @@ exports.show = function(req, res, next) {
 exports.getCount = function(req, res) {
 
 
-	var sql =  'select count(*) as count from Users ';
+	var sql =  'select count(distinct u._id) as count from Users u, Observation o WHERE o.primaryuser_id=u._id';
 
 
 	return models.sequelize.query(sql, {
@@ -152,8 +165,9 @@ exports.getCount = function(req, res) {
 
 	.then(function(result) {
 
-		if (req.query.cachekey &&  req.query.cachekey === "userCount") {
-			return cacheResult(req, JSON.stringify(result)).then(function() {
+		if (req.query.cached) {
+			return cacheResultByUrl(req, JSON.stringify(result)).then(function() {
+				
 				return res.status(200).json(result)
 			})
 		} else {

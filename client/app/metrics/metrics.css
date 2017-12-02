@@ -53,3 +53,24 @@ table.morpho-group > tfoot {
 .morphogroup-username-header {
 	margin-right: 12px;
 }
+
+@media screen and  (min-width: 600px) {
+	.chart-expl {
+		width: 400px;
+		padding: 10px;
+	
+	}
+}
+
+@media screen and  (max-width: 599px) {
+	.chart-expl {
+		width: 300px;
+		padding: 10px;
+	
+	}
+}
+
+.metrics-chart-container {
+	background-color: white;
+	height: 400px;
+}

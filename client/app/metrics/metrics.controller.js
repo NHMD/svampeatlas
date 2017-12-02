@@ -1,21 +1,22 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MetricsCtrl', function ($rootScope, $stateParams, MorphoGroup, $translate,  Auth, User, DeterminationVote, $q, $mdMedia, Observation) {
-			  
-	  var that = this;
-			 
-			  
-			this.$translate = $translate;
-			
-		var chartWidth = $mdMedia('gt-xs') ? 400 : 300
-			
-			that.timeAgo = 52;
-			that.votesTimeAgo = 26;
+	.controller('MetricsCtrl', function($rootScope, $stateParams, MorphoGroup, $translate, Auth, User, DeterminationVote, $q, $mdMedia, Observation) {
 
-		
+		var that = this;
+
+
+		this.$translate = $translate;
+		this.$mdMedia = $mdMedia;
+		var chartWidth = $mdMedia('gt-xs') ? 400 : 300
+
+		that.timeAgo = 52;
+		that.votesTimeAgo = 26;
+
+
 		that.voteChartOpts = {
 			options: {
+				
 				chart: {
 					plotBackgroundColor: null,
 					plotBorderWidth: null,
@@ -23,105 +24,131 @@ angular.module('svampeatlasApp')
 					type: 'column',
 					height: 300,
 					width: chartWidth,
-				}, plotOptions: {
-        column: {
-            stacking: 'normal',
-            dataLabels: {
-                enabled: false
-            }
-        }
-    }},
-			
-    title: {
-        text: $translate.instant('Stemmer pr uge')
-    },
-    xAxis: {
-        title: {
-            text: $translate.instant('Uge')
-        }
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: $translate.instant('Stemmer')
-        },
-        stackLabels: {
-            enabled: false,
-            style: {
-                fontWeight: 'bold',
-                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-            }
-        }
-    },
-    legend: {
-        align: 'right',
-        x: -30,
-        verticalAlign: 'top',
-        y: 25,
-        floating: true,
-        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-        borderColor: '#CCC',
-        borderWidth: 1,
-        shadow: false
-    },
-    tooltip: {
-        headerFormat: '<b>{point.x}</b><br/>',
-        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-    }
-   
-	
-};
+				},
+				plotOptions: {
+					column: {
+						stacking: 'normal',
+						dataLabels: {
+							enabled: false
+						}
+					}
+				}
+			},
 
-	
-	var communityApproved = DeterminationVote.getCount({timeIntervalType: 'YEARWEEK', timeAgo: that.votesTimeAgo, communityApproved:true, cached: true});
-	var expertApproved = DeterminationVote.getCount({timeIntervalType: 'YEARWEEK', timeAgo: that.votesTimeAgo, expertApproved:true, cached: true});
-	var notApproved =	DeterminationVote.getCount({timeIntervalType: 'YEARWEEK', timeAgo: that.votesTimeAgo, notApproved:true, cached: true});	
-		
+			title: {
+				text: $translate.instant('Stemmer pr uge')
+			},
+			xAxis: {
+				title: {
+					text: $translate.instant('Uge')
+				}
+			},
+			yAxis: {
+				min: 0,
+				title: {
+					text: $translate.instant('Stemmer')
+				},
+				stackLabels: {
+					enabled: false,
+					style: {
+						fontWeight: 'bold',
+						color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+					}
+				}
+			},
+			legend: {
+				align: 'right',
+				x: -30,
+				verticalAlign: 'top',
+				y: 25,
+				floating: true,
+				backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+				borderColor: '#CCC',
+				borderWidth: 1,
+				shadow: false
+			},
+			tooltip: {
+				headerFormat: '<b>{point.x}</b><br/>',
+				pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+			}
 
-		$q.all([communityApproved.$promise, expertApproved.$promise, notApproved.$promise]).then(function(values){
+
+		};
+
+
+		var communityApproved = DeterminationVote.getCount({
+			timeIntervalType: 'YEARWEEK',
+			timeAgo: that.votesTimeAgo,
+			communityApproved: true,
+			cached: true
+		});
+		var expertApproved = DeterminationVote.getCount({
+			timeIntervalType: 'YEARWEEK',
+			timeAgo: that.votesTimeAgo,
+			expertApproved: true,
+			cached: true
+		});
+		var notApproved = DeterminationVote.getCount({
+			timeIntervalType: 'YEARWEEK',
+			timeAgo: that.votesTimeAgo,
+			notApproved: true,
+			cached: true
+		});
+
+
+		$q.all([communityApproved.$promise, expertApproved.$promise, notApproved.$promise]).then(function(values) {
 			var weekMap = {};
 			var weeks;
 			var communityApprovedWeekMap = {};
 			var expertApprovedWeekMap = {}
 			var notApprovedWeekMap = {}
-			for(var i=0; i < values[0].length; i++){
+			for (var i = 0; i < values[0].length; i++) {
 				weekMap[values[0][i].YEARWEEK] = true;
 				communityApprovedWeekMap[values[0][i].YEARWEEK] = values[0][i].votecount;
 			}
-			for(var i=0; i < values[1].length; i++){
+			for (var i = 0; i < values[1].length; i++) {
 				weekMap[values[1][i].YEARWEEK] = true;
 				expertApprovedWeekMap[values[1][i].YEARWEEK] = values[1][i].votecount;
 			}
-			for(var i=0; i < values[2].length; i++){
+			for (var i = 0; i < values[2].length; i++) {
 				weekMap[values[2][i].YEARWEEK] = true;
 				notApprovedWeekMap[values[2][i].YEARWEEK] = values[2][i].votecount;
 			}
 			weeks = Object.keys(weekMap);
-			
-			that.voteChartOpts.xAxis.categories = _.map(weeks, function(w){
-				return w.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.toString().substring(4,6);
+
+			that.voteChartOpts.xAxis.categories = _.map(weeks, function(w) {
+				return w.toString().substring(0, 4) + " " + $translate.instant('uge') + " " + w.toString().substring(4, 6);
 			});
-			
-			
-			that.voteChartOpts.series = [
-				  {name: $translate.instant("På observationer som ikke er blevet godkendt"),
-				data: _.map(weeks, function(w){
-				return notApprovedWeekMap[w] || 0;
-			})}, {name: $translate.instant("På observationer som er blevet ekspert-godkendt"),
-				data: _.map(weeks, function(w){
-				return expertApprovedWeekMap[w] || 0;
-			})},{name: $translate.instant("På observationer som er blevet godkendt"),
-				data: _.map(weeks, function(w){
-				return communityApprovedWeekMap[w] || 0;
-			})}]
-			
-			
-			
-			
+
+
+			that.voteChartOpts.series = [{
+				name: $translate.instant("På observationer som ikke er blevet godkendt"),
+				data: _.map(weeks, function(w) {
+					return notApprovedWeekMap[w] || 0;
+				})
+			}, {
+				name: $translate.instant("På observationer som er blevet ekspert-godkendt"),
+				data: _.map(weeks, function(w) {
+					return expertApprovedWeekMap[w] || 0;
+				})
+			}, {
+				name: $translate.instant("På observationer som er blevet godkendt"),
+				data: _.map(weeks, function(w) {
+					return communityApprovedWeekMap[w] || 0;
+				})
+			}]
+
+
+
+
 		});
-		
+
 		that.observationChartOpts = {
+			
 			options: {
+				credits: {
+				    enabled: false
+				  },
 				chart: {
 					plotBackgroundColor: null,
 					plotBorderWidth: null,
@@ -131,7 +158,7 @@ angular.module('svampeatlasApp')
 					width: chartWidth,
 				},
 				title: {
-					text: $translate.instant("Antal fund pr uge")
+					text: $translate.instant("Fund pr uge")
 				},
 
 				xAxis: {
@@ -143,7 +170,7 @@ angular.module('svampeatlasApp')
 						}
 					},
 					title: {
-						text: 'Uge'
+						text: $translate.instant('Uge')
 					}
 				},
 				yAxis: {
@@ -153,23 +180,82 @@ angular.module('svampeatlasApp')
 					}
 				},
 				legend: {
-					enabled: false
-				}
+					align: 'right',
+					x: 0,
+					verticalAlign: 'top',
+					y: 25,
+					floating: true,
+					backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+					borderColor: '#CCC',
+					borderWidth: 1,
+					shadow: false
+				},
 			}
 
 		}
-		
-		Observation.getCount({group: 'YEARWEEK', timeAgo: that.timeAgo, cached: true}).$promise.then(function(data){
-			that.observationChartOpts.series = [{
-				name: $translate.instant("Antal fund pr uge"),
-				data: _.map(data, function(w){
-					return [w.YEARWEEK.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.YEARWEEK.toString().substring(4,6), w.count]
-				})
-			}];
-			
-		})
-		
+
+
+		$q.all([Observation.getCount({
+				group: 'YEARWEEK',
+				timeAgo: that.timeAgo,
+				cached: true,
+				communityApproved: true
+			}).$promise, Observation.getCount({
+				group: 'YEARWEEK',
+				timeAgo: that.timeAgo,
+				cached: true
+			}).$promise])
+			.then(function(values) {
+				var weekMap = {};
+				var weeks;
+				var communityApprovedWeekMap = {};
+				var totalWeekMap = {}
+
+				for (var i = 0; i < values[0].length; i++) {
+					weekMap[values[0][i].YEARWEEK] = true;
+					communityApprovedWeekMap[values[0][i].YEARWEEK] = values[0][i].count;
+				}
+				for (var i = 0; i < values[1].length; i++) {
+					weekMap[values[1][i].YEARWEEK] = true;
+					totalWeekMap[values[1][i].YEARWEEK] = values[1][i].count;
+				}
+
+				weeks = Object.keys(weekMap);
+
+				that.observationChartOpts.options.xAxis.categories = _.map(weeks, function(w) {
+					return w.toString().substring(0, 4) + " " + $translate.instant('uge') + " " + w.toString().substring(4, 6);
+				});
+
+
+				that.observationChartOpts.series = [{
+					name: $translate.instant("Antal fund pr uge"),
+					data: _.map(weeks, function(w) {
+						return totalWeekMap[w] || 0;
+					})
+				}, {
+					name: $translate.instant("Antal brugervaliderede fund pr uge"),
+					data: _.map(weeks, function(w) {
+						return communityApprovedWeekMap[w] || 0;
+					})
+				}]
+
+			})
+
+
+		/*	Observation.getCount({group: 'YEARWEEK', timeAgo: that.timeAgo, cached: true}).$promise.then(function(data){
+				that.observationChartOpts.series = [{
+					name: $translate.instant("Antal fund pr uge"),
+					data: _.map(data, function(w){
+						return [w.YEARWEEK.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.YEARWEEK.toString().substring(4,6), w.count]
+					})
+				}];
+				
+			}) */
+
 		that.speciesChartOpts = {
+			credits: {
+			    enabled: false
+			  },
 			options: {
 				chart: {
 					plotBackgroundColor: null,
@@ -201,69 +287,85 @@ angular.module('svampeatlasApp')
 						text: $translate.instant('num_species')
 					}
 				},
-			    legend: {
-			        align: 'right',
-			        x: 0,
-			        verticalAlign: 'top',
-			        y: 25,
-			        floating: true,
-			        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-			        borderColor: '#CCC',
-			        borderWidth: 1,
-			        shadow: false
-			    },
+				legend: {
+					align: 'right',
+					x: 0,
+					verticalAlign: 'top',
+					y: 25,
+					floating: true,
+					backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+					borderColor: '#CCC',
+					borderWidth: 1,
+					shadow: false
+				},
 			}
 
 		}
-		$q.all([Observation.getSpeciesCount({timeIntervalType: 'YEARWEEK', timeAgo: that.timeAgo,  communityApproved: true, cached: true}).$promise, Observation.getSpeciesCount({timeIntervalType: 'YEARWEEK', timeAgo: that.timeAgo, limit: that.timeAgo, cached: true}).$promise, Observation.getSpeciesCount({timeIntervalType: 'YEARWEEK', timeAgo: that.timeAgo, limit: that.timeAgo, cached: true}).$promise])
-		.then(function(values){
-			var weekMap = {};
-			var weeks;
-			var communityApprovedWeekMap = {};
-			var totalWeekMap = {}
-			
-			for(var i=0; i < values[0].length; i++){
-				weekMap[values[0][i].YEARWEEK] = true;
-				communityApprovedWeekMap[values[0][i].YEARWEEK] = values[0][i].speciescount;
-			}
-			for(var i=0; i < values[1].length; i++){
-				weekMap[values[1][i].YEARWEEK] = true;
-				totalWeekMap[values[1][i].YEARWEEK] = values[1][i].speciescount;
-			}
-			
-			weeks = Object.keys(weekMap);
-			
-			that.speciesChartOpts.options.xAxis.categories = _.map(weeks, function(w){
-				return w.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.toString().substring(4,6);
-			});
-			
-			
-			that.speciesChartOpts.series = [
-				   {name: $translate.instant("num_species"),
-				data: _.map(weeks, function(w){
-				return totalWeekMap[w] || 0;
-			})},{name: $translate.instant("Antal brugervaliderede arter"),
-				data: _.map(weeks, function(w){
-				return communityApprovedWeekMap[w] || 0;
-			})}]
-			
-			
-		/*	that.speciesChartOpts.series = [{
-				name: "Antal brugervaliderede arter",
-				data: _.map(values[0], function(w){
-					return [w.YEARWEEK.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.YEARWEEK.toString().substring(4,6), w.speciescount]
-				})
-			}, {
-				name: "Antal  arter",
-				data: _.map(values[1], function(w){
-					return [w.YEARWEEK.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.YEARWEEK.toString().substring(4,6), w.speciescount]
-				})
-			}]; */
-		})
-		
+		$q.all([Observation.getSpeciesCount({
+				timeIntervalType: 'YEARWEEK',
+				timeAgo: that.timeAgo,
+				communityApproved: true,
+				cached: true
+			}).$promise, Observation.getSpeciesCount({
+				timeIntervalType: 'YEARWEEK',
+				timeAgo: that.timeAgo,
+				limit: that.timeAgo,
+				cached: true
+			}).$promise])
+			.then(function(values) {
+				var weekMap = {};
+				var weeks;
+				var communityApprovedWeekMap = {};
+				var totalWeekMap = {}
 
-		
+				for (var i = 0; i < values[0].length; i++) {
+					weekMap[values[0][i].YEARWEEK] = true;
+					communityApprovedWeekMap[values[0][i].YEARWEEK] = values[0][i].speciescount;
+				}
+				for (var i = 0; i < values[1].length; i++) {
+					weekMap[values[1][i].YEARWEEK] = true;
+					totalWeekMap[values[1][i].YEARWEEK] = values[1][i].speciescount;
+				}
+
+				weeks = Object.keys(weekMap);
+
+				that.speciesChartOpts.options.xAxis.categories = _.map(weeks, function(w) {
+					return w.toString().substring(0, 4) + " " + $translate.instant('uge') + " " + w.toString().substring(4, 6);
+				});
+
+
+				that.speciesChartOpts.series = [{
+					name: $translate.instant("num_species"),
+					data: _.map(weeks, function(w) {
+						return totalWeekMap[w] || 0;
+					})
+				}, {
+					name: $translate.instant("Antal brugervaliderede arter"),
+					data: _.map(weeks, function(w) {
+						return communityApprovedWeekMap[w] || 0;
+					})
+				}]
+
+
+				/*	that.speciesChartOpts.series = [{
+						name: "Antal brugervaliderede arter",
+						data: _.map(values[0], function(w){
+							return [w.YEARWEEK.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.YEARWEEK.toString().substring(4,6), w.speciescount]
+						})
+					}, {
+						name: "Antal  arter",
+						data: _.map(values[1], function(w){
+							return [w.YEARWEEK.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.YEARWEEK.toString().substring(4,6), w.speciescount]
+						})
+					}]; */
+			})
+
+
+
 		that.userChartOpts = {
+			credits: {
+			    enabled: false
+			  },
 			options: {
 				chart: {
 					plotBackgroundColor: null,
@@ -295,63 +397,74 @@ angular.module('svampeatlasApp')
 						text: $translate.instant('Antal brugere')
 					}
 				},
-			
-			    legend: {
-			        align: 'right',
-			        x: 0,
-			        verticalAlign: 'top',
-			        y: 25,
-			        floating: true,
-			        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-			        borderColor: '#CCC',
-			        borderWidth: 1,
-			        shadow: false
-			    },
+
+				legend: {
+					align: 'right',
+					x: 0,
+					verticalAlign: 'top',
+					y: 25,
+					floating: true,
+					backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+					borderColor: '#CCC',
+					borderWidth: 1,
+					shadow: false
+				},
 			}
 
 		}
-		
-		$q.all([Observation.getUserCount({timeIntervalType: 'YEARWEEK', timeAgo: that.timeAgo, cached: true}).$promise, DeterminationVote.getCount({timeIntervalType: 'YEARWEEK', timeAgo: that.timeAgo, cached: true}).$promise ])
-			.then(function(values){
-				
+
+		$q.all([Observation.getUserCount({
+				timeIntervalType: 'YEARWEEK',
+				timeAgo: that.timeAgo,
+				cached: true
+			}).$promise, DeterminationVote.getCount({
+				timeIntervalType: 'YEARWEEK',
+				timeAgo: that.timeAgo,
+				cached: true
+			}).$promise])
+			.then(function(values) {
+
 				var weekMap = {};
 				var weeks;
 				var users = {};
 				var voters = {}
-			
-				for(var i=0; i < values[0].length; i++){
+
+				for (var i = 0; i < values[0].length; i++) {
 					weekMap[values[0][i].YEARWEEK] = true;
 					users[values[0][i].YEARWEEK] = values[0][i].usercount;
 				}
-				for(var i=0; i < values[1].length; i++){
+				for (var i = 0; i < values[1].length; i++) {
 					weekMap[values[1][i].YEARWEEK] = true;
 					voters[values[1][i].YEARWEEK] = values[1][i].usercount;
 				}
-			
+
 				weeks = Object.keys(weekMap);
-			
-				that.userChartOpts.options.xAxis.categories = _.map(weeks, function(w){
-					return w.toString().substring(0,4)+" "+$translate.instant('uge')+" "+w.toString().substring(4,6);
+
+				that.userChartOpts.options.xAxis.categories = _.map(weeks, function(w) {
+					return w.toString().substring(0, 4) + " " + $translate.instant('uge') + " " + w.toString().substring(4, 6);
 				});
-			
-			
-				that.userChartOpts.series = [
-					   {name: $translate.instant("Aktive rapportører"),
-					data: _.map(weeks, function(w){
-					return users[w] || 0;
-				})},{name: $translate.instant("Aktive i validering"),
-					data: _.map(weeks, function(w){
-					return voters[w] || 0;
-				})}]
-				
-				
-		
+
+
+				that.userChartOpts.series = [{
+					name: $translate.instant("Aktive rapportører"),
+					data: _.map(weeks, function(w) {
+						return users[w] || 0;
+					})
+				}, {
+					name: $translate.instant("Aktive i validering"),
+					data: _.map(weeks, function(w) {
+						return voters[w] || 0;
+					})
+				}]
+
+
+
 			})
-		
-	
-	//----------------------------------------------------------------------------------------
-			
-			that.speciesByYearChartOpts = {
+
+
+		//----------------------------------------------------------------------------------------
+
+		that.speciesByYearChartOpts = {
 				options: {
 					chart: {
 						plotBackgroundColor: null,
@@ -366,36 +479,36 @@ angular.module('svampeatlasApp')
 					},
 
 					xAxis: {
-					        type: 'datetime',
-					        dateTimeLabelFormats: { // don't display the dummy year
-					            month: '%e. %b',
-					            year: '%b'
-					        },
-					        title: {
-					            text: 'Date'
-					        }
-					    },
+						type: 'datetime',
+						dateTimeLabelFormats: { // don't display the dummy year
+							month: '%e. %b',
+							year: '%b'
+						},
+						title: {
+							text: 'Date'
+						}
+					},
 					yAxis: {
 						min: 0,
 						title: {
 							text: $translate.instant('num_species')
 						}
 					},
-				    legend: {
-				        align: 'right',
-				        x: 0,
-				        verticalAlign: 'top',
-				        y: 25,
-				        floating: true,
-				        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-				        borderColor: '#CCC',
-				        borderWidth: 1,
-				        shadow: false
-				    },
+					legend: {
+						align: 'right',
+						x: 0,
+						verticalAlign: 'top',
+						y: 25,
+						floating: true,
+						backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+						borderColor: '#CCC',
+						borderWidth: 1,
+						shadow: false
+					},
 					tooltip: {
-					        headerFormat: '<b>{series.name}</b><br>',
-					        pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
-					    },
+						headerFormat: '<b>{series.name}</b><br>',
+						pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+					},
 				}
 
 			}
@@ -484,11 +597,5 @@ angular.module('svampeatlasApp')
 	
 	
 }) */
-			
-		})
-		
-	
-				
-			
-			
-			
+
+	})
