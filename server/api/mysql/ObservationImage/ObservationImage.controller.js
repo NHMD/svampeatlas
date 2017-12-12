@@ -215,7 +215,7 @@ exports.addImagesToObs = function(req, res) {
 		}]
 	}).then(function(obs) {
 
-		var prefix = obs.PrimaryUser.Initialer.toUpperCase() + obs.observationDate.getFullYear() + "-" + obs._id;
+		var prefix = obs.observationDate.getFullYear() + "-" + obs._id;
 		var promises = [];
 
 		_.each(req.files, function(f) {

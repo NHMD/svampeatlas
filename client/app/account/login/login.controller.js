@@ -39,12 +39,19 @@ angular.module('svampeatlasApp')
 				$translate.use(usr.preferred_language);
 	    		  if(Auth.hasRole('taxonomyadmin') &&  !$cookies.get('plutoftoken')){
 					  
-					  PlutoF.GetToken().$promise.then(function(res){
+					  PlutoF.GetToken().$promise
+					  .then(function(res){
 	  	      			var exp = new Date();
 	  	      			exp.setHours(exp.getHours() + (14* 24));
 	  	    			  $cookies.put('plutoftoken', res.access_token, {expires: exp}); 
 						
 					  })
+					  .catch(function(err){
+						  
+						  // ingnore
+					  	
+					  })
+					  
 	      			
 	    		  };
 				

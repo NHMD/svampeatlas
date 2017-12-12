@@ -21,8 +21,7 @@ exports.use = function () {
     return compose()
         // Attach user to request
         .use(function(req, res, next) {
-			console.log("######")
-			console.log(req.originalUrl)
+			
 			req.redis = redisClient;
             if (req.query.cachekey) {
 				redisClient.getAsync(req.query.cachekey)

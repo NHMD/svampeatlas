@@ -27,7 +27,7 @@ angular.module('svampeatlasApp')
 			$scope.getBackgroundStyle = function(img){
 		
 		
-				var url = appConstants.baseurl+appConstants.thumborUrl+"500x0/"
+				var url = appConstants.baseurl+appConstants.thumborUrl+"600x400/"
 	
 				+appConstants.baseurl+appConstants.imageurl + img.name + ".JPG";
 

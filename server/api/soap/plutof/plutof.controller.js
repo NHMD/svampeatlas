@@ -108,7 +108,7 @@ exports.GetToken = function(req, res) {
 	var access_token = req.headers.plutofauthorization;
 	client.methods.gettoken({ parameters: {scope : "read", grant_type:"password", client_id: config.plutof.client_id, client_secret: config.plutof.client_secret, username: config.plutof.username, password: config.plutof.password}},function(data,response){
 	    
-			 return res.status(response.statusCode).json(data);
+			 return (parseInt(response.statusCode) < 400) ? res.status(response.statusCode).json(data) : res.sendStatus(404);
 	}, function(err){
 		return res.status(500)
 	});
