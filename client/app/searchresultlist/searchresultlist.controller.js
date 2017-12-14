@@ -71,7 +71,7 @@ angular.module('svampeatlasApp')
 					}
 				}
 				
-				if(parseInt($scope.totalCount) > 10000){
+				if(parseInt($scope.totalCount) > 25000){
 					$mdToast.show(
 						$mdToast.simple()
 						.textContent($translate.instant('Der kan kun downloades CSV filer med op til 10000 poster. Prøv at indsnævre din søgning.'))

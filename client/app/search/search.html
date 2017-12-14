@@ -181,7 +181,7 @@
 			       
 				  <span class="item-metadata" >
 					  
-					  <span class="item-metastat"> {{item.Municipality.name}} {{'kommune' | translate}} </span>
+					  <span class="item-metastat" ng-if="item.Municipality"> {{item.Municipality.name}} {{'kommune' | translate}} </span>
 				  </span>
 			  </md-item-template>
 			     </md-autocomplete>
@@ -189,7 +189,7 @@
 			       <span>
 			         <strong>{{($chip.name) ? $chip.name : $chip}}</strong>
 					 
-					 <em>{{$chip.Municipality.name}} {{'kommune' | translate}} </em>
+					 <em ng-if="item.Municipality">{{$chip.Municipality.name}} {{'kommune' | translate}} </em>
 			       </span>
 			     </md-chip-template>
 	
