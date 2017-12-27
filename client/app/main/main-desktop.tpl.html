@@ -1,4 +1,4 @@
-<div class="image-header" ng-style="getHeaderImgBackgroundStyle()" ng-if="!Auth.isLoggedIn()">
+<div class="image-header" ng-style="getHeaderImgBackgroundStyle()" >
 	    
 	
 		
@@ -32,7 +32,7 @@
 	
 </div>
 <div>
-<div ng-class="{'main-content' : !Auth.isLoggedIn()}" layout="row" layout-xs="column" layout-sm="column" flex>
+<div class="main-content" layout="row" layout-xs="column" layout-sm="column" flex>
 <div layout="column" flex-gt-sm="66">
 	<h3 ng-if="Auth.isLoggedIn()" class="validation-needed-sub-header">{{'Fund til validering' | translate }} </h3>
 <md-whiteframe class="md-whiteframe-3dp newsfeed" ng-if="Auth.isLoggedIn()">
@@ -174,27 +174,6 @@
 
 	</div>
 </div>
-<div class="footer-wrapper">
-	<md-divider></md-divider>
-	    <div flex class="main-footer" layout="row" layout-align="space-around center" layout-margin >
-	<div layout="column" layout-align="center  center">
-		<div>
-	      <a href="http://www.avjf.dk/avjnf/"> <img src="assets/images/AVJNF1.png"  height="60" alt="Aage v. Jensen naturfond"></a>
-	   </div>
-		   <span class="footer-partner md-body-1">Aage v. Jensen Naturfond</span>
-     </div>
-			<div layout="column" layout-align="center  center">
-				<div>
-	       <a href="http://www.svampe.dk/"> <img src="assets/images/logo.png" height="60" alt="Svampeforeningen"></a>
-		</div>
-			<span class="footer-partner md-body-1">Foreningen til Svampekudskabens Fremme</span>
-    </div>
+<div class="footer-wrapper" ng-include="'app/main/footer.tpl.html'">
 
- 	<div layout="column" layout-align="center center">
-    	<div>
-	       <a href="http://snm.ku.dk/">  <img src="assets/images/ku_logo_dk_v.png" height="60" alt="Københavns universitet"></a>
-		</div>
-			<span class="footer-partner md-body-1">Statens Naturhistoriske Museum</span>
- </div>
-	    </div>
-			    </div>
+</div>

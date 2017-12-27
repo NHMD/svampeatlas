@@ -359,7 +359,10 @@ angular.module('svampeatlasApp')
 			'Antallet af stemmer afgivet på bestemmelser som nu er godkendt, bestemmelser som er blevet ekspert-godkendt samt på bestemmelser som endnu ikke er godkendt': 'Number of votes given on determinations that has now been approved, on determinations that has been expert-approved and on determinations that has not yet been approved',
 			'Antallet af rapportører sammenlignet med antallet af brugere som har været aktive i validering af fund' : 'Number of reporters compared to number of users active in validation of determinations',
 			'Du har ikke angivet en nøjagtig position på kortet, gem alligevel?' : 'You did not speciy a position on the map, save anyway?',
-			'Notifikationer er slået fra for' : 'Notifications turned off for'
+			'Notifikationer er slået fra for' : 'Notifications turned off for',
+			'contentNotAvailableInLocale' : 'The requested content is not yet available in english',
+			'Dataanvendelse og brugerrettigheder' : 'Data use and user rights',
+			'Betingelser for indlæg og brug af data' : 'Conditions for contribution and use of data'
 		});
 		
 
@@ -533,7 +536,8 @@ angular.module('svampeatlasApp')
 			'The email contains further instructions on how to activate your account' : 'Emailen indeholder yderligere information om hvordan du aktiverer din brugerprofil.',
 			'UTM northing' : 'UTM nord',
 			'UTM easting' : 'UTM øst',
-			'Password must be at least 7 characters' : 'Dit password skal være mindst 7 karakterer langt'
+			'Password must be at least 7 characters' : 'Dit password skal være mindst 7 karakterer langt',
+			'contentNotAvailableInLocale' : 'Dette indhold er endnu ikke tilgængeligt på dansk.'
 			
 
 

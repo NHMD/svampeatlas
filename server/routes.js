@@ -70,6 +70,7 @@ module.exports = function(app) {
 	app.use('/api/morphogroups', intparser.parseLimitOffset(), require('./api/mysql/MorphoGroup'));
 	app.use('/api/competitions', require('./api/mysql/Competition'));
 	app.use('/api/votes', require('./api/mysql/DeterminationVotes'));
+	app.use('/api/content', require('./api/content'));
 	
 	
 	app.use('/auth', require('./auth'));

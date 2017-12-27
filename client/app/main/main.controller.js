@@ -10,10 +10,10 @@ angular.module('svampeatlasApp')
 	  $scope.translate = $translate;
 	  var that = this;
   	//$scope.preferred_language =  $cookies.get("preferred_language") || 'da';
-	if(!Auth.isLoggedIn()){
+	
 		$rootScope.$broadcast('close_sidemenu');
 		$scope.sideMenuClosed = true;
-	}
+	
 	 
 	$scope.openSideMenu = function(){
 		$rootScope.$broadcast('open_sidemenu');

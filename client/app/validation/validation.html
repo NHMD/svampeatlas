@@ -1,9 +1,11 @@
  <md-toolbar md-scroll-shrink ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'" ></md-toolbar>
 	
 </div>	
-<md-content flex md-scroll-y layout-padding>
-
-   <md-whiteframe class="md-whiteframe-2dp"  layout="column" >
+<md-content flex md-scroll-y >
+<div layout-padding>
+<div ng-include="templateUrl()"></div>
+</div>
+ <!--  <md-whiteframe class="md-whiteframe-2dp"  layout="column" >
    <h1 class="md-headline"><ng-md-icon icon="group"></ng-md-icon> Interaktiv validering</h1>
    <p>
 	
@@ -36,10 +38,12 @@
 <p>
 Der er stadig tilknyttet validatorer til Danmarks svampeatlas, som har mulighed for at godkende fund uanset scoren i den interaktive validering. Dette kan f.eks. være aktuelt for fund af nye arter for landet, for meget sjældne arter og for fund af svært bestemte arter, hvor der kræves særlig erfaring eller sekvensering af arvemateriale (DNA) for en sikker bestemmelse. Ekspert-validerede fund er markeret med et lille mikroskop-ikon <ng-md-icon icon="microscope" size="16"></ng-md-icon>	
 </p>
-	 </md-whiteframe >
+	 </md-whiteframe > -->
 
 
-	<div ng-include="'components/footer/footer.html'"></div>
+ <div class="footer-wrapper" ng-include="'app/main/footer.tpl.html'">
+
+ </div>
 </md-content>
 	
 

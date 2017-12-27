@@ -240,7 +240,7 @@ exports.showMobileObservationCount = function(req, res) {
 exports.showArchiveObservationCount = function(req, res) {
 	
 	var yearSql = (req.params.year) ? "AND YEAR(o.createdAt) = :year" : "";
-	var sql = 'SELECT u._id, u.name, u.Initialer, u.facebook, COUNT(o._id) as count FROM Observation o, Users u WHERE o.primaryuser_id = u._id '+yearSql+' AND YEAR(o.observationDate) < YEAR(o.createdAt) GROUP BY u._id ORDER BY COUNT(o._id) DESC'
+	var sql = 'SELECT u._id, u.name, u.Initialer, u.facebook, COUNT(o._id) as count FROM Observation o, Users u WHERE o.primaryuser_id = u._id '+yearSql+' AND YEAR(o.observationDate) < YEAR(o.createdAt) AND (o.dataSource = "" OR dataSource IS NULL) GROUP BY u._id ORDER BY COUNT(o._id) DESC'
 		
 	return models.sequelize.query(sql, {
 		replacements: {

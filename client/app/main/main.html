@@ -16,7 +16,7 @@
 		  
 		  
 		  
-		  <md-menu-bar ng-if="!Auth.isLoggedIn() && mdMedia('gt-sm')" class="homepage-horisontal-menu">
+		  <md-menu-bar ng-if="mdMedia('gt-sm')" class="homepage-horisontal-menu">
 		            <md-menu>
 		              <button ng-click="$mdMenu.open()">
 		                {{'Søg i Svampeatlas' | translate}}
@@ -101,6 +101,12 @@
   		                  </md-button>
   		                </md-menu-item>
   		                <md-menu-item >
+  		                  <md-button ng-click="openSideMenu(); $state.go('rights')" >
+  		                    {{'Dataanvendelse og brugerrettigheder' | translate}}
+		                    
+  		                  </md-button>
+  		                </md-menu-item>
+  		                <md-menu-item >
 		                  
   		                  <md-button ng-click="openSideMenu(); $state.go('validation')" >
   		                    {{'Validering' | translate}}
@@ -114,7 +120,15 @@
   		                    {{'Projektbeskrivelse' | translate}}
   		                  </md-button>
   		                </md-menu-item>
+						
+  		                <md-menu-item >
+		                  
+  		                  <md-button ng-click="openSideMenu(); $state.go('demos')" >
+  		                    {{'Vejledninger' | translate}}
+  		                  </md-button>
+  		                </md-menu-item>
 		           
+				   
   		             
 		              </md-menu-content>
 		            </md-menu>
@@ -139,6 +153,9 @@
 		  
 		 	 
           <span flex></span>
+          <md-button ng-if="Auth.isLoggedIn() && mdMedia('gt-xs')"  ng-click="openSideMenu(); $state.go('observationform')">
+           <ng-md-icon icon="add"></ng-md-icon>{{'Nyt fund' | translate}}
+          </md-button>
 		<md-menu >
 		            <md-button aria-label="Open demo menu" ng-click="$mdMenu.open($event)">
 		              <ng-md-icon icon="language"></ng-md-icon> {{preferred_language}}
@@ -150,6 +167,9 @@
 		            </md-menu-content>
 		          </md-menu> 
 		 <!-- <md-button ng-if="!Auth.isLoggedIn()" ng-click="changeLanguage()"><ng-md-icon icon="language"></ng-md-icon> {{($parent.preferred_language ==='dk') ? 'en': 'da'}}</md-button> -->
+		 
+		 
+
         <md-button ng-if="!Auth.isLoggedIn() && mdMedia('gt-xs')"  ng-click="showLogin()">
          <ng-md-icon icon="login"></ng-md-icon>{{'Login' | translate}}
         </md-button>

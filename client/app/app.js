@@ -44,6 +44,7 @@ angular.module('svampeatlasApp', [
 		$logProvider.debugEnabled(false);
 		$locationProvider.html5Mode(true);
 		$httpProvider.interceptors.push('authInterceptor');
+		$httpProvider.interceptors.push('templateInterceptor');
 		$httpProvider.interceptors.push('xmlHttpInterceptor');
 		$translateProvider.useSanitizeValueStrategy('escape');
 		$mdThemingProvider
@@ -327,7 +328,8 @@ angular.module('svampeatlasApp', [
 						requireLogin: false,
 					} */
 				]
-			}, {
+			}, 
+			/* {
 				id: 'about',
 				name: 'Om svampeatlas',
 				type: 'heading',
@@ -361,7 +363,7 @@ angular.module('svampeatlasApp', [
 					type: 'link',
 					requireLogin: false,
 				}]
-			},
+			}, */
 
 			{
 				id: 'Administration',
@@ -476,6 +478,19 @@ angular.module('svampeatlasApp', [
 			}
 		};
 	})
+	.factory('templateInterceptor', function($q, $cookies) {
+	  return {
+	    'responseError': function(rejection) {
+	       var isTemplate = rejection.config.url.indexOf("/api/content/") > -1;
+	       if (isTemplate) {
+	         rejection.data = '<div><p translate>contentNotAvailableInLocale</p></div>';
+	         return rejection;
+	       } else {
+	         return $q.reject(rejection);
+	       }
+	    }
+	  }
+	})
 
 .run(function($rootScope, $state, Auth, editableOptions, editableThemes, $translate, $cookies, ngMdIconService, $http) {
 	// ngMdIconService.addShape('taxonomy', '<g fill="#008"><circle cy="150" cx="33" r="31"/><circle cy="72" cx="144" r="31"/><circle cy="228" cx="144" r="31"/><circle cy="33" cx="267" r="31"/><circle cy="111" cx="267" r="31"/><circle cy="189" cx="267" r="31"/><circle cy="267" cx="267" r="31"/></g><path  d="M267,33l-123,39 123,39m0,78l-123,39 123,39m-127-195l-111,78 111,78"/> ')
@@ -528,6 +543,13 @@ angular.module('svampeatlasApp', [
 
 	.addShape('microscope', '<path  d="M9.46,6.28L11.05,9C8.47,9.26 6.5,11.41 6.5,14A5,5 0 0,0 11.5,19C13.55,19 15.31,17.77 16.08,16H13.5V14H21.5V16H19.25C18.84,17.57 17.97,18.96 16.79,20H19.5V22H3.5V20H6.21C4.55,18.53 3.5,16.39 3.5,14C3.5,10.37 5.96,7.2 9.46,6.28M12.74,2.07L13.5,3.37L14.36,2.87L17.86,8.93L14.39,10.93L10.89,4.87L11.76,4.37L11,3.07L12.74,2.07Z" />')
 		.addShape('trophy', '<path d="M20.2,2H19.5H18C17.1,2 16,3 16,4H8C8,3 6.9,2 6,2H4.5H3.8H2V11C2,12 3,13 4,13H6.2C6.6,15 7.9,16.7 11,17V19.1C8.8,19.3 8,20.4 8,21.7V22H16V21.7C16,20.4 15.2,19.3 13,19.1V17C16.1,16.7 17.4,15 17.8,13H20C21,13 22,12 22,11V2H20.2M4,11V4H6V6V11C5.1,11 4.3,11 4,11M20,11C19.7,11 18.9,11 18,11V6V4H20V11Z" />')
+		.addShape('vimeo', '<path d="M17.811,2.018c2.017,0.053,3.026,1.198,3.036,3.438c0,0.147-0.005,0.3-0.013,0.457c-0.089,1.899-1.502,4.486-4.245,7.76' +
+		'c-2.829,3.43-5.229,5.147-7.2,5.156c-1.226,0-2.244-1.05-3.061-3.151l-0.858-2.88L4.622,9.922C3.997,7.838,3.329,6.798,2.616,6.798' +
+		'c-0.156,0-0.697,0.304-1.626,0.91L0,6.537l1.536-1.276l1.511-1.263C4.4,2.914,5.429,2.328,6.135,2.241' +
+		'c0.094-0.01,0.188-0.013,0.284-0.013c1.449,0,2.354,1.041,2.709,3.124C9.326,6.54,9.49,7.506,9.623,8.248' +
+		'C9.752,8.992,9.86,9.51,9.946,9.805c0.479,1.97,0.995,2.96,1.55,2.968c0.426,0,1.082-0.642,1.968-1.926' +
+		'c0.866-1.319,1.332-2.296,1.392-2.932c0.019-0.129,0.026-0.25,0.026-0.362c0-0.861-0.474-1.29-1.418-1.29' +
+		'c-0.479,0-0.99,0.102-1.537,0.299c0.98-3.021,2.864-4.534,5.65-4.544C17.655,2.018,17.732,2.018,17.811,2.018z"/>')
 	editableThemes['bs3'].submitTpl = '<md-button type="submit" class="md-icon-button  md-primary" aria-label="Save"><span class="glyphicon glyphicon-ok"></span></md-button>';
 	editableThemes['bs3'].cancelTpl = '<md-button type="button" class="md-icon-button  md-warn" ng-click="$form.$cancel()" aria-label="Cancel"><span class="glyphicon glyphicon-remove"></span></md-button>';
 

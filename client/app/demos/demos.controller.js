@@ -6,15 +6,15 @@ angular.module('svampeatlasApp')
 	  $scope.mdMedia = $mdMedia;
  	  
 	  $scope.demos = [
-		  { title: 'Hvordan man lægger fund i svampeatlas', url: 'http://quick.as/xw4zcbzvx', icon: 'ondemand_video' },
+		  { title: 'Hvordan man lægger fund i svampeatlas', url: 'https://vimeo.com/248811895', icon: 'vimeo' },
 		  
-		  { title: 'Hvordan man kommer med bestemmelsesforslag', url: 'http://quick.as/bp7qtngeg', icon: 'ondemand_video' },
+		  { title: 'Hvordan man kommer med bestemmelsesforslag', url: 'https://vimeo.com/248812925', icon: 'vimeo' },
 		  
-		  { title: 'Indtastning af udenlandske fund i Svampeatlas', url: 'http://quick.as/YznXs8nOz' , icon: 'ondemand_video'},
+		  { title: 'Indtastning af udenlandske fund i Svampeatlas', url: 'https://vimeo.com/248845618' , icon: 'vimeo'},
 		  { title: 'Søgning i svampeatlas', url: 'https://www.facebook.com/groups/svampeatlas/permalink/10154445124923522/' , icon: 'facebook'},
 		  { title: 'Rapportører og findere', url: 'https://www.facebook.com/groups/svampeatlas/permalink/10154445112068522/' , icon: 'facebook'},
-		  { title: 'Angivelse af finder som ikke findes i systemet', url: 'http://quick.as/o0jrtdbzk' , icon: 'ondemand_video'},
-		  { title: 'Udvidet søgning efter værtsorganisme', url: 'http://quick.as/mrzqf6gq9' , icon: 'ondemand_video'}
+		  { title: 'Angivelse af finder som ikke findes i systemet', url: 'https://vimeo.com/248849186' , icon: 'vimeo'},
+		  { title: 'Udvidet søgning efter værtsorganisme', url: 'https://vimeo.com/248813218' , icon: 'vimeo'}
 		  
 		 
 		  

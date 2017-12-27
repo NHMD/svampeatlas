@@ -218,6 +218,7 @@ md-menu-bar {
 
 .footer-partner {
 	margin-top: 12px;
+	color: rgb(96,125,139);
 }
 
 .mobile-footer {
@@ -230,6 +231,37 @@ md-menu-bar {
 	min-height: 48px;
 	text-align: left;
 	padding-left: 50px;
+}
+
+.footer-menu
+{
+    background-color: rgb(96,125,139);
+    color: rgb(255,255,255);
+	min-height: 200px;
+}
+
+.footer-menu ul > li > a{
+	
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+	color: white;
+	text-decoration: none;
+}
+
+.footer-menu ul {
+	list-style: none;
+}
+
+.footer-menu ul > li
+{
+margin-top: 8px;
+}
+
+.main-footer {
+	margin-top: 30px;
+}
+
+.m-h-800 {
+	min-height: 800px;
 }
 
 
