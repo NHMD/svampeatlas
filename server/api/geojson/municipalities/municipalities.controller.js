@@ -66,7 +66,7 @@ function removeEntity(res) {
 exports.show = function(req, res) {
 	
 	var kommunenr = req.params.id;
-	var json = require('../kommuner/'+kommunenr+'.json');
+	var json = require('../../../../../kommuner/'+kommunenr+'.json');
 	res.status(200).send(json);
 	
 
