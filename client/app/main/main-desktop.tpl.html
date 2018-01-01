@@ -131,6 +131,11 @@
 			   ng-style="getBackgroundStyle(tile)"
 			   ng-click="ObservationModalService.show($event, tile)"
 				  >
+				  <div ng-if="tile.newDK === true" layout="row" layout-align="end start" style="width: 100% ; height: 100% ">
+					   <img src="assets/images/nyfordk.png" height="60" ng-if="$parent.preferred_language ==='da'">
+					   <img src="assets/images/newtodk.png" height="60" ng-if="$parent.preferred_language ==='en'">
+				   
+				   </div>
 
       <md-grid-tile-footer class="img-footer footer-full-width" >
 	  <span class="footer-img-count star-rating">

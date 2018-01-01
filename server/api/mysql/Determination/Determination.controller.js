@@ -57,9 +57,9 @@ const DEFAULT_HIGHER_TAXON_RANK_LIMIT = 10000;
 // in order to pick a determination to higher taxon rather than to species the higher taxon determintion must have twice the score (factor 0.5) of the species determination
 const DEFAULT_HIGHER_TAXON_FACTOR = 0.75;
 // If the user says its only a possible id, degrade the user impact
-const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_POSSIBLE = 0.5;
+const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_POSSIBLE = 0.1;
 
-const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY = 0.9;
+const IDENTIFICATION_CERTAINTY_PENALTY_FACTOR_LIKELY = 0.5;
 
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
@@ -1090,7 +1090,7 @@ function swapPrimaryDeterminationIfNeeded(observation_id, t, logObject) {
 
 				var newPrimaryDetermination = _.maxBy(obs.Determinations, function(d) {
 					// determinations to higher taxon will be handicapped towards determinations to species
-					return (d.Taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? d.score : (d.score * DEFAULT_HIGHER_TAXON_FACTOR);
+					return (d.Taxon.acceptedTaxon.RankID >= DEFAULT_HIGHER_TAXON_RANK_LIMIT) ? d.score : Math.min((d.score * DEFAULT_HIGHER_TAXON_FACTOR), (ACCEPTED_SCORE - 1) );
 				});
 
 

@@ -248,10 +248,14 @@ angular.module('svampeatlasApp')
 	
 		query.cachekey = ($scope.useLichenFilter) ? 'latestlichens': 'latestredlisted';
 	 
-		$q.all([Observation.getObservationsFlaggedForFrontpage().$promise, Observation.query(query).$promise]).then(function(data) {
-			var observations = data[1];
-			var flaggedObservations = data[0];
-			var tileData = ($scope.useLichenFilter) ? observations : flaggedObservations.concat(observations);
+		$q.all([Observation.getObservationsFlaggedForFrontpageAsNewDK().$promise, Observation.getObservationsFlaggedForFrontpage().$promise, Observation.query(query).$promise]).then(function(data) {
+			var observations = data[2];
+			var flaggedObservations = data[1];
+			var newDkObservations = data[0];
+			for(var i=0; i< newDkObservations.length; i++){
+				newDkObservations[i].newDK = true;
+			}
+			var tileData = ($scope.useLichenFilter) ? observations : newDkObservations.concat(flaggedObservations.concat(observations));
 		$scope.tiles = _.filter(tileData, function(u) {
 			return u.Images.length > 0;
 		});

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog',  'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'MapBox', 'KMS','$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService','ValidatorNotificationModalService', 'SearchService',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog,  Observation, Determination, $mdMedia, $mdToast, leafletData, MapBox, KMS, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, ValidatorNotificationModalService, SearchService) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog',  'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'MapBox', 'KMS','$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService','ValidatorNotificationModalService', 'SearchService','$q',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog,  Observation, Determination, $mdMedia, $mdToast, leafletData, MapBox, KMS, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, ValidatorNotificationModalService, SearchService, $q) {
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
 			this.DeterminationLogModalService = DeterminationLogModalService;
@@ -429,12 +429,23 @@ angular.module('svampeatlasApp')
 			}).catch(function(err){
 				// The observation is not on the frontpage
 			})
+			
+			Observation.isOnFrontpageAsNewDK({
+		id: $scope.obs._id
+	}).$promise.then(function(obs){
+		that.isAlreadyOnFrontpage = true;
+	}).catch(function(err){
+		// The observation is not on the frontpage
+	})
 				}
 
 			};
 			
-			this.addToFrontPage = function(ttl){
-				Observation.flagObservationForFrontpage({
+			this.addToFrontPage = function(ttl, newDK){
+				
+				var method = (newDK) ? 'flagObservationForFrontpageAsNewDK':'flagObservationForFrontpage';
+				
+				Observation[method]({
 				id: $scope.obs._id
 			}, {ttl: ttl}).$promise.then(function(obs){
 				that.isAlreadyOnFrontpage = true;
@@ -443,14 +454,19 @@ angular.module('svampeatlasApp')
 				ErrorHandlingService.handle500();
 			})
 			};
+			
 			this.deleteFromFrontPage = function(){
-				Observation.removeObservationFromFrontpage({
+				
+				$q.all([Observation.removeObservationFromFrontpage({
 				id: $scope.obs._id
-			}).$promise.then(function(obs){
+			}).$promise, Observation.removeObservationFromFrontpageAsNewDK({
+				id: $scope.obs._id
+			}).$promise]).then(function(obs){
 				$scope.showSimpleToast($translate.instant('Operation succeeded.'))
 				that.isAlreadyOnFrontpage = false;
 			})
 			};
+			
 			$rootScope.$on('observation_updated', function(evt, obs) {
 				if (obs._id === $scope.obs._id) {
 					$scope.obs = Observation.get({

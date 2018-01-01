@@ -91,9 +91,18 @@ angular.module('svampeatlasApp')
 							}
 
 
-
+							that.confirmHigherTaxonDetermination = function(){
+								if(that.obs.PrimaryDetermination.Taxon.parent_id === that.newTaxon[0]._id){
+									
+									return confirm($translate.instant('Du angiver et forældre-taxon til')+" " +that.obs.PrimaryDetermination.Taxon.FullName+". "+$translate.instant('Mener du at det helt sikkert ikke er denne art')+"?")
+								} else {
+									return true;
+								}
+								
+							}
 
 							that.saveDetermination = function() {
+								
 								that.determination.taxon_id = that.newTaxon[0]._id;
 								if (that.determiner.length > 0) {
 									that.determination.user_id = that.determiner[0]._id;
@@ -102,7 +111,8 @@ angular.module('svampeatlasApp')
 
 
 
-								updateOrCreate()
+								if(that.confirmHigherTaxonDetermination()){
+updateOrCreate()
 									.then(function(DeterminationView) {
 										that.obs.DeterminationView = DeterminationView;
 										return mdPanelRef.close()
@@ -127,6 +137,9 @@ angular.module('svampeatlasApp')
 										
 										
 									});
+									
+								}	
+									
 
 							};
 			

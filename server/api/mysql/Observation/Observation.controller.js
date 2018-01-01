@@ -1309,6 +1309,93 @@ exports.deleteUserFromObs = function(req, res) {
 	});
 }
 
+exports.addObservationToFrontPageAsNewDK = function(req,res){
+	var redisClient = req.redis;
+	var now = Date.now();
+		var ttl = parseInt(req.body.ttl) *1000 * 60 * 60 * 24; // ttl in days calculated as millisec
+	//var ttl = parseInt(req.body.ttl) * 60 * 10 * 1000; // 10 min for testing
+	var score = now +ttl;
+	
+	
+	
+	return redisClient.zaddAsync('new_dk_frontpage_observations', score, req.params.id)
+		.then(function() {
+			// clean up expired keys
+			return redisClient.zremrangebyscoreAsync('new_dk_frontpage_observations', '-inf', now )
+			//return true;
+		})
+		.then(function() {
+			// clean up expired keys
+			res.sendStatus(200);
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			return res.sendStatus(500);
+		}) 
+	
+}
+
+exports.removeObservationFromFrontPageAsNewDK = function(req,res){
+	var redisClient = req.redis;
+
+	
+	return redisClient.zremAsync('new_dk_frontpage_observations',  req.params.id)
+	
+		.then(function() {
+			// clean up expired keys
+			res.sendStatus(200);
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			return res.sendStatus(500);
+		}) 
+	
+}
+
+exports.getObservationFromFrontPageAsNewDK = function(req,res){
+	var redisClient = req.redis;
+	var now = Date.now();
+	
+	return redisClient.zremrangebyscoreAsync('new_dk_frontpage_observations', '-inf', now ).then(function(){
+			return redisClient.zscoreAsync('new_dk_frontpage_observations',  req.params.id)
+	})
+	
+	
+		.then(function(obs) {
+			
+			if(obs){
+				res.status(200).json(obs);
+			} else {
+				res.sendStatus(404);
+			}
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			return res.sendStatus(500);
+		}) 
+	
+}
+
+exports.getObservationIdsSelectedForFrontpageAsNewDK = function(req, res){
+	var redisClient = req.redis;
+	
+	var now = Date.now();
+ redisClient.zrangebyscoreAsync('new_dk_frontpage_observations', now, '+inf')
+	.then(function(obsids) {
+		req.query.where = JSON.stringify({_id: obsids})
+		//return res.status(200).json(obsids);
+		return exports.index(req, res)
+	})
+	.catch(function(err) {
+		console.log("error: " + err)
+		return res.sendStatus(500);
+	}) 
+}
+
+
+
+// --------------
+
 exports.addObservationToFrontPage = function(req,res){
 	var redisClient = req.redis;
 	var now = Date.now();

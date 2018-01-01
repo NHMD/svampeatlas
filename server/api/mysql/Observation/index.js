@@ -17,6 +17,9 @@ var router = express.Router();
 
 router.get('/frontpage', redisClient.use(), controller.getObservationIdsSelectedForFrontpage); 
 
+router.get('/newdk', redisClient.use(), controller.getObservationIdsSelectedForFrontpageAsNewDK); 
+
+
 router.get('/', auth.appendUser(), redisClient.use(), controller.index);
 
 router.get('/count',  redisClient.cache(60 * 60 * 24), controller.getCount);
@@ -61,6 +64,10 @@ router.post('/:id/notifications', auth.isAuthenticated(), controller.notifyValid
 router.post('/frontpage/:id',  auth.hasRole('validator'), redisClient.use(), controller.addObservationToFrontPage); 
 router.get('/frontpage/:id',   redisClient.use(), controller.getObservationFromFrontPage);
 router.delete('/frontpage/:id',  auth.hasRole('validator'), redisClient.use(), controller.removeObservationFromFrontPage); 
+
+router.post('/newdk/:id',  auth.hasRole('validator'), redisClient.use(), controller.addObservationToFrontPageAsNewDK); 
+router.get('/newdk/:id',   redisClient.use(), controller.getObservationFromFrontPageAsNewDK);
+router.delete('/newdk/:id',  auth.hasRole('validator'), redisClient.use(), controller.removeObservationFromFrontPageAsNewDK); 
 
 
 

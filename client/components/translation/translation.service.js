@@ -362,7 +362,9 @@ angular.module('svampeatlasApp')
 			'Notifikationer er slået fra for' : 'Notifications turned off for',
 			'contentNotAvailableInLocale' : 'The requested content is not yet available in english',
 			'Dataanvendelse og brugerrettigheder' : 'Data use and user rights',
-			'Betingelser for indlæg og brug af data' : 'Conditions for contribution and use of data'
+			'Betingelser for indlæg og brug af data' : 'Conditions for contribution and use of data',
+			'Du angiver et forældre-taxon til' : 'You are suggesting a parent taxon of',
+			'Mener du at det helt sikkert ikke er denne art' : 'Do you mean that it is certainly not this species'
 		});
 		
 
