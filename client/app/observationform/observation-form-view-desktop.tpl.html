@@ -68,7 +68,7 @@
 	 </md-card>
 	  <md-card>
 	  <div layout-margin>
- <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true"  ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ngf-before-model-change="$parent.$parent.showProcessingImageStatus()"
+ <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true"  ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}" ngf-resize-if="$width > 1800 || $height > 1200" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ngf-before-model-change="$parent.$parent.showProcessingImageStatus()"
                   aria-label="Tilføj billeder"
                   class="md-icon-button" >
          <ng-md-icon icon="camera_alt" ></ng-md-icon> {{'Vælg billeder' | translate}}
@@ -78,6 +78,7 @@
    				      <div  flex layout-margin  ngf-drop="" ng-model="ctrl.files" ngf-keep="'distinct'" class="drop-box" 
      ngf-drag-over-class="'dragover'" ngf-multiple="true"   ngf-pattern="'image/jpeg'"
      ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}"
+	 ngf-resize-if="$width > 1800 || $height > 1200"
 	 ngf-before-model-change="$parent.$parent.showProcessingImageStatus()"
 	 ngf-fix-orientation="true" ngf-hide-on-drop-not-available="true"
      ><h3 class="md-title">{{'Træk billeder hertil' | translate}}</h3>

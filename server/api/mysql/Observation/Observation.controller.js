@@ -1079,6 +1079,7 @@ exports.destroy = function(req, res) {
 						models.ObservationImage.destroy(q),
 						models.ObservationPlantTaxon.destroy(q),
 						models.ObservationUser.destroy(q),
+						models.ObservationEvent.destroy(q),
 						models.ObservationSubscriber.destroy(q)
 						
 					]

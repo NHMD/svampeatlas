@@ -39,7 +39,7 @@ angular.module('svampeatlasApp')
 	
 		Taxon.getNumberOfDanishSpecies({
 			id: 'all',
-			cachekey: 'speciesCount'
+			cached: true
 		}).$promise.then(function(res){
 			$scope.speciesCount = res[0].count;
 		})

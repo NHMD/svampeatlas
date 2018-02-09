@@ -38,6 +38,19 @@ function cacheResult(req, value) {
 
 }
 
+function cacheResultByUrl(req, value) {
+	var redisClient = req.redis;
+	var ttl = req.ttl;
+	return redisClient.setAsync(req.originalUrl, value)
+		.then(function() {
+			return redisClient.expireAsync(req.originalUrl, ttl)
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+		})
+
+}
+
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
 	return function(err) {
@@ -1325,8 +1338,10 @@ LEFT JOIN
   { replacements: { taxon_id: req.params.id }, type: models.sequelize.QueryTypes.SELECT }
 ).then(function(result) {
 	
-	if (req.query.cachekey && req.query.cachekey === "speciesCount" &&  req.params.id ==="all") {
-		return cacheResult(req, JSON.stringify(result)).then(function() {
+	if (req.params.id ==="all" && req.query.cached) {
+		console.log("Caching species count")
+		
+		return cacheResultByUrl(req, JSON.stringify(result)).then(function() {
 			return res.status(200).json(result)
 		})
 	} else {
