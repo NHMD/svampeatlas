@@ -531,6 +531,22 @@ angular.module('svampeatlasApp')
 				} else {
 					delete dbQuery.include[6].where.content;
 				}
+				
+				if (search.note) {
+					dbQuery.where.note = {
+						like: "%" + search.note + "%"
+					}
+				} else {
+					delete dbQuery.where.note;
+				}
+				
+				if (search.ecologynote) {
+					dbQuery.where.ecologynote = {
+						like: "%" + search.ecologynote + "%"
+					}
+				} else {
+					delete dbQuery.where.ecologynote;
+				}
 
 
 

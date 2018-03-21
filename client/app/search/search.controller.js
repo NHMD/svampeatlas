@@ -552,6 +552,7 @@ angular.module('svampeatlasApp')
 						delete $scope.search.selectedSubstrate;
 						delete $scope.search.selectedVegetationType;
 						$scope.search.associatedOrganism = [];
+						delete $scope.search.ecologynote;
 						break;
 					case 'persons':
 						$scope.search.collectors = [];
@@ -569,6 +570,7 @@ angular.module('svampeatlasApp')
 						delete $scope.search.selectedDataSet;
 						$scope.search.onlyWithImages = false;
 						delete $scope.search.imageMaxAge;
+						delete $scope.search.note;
 
 						break;
 					case 'forum':

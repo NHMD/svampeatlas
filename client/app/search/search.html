@@ -454,7 +454,13 @@
  			
 			   	
  			  </div>
-			   
+			   <div  layout="row">
+	   		   <md-input-container class="md-block" flex-gt-sm>
+	   		            <label>{{'Økologi-note indeholder:' | translate}}</label>
+	   		            <input name="ecologynote" ng-model="search.ecologynote" />
+				
+         
+	   		          </md-input-container></div>
   		
   		</div>
   		  <div  md-whiteframe="3" class="search-section" layout-padding>
@@ -622,6 +628,15 @@
 		   <md-button ng-click="setDate(7, 'imageMaxAge')">{{'7'}} {{('dage' | translate)}}</md-button>
 		   <md-button ng-click="setDate(30, 'imageMaxAge')">{{'30'}} {{('dage' | translate)}}</md-button>
 		   </div>
+		   <div layout-gt-xs="row">
+		   <md-input-container class="md-block" flex-gt-sm>
+		            <label>{{'Fund-note indeholder:' | translate}}</label>
+		            <input name="note" ng-model="search.note" />
+				
+         
+		          </md-input-container>
+	   		   
+				  </div>
 		   
   		</div>
 		  

@@ -497,6 +497,9 @@ angular.module('svampeatlasApp', [
 	if($cookies.get('preferred_language') === 'dk'){
 		$cookies.put("preferred_language", 'da')
 	}
+	if(!$cookies.get('preferred_language')){
+		$cookies.put("preferred_language", 'da')
+	}
 	
 	window.fbAsyncInit = function() {
 		FB.init({
