@@ -217,7 +217,8 @@ angular.module('svampeatlasApp')
 				var that = this;
 
 				var useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
-
+				var useNoLichenFilter = Boolean(localStorage.getItem('use_no_lichen_filter'));
+				
 				if (useLichenFilter) {
 					search.livsstrategi = "lichenized";
 				}
@@ -250,6 +251,11 @@ angular.module('svampeatlasApp')
 
 					}
 
+				}
+				if (useNoLichenFilter) {
+					search.include[0].where.lichenized = 0;
+				} else if(search.livsstrategi !== 'not_lichenized'){
+					delete search.include[0].where.lichenized;
 				}
 
 				if (search.selectedVegetationType && search.selectedVegetationType.length > 0) {

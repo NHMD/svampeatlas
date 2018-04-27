@@ -202,7 +202,13 @@ exports.localititesWithRecentFindings = function(req, res){
 		sql = 'SELECT l._id, l.decimalLatitude, l.decimalLongitude, l.name FROM Locality l JOIN Observation o JOIN DeterminationView2 d ON o.primarydetermination_id=d.Determination_id AND d.lichenized = 1 AND o.locality_id = l._id '
 		+'AND DATE_ADD(CURDATE(), INTERVAL :days DAY) < DATE(o.observationDate) GROUP BY l._id';
 		
-	} else {
+	} else if (req.query.omitlichens){
+		sql = 'SELECT l._id, l.decimalLatitude, l.decimalLongitude, l.name FROM Locality l JOIN Observation o JOIN DeterminationView2 d ON o.primarydetermination_id=d.Determination_id AND d.lichenized = 0 AND o.locality_id = l._id '
+		+'AND DATE_ADD(CURDATE(), INTERVAL :days DAY) < DATE(o.observationDate) GROUP BY l._id';
+		
+	}
+	
+	 else {
 		sql = 'SELECT l._id, l.decimalLatitude, l.decimalLongitude, l.name FROM Locality l JOIN Observation o ON o.locality_id = l._id '
 		+'AND DATE_ADD(CURDATE(), INTERVAL :days DAY) < DATE(o.observationDate) GROUP BY l._id';
 	}

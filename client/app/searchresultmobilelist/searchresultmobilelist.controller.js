@@ -76,6 +76,7 @@ angular.module('svampeatlasApp')
 				search.wasInitiatedOutsideSearchForm = true;
 				search.where = {};
 				var useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
+				var useNoLichenFilter = Boolean(localStorage.getItem('use_no_lichen_filter'));
 				if ($stateParams.searchterm === "mine") {
 
 					search.include[1].where = {
@@ -89,11 +90,17 @@ angular.module('svampeatlasApp')
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
 					}
+					if(useNoLichenFilter) {
+						search.include[0].where.lichenized = 0;
+					}
 					search.where.observationDate = $filter('date')(moment().startOf('day').toDate(), "yyyy-MM-dd", '+0200')
 					
 				} else if ($stateParams.searchterm === "3days") {
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
+					}
+					if(useNoLichenFilter) {
+						search.include[0].where.lichenized = 0;
 					}
 					search.where.observationDate = {
 						gt: $filter('date')(moment().startOf('day').subtract(3, 'days').toDate(), "yyyy-MM-dd", '+0200')
@@ -101,6 +108,9 @@ angular.module('svampeatlasApp')
 				} else if ($stateParams.searchterm === "7days") {
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
+					}
+					if(useNoLichenFilter) {
+						search.include[0].where.lichenized = 0;
 					}
 					search.where.observationDate = {
 						gt: $filter('date')(moment().startOf('day').subtract(7, 'days').toDate(), "yyyy-MM-dd", '+0200')
@@ -116,7 +126,9 @@ angular.module('svampeatlasApp')
 									if(useLichenFilter) {
 										search.include[0].where.lichenized = 1;
 									};
-					
+									if(useNoLichenFilter) {
+										search.include[0].where.lichenized = 0;
+									}
 									// remove this if we don´t want foreign sightings in default searches
 									search.include[2].required = false;
 
@@ -124,12 +136,18 @@ angular.module('svampeatlasApp')
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
 					}
+					if(useNoLichenFilter) {
+						search.include[0].where.lichenized = 0;
+					}
 					search.include[2].required = false;
 					search.where.locality_id = {"$eq":null};
 
 				} else if ($stateParams.locality_id && $stateParams.date) {
 					if(useLichenFilter) {
 						search.include[0].where.lichenized = 1;
+					}
+					if(useNoLichenFilter) {
+						search.include[0].where.lichenized = 0;
 					}
 					search.where.observationDate = {
 

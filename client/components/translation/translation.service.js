@@ -364,7 +364,11 @@ angular.module('svampeatlasApp')
 			'Dataanvendelse og brugerrettigheder' : 'Data use and user rights',
 			'Betingelser for indlæg og brug af data' : 'Conditions for contribution and use of data',
 			'Du angiver et forældre-taxon til' : 'You are suggesting a parent taxon of',
-			'Mener du at det helt sikkert ikke er denne art' : 'Do you mean that it is certainly not this species'
+			'Mener du at det helt sikkert ikke er denne art' : 'Do you mean that it is certainly not this species',
+			'Brug altid nærmeste lokalitet ved klik' : 'Always use nearest locality on click',
+			'Vis ikke laver i søgninger' : 'Omit Lichens from searches',
+			'Brug MycoKey' : 'Use MycoKey',
+			'Søg i MycoKey' : 'Search MycoKey'
 		});
 		
 
