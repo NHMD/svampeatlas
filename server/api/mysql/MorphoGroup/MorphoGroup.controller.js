@@ -201,6 +201,41 @@ exports.batchUpdateMorphoGroup = function(req, res) {
 		});
 }
 
+exports.mergeMorphoGroups = function(req, res) {
+
+	
+	var sql = `UPDATE Taxon SET morphogroup_id = :targetid WHERE morphogroup_id= :id;`
+	var deleteSql = `DELETE FROM MorphoGroup WHERE _id = :id`;
+	return models.sequelize.transaction(function(t) {
+		return models.sequelize.query(sql, {
+		replacements: {
+			targetid: req.body.targetid,
+			id: req.body.id
+		},
+		type: models.sequelize.QueryTypes.UPDATE,
+		transaction: t
+	})
+	.then(function(){
+		return models.sequelize.query(deleteSql, {
+		replacements: {
+			id: req.body.id
+		},
+		type: models.sequelize.QueryTypes.DELETE,
+		transaction: t
+	})
+	})
+	.then(function(result) {
+
+		return res.sendStatus(200);
+	}).catch(handleError(res));
+		
+		
+	});
+
+
+	
+}
+
 exports.getUsers = function(req, res) {
 	
 	

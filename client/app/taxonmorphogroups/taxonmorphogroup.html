@@ -42,7 +42,12 @@
 	<tbody ng-show="!isLoading">
 	<tr ng-repeat="mg in displayed">
 		<td st-ratio="10">{{mg._id}}</td>
-		<td st-ratio="10"><button type="button" class="btn btn-default" ng-click="viewTaxa(mg)">View taxa</button><button type="button" class="btn btn-default" ng-click="$state.go('taxonmorphogroupusers', {id: mg._id})">Show user impacts</button></td>
+		<td st-ratio="10"><button type="button" class="btn btn-default" ng-click="viewTaxa(mg)">View taxa</button><button type="button" class="btn btn-default" ng-click="$state.go('taxonmorphogroupusers', {id: mg._id})">Show user impacts</button>
+		<button type="button" class="btn btn-default" ng-click="showMergeModal($event, mg, displayed)">Merge</button>
+		</td>
+		
+		
+		
 		<td>{{mg.createdAt | date : 'medium'}}</td>
 		<td>
 			<span editable-text="mg.name_dk" e-name="name_dk" e-form="rowform">

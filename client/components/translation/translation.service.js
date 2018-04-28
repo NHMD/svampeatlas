@@ -368,7 +368,8 @@ angular.module('svampeatlasApp')
 			'Brug altid nærmeste lokalitet ved klik' : 'Always use nearest locality on click',
 			'Vis ikke laver i søgninger' : 'Omit Lichens from searches',
 			'Brug MycoKey' : 'Use MycoKey',
-			'Søg i MycoKey' : 'Search MycoKey'
+			'Søg i MycoKey' : 'Search MycoKey',
+			'Se alle nyheder fra svampeatlas' : 'See all news from the Fungal Atlas'
 		});
 		
 

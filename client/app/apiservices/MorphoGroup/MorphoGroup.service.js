@@ -16,6 +16,10 @@ angular.module('svampeatlasApp')
 			url: '/api/morphogroups/:id/users',
 			isArray: true
 		},
+		merge: {
+			method: 'POST',
+			url: '/api/morphogroups/merge'
+		}
 	    });
    
   });

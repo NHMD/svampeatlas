@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('TaxonMorphoGroupCtrl',['$scope','MorphoGroup', '$mdDialog', 'Auth',  '$state','SearchService', function ($scope, MorphoGroup, $mdDialog, Auth, $state, SearchService) {
+  .controller('TaxonMorphoGroupCtrl',['$scope','MorphoGroup', '$mdDialog','$mdMedia','ErrorHandlingService', '$mdToast', 'Auth',  '$state','SearchService', function ($scope, MorphoGroup, $mdDialog, $mdMedia, ErrorHandlingService, $mdToast, Auth, $state, SearchService) {
 	  $scope.getCurrentUser = Auth.getCurrentUser;
 	  $scope.$state = $state;
 	  
@@ -21,6 +21,49 @@ angular.module('svampeatlasApp')
 		  
 		  
 	  }
+	  
+	$scope.showMergeModal = function(ev, mg, groups) {
+		var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+
+		$mdDialog.show({
+			controller: ['$scope', '$mdDialog', '$mdToast', function($scope, $mdDialog, $mdToast) {
+				$scope.mg = mg;
+				$scope.groups = groups;
+				
+				$scope.merge = function(group_id, targetgroup_id){
+					MorphoGroup.merge({id: group_id, targetid: targetgroup_id}).$promise.then(function(res){
+						$mdDialog.cancel();
+						$mdToast.show(
+							$mdToast.simple()
+							.textContent('Groups successfully merged')
+							.position("top right")
+							.hideDelay(3000)
+						);
+					}).catch(function(err){
+						ErrorHandlingService.handle500()
+					})
+					
+				}
+				$scope.cancel = function() {
+					$mdDialog.cancel();
+				};
+
+
+			}],
+			templateUrl: 'app/taxonmorphogroups/merge.tpl.html',
+			parent: angular.element(document.body),
+			targetEvent: ev,
+			clickOutsideToClose: true,
+			fullscreen: useFullScreen
+		})
+
+
+		$scope.$watch(function() {
+			return $mdMedia('xs') || $mdMedia('sm');
+		}, function(wantsFullScreen) {
+			$scope.customFullscreen = (wantsFullScreen === true);
+		});
+	};
 	  
 	  $scope.addOrUpdateGroup = function(group){
 		  
