@@ -31,7 +31,7 @@ var crowdSourcedIdentificationConstants = determinationController.getCrowsourced
 
 
 
-function getDefaulQuery(req){
+function getDefaulQuery(req) {
 	return {
 		where: {
 			_id: req.params.id
@@ -63,32 +63,31 @@ function getDefaulQuery(req){
 				model: models.Determination,
 				as: 'Determinations',
 				include: [{
-					model: models.Taxon,
-					as: "Taxon",
-					include: [{
 						model: models.Taxon,
-						as: "acceptedTaxon",
+						as: "Taxon",
 						include: [{
-							model: models.TaxonDKnames,
-							as: "Vernacularname_DK"
+							model: models.Taxon,
+							as: "acceptedTaxon",
+							include: [{
+								model: models.TaxonDKnames,
+								as: "Vernacularname_DK"
+							}]
 						}]
-					}]
-				}, {
-					model: models.User,
-					as: 'User',
-					attributes: ['_id', 'email', 'Initialer', 'name']
-				}, {
-					model: models.User,
-					as: 'Validator',
-					attributes: ['_id', 'Initialer', 'name']
-				},
-				{
-									model: models.DeterminationVote,
-									as: 'Votes',
-									attributes: ['_id','user_id', 'createdAt',  'score']
-								},
-			
-			]
+					}, {
+						model: models.User,
+						as: 'User',
+						attributes: ['_id', 'email', 'Initialer', 'name']
+					}, {
+						model: models.User,
+						as: 'Validator',
+						attributes: ['_id', 'Initialer', 'name']
+					}, {
+						model: models.DeterminationVote,
+						as: 'Votes',
+						attributes: ['_id', 'user_id', 'createdAt', 'score']
+					},
+
+				]
 
 			},
 
@@ -138,8 +137,8 @@ function getDefaulQuery(req){
 		]
 	};
 
-} 
-	 
+}
+
 function handleError(res, statusCode) {
 	statusCode = statusCode || 500;
 	return function(err) {
@@ -249,7 +248,7 @@ exports.index = function(req, res) {
 	if (req.query.geometry) {
 		query.where.$and.push(models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom')));
 	}
-	
+
 	/*
 	if (req.query.municipalityid) {
 	
@@ -343,7 +342,7 @@ exports.index = function(req, res) {
 		]
 	}
 	var activeThreadsPromise;
-	
+
 	if (req.user && Boolean(req.query.activeThreadsOnly)) {
 
 		activeThreadsPromise = activeThreads(req.user)
@@ -353,7 +352,7 @@ exports.index = function(req, res) {
 	} else if (req.user && req.query.validationStatusUpdatedSince) {
 
 		activeThreadsPromise = validationStatusUpdatedSince(req.user, req.query.validationStatusUpdatedSince)
-	}	else {
+	} else {
 		activeThreadsPromise = Promise.resolve(false)
 	}
 	console.log(query);
@@ -424,7 +423,7 @@ exports.indexSpeciesList = function(req, res) {
 	}
 
 	var query = {
-		
+
 		where: {},
 		attributes: [
 			[models.sequelize.fn('count', models.sequelize.fn('distinct', models.sequelize.col('Observation._id'))), 'observationCount'], 'primaryuser_id', 'locality_id'
@@ -449,7 +448,7 @@ exports.indexSpeciesList = function(req, res) {
 	if (req.query.geometry) {
 		query.where.$and.push(models.sequelize.fn('ST_Contains', models.sequelize.fn('GeomFromText', wktparse.stringify(JSON.parse(req.query.geometry))), models.sequelize.col('geom')));
 	}
-	
+
 	/*
 	if (req.query.municipalityid) {
 	
@@ -630,7 +629,7 @@ function recentlyCommented(user, since) {
 
 function validationStatusUpdatedSince(user, since) {
 
-	var sql = 'SELECT o._id from Observation o JOIN Determination d on o.primarydetermination_id = d._id WHERE o.primaryuser_id = :userid AND ((d.validator_id IS NOT NULL AND d.validator_id <> :userid AND d.updatedAt > :fromdate) OR (d.createdByUser IS NOT NULL AND d.createdByUser <> :userid AND d.createdAt > :fromdate) OR (d.score >= '+crowdSourcedIdentificationConstants.ACCEPTED_SCORE+'  AND d.updatedAt > d.createdAt AND d.updatedAt > :fromdate) )';
+	var sql = 'SELECT o._id from Observation o JOIN Determination d on o.primarydetermination_id = d._id WHERE o.primaryuser_id = :userid AND ((d.validator_id IS NOT NULL AND d.validator_id <> :userid AND d.updatedAt > :fromdate) OR (d.createdByUser IS NOT NULL AND d.createdByUser <> :userid AND d.createdAt > :fromdate) OR (d.score >= ' + crowdSourcedIdentificationConstants.ACCEPTED_SCORE + '  AND d.updatedAt > d.createdAt AND d.updatedAt > :fromdate) )';
 
 	return models.sequelize.query(
 		sql, {
@@ -650,6 +649,54 @@ function validationStatusUpdatedSince(user, since) {
 }
 
 
+exports.showSimple = function(req, res) {
+	var userIsValidator = (req.user) ? userTool.hasRole(req.user, 'validator') : false;
+
+	var query = getDefaulQuery(req);
+
+	if (!userIsValidator) {
+		query.attributes = {
+			exclude: ['noteInternal']
+		};
+	};
+
+	Observation.find(query)
+
+	.then(handleEntityNotFound(res))
+		.then(function(obj) {
+			console.log(obj.observationDate)
+			var parsed = {};
+
+			parsed.Taxon = obj.PrimaryDetermination.Taxon.acceptedTaxon.FullName;
+			parsed.Author = obj.PrimaryDetermination.Taxon.acceptedTaxon.Author;
+			parsed.Leg = obj.users.map(function(u) {
+				return u.name
+			}).join(', ');
+			parsed.Det = obj.PrimaryDetermination.User.name;
+			parsed.Date = obj.observationDate;
+			parsed.Day = obj.observationDate.getDate();//obj.observationDate.split("T")[0].split("-")[2];
+			parsed.Month = obj.observationDate.getMonth()+1;//obj.observationDate.split("T")[0].split("-")[1];
+			parsed.Year = obj.observationDate.getFullYear();//obj.observationDate.split("T")[0].split("-")[0];
+			parsed.CollNo = obj.fieldnumber;
+			parsed.AtlasNo = obj._id;
+			parsed.Lokalitet = (obj.Locality) ? obj.Locality.name : obj.verbatimLocality;
+			parsed.Land = (obj.Locality) ? 'Denmark' : obj.GeoNames.countryName;
+			parsed.Latitude = obj.decimalLatitude;
+			parsed.Longitude = obj.decimalLongitude;
+			parsed.Precision = obj.accuracy;
+			parsed.Substrat = obj.Substrate.name;
+			parsed.Vegetationstype = obj.VegetationType.name;
+			parsed.Vaert = obj.associatedTaxa.map(function(t) {
+				return t.DKandLatinName
+			}).join(', ');
+			parsed.Notes = obj.note
+
+			return res.status(200).json(parsed)
+		})
+
+	.
+	catch(handleError(res));
+};
 // Get a single observation
 exports.show = function(req, res) {
 	var userIsValidator = (req.user) ? userTool.hasRole(req.user, 'validator') : false;
@@ -664,10 +711,12 @@ exports.show = function(req, res) {
 
 	Observation.find(query)
 
-		.then(handleEntityNotFound(res))
-		.then(responseWithResult(res))
-	
-		.
+	.then(handleEntityNotFound(res))
+		.then(function(obs) {
+			return res.status(200).json(obs)
+		})
+
+	.
 	catch(handleError(res));
 };
 
@@ -684,7 +733,14 @@ exports.create = function(req, res) {
 	if (!userIsValidator) {
 		delete observation.noteInternal;
 	};
-	var logObject = { User: {_id: req.user._id, name: req.user.name, initials: req.user.Initialer }, _eventType: 'NEW OBSERVATION WITH INITIAL DETERMINATION'};
+	var logObject = {
+		User: {
+			_id: req.user._id,
+			name: req.user.name,
+			initials: req.user.Initialer
+		},
+		_eventType: 'NEW OBSERVATION WITH INITIAL DETERMINATION'
+	};
 	observation.primaryuser_id = req.user._id;
 	observation.geom = models.sequelize.fn('GeomFromText', 'POINT (' + req.body.decimalLongitude + ' ' + req.body.decimalLatitude + ')');
 
@@ -719,40 +775,49 @@ exports.create = function(req, res) {
 							user_id: u._id
 						}
 					})
-					
+
 					return [obs.save({
-						transaction: t
-					}), det,
-					 models.ObservationPlantTaxon.bulkCreate(associated, {
-						transaction: t
-					}), models.ObservationUser.bulkCreate(finders, {
-						transaction: t
-					}), models.ObservationSubscriber.bulkCreate(finders, {
-						transaction: t
-					})];
+							transaction: t
+						}), det,
+						models.ObservationPlantTaxon.bulkCreate(associated, {
+							transaction: t
+						}), models.ObservationUser.bulkCreate(finders, {
+							transaction: t
+						}), models.ObservationSubscriber.bulkCreate(finders, {
+							transaction: t
+						})
+					];
 				})
 				.spread(function(obs, det) {
-					return [obs, models.DeterminationLog.create({ eventType: logObject._eventType, user_id: req.user._id, determination_id: det._id, observation_id: obs._id, logObject: JSON.stringify(logObject)}, {transaction: t})]
+					return [obs, models.DeterminationLog.create({
+						eventType: logObject._eventType,
+						user_id: req.user._id,
+						determination_id: det._id,
+						observation_id: obs._id,
+						logObject: JSON.stringify(logObject)
+					}, {
+						transaction: t
+					})]
 				})
 				.spread(function(obs) {
 					return obs;
 				})
-					.
-				catch((err) => {
-					throw err
-				});
+				.
+			catch((err) => {
+				throw err
+			});
 
 		}).then(function(obs) {
 
 			return res.status(201).json(obs)
 		})
-			.
-		catch((err) => {
-			var statusCode = (err.message === "LOCALITY_MISSING") ? 422 : 500;
-			console.log(err);
+		.
+	catch((err) => {
+		var statusCode = (err.message === "LOCALITY_MISSING") ? 422 : 500;
+		console.log(err);
 
-			return res.status(statusCode).send(err.message);
-		});
+		return res.status(statusCode).send(err.message);
+	});
 
 
 
@@ -892,11 +957,12 @@ exports.update = function(req, res) {
 
 
 exports.updatePrimaryDetermination = (req, res) => {
-	
+
 	return models.Observation.find({
-		where: {
-			_id: req.params.id
-		}, include: [{
+			where: {
+				_id: req.params.id
+			},
+			include: [{
 				model: models.Determination,
 				as: "PrimaryDetermination",
 				include: [{
@@ -919,60 +985,67 @@ exports.updatePrimaryDetermination = (req, res) => {
 					as: 'Validator',
 					attributes: ['_id', 'Initialer', 'name']
 				}]
-			},{
+			}, {
 				model: models.Determination,
 				as: 'Determinations',
 				include: [{
-					model: models.Taxon,
-					as: "Taxon",
-					include: [{
 						model: models.Taxon,
-						as: "acceptedTaxon",
+						as: "Taxon",
 						include: [{
-							model: models.TaxonDKnames,
-							as: "Vernacularname_DK"
+							model: models.Taxon,
+							as: "acceptedTaxon",
+							include: [{
+								model: models.TaxonDKnames,
+								as: "Vernacularname_DK"
+							}]
 						}]
-					}]
-				}, {
-					model: models.User,
-					as: 'User',
-					attributes: ['_id', 'email', 'Initialer', 'name']
-				}, {
-					model: models.User,
-					as: 'Validator',
-					attributes: ['_id', 'Initialer', 'name']
-				},
-				{
-									model: models.DeterminationVote,
-									as: 'Votes'
-								},
-			
-			]
+					}, {
+						model: models.User,
+						as: 'User',
+						attributes: ['_id', 'email', 'Initialer', 'name']
+					}, {
+						model: models.User,
+						as: 'Validator',
+						attributes: ['_id', 'Initialer', 'name']
+					}, {
+						model: models.DeterminationVote,
+						as: 'Votes'
+					},
+
+				]
 
 			}]
-	}).then((obs)=>{
-		
-		var newDetermination = _.find(obs.Determinations, (det)=>{
-			return det._id === req.body._id;
+		}).then((obs) => {
+
+			var newDetermination = _.find(obs.Determinations, (det) => {
+				return det._id === req.body._id;
+			})
+			var oldDetermination = obs.PrimaryDetermination;
+			if (!newDetermination) {
+				throw new Error("Not found");
+			} else {
+				newDetermination.validation = "Godkendt";
+				newDetermination.validator_id = req.user._id;
+				return [obs.setPrimaryDetermination(newDetermination), newDetermination.save(), oldDetermination]
+			}
 		})
-		var oldDetermination = obs.PrimaryDetermination;
-		if(!newDetermination) {
-			throw new Error("Not found");
-		} else {
-			newDetermination.validation = "Godkendt";
-			newDetermination.validator_id = req.user._id;
-			return [obs.setPrimaryDetermination(newDetermination), newDetermination.save(), oldDetermination]
-		}
-	})
-	.spread((obs, newDetermination, oldDetermination)=>{
-	
-			var desc = "New determination_id: "+newDetermination._id +"; new taxon: "+newDetermination.Taxon.acceptedTaxon.FullName+"; old determination_id: "+oldDetermination._id+"; old taxon "+oldDetermination.Taxon.acceptedTaxon.FullName
-			
-			return  models.ObservationLog.create({eventname: "New primary determination", oldvalues: JSON.stringify({"primarydetermination_id": oldDetermination._id}), description: desc, user_id: req.user._id, observation_id: req.params.id})
-		
-	})
-	
-	.then(()=>{
+		.spread((obs, newDetermination, oldDetermination) => {
+
+			var desc = "New determination_id: " + newDetermination._id + "; new taxon: " + newDetermination.Taxon.acceptedTaxon.FullName + "; old determination_id: " + oldDetermination._id + "; old taxon " + oldDetermination.Taxon.acceptedTaxon.FullName
+
+			return models.ObservationLog.create({
+				eventname: "New primary determination",
+				oldvalues: JSON.stringify({
+					"primarydetermination_id": oldDetermination._id
+				}),
+				description: desc,
+				user_id: req.user._id,
+				observation_id: req.params.id
+			})
+
+		})
+
+	.then(() => {
 		res.send(204);
 	}).
 	catch(function(err) {
@@ -997,11 +1070,11 @@ exports.destroy = function(req, res) {
 							model: models.DeterminationView,
 							as: "DeterminationView",
 							attributes: ['Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_user_id', 'Determination_validation', 'Determination_validator_id'],
-						include: [ {
-							model: models.User,
-							as: 'Determiner',
-							attributes: ['email', 'Initialer', 'name']
-						}]
+							include: [{
+								model: models.User,
+								as: 'Determiner',
+								attributes: ['email', 'Initialer', 'name']
+							}]
 						}, {
 							model: models.User,
 							as: 'PrimaryUser',
@@ -1030,37 +1103,37 @@ exports.destroy = function(req, res) {
 					transaction: t
 				})
 				.then(function(obs) {
-					
+
 					if (!obs) {
 						res.send(404);
-					} else if(!userIsValidator && !(req.user._id === obs.primaryuser_id && obs.createdAt > moment().subtract(2, 'days'))){
+					} else if (!userIsValidator && !(req.user._id === obs.primaryuser_id && obs.createdAt > moment().subtract(2, 'days'))) {
 						throw new Error("Forbidden");
 					}
 					var serializedObs = JSON.stringify(obs);
-					
+
 					return [obs, models.ObservationLog.create({
-							eventname: 'Deleted observation',
-							oldvalues: serializedObs,
-							user_id: req.user._id,
-							observation_id: req.params.id
-						}, {
-							transaction: t
-						})];
+						eventname: 'Deleted observation',
+						oldvalues: serializedObs,
+						user_id: req.user._id,
+						observation_id: req.params.id
+					}, {
+						transaction: t
+					})];
 				})
 				.spread(function(obs) {
 
 					obs.primarydetermination_id = null;
-				
+
 					return [obs.save({
-							transaction: t
-						}), models.DeterminationVote.destroy({
+						transaction: t
+					}), models.DeterminationVote.destroy({
 						where: {
 							observation_id: req.params.id
 						},
 						transaction: t
 					})];
-						
-					
+
+
 
 				})
 				.spread(function(obs) {
@@ -1081,7 +1154,7 @@ exports.destroy = function(req, res) {
 						models.ObservationUser.destroy(q),
 						models.ObservationEvent.destroy(q),
 						models.ObservationSubscriber.destroy(q)
-						
+
 					]
 
 				}).then(function() {
@@ -1100,12 +1173,12 @@ exports.destroy = function(req, res) {
 			res.send(204);
 		})
 		.
-		catch(function(err) {
-			var statusCode = (err.message === 'Forbidden') ? 403 : 500;
-			console.log(err);
-		
-			res.status(statusCode).send(err.message);
-		});
+	catch(function(err) {
+		var statusCode = (err.message === 'Forbidden') ? 403 : 500;
+		console.log(err);
+
+		res.status(statusCode).send(err.message);
+	});
 
 
 
@@ -1113,13 +1186,13 @@ exports.destroy = function(req, res) {
 
 exports.getCount = function(req, res) {
 
-	var commSql = (req.query.communityApproved) ? ' AND (d.score >= '+determinationController.Constants.ACCEPTED_SCORE+' AND d.validation <> "Godkendt") AND d.baseScore < '+determinationController.Constants.ACCEPTED_SCORE : "";
+	var commSql = (req.query.communityApproved) ? ' AND (d.score >= ' + determinationController.Constants.ACCEPTED_SCORE + ' AND d.validation <> "Godkendt") AND d.baseScore < ' + determinationController.Constants.ACCEPTED_SCORE : "";
 	var groups = {
-		'Year': 'select year(observationDate) as year, count(*) as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id'+commSql+' group by year(observationDate)',
-		'Decade': 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id'+commSql+' group by decade',
-		'YEARWEEK' : 'SELECT YEARWEEK(observationDate) as YEARWEEK, COUNT(o._id) as count FROM Observation o, Determination d WHERE o.primarydetermination_id=d._id'+commSql+' AND observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo WEEK) GROUP BY YEARWEEK(observationDate)'
+		'Year': 'select year(observationDate) as year, count(*) as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id' + commSql + ' group by year(observationDate)',
+		'Decade': 'select 10 * FLOOR( YEAR(observationDate) / 10 ) AS decade, count(*)  as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id' + commSql + ' group by decade',
+		'YEARWEEK': 'SELECT YEARWEEK(observationDate) as YEARWEEK, COUNT(o._id) as count FROM Observation o, Determination d WHERE o.primarydetermination_id=d._id' + commSql + ' AND observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo WEEK) GROUP BY YEARWEEK(observationDate)'
 	}
-	var sql = (req.query.group) ? groups[req.query.group] : 'select count(*) as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id'+commSql;
+	var sql = (req.query.group) ? groups[req.query.group] : 'select count(*) as count from Observation o, Determination d WHERE o.primarydetermination_id=d._id' + commSql;
 
 
 	return models.sequelize.query(sql, {
@@ -1133,7 +1206,7 @@ exports.getCount = function(req, res) {
 
 		if (req.query.cached) {
 			return cacheResultByUrl(req, JSON.stringify(result)).then(function() {
-				
+
 				return res.status(200).json(result)
 			})
 		} else {
@@ -1145,27 +1218,27 @@ exports.getCount = function(req, res) {
 };
 
 exports.getSpeciesCount = function(req, res) {
-	
-	if(['WEEK', 'MONTH', 'YEAR', 'YEARWEEK'].indexOf(req.query.timeIntervalType) === -1 ){
+
+	if (['WEEK', 'MONTH', 'YEAR', 'YEARWEEK'].indexOf(req.query.timeIntervalType) === -1) {
 		return res.sendStatus(400);
 	}
 
 	var sql;
-			if (req.query.communityApproved){
-				sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score >= ${determinationController.Constants.ACCEPTED_SCORE} AND d.validation <> "Godkendt") AND d.baseScore < ${determinationController.Constants.ACCEPTED_SCORE} AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
-			} else if (req.query.expertApproved) {
-				sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND  d.validation = "Godkendt" AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
-			} else if (req.query.notApproved){
-				sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score < ${determinationController.Constants.ACCEPTED_SCORE} AND d.validation <> "Godkendt") AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
-			} else {
-				sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score >= ${determinationController.Constants.ACCEPTED_SCORE} OR d.validation = "Godkendt") AND o.observationDate BETWEEN DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) AND DATE_SUB(NOW(), INTERVAL :limit ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`			
-			}
-		
+	if (req.query.communityApproved) {
+		sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score >= ${determinationController.Constants.ACCEPTED_SCORE} AND d.validation <> "Godkendt") AND d.baseScore < ${determinationController.Constants.ACCEPTED_SCORE} AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
+	} else if (req.query.expertApproved) {
+		sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND  d.validation = "Godkendt" AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
+	} else if (req.query.notApproved) {
+		sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score < ${determinationController.Constants.ACCEPTED_SCORE} AND d.validation <> "Godkendt") AND o.observationDate > DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
+	} else {
+		sql = `SELECT ${req.query.timeIntervalType}(o.observationDate) as ${req.query.timeIntervalType},  count(distinct d.taxon_id) as speciescount  FROM Observation o, Determination d, Taxon t WHERE o.primarydetermination_id=d._id AND d.taxon_id = t._id AND t.RankID >= 9950 AND (d.score >= ${determinationController.Constants.ACCEPTED_SCORE} OR d.validation = "Godkendt") AND o.observationDate BETWEEN DATE_SUB(NOW(), INTERVAL :timeAgo ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) AND DATE_SUB(NOW(), INTERVAL :limit ${(req.query.timeIntervalType ==='YEARWEEK') ? 'WEEK': req.query.timeIntervalType}) GROUP BY ${req.query.timeIntervalType}(o.observationDate)`
+	}
+
 
 	return models.sequelize.query(sql, {
 		replacements: {
 			timeAgo: req.query.timeAgo,
-			limit:  (req.query.limit) ? parseInt(req.query.timeAgo) - parseInt(req.query.limit) : 0
+			limit: (req.query.limit) ? parseInt(req.query.timeAgo) - parseInt(req.query.limit) : 0
 		},
 		type: models.sequelize.QueryTypes.SELECT
 	})
@@ -1174,7 +1247,7 @@ exports.getSpeciesCount = function(req, res) {
 
 		if (req.query.cached) {
 			return cacheResultByUrl(req, JSON.stringify(result)).then(function() {
-				
+
 				return res.status(200).json(result)
 			})
 		} else {
@@ -1186,8 +1259,8 @@ exports.getSpeciesCount = function(req, res) {
 };
 
 exports.getUserCount = function(req, res) {
-	
-	if(['WEEK', 'MONTH', 'YEAR', 'YEARWEEK'].indexOf(req.query.timeIntervalType) === -1 ){
+
+	if (['WEEK', 'MONTH', 'YEAR', 'YEARWEEK'].indexOf(req.query.timeIntervalType) === -1) {
 		return res.sendStatus(400);
 	}
 
@@ -1197,16 +1270,16 @@ exports.getUserCount = function(req, res) {
 	return models.sequelize.query(sql, {
 		replacements: {
 			timeIntervalType: req.query.timeIntervalType,
-			timeAgo: req.query.timeAgo 
+			timeAgo: req.query.timeAgo
 		},
 		type: models.sequelize.QueryTypes.SELECT
 	})
 
 	.then(function(result) {
-		
+
 		if (req.query.cached) {
 			return cacheResultByUrl(req, JSON.stringify(result)).then(function() {
-				
+
 				return res.status(200).json(result)
 			})
 		} else {
@@ -1310,20 +1383,20 @@ exports.deleteUserFromObs = function(req, res) {
 	});
 }
 
-exports.addObservationToFrontPageAsNewDK = function(req,res){
+exports.addObservationToFrontPageAsNewDK = function(req, res) {
 	var redisClient = req.redis;
 	var now = Date.now();
-		var ttl = parseInt(req.body.ttl) *1000 * 60 * 60 * 24; // ttl in days calculated as millisec
+	var ttl = parseInt(req.body.ttl) * 1000 * 60 * 60 * 24; // ttl in days calculated as millisec
 	//var ttl = parseInt(req.body.ttl) * 60 * 10 * 1000; // 10 min for testing
-	var score = now +ttl;
-	
-	
-	
+	var score = now + ttl;
+
+
+
 	return redisClient.zaddAsync('new_dk_frontpage_observations', score, req.params.id)
 		.then(function() {
 			// clean up expired keys
-			return redisClient.zremrangebyscoreAsync('new_dk_frontpage_observations', '-inf', now )
-			//return true;
+			return redisClient.zremrangebyscoreAsync('new_dk_frontpage_observations', '-inf', now)
+				//return true;
 		})
 		.then(function() {
 			// clean up expired keys
@@ -1332,39 +1405,39 @@ exports.addObservationToFrontPageAsNewDK = function(req,res){
 		.catch(function(err) {
 			console.log("error: " + err)
 			return res.sendStatus(500);
-		}) 
-	
+		})
+
 }
 
-exports.removeObservationFromFrontPageAsNewDK = function(req,res){
+exports.removeObservationFromFrontPageAsNewDK = function(req, res) {
 	var redisClient = req.redis;
 
-	
-	return redisClient.zremAsync('new_dk_frontpage_observations',  req.params.id)
-	
-		.then(function() {
+
+	return redisClient.zremAsync('new_dk_frontpage_observations', req.params.id)
+
+	.then(function() {
 			// clean up expired keys
 			res.sendStatus(200);
 		})
 		.catch(function(err) {
 			console.log("error: " + err)
 			return res.sendStatus(500);
-		}) 
-	
+		})
+
 }
 
-exports.getObservationFromFrontPageAsNewDK = function(req,res){
+exports.getObservationFromFrontPageAsNewDK = function(req, res) {
 	var redisClient = req.redis;
 	var now = Date.now();
-	
-	return redisClient.zremrangebyscoreAsync('new_dk_frontpage_observations', '-inf', now ).then(function(){
-			return redisClient.zscoreAsync('new_dk_frontpage_observations',  req.params.id)
+
+	return redisClient.zremrangebyscoreAsync('new_dk_frontpage_observations', '-inf', now).then(function() {
+		return redisClient.zscoreAsync('new_dk_frontpage_observations', req.params.id)
 	})
-	
-	
-		.then(function(obs) {
-			
-			if(obs){
+
+
+	.then(function(obs) {
+
+			if (obs) {
 				res.status(200).json(obs);
 			} else {
 				res.sendStatus(404);
@@ -1373,44 +1446,46 @@ exports.getObservationFromFrontPageAsNewDK = function(req,res){
 		.catch(function(err) {
 			console.log("error: " + err)
 			return res.sendStatus(500);
-		}) 
-	
+		})
+
 }
 
-exports.getObservationIdsSelectedForFrontpageAsNewDK = function(req, res){
+exports.getObservationIdsSelectedForFrontpageAsNewDK = function(req, res) {
 	var redisClient = req.redis;
-	
+
 	var now = Date.now();
- redisClient.zrangebyscoreAsync('new_dk_frontpage_observations', now, '+inf')
-	.then(function(obsids) {
-		req.query.where = JSON.stringify({_id: obsids})
-		//return res.status(200).json(obsids);
-		return exports.index(req, res)
-	})
-	.catch(function(err) {
-		console.log("error: " + err)
-		return res.sendStatus(500);
-	}) 
+	redisClient.zrangebyscoreAsync('new_dk_frontpage_observations', now, '+inf')
+		.then(function(obsids) {
+			req.query.where = JSON.stringify({
+					_id: obsids
+				})
+				//return res.status(200).json(obsids);
+			return exports.index(req, res)
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			return res.sendStatus(500);
+		})
 }
 
 
 
 // --------------
 
-exports.addObservationToFrontPage = function(req,res){
+exports.addObservationToFrontPage = function(req, res) {
 	var redisClient = req.redis;
 	var now = Date.now();
-		var ttl = parseInt(req.body.ttl) *1000 * 60 * 60 * 24; // ttl in days calculated as millisec
+	var ttl = parseInt(req.body.ttl) * 1000 * 60 * 60 * 24; // ttl in days calculated as millisec
 	//var ttl = parseInt(req.body.ttl) * 60 * 10 * 1000; // 10 min for testing
-	var score = now +ttl;
-	
-	
-	
+	var score = now + ttl;
+
+
+
 	return redisClient.zaddAsync('selected_frontpage_observations', score, req.params.id)
 		.then(function() {
 			// clean up expired keys
-			return redisClient.zremrangebyscoreAsync('selected_frontpage_observations', '-inf', now )
-			//return true;
+			return redisClient.zremrangebyscoreAsync('selected_frontpage_observations', '-inf', now)
+				//return true;
 		})
 		.then(function() {
 			// clean up expired keys
@@ -1419,39 +1494,39 @@ exports.addObservationToFrontPage = function(req,res){
 		.catch(function(err) {
 			console.log("error: " + err)
 			return res.sendStatus(500);
-		}) 
-	
+		})
+
 }
 
-exports.removeObservationFromFrontPage = function(req,res){
+exports.removeObservationFromFrontPage = function(req, res) {
 	var redisClient = req.redis;
 
-	
-	return redisClient.zremAsync('selected_frontpage_observations',  req.params.id)
-	
-		.then(function() {
+
+	return redisClient.zremAsync('selected_frontpage_observations', req.params.id)
+
+	.then(function() {
 			// clean up expired keys
 			res.sendStatus(200);
 		})
 		.catch(function(err) {
 			console.log("error: " + err)
 			return res.sendStatus(500);
-		}) 
-	
+		})
+
 }
 
-exports.getObservationFromFrontPage = function(req,res){
+exports.getObservationFromFrontPage = function(req, res) {
 	var redisClient = req.redis;
 	var now = Date.now();
-	
-	return redisClient.zremrangebyscoreAsync('selected_frontpage_observations', '-inf', now ).then(function(){
-			return redisClient.zscoreAsync('selected_frontpage_observations',  req.params.id)
+
+	return redisClient.zremrangebyscoreAsync('selected_frontpage_observations', '-inf', now).then(function() {
+		return redisClient.zscoreAsync('selected_frontpage_observations', req.params.id)
 	})
-	
-	
-		.then(function(obs) {
-			
-			if(obs){
+
+
+	.then(function(obs) {
+
+			if (obs) {
 				res.status(200).json(obs);
 			} else {
 				res.sendStatus(404);
@@ -1460,215 +1535,238 @@ exports.getObservationFromFrontPage = function(req,res){
 		.catch(function(err) {
 			console.log("error: " + err)
 			return res.sendStatus(500);
-		}) 
-	
+		})
+
 }
 
-exports.getObservationIdsSelectedForFrontpage = function(req, res){
+exports.getObservationIdsSelectedForFrontpage = function(req, res) {
 	var redisClient = req.redis;
-	
+
 	var now = Date.now();
- redisClient.zrangebyscoreAsync('selected_frontpage_observations', now, '+inf')
-	.then(function(obsids) {
-		req.query.where = JSON.stringify({_id: obsids})
-		//return res.status(200).json(obsids);
-		return exports.index(req, res)
-	})
-	.catch(function(err) {
-		console.log("error: " + err)
-		return res.sendStatus(500);
-	}) 
+	redisClient.zrangebyscoreAsync('selected_frontpage_observations', now, '+inf')
+		.then(function(obsids) {
+			req.query.where = JSON.stringify({
+					_id: obsids
+				})
+				//return res.status(200).json(obsids);
+			return exports.index(req, res)
+		})
+		.catch(function(err) {
+			console.log("error: " + err)
+			return res.sendStatus(500);
+		})
 }
 
 
 
 
-exports.notifyValidator = function(req, res){
+exports.notifyValidator = function(req, res) {
 	var query = getDefaulQuery(req);
-	
-Observation.find(query)
-	.then(handleEntityNotFound(res))
-	.then(function(obs){
-		
-		return mail.notifyValidator(req.user, obs, req.body.message)
-	})
-	.then(function(){
-		res.sendStatus(200);
-	})
-	.
-catch(handleError(res));
 
-	
+	Observation.find(query)
+		.then(handleEntityNotFound(res))
+		.then(function(obs) {
+
+			return mail.notifyValidator(req.user, obs, req.body.message)
+		})
+		.then(function() {
+			res.sendStatus(200);
+		})
+		.
+	catch(handleError(res));
+
+
 }
 
 exports.generateCapsule = function(req, res) {
-	
-	
-var query = getDefaulQuery(req);
 
-query.include[0].include.push({
-	model: models.DeterminationVote,
-	as: 'Votes',
-	attributes: ['_id', 'user_id', 'createdAt', 'score'],
-	include: [{
-		model: models.User,
-		as: "User",
-		attributes: ['_id', 'name', 'Initialer'],
-	}]
-})
+
+	var query = getDefaulQuery(req);
+
+	query.include[0].include.push({
+		model: models.DeterminationVote,
+		as: 'Votes',
+		attributes: ['_id', 'user_id', 'createdAt', 'score'],
+		include: [{
+			model: models.User,
+			as: "User",
+			attributes: ['_id', 'name', 'Initialer'],
+		}]
+	})
 
 
 	Observation.find(query)
 		.then(handleEntityNotFound(res))
-		.then(function(obs){
-			
+		.then(function(obs) {
+
 			getPdfCapsule(req, res, obs)
 		})
 		.
 	catch(handleError(res));
-	
-	
+
+
 };
 
-function getPdfCapsule(req, res, obs){
-	
-	var doc = new PDFdocument({layout: 'landscape', size: 'A4'});
-	
+function getPdfCapsule(req, res, obs) {
+
+	var doc = new PDFdocument({
+		layout: 'landscape',
+		size: 'A4'
+	});
+
 	doc.pipe(res);
 
 
-doc.rotate(180, {origin: [doc.x, doc.y]});	
+	doc.rotate(180, {
+		origin: [doc.x, doc.y]
+	});
 
 
-doc
-   .fontSize(14)
-	.text(obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName + " "+obs.PrimaryDetermination.Taxon.acceptedTaxon.Author, -1320, 100, {align: 'center'});
-
-if(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK){
 	doc
-	   .fontSize(14)
-		.text(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk, -1320, 115, {align: 'center'});
+		.fontSize(14)
+		.text(obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName + " " + obs.PrimaryDetermination.Taxon.acceptedTaxon.Author, -1320, 100, {
+			align: 'center'
+		});
+
+	if (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) {
+		doc
+			.fontSize(14)
+			.text(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk, -1320, 115, {
+				align: 'center'
+			});
 	}
 
 
 
-doc
-   .fontSize(14)
-	.text('DMS-'+obs._id, -165, 70);
-doc.image(config.staticImagePath+'LogoSmallest.png', -495, 70, {height: 22})
-doc
-   .fontSize(14)
-	.text('Danmarks svampeatlas', -470, 70);
-		
-doc
-	.fontSize(8)
-	.text('Danish Fungal Atlas');
-
-doc.rotate(180);	
-if(obs.Images.length > 0){
-doc.image(config.uploaddir+obs.Images[0].name+".JPG", 70, -55, {fit: [210, 140]})	
-}
-
-if(obs.Images.length > 1){
-doc.image(config.uploaddir+obs.Images[1].name+".JPG", 280, -55, {fit: [210, 140]})	
-}
-
-// vandrette linjer
-doc.moveTo(-140, -65) 
- .lineTo(700, -65) 
-.dash(5, {space: 10})
- .stroke() 
-
-doc.moveTo(-140, 220) 
- .lineTo(700, 220) 
-.dash(5, {space: 10})
- .stroke() 
-
-// lodrette
-
-doc.moveTo(60, -150) 
- .lineTo(60, 480) 
-.dash(5, {space: 10})
- .stroke() 
-
-doc.moveTo(500, -150) 
- .lineTo(500, 480) 
-.dash(5, {space: 10})
- .stroke()
-
-doc.rotate(180);
-var locality = (obs.locality_id !== null) ? 'Denmark, '+obs.Locality.name : obs.verbatimLocality		
-doc
-	.fontSize(10)
-	.text('Locality: '+ locality, -480, -365)
-.moveDown(0.5)
-
-doc
-	.fontSize(10)
-	.text('Latitude: '+ obs.decimalLatitude+ " Longitude: "+obs.decimalLongitude+ " Accuracy: "+obs.accuracy+ " m")
-.moveDown(0.5)
-
-doc
-	
-	.text('Date: '+ obs.observationDate.getDate() + '/' + (obs.observationDate.getMonth() + 1) + '/' +  obs.observationDate.getFullYear() + ' Reported by: '+ obs.PrimaryDetermination.User.name)
-.moveDown(0.5)
-
-
-doc
-	.fontSize(10)
-	.text('Det: '+ obs.PrimaryDetermination.User.name)
-	.moveDown(0.5)
-if (obs.PrimaryDetermination.validation === "Godkendt" && obs.PrimaryDetermination.Validator  && obs.PrimaryDetermination.Validator._id !== obs.PrimaryDetermination.User._id ) {
-	
-
-	
-doc
-	.text('Conf: '+ obs.PrimaryDetermination.Validator.name)
-	.moveDown(0.5)
-
-	
-}
-
-else if (obs.PrimaryDetermination.Votes.length > 0  && parseInt(obs.PrimaryDetermination.score) >= crowdSourcedIdentificationConstants.ACCEPTED_SCORE ) {
-	
-
-	obs.PrimaryDetermination.Votes.sort(function(a, b){
-			return b.score - a.score
+	doc
+		.fontSize(14)
+		.text('DMS-' + obs._id, -165, 70);
+	doc.image(config.staticImagePath + 'LogoSmallest.png', -495, 70, {
+		height: 22
 	})
-	
-	var sliced = obs.PrimaryDetermination.Votes.slice(0, 3);
-	
-	var conf = _.reduce(sliced, function(prev, v) {
+	doc
+		.fontSize(14)
+		.text('Danmarks svampeatlas', -470, 70);
 
-		var usr = (prev !== "") ? ", " + v.User.name : v.User.name;
+	doc
+		.fontSize(8)
+		.text('Danish Fungal Atlas');
 
-		return prev + usr;
-	}, "")
-	
-doc
-	.text('Conf: '+ conf)
-	.moveDown(0.5)
+	doc.rotate(180);
+	if (obs.Images.length > 0) {
+		doc.image(config.uploaddir + obs.Images[0].name + ".JPG", 70, -55, {
+			fit: [210, 140]
+		})
+	}
 
-	
-}	;
-var desc = "";	
-if (obs.users.length > 0) {
-	desc += _.reduce(obs.users, function(prev, u) {
+	if (obs.Images.length > 1) {
+		doc.image(config.uploaddir + obs.Images[1].name + ".JPG", 280, -55, {
+			fit: [210, 140]
+		})
+	}
 
-		var usr = (prev !== "") ? ", " + u.name : u.name;
+	// vandrette linjer
+	doc.moveTo(-140, -65)
+		.lineTo(700, -65)
+		.dash(5, {
+			space: 10
+		})
+		.stroke()
 
-		return prev + usr;
-	}, "")
-} else if (obs.verbatimLeg) {
-	desc += obs.verbatimLeg;
-};
-doc
-	.text('Leg: '+ desc)
-	.moveDown(0.5)
-	
-	
+	doc.moveTo(-140, 220)
+		.lineTo(700, 220)
+		.dash(5, {
+			space: 10
+		})
+		.stroke()
 
-	var hosts = (obs.associatedTaxa.length === 1) ? "Host: ": "Hosts: ";	
+	// lodrette
+
+	doc.moveTo(60, -150)
+		.lineTo(60, 480)
+		.dash(5, {
+			space: 10
+		})
+		.stroke()
+
+	doc.moveTo(500, -150)
+		.lineTo(500, 480)
+		.dash(5, {
+			space: 10
+		})
+		.stroke()
+
+	doc.rotate(180);
+	var locality = (obs.locality_id !== null) ? 'Denmark, ' + obs.Locality.name : obs.verbatimLocality
+	doc
+		.fontSize(10)
+		.text('Locality: ' + locality, -480, -365)
+		.moveDown(0.5)
+
+	doc
+		.fontSize(10)
+		.text('Latitude: ' + obs.decimalLatitude + " Longitude: " + obs.decimalLongitude + " Accuracy: " + obs.accuracy + " m")
+		.moveDown(0.5)
+
+	doc
+
+		.text('Date: ' + obs.observationDate.getDate() + '/' + (obs.observationDate.getMonth() + 1) + '/' + obs.observationDate.getFullYear() + ' Reported by: ' + obs.PrimaryDetermination.User.name)
+		.moveDown(0.5)
+
+
+	doc
+		.fontSize(10)
+		.text('Det: ' + obs.PrimaryDetermination.User.name)
+		.moveDown(0.5)
+	if (obs.PrimaryDetermination.validation === "Godkendt" && obs.PrimaryDetermination.Validator && obs.PrimaryDetermination.Validator._id !== obs.PrimaryDetermination.User._id) {
+
+
+
+		doc
+			.text('Conf: ' + obs.PrimaryDetermination.Validator.name)
+			.moveDown(0.5)
+
+
+	} else if (obs.PrimaryDetermination.Votes.length > 0 && parseInt(obs.PrimaryDetermination.score) >= crowdSourcedIdentificationConstants.ACCEPTED_SCORE) {
+
+
+		obs.PrimaryDetermination.Votes.sort(function(a, b) {
+			return b.score - a.score
+		})
+
+		var sliced = obs.PrimaryDetermination.Votes.slice(0, 3);
+
+		var conf = _.reduce(sliced, function(prev, v) {
+
+			var usr = (prev !== "") ? ", " + v.User.name : v.User.name;
+
+			return prev + usr;
+		}, "")
+
+		doc
+			.text('Conf: ' + conf)
+			.moveDown(0.5)
+
+
+	};
+	var desc = "";
+	if (obs.users.length > 0) {
+		desc += _.reduce(obs.users, function(prev, u) {
+
+			var usr = (prev !== "") ? ", " + u.name : u.name;
+
+			return prev + usr;
+		}, "")
+	} else if (obs.verbatimLeg) {
+		desc += obs.verbatimLeg;
+	};
+	doc
+		.text('Leg: ' + desc)
+		.moveDown(0.5)
+
+
+
+	var hosts = (obs.associatedTaxa.length === 1) ? "Host: " : "Hosts: ";
 	if (obs.associatedTaxa.length > 0) {
 		hosts += _.reduce(obs.associatedTaxa, function(prev, u) {
 
@@ -1676,55 +1774,59 @@ doc
 
 			return prev + usr;
 		}, "")
-		
-doc
-	
-	.text(hosts)
 
-	.moveDown(0.5)	
-	} 	
-doc
-	
-	.text("Substrate: "+ obs.Substrate.name_uk)
+		doc
 
-	.moveDown(0.5)	
-doc
-	
-	.text("https://svampe.databasen.org/observations/"+obs._id,  -480, -235)
+			.text(hosts)
 
+		.moveDown(0.5)
+	}
+	doc
 
-	
+		.text("Substrate: " + obs.Substrate.name_uk)
 
-requestPromise({
-    url: 'https://maps.googleapis.com/maps/api/staticmap?center='+obs.decimalLatitude+','+obs.decimalLongitude+'&zoom=10&size=415x125&maptype=roadmap&markers='+obs.decimalLatitude+','+obs.decimalLongitude+"&key="+config.google.maps.apikey,
-    // Prevents Request from converting response to string
-    encoding: null
+	.moveDown(0.5)
+	doc
 
-})
-.then(function(body){
-	//console.log(response);
-	doc.rotate(180);
-    doc.image(body, 70, 90, {width: 415})
-	
-return	requestPromise({
-	    url: 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://svampe.databasen.org/observations/'+obs._id,
-	    // Prevents Request from converting response to string
-	    encoding: null
-
-	})
-})
-.then(function(body){
-	doc.rotate(180);
-    doc.image(body, -120, -280, {width: 50})
-	
-	doc.end();
-})
-.catch(function(err){
-	console.log(err)
-	doc.end();
-})
+		.text("https://svampe.databasen.org/observations/" + obs._id, -480, -235)
 
 
-	
-	
+
+
+	requestPromise({
+			url: 'https://maps.googleapis.com/maps/api/staticmap?center=' + obs.decimalLatitude + ',' + obs.decimalLongitude + '&zoom=10&size=415x125&maptype=roadmap&markers=' + obs.decimalLatitude + ',' + obs.decimalLongitude + "&key=" + config.google.maps.apikey,
+			// Prevents Request from converting response to string
+			encoding: null
+
+		})
+		.then(function(body) {
+			//console.log(response);
+			doc.rotate(180);
+			doc.image(body, 70, 90, {
+				width: 415
+			})
+
+			return requestPromise({
+				url: 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://svampe.databasen.org/observations/' + obs._id,
+				// Prevents Request from converting response to string
+				encoding: null
+
+			})
+		})
+		.then(function(body) {
+			doc.rotate(180);
+			doc.image(body, -120, -280, {
+				width: 50
+			})
+
+			doc.end();
+		})
+		.catch(function(err) {
+			console.log(err)
+			doc.end();
+		})
+
+
+
+
 }

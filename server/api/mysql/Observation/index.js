@@ -32,6 +32,7 @@ router.get('/count/users',  redisClient.cache(60 * 60 * 24), controller.getUserC
 router.get('/specieslist', auth.appendUser(), controller.indexSpeciesList)
 
 router.get('/:id', auth.appendUser(), nocache.noCache(), controller.show);
+router.get('/:id/simple', auth.appendUser(), nocache.noCache(), controller.showSimple);
 
 router.get('/:id/forum', forumController.showForumForObs);
 router.post('/:id/forum', auth.isAuthenticated(), forumController.addCommentToObs);
