@@ -54,7 +54,7 @@
 			  </a> </p>
 	            <p>{{'Antal stemmer' | translate}}: {{ det.Votes.length }} </p>
 				
-					 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></p>
+					 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(det.Validator._id)">{{det.Validator.name}} ({{det.Validator.Initialer}})</a></p>
 					<p ng-if="det.notes">{{'Noter' | translate}}: {{ det.notes }} </p>
 				
 				
@@ -110,7 +110,7 @@
   			    {{det.confidence | translate}}
   			  </a> </p>
 	            <p>{{'Antal stemmer' | translate}}: {{ det.Votes.length }} </p>
-			 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(obs.PrimaryDetermination.Validator._id)">{{obs.PrimaryDetermination.Validator.name}} ({{obs.PrimaryDetermination.Validator.Initialer}})</a></p>
+			 <p ng-if="det.validation === 'Godkendt' && det.Validator">{{'Bestemmelsen er' | translate}} {{'VALIDATION_STATUS_EXPERT' | translate}} {{'af' | translate}} <a ng-click="showUser(det.Validator._id)">{{det.Validator.name}} ({{det.Validator.Initialer}})</a></p>
 				
 				<p ng-if="det.notes">{{'Noter' | translate}}: {{ det.notes }} </p>
 				
