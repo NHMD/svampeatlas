@@ -254,9 +254,7 @@ angular.module('svampeatlasApp')
 				}
 				if (useNoLichenFilter) {
 					search.include[0].where.lichenized = 0;
-				} else if(search.livsstrategi !== 'not_lichenized'){
-					delete search.include[0].where.lichenized;
-				}
+				} 
 
 				if (search.selectedVegetationType && search.selectedVegetationType.length > 0) {
 					dbQuery.where.vegetationtype_id = {

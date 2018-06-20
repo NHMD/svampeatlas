@@ -597,23 +597,23 @@ angular.module('svampeatlasApp')
 
 			$scope.strategiesUI = [{
 				en: 'mycorrhizal',
-				dk: 'mykorrhizadannende',
+				da: 'mykorrhizadannende',
 				key: 'mycorrhizal'
 			}, {
 				en: 'lichenized',
-				dk: 'lavdanner',
+				da: 'lavdanner',
 				key: 'lichenized'
 			}, {
 				en: 'Not lichenized',
-				dk: 'Ikke lavdanner',
+				da: 'Ikke lavdanner',
 				key: 'not_lichenized'
 			}, {
 				en: 'parasite on lichens',
-				dk: 'parasit på laver',
+				da: 'parasit på laver',
 				key: 'parasite_on_lichens'
 			}, {
 				en: 'saprobe on wood',
-				dk: 'nedbryder på træ',
+				da: 'nedbryder på træ',
 				key: 'saprobe_on_wood'
 			}]
 			$scope.strategies =  ObservationSearchService.strategies; //['mycorrhizal', 'lichenized', 'parasite', 'saprobe', 'on_lichens', 'on_wood']
