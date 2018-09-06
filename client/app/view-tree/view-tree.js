@@ -6,7 +6,9 @@
         .state('taxonomy-tree', {
           url: '/taxonbase/taxonomy-tree',
            templateUrl: 'app/view-tree/view-tree.html',
-          controller: 'ViewTreeCtrl'
+          controller: 'ViewTreeCtrl',
+		title: 'Danmarks Svampeatlas',
+			
         });
     });
 	

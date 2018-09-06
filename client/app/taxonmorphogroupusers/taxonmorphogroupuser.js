@@ -9,6 +9,8 @@ angular.module('svampeatlasApp')
 		  },
         url: '/taxonbase/morphogroups/:id',
         templateUrl: 'app/taxonmorphogroupusers/taxonmorphogroupuser.html',
+		title: 'Danmarks Svampeatlas',
+		  
         controller: 'TaxonMorphoGroupUserCtrl',
 		  controllerAs: 'vm'
       });

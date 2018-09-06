@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SpeciesCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth, preloader, SpeciesModalService, MycoKeyModalService) {
+	.controller('SpeciesCtrl', function($rootScope, $scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, $mdDialog, SimilarTaxa, SimilarTaxaModalService, Auth, preloader, SpeciesModalService, MycoKeyModalService) {
 
 		//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 		$scope.Auth = Auth;
@@ -88,9 +88,11 @@ angular.module('svampeatlasApp')
 			id: $stateParams.id || 10000
 		})
 
-
+	
 
 		$scope.taxon.$promise.then(function() {
+			
+			$rootScope.title = ($scope.taxon.Vernacularname_DK) ? capitalizeFirstLetter($scope.taxon.Vernacularname_DK.vernacularname_dk) + " (" + $scope.taxon.FullName + ")" : $scope.taxon.FullName;
 
 			$scope.higherTaxa = Taxon.higherTaxa({
 				id: $scope.taxon._id

@@ -12,6 +12,8 @@ angular.module('svampeatlasApp')
 		    },
         url: '/search/:searchid/result/gallery/:searchterm?',
         templateUrl: 'app/searchresultgallery/searchresultgallery.html',
-        controller: 'SearchGalleryCtrl'
+        controller: 'SearchGalleryCtrl',
+		title: 'Søgeresultat - Danmarks Svampeatlas',
+			
       });
   });

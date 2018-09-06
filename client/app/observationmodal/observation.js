@@ -10,6 +10,7 @@ angular.module('svampeatlasApp')
 		  },
         url: '/observations/new',
         templateUrl: 'app/observationform/observationform.html',
+		  title: 'Nyt fund',
        controller: 'ObservationFormCtrl',
 		  controllerAs : 'ctrl'
       })

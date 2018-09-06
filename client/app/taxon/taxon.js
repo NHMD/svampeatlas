@@ -9,6 +9,8 @@ angular.module('svampeatlasApp')
 		  },
         url: '/taxonbase/taxon/:id',
         templateUrl: 'app/taxon/taxon.html',
-        controller: 'TaxonCtrl'
+        controller: 'TaxonCtrl',
+		title: 'Danmarks Svampeatlas',
+		  
       });
   });

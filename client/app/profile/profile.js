@@ -10,6 +10,8 @@ angular.module('svampeatlasApp')
         url: '/dashboard',
         templateUrl: 'app/profile/profile.html',
         controller: 'ProfileCtrl',
+		title: 'Danmarks Svampeatlas',
+		  
         authenticate: function(Auth){
 		  	return Auth.isLoggedIn();
 		  }
@@ -18,7 +20,9 @@ angular.module('svampeatlasApp')
 	
         url: '/userprofile/:userid?',
         templateUrl: 'app/profile/profile.html',
-        controller: 'ProfileCtrl'
+        controller: 'ProfileCtrl',
+		title: 'Danmarks Svampeatlas',
+		  
       });
  
  });

@@ -7,6 +7,8 @@ angular.module('svampeatlasApp')
 		  
         url: '/fieldtrips',
         templateUrl: 'app/fieldtrips/fieldtrips.html',
-        controller: 'FieldTripsCtrl'
+        controller: 'FieldTripsCtrl',
+		 title: 'Danmarks Svampeatlas', 
+		  
       });
   });

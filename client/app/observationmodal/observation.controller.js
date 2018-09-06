@@ -27,7 +27,7 @@ angular.module('svampeatlasApp')
 			$scope.getBackgroundStyle = function(img){
 		
 		
-				var url = appConstants.baseurl+appConstants.thumborUrl+"600x400/"
+				var url = appConstants.baseurl+appConstants.thumborUrl+"500x0/"
 	
 				+appConstants.baseurl+appConstants.imageurl + img.name + ".JPG";
 
@@ -349,7 +349,9 @@ angular.module('svampeatlasApp')
 				}
 			}
 			
-
+			function capitalizeFirstLetter(string) {
+				return string.charAt(0).toUpperCase() + string.slice(1);
+			}
 
 			Observation.get({
 				id: obsid
@@ -361,7 +363,16 @@ angular.module('svampeatlasApp')
 					preloader.preloadImages( [obs], obs.Images.length);
 					
 				}
-				
+				var taxon = (obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? capitalizeFirstLetter(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk) + " (" + obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName + ")" : obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName;
+				var date =  new Date(obs.observationDate);
+				var date_ = (obs.observationDateAccuracy === 'day') ? date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()+', ' : '';
+				var loc = "";
+				if (obs.Locality) {
+					loc = obs.Locality.name
+				} else if (obs.GeoNames) {
+					loc = obs.GeoNames.name + ", " + obs.GeoNames.adminName1 + ", " + obs.GeoNames.countryName
+				};
+				$rootScope.title = taxon + ", " + date_  + loc;
 				$mdExpansionPanel().waitFor('determinationsPanel').then(function (instance) { instance.expand();});
 				$mdExpansionPanel().waitFor('commentsPanel').then(function (instance) { instance.expand();});
 

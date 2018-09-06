@@ -7,6 +7,8 @@ angular.module('svampeatlasApp')
 
         url: '/about',
         templateUrl: 'app/about/about.html',
-        controller: 'AboutCtrl'
+        controller: 'AboutCtrl',
+		title: 'Danmarks Svampeatlas',
+		  
       });
   });

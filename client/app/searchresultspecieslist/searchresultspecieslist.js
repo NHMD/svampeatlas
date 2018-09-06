@@ -12,6 +12,8 @@ angular.module('svampeatlasApp')
 		    },
         url: '/search/:searchid/result/specieslist/:searchterm?',
         templateUrl: 'app/searchresultspecieslist/searchresultspecieslist.html',
-        controller: 'SearchSpeciesListCtrl'
+        controller: 'SearchSpeciesListCtrl',
+		title: 'Søgeresultat - Danmarks Svampeatlas',
+			
       });
   });

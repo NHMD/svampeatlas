@@ -1121,17 +1121,17 @@ exports.destroy = function(req, res) {
 					})];
 				})
 				.spread(function(obs) {
-
-					obs.primarydetermination_id = null;
-
-					return [obs.save({
-						transaction: t
-					}), models.DeterminationVote.destroy({
+					var q = {
 						where: {
 							observation_id: req.params.id
 						},
 						transaction: t
-					})];
+					};
+					obs.primarydetermination_id = null;
+
+					return [obs.save({
+						transaction: t
+					}), models.DeterminationVote.destroy(q), models.ObservationEvent.destroy(q)];
 
 
 
@@ -1152,7 +1152,7 @@ exports.destroy = function(req, res) {
 						models.ObservationImage.destroy(q),
 						models.ObservationPlantTaxon.destroy(q),
 						models.ObservationUser.destroy(q),
-						models.ObservationEvent.destroy(q),
+						//models.ObservationEvent.destroy(q),
 						models.ObservationSubscriber.destroy(q)
 
 					]

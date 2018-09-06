@@ -7,6 +7,8 @@ angular.module('svampeatlasApp')
 
         url: '/citation',
         templateUrl: 'app/rights/rights.html',
-        controller: 'RightsCtrl'
+        controller: 'RightsCtrl',
+		title: 'Danmarks Svampeatlas',
+		  
       });
   });
