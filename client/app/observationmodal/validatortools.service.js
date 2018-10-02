@@ -1,6 +1,6 @@
 'use strict';
 angular.module('svampeatlasApp')
-	.factory('ValidatorToolsService', function(Determination, Observation, ErrorHandlingService, $rootScope, $mdToast, $translate, VotingService) {
+	.factory('ValidatorToolsService', function(Determination, Observation, DnaSequence, ErrorHandlingService, $rootScope, $mdToast, $translate, VotingService) {
 		
 
 
@@ -124,6 +124,28 @@ angular.module('svampeatlasApp')
 								$mdToast.show(
 									$mdToast.simple()
 									.textContent($translate.instant('Bestemmelsen blev slettet'))
+									.position("bottom left")
+									
+									.hideDelay(3000)
+								);
+						
+					})
+				},
+				deleteDnaSequence: function(seq, obs){
+					
+							
+					return DnaSequence.remove({id: seq._id}).$promise.then(function(res){
+						
+						
+							for(var i=0; i< obs.DnaSequence.length; i++){
+									if(parseInt(obs.DnaSequence[i]._id) === parseInt(seq._id)){
+										obs.DnaSequence.splice(i, 1);
+										break;
+									} 
+								};
+								$mdToast.show(
+									$mdToast.simple()
+									.textContent($translate.instant('DNA sekvens blev slettet'))
 									.position("bottom left")
 									
 									.hideDelay(3000)

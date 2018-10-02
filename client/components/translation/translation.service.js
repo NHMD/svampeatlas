@@ -369,7 +369,14 @@ angular.module('svampeatlasApp')
 			'Vis ikke laver i søgninger' : 'Omit Lichens from searches',
 			'Brug MycoKey' : 'Use MycoKey',
 			'Søg i MycoKey' : 'Search MycoKey',
-			'Se alle nyheder fra svampeatlas' : 'See all news from the Fungal Atlas'
+			'Se alle nyheder fra svampeatlas' : 'See all news from the Fungal Atlas',
+			'DNA sekvenser' : 'DNA sequences',
+			'DNA sekvens': 'DNA sequence',
+			'Fund med DNA sekvenser': 'Records with DNA sequences',
+			'Markør' : 'Marker',
+			'Ny DNA sekvens' : 'New DNA sequence',
+			'Tilføj DNA sekvens til': 'Add DNA sequence to',
+			'Ikke obligatorisk': 'Not mandatory'
 		});
 		
 

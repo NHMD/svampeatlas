@@ -7,7 +7,8 @@
 				<span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 	  		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>{{'Indlagt som' | translate}} <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
 	  		 
-			  
+			<span ng-if="obs.PrimaryDetermination.species_hypothesis">  <a ng-href="https://unite.ut.ee/sh/{{obs.PrimaryDetermination.species_hypothesis}}"  target="_blank">({{obs.PrimaryDetermination.species_hypothesis}})</a>
+		  </span>
   			
   			
   			<span ng-if=" 0 >= obs.PrimaryDetermination.score  && obs.PrimaryDetermination.validation !== 'Afvist' && obs.PrimaryDetermination.validation !== 'Godkendt'">
@@ -186,6 +187,8 @@
           <span class="md-headline" ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK">{{obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} </span>
 		  <span ng-class="(obs.PrimaryDetermination.Taxon.acceptedTaxon.Vernacularname_DK) ? 'md-subhead':'md-headline'"><em>{{obs.PrimaryDetermination.Taxon.acceptedTaxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.acceptedTaxon.Author}}</span>
 		  <span ng-if="obs.PrimaryDetermination.Taxon.acceptedTaxon._id !== obs.PrimaryDetermination.Taxon._id" class="md-subheader"><br>{{'Indlagt som' | translate}} <em>{{obs.PrimaryDetermination.Taxon.FullName}}</em> {{obs.PrimaryDetermination.Taxon.Author}}</span>
+			<span ng-if="obs.PrimaryDetermination.species_hypothesis">  <a ng-href="https://unite.ut.ee/sh/{{obs.PrimaryDetermination.species_hypothesis}}"  target="_blank">({{obs.PrimaryDetermination.species_hypothesis}})</a>
+		  </span>
 		<span ng-if=" 0 >= obs.PrimaryDetermination.score  && obs.PrimaryDetermination.validation !== 'Afvist' && obs.PrimaryDetermination.validation !== 'Godkendt'">
 			{{'Dette fund er under godkendelse og bør ikke refereres før det er godkendt' | translate}}
 		</span>
@@ -279,7 +282,8 @@
      
     </md-card>
 	   <div ng-if="Auth.isLoggedIn()" ng-include="'app/observationmodal/determinationlist.tpl.html'"></div>
- 	   <div ng-if="Auth.isLoggedIn() || obs.Forum.length > 0" ng-include="'app/observationmodal/commentlist.tpl.html'"> </div> 
+ 	   <div ng-if="Auth.isLoggedIn() || obs.Forum.length > 0" ng-include="'app/observationmodal/commentlist.tpl.html'"></div>
+	   <div ng-if="Auth.hasRole('taxonomyadmin')" ng-include="'app/observationmodal/dnasequencelist.tpl.html'"></div> 
 </div>
 	
 <md-card flex="40">	

@@ -272,3 +272,6 @@ WHERE d1.observation_id= o._id AND EXISTS
         )) a WHERE a._id <> a.primarydetermination_id);
 -- Add unique constraint on taxon, observation in determinations 
 ALTER TABLE Determination add UNIQUE (observation_id, taxon_id);
+
+ALTER TABLE Determination ADD COLUMN species_hypothesis VARCHAR(255);
+ALTER TABLE Determination ADD COLUMN sh_identity DOUBLE;

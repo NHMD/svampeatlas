@@ -1,0 +1,66 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" ng-app="svampeatlasApp"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="/">
+    <title ng-bind="title || 'Danmarks svampeatlas'">Danmarks svampeatlas</title>
+    <meta name="description" content="Danmarks officielle database for svampefund. Du kan indlægge, søge og diskutere fund. Du kan også få eksperthjælp til bestemmelse af svampe.">
+   
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+	
+	<meta property="fb:app_id"              content="332165895643" />
+	<meta property="og:url"                content="http://svampe.databasen.org" />
+	<meta property="og:type"               content="website" />
+	<meta property="og:title"               content="Danmarks officielle database for svampefund" />
+	<meta property="og:site_name"              content="Danmarks svampeatlas" />
+	<meta property="og:description"        content="Danmarks officielle database for svampefund. Du kan indlægge, søge og diskutere fund. Du kan også få eksperthjælp til bestemmelse af svampe." />
+	<meta property="og:image"              content="http://svampe.databasen.org/assets/images/public/mycena_crop.jpg" />
+	<meta property="og:locale" content="da_DK" />
+	<meta property="og:locale:alternate" content="en_GB" />
+	<meta name="google-site-verification" content="aR3ivKsPsPJ2s6oX-xSfmEfg5drDMHsbX9l8rePyXgc" />
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="stylesheet" href="app/128d12b2.vendor.css"/>
+    <link rel="stylesheet" href="app/5280cfc8.app.css"/>
+  </head>
+  <body  layout="row">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+	<md-sidenav ng-include="'components/navbar-material/navbarMaterial.html'" ng-controller="NavbarMaterialCtrl as ctrl" layout="column" class="md-sidenav-left md-whiteframe-z2" ng-class="{'position-fixed': mdMedia('max-width: 768px') }"
+	    md-component-id="left"
+	    md-is-locked-open="$mdMedia('gt-md') && !ctrl.closed " id="main-menu"></md-sidenav>
+    <!--<div ui-view=""></div>-->
+	<div layout="column" ui-view  layout-fill role="main" flex >
+	
+	   <!--<div ui-view layout="column" ng-cloak></div>-->
+	</div>
+	<!--<div ng-include="'components/navbar-material/navbarMaterial.html'" ng-controller="NavbarMaterialCtrl" layout="row"></div> -->
+	
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-75002805-1', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <script src="app/943dcd1b.vendor.js"></script>
+
+        <script src="app/d0720c97.app.js"></script>
+</body>
+</html>

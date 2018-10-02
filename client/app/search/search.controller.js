@@ -527,6 +527,7 @@ angular.module('svampeatlasApp')
 						$scope.search.selectedHigherTaxa = [];
 						$scope.search.onlyHigherTaxa = false;
 						delete $scope.search.include[0].where.Taxon_redlist_status;
+						delete $scope.search.Determination_species_hypothesis;
 						break;
 					case 'geography':
 						$scope.search.onlyForeign = false;
@@ -579,6 +580,13 @@ angular.module('svampeatlasApp')
 						delete $scope.search.forumMaxAge;
 						
 						delete $scope.search.forumComment;
+						
+
+						break;
+					case 'dna':
+					
+						$scope.search.onlyWithDNAsequence = false;
+						$scope.search.include[9].where = {};
 						
 
 						break;

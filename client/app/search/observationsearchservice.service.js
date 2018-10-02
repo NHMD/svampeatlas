@@ -22,7 +22,7 @@ angular.module('svampeatlasApp')
 				include: [{
 					model: "DeterminationView",
 					as: "DeterminationView",
-					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
+					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id', 'Determination_species_hypothesis'],
 					where: {
 
 						// $and: $or is reserved for searches across communityvalidated and hardvalidated determinations
@@ -71,6 +71,12 @@ angular.module('svampeatlasApp')
 					as: 'Determinations',
 					where: {},
 					attributes: ["_id", "score"],
+					required: false
+				}, {
+					model: "DnaSequence",
+					as: 'DnaSequence',
+					where: {},
+					attributes: ["_id", "marker", "geneticAccessionNumber"],
 					required: false
 				}]
 			},
@@ -123,7 +129,7 @@ angular.module('svampeatlasApp')
 					include: [{
 						model: "DeterminationView",
 						as: "DeterminationView",
-						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id'],
+						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id', 'Determination_species_hypothesis'],
 						where: {
 							$and: {
 								$or: {}
@@ -168,10 +174,16 @@ angular.module('svampeatlasApp')
 						where: {},
 						required: false
 					}, {
-					model: "Determination",
-					as: 'Determinations',
+						model: "Determination",
+						as: 'Determinations',
+						where: {},
+						attributes: ["_id", "score"],
+						required: false
+					}, {
+					model: "DnaSequence",
+					as: 'DnaSequence',
 					where: {},
-					attributes: ["_id", "score"],
+					attributes: ["_id", "marker", "geneticAccessionNumber"],
 					required: false
 				}]
 				}
@@ -218,7 +230,7 @@ angular.module('svampeatlasApp')
 
 				var useLichenFilter = Boolean(localStorage.getItem('use_lichen_filter'));
 				var useNoLichenFilter = Boolean(localStorage.getItem('use_no_lichen_filter'));
-				
+
 				if (useLichenFilter) {
 					search.livsstrategi = "lichenized";
 				}
@@ -254,7 +266,7 @@ angular.module('svampeatlasApp')
 				}
 				if (useNoLichenFilter) {
 					search.include[0].where.lichenized = 0;
-				} 
+				}
 
 				if (search.selectedVegetationType && search.selectedVegetationType.length > 0) {
 					dbQuery.where.vegetationtype_id = {
@@ -445,12 +457,14 @@ angular.module('svampeatlasApp')
 						switch (ds) {
 							case 'VALIDATION_STATUS_COMMUNITY_LEVEL_3':
 								dbQuery.include[0].where.$and.$or.push({
-										Determination_score: {
-											$gte: appConstants.AcceptedDeterminationScore
-										},
-										Determination_validation: {$notIn: ['Afvist', 'Godkendt']}
-									})
-									dbQuery.include[0].where.$and.$or.push({
+									Determination_score: {
+										$gte: appConstants.AcceptedDeterminationScore
+									},
+									Determination_validation: {
+										$notIn: ['Afvist', 'Godkendt']
+									}
+								})
+								dbQuery.include[0].where.$and.$or.push({
 										Determination_validation: "Godkendt",
 										Determination_validator_id: {
 											$eq: null
@@ -461,9 +475,11 @@ angular.module('svampeatlasApp')
 							case 'VALIDATION_STATUS_COMMUNITY_LEVEL_2':
 								dbQuery.include[0].where.$and.$or.push({
 										Determination_score: {
-											$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore -1]
+											$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore - 1]
 										},
-										Determination_validation: {$notIn: ['Afvist', 'Godkendt']}
+										Determination_validation: {
+											$notIn: ['Afvist', 'Godkendt']
+										}
 									})
 									//  $or.push( {$between: [appConstants.ProbableDeterminationScore, appConstants.AcceptedDeterminationScore]});
 								break;
@@ -472,7 +488,9 @@ angular.module('svampeatlasApp')
 										Determination_score: {
 											$lt: appConstants.ProbableDeterminationScore
 										},
-										Determination_validation: {$notIn: ['Afvist', 'Godkendt']}
+										Determination_validation: {
+											$notIn: ['Afvist', 'Godkendt']
+										}
 									})
 									//  $or.push({$lt: appConstants.ProbableDeterminationScore});
 								break;
@@ -500,6 +518,12 @@ angular.module('svampeatlasApp')
 				if (search.Determination_validation && search.Determination_validation.length > 0) {
 					dbQuery.include[0].where.$and.$or.push({
 						Determination_validation: search.Determination_validation
+					})
+				}
+
+				if (search.Determination_species_hypothesis && search.Determination_species_hypothesis.length > 0) {
+					dbQuery.include[0].where.$and.$or.push({
+						Determination_species_hypothesis: search.Determination_species_hypothesis
 					})
 				}
 
@@ -535,7 +559,7 @@ angular.module('svampeatlasApp')
 				} else {
 					delete dbQuery.include[6].where.content;
 				}
-				
+
 				if (search.note) {
 					dbQuery.where.note = {
 						like: "%" + search.note + "%"
@@ -543,7 +567,7 @@ angular.module('svampeatlasApp')
 				} else {
 					delete dbQuery.where.note;
 				}
-				
+
 				if (search.ecologynote) {
 					dbQuery.where.ecologynote = {
 						like: "%" + search.ecologynote + "%"
@@ -577,7 +601,15 @@ angular.module('svampeatlasApp')
 				} else {
 					dbQuery.include[5].required = false;
 				}
-
+				
+				if (search.onlyWithDNAsequence || (search.include[9] && (search.include[9].where.marker || search.include[9].where.geneticAccessionNumber))) {
+					dbQuery.include[9].required = true;
+				} else if (search.include[9]){
+					dbQuery.include[9].required = false;
+				}
+				
+				
+				
 				if (search.onlyMyObservations) {
 					dbQuery.where.primaryuser_id = Auth.getCurrentUser()._id
 				}

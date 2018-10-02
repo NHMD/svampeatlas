@@ -158,6 +158,10 @@
 	  		     <md-option value="NE">NE - {{'Ikke bedømt' | translate}}</md-option>
 	  		             </md-select>
 	  		   	  </md-input-container>
+			   <md-input-container class="md-block" flex-gt-sm ng-if="Auth.hasRole('taxonomyadmin')">
+			            <label>{{'Species hypothesis' | translate}}</label>
+			            <input name="species_hypothesis" ng-model="search.Determination_species_hypothesis" />     
+			          </md-input-container>
   		</div>
   		  <div  md-whiteframe="3" class="search-section" layout-padding>
 			  <div layout="row"> <span class="search-sub-header"><ng-md-icon icon="map"></ng-md-icon> {{'Geografi' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('geography')" icon="refresh"></div>
@@ -246,7 +250,7 @@
   				            <input name="minAccuracy" ng-model="search.minAccuracy" ng-pattern="/^\d+$/" />
   							<div ng-messages="searchForm.minAccuracy.$error" role="alert" >
 							              
-  							              <div ng-message="pattern" >{{'Indtast ussikerhed i meter'}}
+  							              <div ng-message="pattern" >{{'Indtast usikkerhed i meter'}}
   							              </div>
 							             
   							            </div>
@@ -682,6 +686,36 @@
 	   	   				          </md-input-container>
 							  
 							  </div>
+
+  		  <div  md-whiteframe="3" class="search-section" ng-if="Auth.hasRole('taxonomyadmin')" layout-padding>
+			  <div layout="row">  <span class="search-sub-header"><ng-md-icon icon="dna"></ng-md-icon> {{'DNA sekvenser' | translate}}</span> <span flex></span> <ng-md-icon class="search-sub-header refresh-section" ng-click="resetSection('dna')" icon="refresh"></div>
+	  		<div layout-gt-xs="row">
+		 
+	  	 	<md-switch ng-model="search.onlyWithDNAsequence" aria-label="Fund med DNA sekvenser" >
+	  	 	   <span translate>Fund med DNA sekvenser</span>
+	  	 	  </md-switch>
+			 
+	  							  </div>
+								  <div layout-gt-xs="row" >
+							 		 <md-input-container layout-fill>
+							 		        <label>{{'Markør' | translate}}</label>
+							 		        <md-select ng-model="search.include[9].where.marker" >
+				
+							 		          <md-option value="{{marker}}" ng-repeat="marker in ['ITS', 'ITS1', 'ITS2', 'LSU','SSU', 'RPB1', 'RPB2']">
+							 		            {{marker}}
+							 		          </md-option>
+
+							 		        </md-select>
+							 		      </md-input-container>
+								 	 <md-input-container class="md-block" layout-fill>
+								 	           <label>{{'Accession number' | translate}}</label>
+								 	           <input ng-model="search.include[9].where.geneticAccessionNumber">
+								 	         </md-input-container>
+
+								  </div>
+	           
+  		
+  		</div>
 							
          
 

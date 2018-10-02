@@ -137,6 +137,20 @@
 
    	
   </div>
+ <div layout="row" layout-padding layout-margin ng-if="ctrl.Auth.hasRole('taxonomyadmin')">
+	 <md-input-container class="md-block" layout-fill>
+	           <label>{{'Species hypothesis' | translate}}</label>
+	           <input ng-model="ctrl.determination.species_hypothesis">
+	         </md-input-container>
+			 <md-input-container class="md-block" layout-fill>
+			           <label>{{'Species hypothesis identity %' | translate}}</label>
+			           <input type="number" step="0.01" min="0" ng-model="ctrl.determination.sh_identity" >
+					    <div ng-if="ctrl.determination.species_hypothesis" style="color:maroon" role="alert">
+		              <div >{{'Indtast Species hypothesis identity.'}}
+		              </div>
+					   </div>
+			         </md-input-container>
+ </div>
 	 <div layout="row" layout-padding layout-margin>
 		 <md-input-container class="md-block" layout-fill>
 		           <label>{{'Note til bestemmelsen' | translate}}</label>

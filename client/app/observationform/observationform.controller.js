@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', 'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService', '$mdPanel', '$cookies', 'preloader', 'VotingService', 'ValidatorToolsService', 'DeterminationLogModalService', 'MapBox', 'KMS', 'UTMConverterService', 'SpeciesModalService',
-		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, MapBox, KMS, UTMConverterService, SpeciesModalService) {
+	.controller('ObservationFormCtrl', ['$scope', '$rootScope', '$filter', '$q', '$http', 'Auth', 'ErrorHandlingService', 'SearchService', '$mdDialog', 'Taxon', 'TaxonAttributes', 'Locality', 'Observation', 'ObservationImage', 'Determination', '$mdMedia', '$mdToast', 'leafletData', '$timeout', 'GeoJsonUtils', 'PlantTaxon', 'Upload', 'ObservationFormStateService', 'DeterminationModalService', '$translate', 'UserAgentService', 'appConstants', 'ObservationStateService', '$mdPanel', '$cookies', 'preloader', 'VotingService', 'ValidatorToolsService', 'DeterminationLogModalService', 'DnaSequenceModalService', 'MapBox', 'KMS', 'UTMConverterService', 'SpeciesModalService',
+		function($scope, $rootScope, $filter, $q, $http, Auth, ErrorHandlingService, SearchService, $mdDialog, Taxon, TaxonAttributes, Locality, Observation, ObservationImage, Determination, $mdMedia, $mdToast, leafletData, $timeout, GeoJsonUtils, PlantTaxon, Upload, ObservationFormStateService, DeterminationModalService, $translate, UserAgentService, appConstants, ObservationStateService, $mdPanel, $cookies, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService,DnaSequenceModalService, MapBox, KMS, UTMConverterService, SpeciesModalService) {
 			var row = ObservationStateService.get();
 
 			$scope.$cookies = $cookies;
@@ -19,6 +19,8 @@ angular.module('svampeatlasApp')
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
 			this.DeterminationLogModalService = DeterminationLogModalService;
+			this.DnaSequenceModalService = DnaSequenceModalService;
+			
 
 			$scope.$translate = $translate;
 			$scope.imageurl = appConstants.imageurl;

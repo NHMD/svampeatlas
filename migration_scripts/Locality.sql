@@ -44,4 +44,7 @@ UPDATE Observation o, Fungi f, Locality l, alleposterclosestlok a set o.locality
 
 SELECT COUNT(*) FROM Observation o, Fungi f, Locality l, alleposterclosestlok a WHERE o._id=f.AtlasLNR AND f.AtlasLocID = 0 AND l.include = 1 and f.LocalityBasicString = l.name AND a.AtlasIDnummer = f.AtlasIDnummer AND a.distance_in_km < 1; 
 
+INSERT INTO Locality (name, municipality_id, decimalLatitude, decimalLongitude, include, mainlocality) VALUES ('Vestermølle skov', 81, 56.028942, 9.9647053, 1, 1);
+UPDATE Locality l1, Locality l2 SET l1.name = CONCAT(l2.name, ' skov') where l2._id=28709 AND  l1._id=29998;
+
 

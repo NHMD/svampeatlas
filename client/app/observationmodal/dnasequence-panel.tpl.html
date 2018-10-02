@@ -1,0 +1,69 @@
+<div role="dialog" aria-label="DNA sequence" layout="column" layout-align="center center">
+ <md-toolbar>
+   <div class="md-toolbar-tools">
+	<h2 >{{'Tilføj DNA sekvens til'| translate}} DMS-{{ctrl.obs._id}}</h2>
+     <span flex></span>
+     <md-button class="md-icon-button" ng-click="ctrl.closeDialog()">
+       <ng-md-icon icon="close"></ng-md-icon>
+     </md-button>
+   </div>
+ </md-toolbar>
+
+      <div id="determination-panel-content" class="demo-dialog-content" >
+
+		
+	 <div  layout-padding layout-margin ng-style="{'margin-top': '20px'}">
+		 <md-input-container layout-fill>
+		        <label>{{'Markør' | translate}}</label>
+		        <md-select ng-model="ctrl.sequence.marker" >
+				
+		          <md-option value="{{marker}}" ng-repeat="marker in ['ITS', 'ITS1', 'ITS2', 'LSU','SSU', 'RPB1', 'RPB2']">
+		            {{marker}}
+		          </md-option>
+
+		        </md-select>
+		      </md-input-container>
+
+		
+			  </div>
+
+ <div layout="row" layout-padding layout-margin >
+	 <md-input-container class="md-block" layout-fill>
+	           <label>{{'Accession number' | translate}}</label>
+	           <input ng-model="ctrl.sequence.geneticAccessionNumber">
+			   <div class="hint" >{{'Ikke obligatorisk' | translate}}</div>
+	         </md-input-container>
+
+ </div>
+	 <div layout="row" layout-padding layout-margin>
+		 <md-input-container class="md-block" layout-fill>
+		           <label>{{'DNA sekvens' | translate}}</label>
+		           <textarea ng-model="ctrl.sequence.sequence"  rows="5" md-select-on-focus></textarea>
+		         </md-input-container>
+	 </div>
+
+      </div>
+
+  <div class="demo-dialog-button" layout="row">
+	  
+	  <span flex></span>
+    <md-button   class="md-primary" style="margin-right:20px;" ng-click="ctrl.closeDialog()" >
+      {{'Fortryd' | translate}}
+    </md-button>
+    <md-button ng-click="ctrl.saveDetermination()" class="md-primary" style="margin-right:20px;" ng-disabled="1 > newTaxon.length">
+      {{'Gem' | translate}}
+    </md-button>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+ 

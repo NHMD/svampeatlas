@@ -11,6 +11,8 @@
     </md-card>
 	<div ng-if="obs && obs._id" ng-include="'app/observationmodal/determinationlist.tpl.html'" flex></div>
 	<div ng-if="obs && obs._id" ng-include="'app/observationmodal/commentlist.tpl.html'"></div>
+   <div ng-if="Auth.hasRole('taxonomyadmin')" ng-include="'app/observationmodal/dnasequencelist.tpl.html'"></div> 
+	
 </div>
 	<div flex="40" >
 		 <md-card>

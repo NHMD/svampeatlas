@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog',  'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'MapBox', 'KMS','$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService','ValidatorNotificationModalService', 'SearchService','$q',
-		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog,  Observation, Determination, $mdMedia, $mdToast, leafletData, MapBox, KMS, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, ValidatorNotificationModalService, SearchService, $q) {
+	.controller('ObservationCtrl', ['$scope', '$rootScope', '$window', 'Auth', 'ErrorHandlingService', '$mdPanel', '$mdDialog',  'Observation', 'Determination', '$mdMedia', '$mdToast', 'leafletData', 'MapBox', 'KMS','$timeout', 'DeterminationModalService', 'ObservationFormService', '$translate', '$state', '$stateParams', 'appConstants', 'ObservationStateService', '$cookies', 'ObservationImage', 'Taxon', '$mdExpansionPanel', 'preloader', 'VotingService','ValidatorToolsService','DeterminationLogModalService','ValidatorNotificationModalService','DnaSequenceModalService', 'SearchService','$q',
+		function($scope, $rootScope, $window, Auth, ErrorHandlingService, $mdPanel, $mdDialog,  Observation, Determination, $mdMedia, $mdToast, leafletData, MapBox, KMS, $timeout, DeterminationModalService, ObservationFormService, $translate, $state, $stateParams, appConstants, ObservationStateService, $cookies, ObservationImage, Taxon, $mdExpansionPanel, preloader, VotingService, ValidatorToolsService, DeterminationLogModalService, ValidatorNotificationModalService, DnaSequenceModalService, SearchService, $q) {
 			var that = this;
 			this.DeterminationModalService = DeterminationModalService;
 			this.DeterminationLogModalService = DeterminationLogModalService;
+			this.DnaSequenceModalService = DnaSequenceModalService;
 			this.ValidatorNotificationModalService = ValidatorNotificationModalService;
 			$scope.moment = moment;
 			$scope.Determination = Determination;
@@ -137,7 +138,7 @@ angular.module('svampeatlasApp')
 			$scope.setPrimaryDetermination = ValidatorToolsService.setPrimaryDetermination;
 			$scope.deleteDetermination = ValidatorToolsService.deleteDetermination;
 			$scope.updateConfidence = ValidatorToolsService.updateConfidence;
-			
+			$scope.deleteDnaSequence = ValidatorToolsService.deleteDnaSequence;
 			
 			$scope.focusNewComment = function(){
 				

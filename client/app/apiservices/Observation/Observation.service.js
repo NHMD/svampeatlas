@@ -111,6 +111,13 @@ angular.module('svampeatlasApp')
 				},
 				url: '/api/observations/:id/primarydetermination'
 			},
+			'addDnaSequence': {
+				method: 'POST',
+				params: {
+					id: '@_id'
+				},
+				url: '/api/observations/:id/dnasequence'
+			},
 			'addUser': {
 				method: 'POST',
 				params: {

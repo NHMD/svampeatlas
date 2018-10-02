@@ -132,7 +132,13 @@
 		<td ng-if="$stateParams.searchterm && ($stateParams.searchterm === 'mine' || $stateParams.searchterm === 'today' || $stateParams.searchterm === '3days')" data-title="{{'Indlagt' | translate}}">{{(moment(row.createdAt).isSame(moment(), 'day')) ? getCreatedAt(row.createdAt) : (row.createdAt | date : 'dd/MM/yyyy')}}</td>
 		<td data-title="{{'Dato' | translate}}" >{{(row.observationDateAccuracy === 'day') ? (row.observationDate | date : 'dd/MM/yyyy') : getDate(row.observationDate, row.observationDateAccuracy)}}</td>
 		
-		<td data-title="{{'Art' | translate}}"><a ng-click="SpeciesModalService.show($event,row.DeterminationView.Taxon_id);$event.stopPropagation();" ><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}}) <span></span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></a><span ng-if="row.Determinations.length > 1 && Auth.isLoggedIn()" ng-click="ObservationModalService.show($event, row)" ><md-tooltip>{{'Der findes' | translate}} {{row.Determinations.length}} {{'bestemmelsesforslag' | translate}}</md-tooltip><ng-md-icon style="fill: rgb(96,125,139)" size="18" icon="info_outline" ></ng-md-icon></span></td>
+		<td data-title="{{'Art' | translate}}"><a ng-click="SpeciesModalService.show($event,row.DeterminationView.Taxon_id);$event.stopPropagation();" ><em>{{row.DeterminationView.Taxon_FullName}} <span ng-if="row.DeterminationView.Taxon_RankID < 5001">sp.</span></em><span ng-if="row.DeterminationView.Taxon_redlist_status">({{row.DeterminationView.Taxon_redlist_status}}) <span></span><span ng-if="row.DeterminationView.Taxon_id !== row.DeterminationView.Recorded_as_id" class="md-caption"><br>Indlagt som <em>{{row.DeterminationView.Recorded_as_FullName}}</em></span></a>
+			<a ng-href="https://unite.ut.ee/sh/{{row.DeterminationView.Determination_species_hypothesis}}" ng-if="row.DeterminationView.Determination_species_hypothesis" target="_blank">({{row.DeterminationView.Determination_species_hypothesis}})</a>
+			<span ng-if="row.Determinations.length > 1 && Auth.isLoggedIn()" ng-click="ObservationModalService.show($event, row)" >
+			<md-tooltip>{{'Der findes' | translate}} {{row.Determinations.length}} {{'bestemmelsesforslag' | translate}}</md-tooltip>
+			<ng-md-icon style="fill: rgb(96,125,139)" size="18" icon="info_outline" ></ng-md-icon>
+		</span>
+	</td>
 		<td data-title="{{'Dansk navn' | translate}}">{{row.DeterminationView.Taxon_vernacularname_dk | capitalize}}</td>	
 		<td data-title="{{'Lokalitet' | translate}}"><span ng-if="row.Locality">{{row.Locality.name}}</span><span ng-if="row.GeoNames">{{row.GeoNames.countryName+', '+row.GeoNames.adminName1+', '+row.GeoNames.name}}</span></td>	
 		
