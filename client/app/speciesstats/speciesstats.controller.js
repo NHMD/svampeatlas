@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SpeciesStatsCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService) {
+	.controller('SpeciesStatsCtrl', function($scope, $translate, $mdMedia, Taxon, Observation, Locality, appConstants, leafletData, $timeout, ObservationModalService, ObservationSearchService, $state, $stateParams, ObservationCountService, MapBox, KMS) {
 
 		var capitalizeFirstLetter = function(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
@@ -16,7 +16,8 @@ angular.module('svampeatlasApp')
 		$scope.timeinterval = "all"
 		$scope.mapsettings = {
 			defaults: {
-				attributionControl: false
+				attributionControl: false,
+				layersControl: false
 			},
 			center: {
 				lat: 56,
@@ -41,19 +42,19 @@ angular.module('svampeatlasApp')
 				},
 				overlays: {
 					2009: {
-						name: '2009',
+						name: 'Efter 2008',
 						visible: true,
 						type: 'featureGroup'
 
 					},
 					2008: {
-						name: '2008',
+						name: '1991-2008',
 						visible: true,
 						type: 'featureGroup'
 
 					},
 					1991: {
-						name: '1991',
+						name: 'Før 1991',
 						visible: true,
 						type: 'featureGroup'
 					}
@@ -62,6 +63,64 @@ angular.module('svampeatlasApp')
 				}
 			}
 		};
+		
+		MapBox.getTicket().then(function(ticket) {
+
+			$scope.mapsettings.layers.baselayers.mapbox_outdoors = {
+					name: 'Mapbox Outdoors',
+					url: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/256/{z}/{x}/{y}?access_token=' + ticket,
+					type: 'xyz'
+
+				},
+				$scope.mapsettings.layers.baselayers.mapbox_satelite = {
+					name: 'Mapbox Satelite',
+					url: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token=' + ticket,
+					type: 'xyz'
+
+				};
+		});
+
+		KMS.getTicket().then(function(ticket) {
+
+			$scope.mapsettings.layers.baselayers.topo_25 = {
+				name: "DK 4cm kort",
+				type: 'wms',
+				visible: true,
+				url: "https://kortforsyningen.kms.dk/topo_skaermkort",
+				layerOptions: {
+					layers: "topo25_klassisk",
+					servicename: "topo25",
+					version: "1.1.1",
+					request: "GetMap",
+					format: "image/jpeg",
+					service: "WMS",
+					styles: "default",
+					exceptions: "application/vnd.ogc.se_inimage",
+					jpegquality: "80",
+					attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+					ticket: ticket
+				}
+			};
+			$scope.mapsettings.layers.baselayers.luftfoto = {
+				name: "DK luftfoto",
+				type: 'wms',
+				visible: true,
+				url: "https://kortforsyningen.kms.dk/topo_skaermkort",
+				layerOptions: {
+					layers: "orto_foraar",
+					servicename: "orto_foraar",
+					version: "1.1.1",
+					request: "GetMap",
+					format: "image/jpeg",
+					service: "WMS",
+					styles: "default",
+					exceptions: "application/vnd.ogc.se_inimage",
+					jpegquality: "80",
+					attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+					ticket: ticket
+				}
+			};
+		});
 
 		function getPath(obs) {
 

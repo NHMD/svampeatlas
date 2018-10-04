@@ -132,16 +132,15 @@ function getDefaulQuery(req) {
 			}, {
 				model: models.VegetationType,
 				as: 'VegetationType'
+			}, {
+				model: models.DnaSequence,
+				as: 'DnaSequence',
+				include: [{
+					model: models.User,
+					as: "User",
+					attributes: ['name', 'Initialer']
+				}]
 			},
-			{
-							model: models.DnaSequence,
-							as: 'DnaSequence',
-							include: [{
-								model: models.User,
-								as: "User",
-								attributes: ['name', 'Initialer']
-							}]
-						},
 
 		]
 	};
@@ -683,9 +682,9 @@ exports.showSimple = function(req, res) {
 			}).join(', ');
 			parsed.Det = obj.PrimaryDetermination.User.name;
 			parsed.Date = obj.observationDate;
-			parsed.Day = obj.observationDate.getDate();//obj.observationDate.split("T")[0].split("-")[2];
-			parsed.Month = obj.observationDate.getMonth()+1;//obj.observationDate.split("T")[0].split("-")[1];
-			parsed.Year = obj.observationDate.getFullYear();//obj.observationDate.split("T")[0].split("-")[0];
+			parsed.Day = obj.observationDate.getDate(); //obj.observationDate.split("T")[0].split("-")[2];
+			parsed.Month = obj.observationDate.getMonth() + 1; //obj.observationDate.split("T")[0].split("-")[1];
+			parsed.Year = obj.observationDate.getFullYear(); //obj.observationDate.split("T")[0].split("-")[0];
 			parsed.CollNo = obj.fieldnumber;
 			parsed.AtlasNo = obj._id;
 			parsed.Lokalitet = (obj.Locality) ? obj.Locality.name : obj.verbatimLocality;
@@ -1139,13 +1138,24 @@ exports.destroy = function(req, res) {
 					obs.primarydetermination_id = null;
 
 					return [obs.save({
-						transaction: t
-					}), models.DeterminationVote.destroy(q), models.ObservationEvent.destroy(q)];
+							transaction: t
+						}),
+						models.DeterminationVote.destroy(q),
+						models.sequelize.query(
+							'DELETE ObservationEventMentions FROM ObservationEventMentions ' +
+							'INNER JOIN ObservationEvents on ObservationEventMentions.observationevent_id = ObservationEvents._id ' +
+							'WHERE ObservationEvents.observation_id = :observation_id', {
+								replacements: {
+									observation_id: obs._id
+								},
+								type: models.sequelize.QueryTypes.DELETE
+							})
+					];
 
 
 
 				})
-				.spread(function(obs) {
+				.spread(function(obs, deleted) {
 
 
 					var q = {
@@ -1161,7 +1171,7 @@ exports.destroy = function(req, res) {
 						models.ObservationImage.destroy(q),
 						models.ObservationPlantTaxon.destroy(q),
 						models.ObservationUser.destroy(q),
-						//models.ObservationEvent.destroy(q),
+						models.ObservationEvent.destroy(q),
 						models.DnaSequence.destroy(q),
 						models.ObservationSubscriber.destroy(q)
 

@@ -79,7 +79,12 @@
 		<h3 ng-show="taxon.Vernacularname_DK" class="md-display-1"><a ng-if="Auth.hasRole('taxonomyadmin')" class="mycokey-image-link" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a>{{taxon.Vernacularname_DK.vernacularname_dk | capitalize}} </h3>
 		<h4 class="md-subhead" ng-show="taxon.Vernacularname_DK"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h4>
 		<h3 ng-show="!taxon.Vernacularname_DK" class="md-headline"><a ng-if="Auth.hasRole('taxonomyadmin')" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a> <em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
-		 <div class="md-caption" layout="column"> <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt navn:'): 'Syn.:'}}  <em> {{syn.FullName}}</em> {{syn.Author}}</span>
+		 <div class="md-caption" layout="column"> 
+			 <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt navn:'): 'Syn.:'}}  <em> {{syn.FullName}}</em> {{syn.Author}}</span>
+	</div>
+	
+		 <div class="md-caption" layout="column"> 
+			 <span  ng-repeat="name in taxon.DanishNames" ng-if="name._id !== taxon.Vernacularname_DK._id">Syn.: {{name.vernacularname_dk}} <span ng-if="name.source">({{name.source}})</span></span>
 	</div>
 		<!-- <div class="md-caption" layout-gt-xs="row" flex> <div  ng-repeat="tx in higherTaxa"><div ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}{{(!$last) ? ',': ''}}</div>
 		 <div ng-if="!tx.Vernacularname_DK"></div>
@@ -118,17 +123,16 @@
 			{{taxon.attributes.forvekslingsmuligheder}}</p>
 		
 	</span>
+		<p ng-if="taxon.attributes.bogtekst_faenologi_udbredelse"><strong>Udbredelse og fænologi: </strong>{{taxon.attributes.bogtekst_faenologi_udbredelse
+	}}</p>
 	<div ng-if="taxon.redlistdata.length > 0">
 	
 		<p><strong>Rødlistekategori ({{taxon.redlistdata[0].year}}): </strong>{{taxon.redlistdata[0].Status
 	}}</p>
 
-	<p><strong>Global udbredelse: </strong>{{taxon.redlistdata[0].Udbredelse
-}}</p>
-
-
-
 </div>
+<p ng-if="taxon.attributes.spiselighedsrapport"><strong>Spiselighed: </strong>{{taxon.attributes.spiselighedsrapport}}</p>
+
 <p><strong>Antal fund i svampeatlas:</strong> {{count}} <md-button class="md-icon-button md-primary" ng-click="showRecords('list')">
 			<md-tooltip md-direction="bottom" >
 			          {{'Vis fund i liste' | translate}}

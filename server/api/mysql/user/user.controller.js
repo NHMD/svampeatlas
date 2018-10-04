@@ -766,7 +766,7 @@ LEFT JOIN ObservationImages oi ON
   WHERE oi1.observation_id = o._id LIMIT 1
  )
 LEFT JOIN ObservationEventMentions om ON om.observationevent_id= oe._id AND om.user_id = :userid 
-LEFT JOIN (Determination d JOIN Taxon st ON d.taxon_id=st._id) ON oe.determination_id = d._id ORDER BY oe.createdAt DESC, oe.observation_id LIMIT :limit OFFSET :offset`;
+LEFT JOIN (Determination d JOIN Taxon st ON d.taxon_id=st._id) ON oe.determination_id = d._id ORDER BY (os.updatedAt < oe.createdAt) DESC, oe.createdAt DESC,  oe.observation_id LIMIT :limit OFFSET :offset`;
 
 var offset = (req.query.offset) ? parseInt(req.query.offset) : 0;
 var limit = (req.query.limit) ? parseInt(req.query.limit) : 25;
