@@ -672,32 +672,43 @@ exports.showSimple = function(req, res) {
 
 	.then(handleEntityNotFound(res))
 		.then(function(obj) {
-			console.log(obj.observationDate)
 			var parsed = {};
 
-			parsed.Taxon = obj.PrimaryDetermination.Taxon.acceptedTaxon.FullName;
-			parsed.Author = obj.PrimaryDetermination.Taxon.acceptedTaxon.Author;
+			parsed.Taxon = _.get(obj, 'PrimaryDetermination.Taxon.acceptedTaxon.FullName');
+			parsed.Author = _.get(obj, 'PrimaryDetermination.Taxon.acceptedTaxon.Author');
 			parsed.Leg = obj.users.map(function(u) {
 				return u.name
 			}).join(', ');
-			parsed.Det = obj.PrimaryDetermination.User.name;
+			parsed.Det = _.get(obj, 'PrimaryDetermination.User.name');
 			parsed.Date = obj.observationDate;
 			parsed.Day = obj.observationDate.getDate(); //obj.observationDate.split("T")[0].split("-")[2];
 			parsed.Month = obj.observationDate.getMonth() + 1; //obj.observationDate.split("T")[0].split("-")[1];
 			parsed.Year = obj.observationDate.getFullYear(); //obj.observationDate.split("T")[0].split("-")[0];
 			parsed.CollNo = obj.fieldnumber;
 			parsed.AtlasNo = obj._id;
-			parsed.Lokalitet = (obj.Locality) ? obj.Locality.name : obj.verbatimLocality;
-			parsed.Land = (obj.Locality) ? 'Denmark' : obj.GeoNames.countryName;
 			parsed.Latitude = obj.decimalLatitude;
 			parsed.Longitude = obj.decimalLongitude;
 			parsed.Precision = obj.accuracy;
-			parsed.Substrat = obj.Substrate.name;
-			parsed.Vegetationstype = obj.VegetationType.name;
-			parsed.Vaert = obj.associatedTaxa.map(function(t) {
-				return t.DKandLatinName
-			}).join(', ');
+		
 			parsed.Notes = obj.note
+			
+			if(req.query.locale && req.query.locale === "en"){
+				parsed.Substrate = _.get(obj, 'Substrate.name_uk');
+				parsed.Vegetationtype = _.get(obj, 'VegetationType.name_uk');
+				parsed.Host = obj.associatedTaxa.map(function(t) {
+					return t.DKandLatinName
+				}).join(', ');
+				parsed.Locality = (obj.Locality) ? obj.Locality.name : obj.verbatimLocality;
+				parsed.Country = (obj.Locality) ? 'Denmark' : obj.GeoNames.countryName;
+			} else {
+				parsed.Substrat = _.get(obj, 'Substrate.name');
+				parsed.Vegetationstype = _.get(obj, 'VegetationType.name');
+				parsed.Vaert = obj.associatedTaxa.map(function(t) {
+					return t.DKandLatinName
+				}).join(', ');
+				parsed.Lokalitet = (obj.Locality) ? obj.Locality.name : obj.verbatimLocality;
+				parsed.Land = (obj.Locality) ? 'Denmark' : obj.GeoNames.countryName;
+			}
 
 			return res.status(200).json(parsed)
 		})
