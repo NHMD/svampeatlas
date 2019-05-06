@@ -9,7 +9,8 @@
 
 'use strict';
 
-
+var models = require('../../mysql')
+var GeoNames = models.GeoNames;
 var _ = require('lodash');
 var Client = require('node-rest-client').Client;
 var client = new Client();
@@ -66,6 +67,27 @@ function removeEntity(res) {
     }
   };
 }
+
+exports.getCountries = function(req, res) {
+	//SELECT IF(ISNULL(g.countryName), "Denmark", g.countryName) as country
+	
+	var sql = 'SELECT distinct countryName FROM `GeoNames`';
+
+
+	return models.sequelize.query(sql, {
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+		
+
+			return res.status(200).json(result)
+		
+
+	}).catch(handleError(res));
+
+
+};
 
 // Get list of things
 exports.findNearbyJSON = function(req, res) {

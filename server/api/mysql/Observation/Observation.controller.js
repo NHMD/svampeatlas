@@ -752,6 +752,8 @@ exports.create = function(req, res) {
 	if (!userIsValidator) {
 		delete observation.noteInternal;
 	};
+	delete observation._id;
+	
 	var logObject = {
 		User: {
 			_id: req.user._id,

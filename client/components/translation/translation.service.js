@@ -376,7 +376,9 @@ angular.module('svampeatlasApp')
 			'Markør' : 'Marker',
 			'Ny DNA sekvens' : 'New DNA sequence',
 			'Tilføj DNA sekvens til': 'Add DNA sequence to',
-			'Ikke obligatorisk': 'Not mandatory'
+			'Ikke obligatorisk': 'Not mandatory',
+			'Ikke bestemt til art': 'Not identified to species level',
+			'Land' : 'Country'
 		});
 		
 

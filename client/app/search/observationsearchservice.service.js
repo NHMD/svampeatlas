@@ -299,15 +299,37 @@ angular.module('svampeatlasApp')
 
 
 
-				if (search.onlyForeign) {
+				if (search.onlyForeign ) {
 					search.include[2].required = false;
 					dbQuery.where.locality_id = {
 						$eq: null
 					};
+					
 				} else {
 					delete dbQuery.where.locality_id;
+					
 					search.include[2].required = (search.geometry || (search.selectedDataSet && search.selectedDataSet.length) || search.databasenumber) ? false : !search.includeForeign;
 				}
+				
+				if (search.selectedCountry) {
+					search.include[2].required = false;
+					search.include[3].required = true;
+					dbQuery.where.locality_id = {
+						$eq: null
+					};
+						dbQuery.include[3].where.countryName = search.selectedCountry
+					
+				} else {
+					delete dbQuery.where.locality_id;
+					
+						delete dbQuery.include[3].where.countryName
+					search.include[3].required = false;
+					
+					search.include[2].required = (search.geometry || (search.selectedDataSet && search.selectedDataSet.length) || search.databasenumber) ? false : !search.includeForeign;
+				}
+				
+				
+				
 
 
 
@@ -520,6 +542,12 @@ angular.module('svampeatlasApp')
 						Determination_validation: search.Determination_validation
 					})
 				}
+				
+				if (search.noSpeciesDetermination) {
+					dbQuery.include[0].where.Taxon_RankID = { $lt: 10000}
+				} else {
+					delete dbQuery.where.ecologynote;
+				}
 
 				if (search.Determination_species_hypothesis && search.Determination_species_hypothesis.length > 0) {
 					dbQuery.include[0].where.$and.$or.push({
@@ -717,6 +745,7 @@ angular.module('svampeatlasApp')
 															delete dbQuery.municipalityid;
 														}
 														*/
+				
 				if (search.activeThreadsOnly) {
 					dbQuery.activeThreadsOnly = search.activeThreadsOnly;
 				} else {

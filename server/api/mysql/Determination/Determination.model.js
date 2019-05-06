@@ -34,6 +34,10 @@ module.exports = function(sequelize, DataTypes) {
 	         key: "_id"
 	       }
    },
+   typeStatus : {
+   	type: DataTypes.STRING,
+   	allowNull: true,
+   },
    species_hypothesis : {
    	type: DataTypes.STRING,
    	allowNull: true,

@@ -150,7 +150,40 @@
 		              </div>
 					   </div>
 			         </md-input-container>
+					 
+					 
+					 
+					 
+						
+
+		
+					 
+					 
+					 
+					 
+					 
+					 
  </div>
+ <div layout="row" layout-padding layout-margin ng-if="ctrl.Auth.hasRole('taxonomyadmin')">
+ 
+ <md-input-container layout-fill>
+        <label>{{'Type status' | translate}}</label>
+        <md-select ng-model="ctrl.determination.typeStatus" ng-disabled="ctrl.newTaxon.length ===0">
+		  <md-option value="" >
+            Not a type
+          </md-option>
+		  <md-option ng-repeat="t in ctrl.typeStatuses" value="{{t.value}}" >
+            {{t.value}}<br/>
+			<span class="item-metastat">{{t.description}}</span>
+          </md-option>
+          
+        </md-select>
+		
+		
+      </md-input-container>
+	  
+	  </div>
+	  
 	 <div layout="row" layout-padding layout-margin>
 		 <md-input-container class="md-block" layout-fill>
 		           <label>{{'Note til bestemmelsen' | translate}}</label>

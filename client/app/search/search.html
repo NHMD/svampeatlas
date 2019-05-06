@@ -207,13 +207,24 @@
 			 	    <md-switch ng-model="search.onlyForeign" aria-label="Vis kun udenlandske fund" >
 			 	        <span translate>Kun udenlandske fund</span>
 			 	      </md-switch>
+					  
+						
 			 	</div>
- 			  
+				<div layout-gt-xs="row" >
+					   <md-input-container>
+					    <label>{{'Land' | translate}}</label>
+	 			 	  <md-select ng-model="search.selectedCountry">
+		             <md-option ng-repeat="c in countries | orderBy:'countryName'" value="{{c.countryName}}" >
+		               {{c.countryName}}
+		             </md-option>
+				  </md-select>
+			  </md-input-container>
+			  </div>
  			   <div layout-gt-xs="row" >
 				   <md-input-container>
 				    <label>{{'Kommune' | translate}}</label>
  			 	  <md-select ng-model="search.selectedMunicipality">
-	             <md-option ng-repeat="m in municipalities" value="{{m._id}}" >
+	             <md-option ng-repeat="m in municipalities | orderBy:'name'" value="{{m._id}}" >
 	               {{m.name}}
 	             </md-option>
 			  </md-select>
@@ -594,6 +605,12 @@
            
 		  
 		            </div>
+	 			   <div layout-gt-xs="row">
+	 			 	  <md-switch ng-model="search.noSpeciesDetermination" aria-label="Ikke bestemt til art" >
+	 			 	      <span translate>Ikke bestemt til art</span>
+	 			 	    </md-switch>
+	 			 	    
+	 			 	</div>
            <div layout-gt-xs="row">
     	   <md-input-container class="md-block" flex-gt-xs>
     	           <label translate>Databasenummer</label>

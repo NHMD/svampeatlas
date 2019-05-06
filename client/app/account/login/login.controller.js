@@ -37,7 +37,8 @@ angular.module('svampeatlasApp')
 				}
 				$cookies.put('preferred_language', usr.preferred_language);
 				$translate.use(usr.preferred_language);
-	    		  if(Auth.hasRole('taxonomyadmin') &&  !$cookies.get('plutoftoken')){
+	    		 
+				/*  if(Auth.hasRole('taxonomyadmin') &&  !$cookies.get('plutoftoken')){
 					  
 					  PlutoF.GetToken().$promise
 					  .then(function(res){
@@ -47,13 +48,13 @@ angular.module('svampeatlasApp')
 						
 					  })
 					  .catch(function(err){
-						  
+						  console.log(err)
 						  // ingnore
 					  	
 					  })
 					  
 	      			
-	    		  };
+	    		  }; */
 				
 			})
   		 

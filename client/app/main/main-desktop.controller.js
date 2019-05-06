@@ -232,7 +232,7 @@ angular.module('svampeatlasApp')
 		} else if ($scope.useNoLichenFilter) {
 			determinationwhere = {
 				lichenized: 0,
-				Taxon_redlist_status: ['RE', 'CR', 'EN', 'VU', 'NT'],
+				Taxon_redlist_status: ['RE', 'CR', 'EN', 'VU'],
 				$or: [{
 					Determination_validation: 'Godkendt'
 				}, {
@@ -244,7 +244,7 @@ angular.module('svampeatlasApp')
 
 		} else {
 			determinationwhere = {
-				Taxon_redlist_status: ['RE', 'CR', 'EN', 'VU', 'NT'],
+				Taxon_redlist_status: ['RE', 'CR', 'EN', 'VU'],
 				$or: [{
 					Determination_validation: 'Godkendt'
 				}, {

@@ -47,6 +47,35 @@ angular.module('svampeatlasApp')
 						this.$translate = $translate;
 						this.newTaxon = [];
 						this.determiner = [];
+						
+						this.typeStatuses = [{
+							value: 'HOLOTYPE',
+							description: 'The one specimen or other element used or designated by the original author at the time of publication of the original description as the nomenclatural type of a species or infraspecific taxon.'
+						}, {
+							value: 'HYPOTYPE',
+							description: 'A specimen that was not part of the original type series of the species, but is known from a published description, figure, or listing.'
+						}, {
+							value: 'EPITYPE',
+							description: 'An epitype is a specimen or illustration selected to serve as an interpretative type when any kind of holotype, lectotype, etc.'
+						}, {
+							value: 'ISOTYPE',
+							description: 'An isotype is any duplicate of the holotype'
+						}, {
+							value: 'NEOTYPE',
+							description: 'A specimen designated as nomenclatural type subsequent to the publication of the original description in cases where the original holotype, lectotype, all paratypes and syntypes are lost or destroyed, or suppressed by the (botanical or zoological) commission on nomenclature.'
+						}, {
+							value: 'LECTOTYPE',
+							description: 'A specimen or other element designated subsequent to the publication of the original description from the original material (syntypes or paratypes) to serve as nomenclatural type.'
+						}, {
+							value: 'PARATYPE',
+							description: 'All of the specimens in the type series of a species or infraspecific taxon other than the holotype (and, in botany, isotypes).'
+						}, {
+							value: 'TOPOTYPE',
+							description: 'One or more specimens collected at the same location as the type series (type locality), regardless of whether they are part of the type series.'
+						}, {
+							value: 'SYNTYPE',
+							description: 'One of the series of specimens used to describe a species or infraspecific taxon when neither a single holotype nor a lectotype has been designated.'
+						}]
 
 						if (that.editMode === true) {
 							that.newTaxon.push(that.obs.PrimaryDetermination.Taxon)

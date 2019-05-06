@@ -258,6 +258,8 @@ function createDetermination(obs, determination, user, t, logObject) {
 	var userIsValidator = userTool.hasRole(user, 'validator');
 	if(!userTool.hasRole(user, 'taxonomyadmin')){
 		delete determination.species_hypothesis;
+		delete determination.typeStatus;
+		
 	}
 	logObject.User.userIsValidator = userIsValidator;
 	return Promise.all([models.Taxon.find({
@@ -287,8 +289,8 @@ function createDetermination(obs, determination, user, t, logObject) {
 		}).spread((baseScore, taxonWeight, taxon, obs) => {
 
 
-			console.log("### baseScore: " + baseScore)
-			console.log("### taxonWeight: " + taxonWeight)
+			// console.log("### baseScore: " + baseScore)
+			// console.log("### taxonWeight: " + taxonWeight)
 
 			logObject.Determination = {};
 

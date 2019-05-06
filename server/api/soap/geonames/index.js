@@ -7,6 +7,9 @@ var router = express.Router();
 
 router.get('/findnearby', controller.findNearbyJSON);
 
+router.get('/countries', controller.getCountries)
+
+
 //router.get('/newnames/:rank/:startdate', controller.NewNames);
 
 

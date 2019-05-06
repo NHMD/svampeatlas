@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter', 'Area','StoredSearch', 'StoredSearchModalService', '$stateParams', 'appConstants', '$cookies', 'KMS', 'MapBox',
-		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter, Area, StoredSearch, StoredSearchModalService, $stateParams, appConstants, $cookies, KMS, MapBox) {
+	.controller('SearchCtrl', ['$scope', 'ObservationSearchService', 'SearchService', 'leafletData', '$timeout', '$mdUtil', '$mdSidenav', '$mdMedia', '$state', 'Auth', '$translate', '$filter', 'Area','StoredSearch', 'StoredSearchModalService', '$stateParams', 'appConstants', '$cookies', 'KMS', 'MapBox','$http',
+		function($scope, ObservationSearchService, SearchService, leafletData, $timeout, $mdUtil, $mdSidenav, $mdMedia, $state, Auth, $translate, $filter, Area, StoredSearch, StoredSearchModalService, $stateParams, appConstants, $cookies, KMS, MapBox, $http) {
 			$scope.baseUrl = appConstants.baseurl;
 			$scope.appConstants = appConstants;
 			$scope.Auth = Auth;
@@ -12,6 +12,13 @@ angular.module('svampeatlasApp')
 			$scope.$translate = $translate;
 			$scope.AcceptedDeterminationScore = appConstants.AcceptedDeterminationScore;
 			$scope.ProbableDeterminationScore = appConstants.ProbableDeterminationScore;
+			
+			$http({
+								method: 'GET',
+								url: '/api/geonames/countries'
+							}).then(function(res) {
+								$scope.countries = res.data;
+							});
 			
 			$scope.setDate = function(days, model) {
 				ObservationSearchService.setDate(days, model, $scope.search);
@@ -534,6 +541,8 @@ angular.module('svampeatlasApp')
 						$scope.search.includeForeign = false;
 						$scope.search.selectedLocalities = [];
 						delete $scope.observationSearch.geometry;
+						delete $scope.search.selectedCountry;
+						
 						$scope.drawnItems.removeLayer($scope.leafletPolygon);
 						$scope.deleteMunicipality()
 						break;
@@ -665,6 +674,9 @@ angular.module('svampeatlasApp')
 			//observationSearch.where.observationDate.$between[0]
 			$scope.$watch('search', function(newVal, oldVal) {
 				 // if there is a search id delete it (will be set after 100 millisec when a stored search is selected or created)
+				if(newVal.selectedCountry){
+					newVal.onlyForeign = true
+				}
 				delete ObservationSearchService.storedSearch;
 				ObservationSearchService.uiSearchToDBquery(newVal, $scope.observationSearch)
 

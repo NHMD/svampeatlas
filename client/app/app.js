@@ -83,7 +83,17 @@ angular.module('svampeatlasApp', [
 				type: 'link',
 				icon: 'person_add',
 				ifNotLoggedIn: true
-			}, {
+			}, 
+			{
+				id: 'about',
+				name: 'Om svampeatlas',
+				icon: 'info_outline',
+				state: 'about',
+				type: 'link',
+			ifNotLoggedIn:true
+			},
+			
+			{
 				id: 'Settings',
 				name: 'Bruger',
 				type: 'heading',
@@ -340,6 +350,14 @@ angular.module('svampeatlasApp', [
 					} */
 				]
 			},
+			{
+				id: 'about',
+				name: 'Om svampeatlas',
+				icon: 'info_outline',
+				state: 'about',
+				type: 'link',
+			requireLogin:true
+			},
 			/* {
 				id: 'about',
 				name: 'Om svampeatlas',
@@ -476,12 +494,17 @@ angular.module('svampeatlasApp', [
 
 			// Intercept 401s and redirect you to login
 			responseError: function(response) {
-				if (response.status === 401) {
+				if (response.status === 401 && response.config.url.indexOf('plutof') === -1 ) {
 					(state || (state = $injector.get('$state'))).go('main', {
 						openLogin: true
 					});
 					// remove any stale tokens
 					$cookies.remove('token');
+					return $q.reject(response);
+				} else if (response.status === 401 && response.config.url.indexOf('plutof') === -1 ) {
+					
+					// remove any stale tokens
+					$cookies.remove('plutoftoken');
 					return $q.reject(response);
 				} else {
 					return $q.reject(response);

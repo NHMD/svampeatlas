@@ -275,3 +275,4 @@ ALTER TABLE Determination add UNIQUE (observation_id, taxon_id);
 
 ALTER TABLE Determination ADD COLUMN species_hypothesis VARCHAR(255);
 ALTER TABLE Determination ADD COLUMN sh_identity DOUBLE;
+ALTER TABLE Determination ADD COLUMN typeStatus VARCHAR(255);
