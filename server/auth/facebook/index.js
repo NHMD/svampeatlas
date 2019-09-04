@@ -8,14 +8,14 @@ var router = express.Router();
 
 router
 .get('/authorize', auth.appendUser(), passport.authorize('facebook', {
-  scope: ['email', 'user_about_me'],
+  scope: ['email'],
 //  failureRedirect: '/signup',
 	failureRedirect: '/?fberror=true',
   session: false
 }))
 
   .get('/', auth.appendUser(), passport.authorize('facebook', {
-    scope: ['email', 'user_about_me'],
+    scope: ['email'],
   //  failureRedirect: '/signup',
 	  failureRedirect: '/?fberror=true',
     session: false

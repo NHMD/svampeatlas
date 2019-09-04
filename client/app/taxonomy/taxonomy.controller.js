@@ -11,11 +11,11 @@ angular.module('svampeatlasApp')
 				$scope.csvSeparator= sep;
 			}
 			
-			
 			var csvDeferred = $q.defer();
 			$scope.csv = csvDeferred.promise;
+			
 			$scope.getTaxonListCsv = function() {
-
+				
 				delete $scope.csvQuery.limit;
 				delete $scope.csvQuery.offset;
 				
@@ -60,6 +60,9 @@ angular.module('svampeatlasApp')
 				
 				csvDeferred.resolve(mapped)
 				
+				csvDeferred = $q.defer();
+				$scope.csv = csvDeferred.promise;
+				
 				 
 				})
 
@@ -71,6 +74,8 @@ angular.module('svampeatlasApp')
 			
 			$scope.translate = $translate;
 			$scope.resetSearch = function() {
+				delete $scope.csvQuery;
+				delete $scope.csvInclude;
 				localStorage.removeItem('taxonomy_attribute_conditions');
 				localStorage.removeItem('taxonomy_selected_higher_taxa');
 				localStorage.removeItem('taxonomy_higher_taxa_predicate')
@@ -753,6 +758,7 @@ angular.module('svampeatlasApp')
 
 					$scope.displayed = result;
 					$scope.isLoading = false;
+					
 				});
 			};
 

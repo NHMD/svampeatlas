@@ -129,11 +129,13 @@ angular.module('svampeatlasApp')
 					var mapped =  _.map(result, function(e){
 						return {
 							_id: "DMS-"+e._id,
+							fieldnumber: e.fieldnumber ? e.fieldnumber : "",
 							observationDate: e.observationDate,
 						//	createdDate: e.createdAt,
 							validationStatus: getValidationStatus(e),
 							taxon_id: e.DeterminationView.Taxon_id,
 							taxonFullName: e.DeterminationView.Taxon_FullName,
+							originalTaxonNameUsage: (e.DeterminationView.Taxon_FullName !==	e.DeterminationView.Recorded_as_FullName) ? e.DeterminationView.Recorded_as_FullName : "",
 							taxonDanishName: e.DeterminationView.Taxon_vernacularname_dk,
 							taxonRedListCategory: e.DeterminationView.Taxon_redlist_status,
 							locality: getLocality(e),
