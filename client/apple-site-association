@@ -1,0 +1,11 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID":"8XW2A3LKCS.com.noque.fungalatlas",
+                "paths": ["/taxon/*"]
+            }
+        ]
+    }
+}

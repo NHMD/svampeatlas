@@ -1,0 +1,222 @@
+<md-toolbar   ng-controller="NavbarCtrl" ng-include="'components/navbar/navbar.html'">	
+	
+</md-toolbar>
+	
+<md-content flex md-scroll-y layout-xs="column" layout-gt-xs="row" >
+<div ng-if="$mdMedia('xs')">
+	  <div ng-if="!ctrl.loading" layout-margin>
+ <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="false"   ngf-pattern="'image/jpeg'" ngf-resize="{quality: .9,  restoreExif: true}"  ngf-fix-orientation="true" ngf-before-model-change="ctrl.resetImages()"
+                  aria-label="Tilføj billeder"
+                  class="md-icon-button" >
+         <ng-md-icon icon="camera_alt" ></ng-md-icon> {{'Vælg foto til identifikation' | translate}}
+       </md-button>
+
+</div>
+<div ng-if="ctrl.translate.use() !=='en' && (ctrl.files.length === 0 && !ctrl.results)" layout-padding>
+	<div class="alert alert-danger" role="alert" ><strong>Advarsel: Spis aldrig svampe bare fordi systemet foreslår at du har fundet en spisesvamp. Søg altid råd fra svampekyndige mennesker hvis du ikke selv er svampekender. </strong></div>
+<p>
+	Vi er glade for at byde velkommen til vores beta-version af automatisk billedgenkendelse på Svampeatlas. Systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas. Systemet er baseret på kunstig intelligens og er trænet med alle de fotos I har biddraget med til Svampeatlasset. De teknisk nysgerrige kan blive klogere <a href="http://cmp.felk.cvut.cz/~sulcmila/presentation/2018.06.22-Fine-grainedFlowerAndFungiClassificationAtCMP.pdf" target="_blank">her</a>.
+</p><p>
+	Bemærk at systemet skal bruges med <strong>endnu mere kritisk sans</strong> end din svampebog. Så spis aldrig svampe bare fordi systemet foreslår at du har fundet en spisesvamp, uden at søge hjælp fra svampekyndige mennesker. Systemet kan således ikke se hvilken del af dit foto der repræsenterer selve svampen, og hvad der er baggrund. Det kan af og til give sjove resultater, hvis du fx fotografer en vedboende svamp hjemme på græsplænen. 
+	</p><p>
+	Vi glæder os til at høre hvad du synes om systemet – så kom gerne med feedback – så vi kan lave det endnu bedre i fremtiden. Start en tråd på facebookgruppen svampeliv, eller send en mail til <a href="mailto:jheilmann-clausen@snm.ku.dk">Jacob Heilmann-Clausen</a>
+	
+</p>
+</div>
+
+<div ng-if="ctrl.translate.use() ==='en' && (ctrl.files.length === 0 && !ctrl.results)" layout-padding>
+	<div class="alert alert-danger" role="alert" ><strong>Warning: Never eat a mushroom because the system indicates you have found an edible fungus. Always seek advice from experts if you are not experienced yourself.</strong></div>
+<p>
+	Welcome to our new beta version of automated picture recognition on the Danish Fungal Atlas. The system has been developed by Milan Šulc og Professor Jiri Matas from Czech Technical University in Prague (CTU), Lukáš Picek from University of West Bohemia (UWB) and the Fungal Atlas. The system deploys artificial intelligence and is trained on all the photos submitted by volunteers in the Atlas. Technical details <a href="http://cmp.felk.cvut.cz/~sulcmila/presentation/2018.06.22-Fine-grainedFlowerAndFungiClassificationAtCMP.pdf" target="_blank">here</a>.
+</p><p>
+	<strong>Note that the system should be used with great care, and not as tool to identify edible fungi without involving knowledgeable humans with experience in fungal recognition.</strong> So please explore with curiosity and sanity. 
+	</p>
+</div>
+
+ </div>
+ 
+
+	  <md-card ng-if="ctrl.files.length > 0 || $mdMedia('gt-xs')" flex>
+	 <div layout="row" ng-if="ctrl.loading" layout-margin>
+	 	<span flex></span>
+		<md-progress-circular  md-mode="indeterminate" ></md-progress-circular>
+		<span flex></span>
+	 </div>
+	 
+	 <div ng-if="$mdMedia('gt-xs')">
+	 	  <div ng-if="!ctrl.loading" layout-margin>
+	  <md-button layout-fill class="md-primary"  ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="false"   ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true" ngf-before-model-change="ctrl.resetImages()"
+	                   aria-label="Tilføj billeder"
+	                   class="md-icon-button" >
+	          <ng-md-icon icon="camera_alt" ></ng-md-icon> {{'Vælg foto til identifikation' | translate}}
+	        </md-button>
+	 <!--	 <div style="text-align: center">{{'eller' | translate}}</div>
+	    				      <div  flex layout-margin  ngf-drop="" ng-model="ctrl.files" ngf-keep="'distinct'" class="drop-box" 
+	      ngf-drag-over-class="'dragover'" ngf-multiple="true"   ngf-pattern="'image/jpeg'"
+	      ngf-resize="{width: 900, height: 600, quality: .9,  restoreExif: true}"
+	 	 ngf-resize-if="$width > 900 || $height > 600"
+	 	 ngf-before-model-change="$parent.$parent.showProcessingImageStatus()"
+	 	 ngf-fix-orientation="true" ngf-hide-on-drop-not-available="true"
+	      ><h3 class="md-title">{{'Træk billeder hertil' | translate}}</h3>
+	  	<ng-md-icon icon="camera_alt" size="64" style="margin-left: -24px"></ng-md-icon>
+	  </div> -->
+	 </div>
+	 <div ng-if="ctrl.translate.use() !=='en' && (ctrl.files.length === 0 && !ctrl.results)" layout-padding>
+		 <div class="alert alert-danger" role="alert" ><strong>Advarsel: Spis aldrig svampe bare fordi systemet foreslår at du har fundet en spisesvamp. Søg altid råd fra svampekyndige mennesker hvis du ikke selv er svampekender. </strong></div>
+	 <p>
+	 	Vi er glade for at byde velkommen til vores beta-version af automatisk billedgenkendelse på Svampeatlas. Systemet er udviklet af Milan Šulc og Professor Jiri Matas fra det Tjekkiske Tekniske Universitet (CTU) i Prag, Lukáš Picek fra University of West Bohemia (UWB) i Tjekkiet og Danmarks Svampeatlas. Systemet er baseret på kunstig intelligens og er trænet med alle de fotos I har biddraget med til Svampeatlasset. De teknisk nysgerrige kan blive klogere <a href="http://cmp.felk.cvut.cz/~sulcmila/presentation/2018.06.22-Fine-grainedFlowerAndFungiClassificationAtCMP.pdf" target="_blank">her</a>.
+	 </p><p>
+	 	Bemærk at systemet skal bruges med <strong>endnu mere kritisk sans</strong> end din svampebog. Så spis aldrig svampe bare fordi systemet foreslår at du har fundet en spisesvamp, uden at søge hjælp fra svampekyndige mennesker. Systemet kan således ikke se hvilken del af dit foto der repræsenterer selve svampen, og hvad der er baggrund. Det kan af og til give sjove resultater, hvis du fx fotografer en vedboende svamp hjemme på græsplænen. 
+	 	</p><p>
+	 	Vi glæder os til at høre hvad du synes om systemet – så kom gerne med feedback – så vi kan lave det endnu bedre i fremtiden. Start en tråd på facebookgruppen svampeliv, eller send en mail til <a href="mailto:jheilmann-clausen@snm.ku.dk">Jacob Heilmann-Clausen</a>
+	
+	 </p>
+	 </div>
+
+	 <div ng-if="ctrl.translate.use() ==='en' && (ctrl.files.length === 0 && !ctrl.results)" layout-padding>
+		 <div class="alert alert-danger" role="alert" ><strong>Warning: Never eat a mushroom because the system indicates you have found an edible fungus. Always seek advice from experts if you are not experienced yourself.</strong></div>
+	 <p>
+	 	Welcome to our new beta version of automated picture recognition on the Danish Fungal Atlas. The system has been developed by Milan Šulc og Professor Jiri Matas from Czech Technical University in Prague (CTU), Lukáš Picek from University of West Bohemia (UWB) and the Fungal Atlas. The system deploys artificial intelligence and is trained on all the photos submitted by volunteers in the Atlas. Technical details <a href="http://cmp.felk.cvut.cz/~sulcmila/presentation/2018.06.22-Fine-grainedFlowerAndFungiClassificationAtCMP.pdf" target="_blank">here</a>.
+	 </p><p>
+	 	<strong>Note that the system should be used with great care, and not as tool to identify edible fungi without involving knowledgeable humans with experience in fungal recognition.</strong> So please explore with curiosity and sanity. 
+	 	</p>
+	 </div>
+	<!--  <div ng-if="!ctrl.loading && ctrl.files.length === 1 && !ctrl.results" layout-margin>
+	     <md-button  layout-fill class="md-primary"  ng-click="analyze()"
+	                      aria-label="Analysér foto"
+	                      class="md-icon-button" >
+	             <ng-md-icon icon="camera_alt" ></ng-md-icon> {{'Analysér foto' | translate}}
+	           </md-button>
+	  </div> -->
+	  </div>
+	  
+
+	 <md-card-content layout-fill flex="noshrink" >
+	
+
+<md-grid-list
+         md-cols-xs="1" md-cols-sm="1" md-cols-md="1" md-cols-gt-md="1"
+        md-row-height-gt-xs="400px"
+		md-row-height-xs="200px"
+        >
+
+<md-grid-tile ng-repeat="file in ctrl.files"    
+             md-colspan-sm="1"
+            ngf-background="file"
+			   ng-style="{'background-size': 'cover'}">
+
+	<div class="md-gridtile-delete-upper-right"><md-button ng-click="ctrl.resetImages()"><ng-md-icon icon="clear"></ng-md-icon></md-button></div>
+      <md-grid-tile-footer  >{{file.name}}
+  </md-grid-tile-footer>
+  </md-grid-tile>
+  </md-grid-list>	
+  
+  
+	
+  
+	
+	 
+ </md-card-content>
+</div>
+	  <!-- <div layout layout-margin ng-repeat="img in obs.Images">
+		  
+		   <md-progress-circular md-mode="indeterminate" ng-show="loaded[img.name] !== true && failed[img.name] !== true"></md-progress-circular>
+	     <img   style="margin: auto; max-width: 100%; height:inherit;" alt="{{obs.PrimaryDetermination.Taxon.FullName}}" ng-src="{{imageurl+img.name}}.jpg" imageonload="imageHasLoaded(img.name)" imageonerror="imageHasFailed(img.name)" ng-show="failed[img.name] !== true">
+	 </div> -->
+</md-card>
+
+
+
+
+
+	<div ng-if="ctrl.results" style="height: 1640px;overflow: auto;" flex>
+		
+		
+		<div style="height: 3600px">
+		
+	 <div style="margin-right: 8px; margin-left: 8px; margin-top: 8px; margin-bottom: 6px; padding: 8px;" class="alert alert-danger" role="alert" ng-if="ctrl.showPoisonousWarning"><strong ng-if="ctrl.translate.use()!=='en'">Advarsel! Der er giftige svampe mellem resultaterne.</strong>
+	 <strong ng-if="ctrl.translate.use()==='en'">Warning! There are poisonous fungi in the results</strong>
+	 </div>
+		
+		
+		
+		
+		
+		
+   	 <md-card ng-repeat="tile  in ctrl.results" >
+   	 		<!--    -->
+   			
+				
+   				<!-- -->
+   	         <md-card-title class="mobile-obs-title" layout-padding>
+   	           <md-card-title-text class="mobile-obs-header">
+   	             <h4 class="mobile-obs-header">
+					 <a ng-click="ctrl.SpeciesModalService.show($event, tile.acceptedTaxon._id)">
+						 <em ng-if=" (ctrl.translate.use() ==='en' && !tile.acceptedTaxon.attributes.vernacular_name_GB) || (ctrl.translate.use()==='da' && !tile.acceptedTaxon.Vernacularname_DK)">{{tile.acceptedTaxon.FullName}}</em>
+					 </a>
+   					 
+   					 <span ng-if="tile.acceptedTaxon.Vernacularname_DK && ctrl.translate.use() !=='en'"><a ng-click="ctrl.SpeciesModalService.show($event, tile.acceptedTaxon._id)">{{tile.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}}</a></span>
+					 <span ng-if="tile.acceptedTaxon.attributes.vernacular_name_GB && ctrl.translate.use() ==='en'"><a ng-click="ctrl.SpeciesModalService.show($event, tile.acceptedTaxon._id)">{{tile.acceptedTaxon.attributes.vernacular_name_GB | capitalize}}</a></span>
+				 
+				 
+				 </h4>
+   				 <span class="md-subhead" ng-if="(tile.acceptedTaxon.Vernacularname_DK && ctrl.translate.use()==='da') || (tile.acceptedTaxon.attributes.vernacular_name_GB && ctrl.translate.use() ==='en')">
+   					 <em >{{tile.acceptedTaxon.FullName}}</em> 
+   					 <span ng-if="tile.acceptedTaxon.redlistdata.length > 0"> ({{tile.acceptedTaxon.redlistdata[0].status}})</span>
+   				 </span>
+   	             <span class="md-subhead" ng-if="Auth.hasRole('validator')">
+   			 	   <span class="info">{{'Sikkerhed' | translate}}: {{ctrl.Math.round(tile.score * 100)}}%<br>
+   			 	   </span>
+				   
+   				   
+				   
+   				 </span>
+				 <md-progress-linear  style="margin-top: 8px" md-mode="determinate" value="{{ctrl.Math.round(tile.score * 100)}}"></md-progress-linear>
+				 <div style="margin-top: 8px; color: #a94442;"  ng-if="tile.acceptedTaxon.attributes.spiselighedsrapport.indexOf('giftig') > -1"><strong ng-if="ctrl.translate.use()!=='en'">{{ tile.acceptedTaxon.attributes.spiselighedsrapport | capitalize}}</strong>
+				 <strong ng-if="ctrl.translate.use()==='en'">Poisonous</strong>
+				 </div>
+   	           </md-card-title-text>
+   	           <md-card-title-media >
+   	             <div class="md-media-md card-media" ng-style="ctrl.getBackgroundStyle(tile)"></div>
+   	             
+				 
+				 
+   	           </md-card-title-media>
+	          
+   	         </md-card-title>
+			 
+   	         <md-card-actions layout="row" layout-align="end center" >
+			 
+   			
+   			 <span flex></span>
+    			
+			 
+   	           <md-button  class="md-raised show-mobile-obs" aria-label="Vis art" ng-click="ctrl.SpeciesModalService.show($event, tile.acceptedTaxon._id)" translate="Vis art"> </md-button> 
+   	          <md-button ng-if="Auth.isLoggedIn()" class="md-raised show-mobile-obs" aria-label="opret fund" ng-click="ctrl.createObservation($event, tile)" translate="Opret fund"> </md-button> 
+   	         </md-card-actions>
+   	       </md-card>
+		
+		
+		<div style="margin-left: 10px;"><span class="md-caption">The image-based recognition system was developed by Milan Šulc and Jiri Matas from <a href="https://www.fel.cvut.cz/en/" target="_blank">CTU</a> in Prague and by Lukas Picek from <a href="https://www.fav.zcu.cz/en/" target="_blank">UWB</a>.</span></div>
+		
+		
+	</div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+</div>
+	 
+</md-content>
+

@@ -304,7 +304,16 @@ angular.module('svampeatlasApp', [
 				name: 'Svampebog',
 				type: 'heading',
 
-				children: [{
+				children: [
+					{
+						id: 'imagevision',
+						icon: 'camera_alt',
+						name: 'Foto identifikation',
+						state: 'imagevision',
+						type: 'link',
+						requireLogin: false,
+					},
+					{
 						id: 'checklist',
 						icon: 'playlist_add_check',
 						name: 'Danske arter',

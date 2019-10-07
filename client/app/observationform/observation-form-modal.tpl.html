@@ -8,6 +8,11 @@
         <h2 ng-if="!obs || !obs._id">{{'Nyt fund' | translate}} {{(duplicateID) ? ('('+('klonet fra' | translate)+' DMS-'+duplicateID+')') : ''}}</h2>
 		<h2 ng-if="obs && obs._id">DMS-{{obs._id}} </h2>
         <span flex></span>
+   	 <md-button ng-if="$mdMedia('xs') || $mdMedia('sm')" ng-click="moveToMapAndUseLocation()"
+   	                  aria-label="Tilføj position"
+   	                  class="md-icon-button" >
+   	         <ng-md-icon icon="gps_fixed" ></ng-md-icon>
+   	       </md-button>
 			 <md-button ngf-select ng-model="ctrl.files" name="files" ngf-keep="'distinct'" ngf-multiple="true" ngf-resize="{width: 1800, height: 1200, quality: .9,  restoreExif: true}" ngf-resize-if="$width > 1800 || $height > 1200" ngf-pattern="'image/jpeg'"  ngf-fix-orientation="true"  ngf-before-model-change="showProcessingImageStatus()"
 			                  aria-label="Tilføj billeder"
 			                  class="md-icon-button" >

@@ -187,6 +187,7 @@ module.exports = function(sequelize, DataTypes) {
     					foreignKey: "parent_id",
     					as: "Parent"
     				});
+					
 			
     			models.Taxon
     				.hasMany(models.Taxon, {

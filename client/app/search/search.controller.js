@@ -581,6 +581,7 @@ angular.module('svampeatlasApp')
 						$scope.search.onlyWithImages = false;
 						delete $scope.search.imageMaxAge;
 						delete $scope.search.note;
+						delete $scope.search.Determination_notes;
 
 						break;
 					case 'forum':

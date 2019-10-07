@@ -378,7 +378,13 @@ angular.module('svampeatlasApp')
 			'Tilføj DNA sekvens til': 'Add DNA sequence to',
 			'Ikke obligatorisk': 'Not mandatory',
 			'Ikke bestemt til art': 'Not identified to species level',
-			'Land' : 'Country'
+			'Land' : 'Country',
+			'Vælg foto til identifikation': 'Choose photo for identification',
+			'Analysér foto': 'Analyse photo',
+			'Sikkerhed': 'Confidence',
+			'Vis art': 'Show species',
+			'Opret fund': 'Create observation',
+			'Foto identifikation': 'Photo identification'
 		});
 		
 

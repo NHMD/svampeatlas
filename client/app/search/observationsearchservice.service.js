@@ -22,7 +22,7 @@ angular.module('svampeatlasApp')
 				include: [{
 					model: "DeterminationView",
 					as: "DeterminationView",
-					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id', 'Determination_species_hypothesis'],
+					attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id', 'Determination_species_hypothesis', 'Determination_notes'],
 					where: {
 
 						// $and: $or is reserved for searches across communityvalidated and hardvalidated determinations
@@ -129,7 +129,7 @@ angular.module('svampeatlasApp')
 					include: [{
 						model: "DeterminationView",
 						as: "DeterminationView",
-						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id', 'Determination_species_hypothesis'],
+						attributes: ['Taxon_id', 'Recorded_as_id', 'Taxon_FullName', 'Taxon_vernacularname_dk', 'Taxon_RankID', 'Determination_validation', 'Taxon_redlist_status', 'Taxon_path', 'Recorded_as_FullName', 'Determination_user_id', 'Determination_score', 'Determination_validator_id', 'Determination_species_hypothesis', 'Determination_notes'],
 						where: {
 							$and: {
 								$or: {}
@@ -552,6 +552,12 @@ angular.module('svampeatlasApp')
 				if (search.Determination_species_hypothesis && search.Determination_species_hypothesis.length > 0) {
 					dbQuery.include[0].where.$and.$or.push({
 						Determination_species_hypothesis: search.Determination_species_hypothesis
+					})
+				}
+				
+				if (search.Determination_notes && search.Determination_notes.length > 0) {
+					dbQuery.include[0].where.$and.$or.push({
+						Determination_notes: {like: "%" + search.Determination_notes + "%"} 
 					})
 				}
 

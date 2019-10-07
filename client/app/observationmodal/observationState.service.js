@@ -13,6 +13,7 @@ angular.module('svampeatlasApp')
 				reset: function(){
 				observation = undefined;
 				delete this.duplicateRecord;
+				delete this.imageVisionOptions
 				}
 			};
 

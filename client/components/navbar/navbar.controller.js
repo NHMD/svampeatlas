@@ -37,7 +37,8 @@ $scope.states =
 	  'notifications' : {name: 'Notifikationer', icon: 'notifications_active'},
 	  'forgot' : {name: 'Glemt password', icon: 'lock_open'},
 	  'metrics' : {name: 'Statistik', icon: 'insert_chart'},
-	  'rights' : {name: 'Betingelser for indlæg og brug af data', icon: 'copyright'}
+	  'rights' : {name: 'Betingelser for indlæg og brug af data', icon: 'copyright'},
+	  'imagevision' : {name: 'Foto identifikation', icon: 'camera_alt'}
 	  
 
 	  

@@ -1,0 +1,76 @@
+ 
+ table.morpho-group {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 700px; /* this can vary */
+	margin-top: 20px;
+}
+
+table.morpho-group * {
+    box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+ table.morpho-group > thead {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+table.morpho-group > tbody {
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+table.morpho-group > thead > tr, table.morpho-group > tbody > tr, table.morpho-group > tfoot > tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+table.morpho-group > thead, table.morpho-group > tfoot {
+    flex-shrink: 0;
+}
+
+table.morpho-group > thead > tr> th, table.morpho-group > tbody > tr> td {
+    width: 20%; /* this can vary */
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+table.morpho-group > tfoot {
+    display: inline-block;
+}
+
+.morpho-group a {
+	text-decoration: none;
+}
+
+.morphogroup-username-header {
+	margin-right: 12px;
+}
+
+@media screen and  (min-width: 600px) {
+	.chart-expl {
+		width: 400px;
+		padding: 10px;
+	
+	}
+}
+
+@media screen and  (max-width: 599px) {
+	.chart-expl {
+		width: 300px;
+		padding: 10px;
+	
+	}
+}
+
+.metrics-chart-container {
+	background-color: white;
+	height: 400px;
+}

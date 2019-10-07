@@ -3,11 +3,14 @@ angular.module('svampeatlasApp')
 	.factory('ObservationFormService', function($mdDialog, ObservationStateService, $rootScope) {
 
 			return {
-				show: function(ev, row, duplicateRecord) {
+				show: function(ev, row, duplicateRecord, imageVisionOptions) {
 
 					ObservationStateService.set(row);
 					if(duplicateRecord){
 						ObservationStateService.duplicateRecord = true;
+					}
+					if(imageVisionOptions){
+						ObservationStateService.imageVisionOptions = imageVisionOptions;
 					}
 					$mdDialog.show({
 						controller: 'ObservationFormCtrl',

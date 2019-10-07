@@ -172,6 +172,7 @@ angular.module('svampeatlasApp')
 						JSON.stringify({
 							model: "User",
 							as: 'PrimaryUser',
+							required: false,
 							attributes: ['_id', 'email', 'Initialer', 'name'],
 							where: {}
 						}),

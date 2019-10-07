@@ -251,6 +251,9 @@ angular.module('svampeatlasApp')
 								obs.Forum = [];
 								obs.Images = [];
 								$scope.showSimpleToast($translate.instant('Du har nu klonet') + ' DMS-' + $scope.duplicateID + '. ' + $translate.instant('Husk at gemme det klonede fund før du lukker dette vindue.'), 5000, 'top left')
+							} else if(ObservationStateService.imageVisionOptions){
+								$scope.newTaxon = [ObservationStateService.imageVisionOptions.taxon]
+								that.files = [ObservationStateService.imageVisionOptions.file]
 							}
 
 							return obs;
@@ -736,6 +739,9 @@ angular.module('svampeatlasApp')
 				q.where.decimalLatitude = {
 					$between: [bounds.getSouth(), bounds.getNorth()]
 				}
+				q.where.name = {
+					$notLike: "Biowide%"
+				}
 				Locality.query(q).$promise.then(function(localities) {
 					var closest;
 					var closestdist = 1000000000;
@@ -766,7 +772,7 @@ angular.module('svampeatlasApp')
 						};
 					}
 
-					if ($scope.useNearestLocalityOnClick) {
+					if ($scope.useNearestLocalityOnClick && $scope.mapsettings.markers[closest]) {
 						$scope.selectedLocality = [$scope.mapsettings.markers[closest]]
 						$scope.mapsettings.markers[closest].icon = {
 							type: 'awesomeMarker',
@@ -1221,6 +1227,9 @@ angular.module('svampeatlasApp')
 						user_id: $scope.determiner[0]._id,
 						confidence: that.determinationConfidence
 					};
+					if(ObservationStateService.imageVisionOptions && ObservationStateService.imageVisionOptions.taxon._id === $scope.newTaxon[0]._id){
+						obs.determination.notes = "#imagevision_score: "+ObservationStateService.imageVisionOptions.score+"; #imagevision_list: "+ObservationStateService.imageVisionOptions.list
+					}
 
 				}
 
