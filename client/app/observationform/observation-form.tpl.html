@@ -282,7 +282,7 @@
 					md-min-length="3"
  				        md-selected-item="selectedItem"
  				        md-search-text="searchText"
- 				        md-items="item in querySearchGBIFPlantTaxon(searchText, extendedHostRank)"
+ 				        md-items="item in querySearchGBIFPlantTaxon(searchText, extendedHostRank, ctrl.extendedHostHigherTaxon)"
  				        md-item-text="item.canonicalName"
  				        placeholder="{{'Udvidet værtssøgning' | translate }}"
  						>
@@ -296,6 +296,13 @@
  				    </md-chip-template>
 	
  				  </md-chips>
+				   
+	   				  <md-radio-group ng-model="ctrl.extendedHostHigherTaxon" ng-if="extendedAssociatedOrganismSearch">
+	   				        <md-radio-button value="6">Plantae</md-radio-button>
+	   				        <md-radio-button value="1" >Animalia</md-radio-button>
+							<md-radio-button value="5" >Fungi</md-radio-button>
+				       
+	   				      </md-radio-group>
 				  <md-radio-group ng-model="$parent.extendedHostRank" ng-if="extendedAssociatedOrganismSearch">
 				        <md-radio-button value="SPECIES">{{'Art' | translate}}</md-radio-button>
 				        <md-radio-button value="GENUS" >{{'Slægt' | translate}}</md-radio-button>

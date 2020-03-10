@@ -5,6 +5,8 @@ angular.module('svampeatlasApp')
     $stateProvider
 
       .state('observationform', {
+		parent: 'localization',  
+		  
 		  authenticate: function(Auth){
 		  	return Auth.isLoggedIn()
 		  },
@@ -15,7 +17,8 @@ angular.module('svampeatlasApp')
 		  controllerAs : 'ctrl'
       })
       .state('observations', {
-	
+		parent: 'localization',  
+		  
         url: '/observations/:observationid?',
         templateUrl: 'app/observationmodal/observation.html',
         controller: 'ObservationCtrl',

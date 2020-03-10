@@ -4,6 +4,8 @@ angular.module('svampeatlasApp')
   .config(function ($stateProvider) {
     $stateProvider
       .state('search-map', {
+		parent: 'localization',  
+		  
 		  params: {
 		      
 			  taxon_id: null,

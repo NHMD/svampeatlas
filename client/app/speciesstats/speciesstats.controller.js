@@ -42,7 +42,7 @@ angular.module('svampeatlasApp')
 				},
 				overlays: {
 					2009: {
-						name: 'Efter 2008',
+						name: $translate.use() === 'en' ? 'After 2008' : 'Efter 2008',
 						visible: true,
 						type: 'featureGroup'
 
@@ -54,7 +54,7 @@ angular.module('svampeatlasApp')
 
 					},
 					1991: {
-						name: 'Før 1991',
+						name: $translate.use() === 'en' ? 'Before 1991' : 'Før 1991',
 						visible: true,
 						type: 'featureGroup'
 					}
@@ -231,7 +231,7 @@ angular.module('svampeatlasApp')
 					width: chartWidth,
 				},
 				title: {
-					text: "Fundfordeling over måneder"
+					text: $translate.use() === 'en' ? "Distribution of records by month" : "Fundfordeling over måneder"
 				},
 
 				xAxis: {
@@ -247,7 +247,7 @@ angular.module('svampeatlasApp')
 				yAxis: {
 					min: 0,
 					title: {
-						text: 'Antal fund'
+						text: $translate.use() === 'en' ? "Number of records" : "Antal fund",
 					}
 				},
 				legend: {
@@ -258,18 +258,20 @@ angular.module('svampeatlasApp')
 		}
 
 		var hostChartOpts = angular.copy($scope.monthChartOptions);
-		hostChartOpts.options.title.text = "Fordeling på de 10 hyppigste værter";
+		hostChartOpts.options.title.text = $translate.use() === 'en' ? "Distribution by 10 most frequent hosts" : "Fordeling på de 10 hyppigste værter";
 		$scope.hostChartOptions = hostChartOpts;
 
 		var decadeChartOpts = angular.copy($scope.monthChartOptions);
-		decadeChartOpts.options.title.text = "Fordeling af fund over 10 års perioder";
+		decadeChartOpts.options.title.text = $translate.use() === 'en' ? "Distribution by decade" : "Fordeling af fund over 10 års perioder";
 		decadeChartOpts.options.tooltip = {
 			pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
 		};
-		decadeChartOpts.options.yAxis.title.text = 'Antal fund pr 100.000';
+		decadeChartOpts.options.yAxis.title.text = $translate.use() === 'en' ? "Number of records pr 100.000" : 'Antal fund pr 100.000';
 		$scope.decadeChartOptions = decadeChartOpts;
 
-		$scope.months = _.map(['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'], function(m) {
+		$scope.months = $translate.use() !== 'en' ? _.map(['januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december'], function(m) {
+			return [capitalizeFirstLetter(m), 0];
+		}) : _.map(['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'oktober', 'november', 'december'], function(m) {
 			return [capitalizeFirstLetter(m), 0];
 		})
 		$scope.hosts = [];
@@ -377,16 +379,16 @@ angular.module('svampeatlasApp')
 				$scope.hosts = $scope.hosts.slice(0, 10);
 				//$scope.decades = $scope.decades.slice(0, 11);
 				$scope.monthChartOptions.series = [{
-					name: "Antal fund",
+					name: $translate.use() === 'en' ? "Number of records" : "Antal fund",
 					data: $scope.months
 				}];
 				$scope.hostChartOptions.series = [{
-					name: "Antal fund",
+					name: $translate.use() === 'en' ? "Number of records" : "Antal fund",
 					data: $scope.hosts
 				}];
 
 				$scope.decadeChartOptions.series = [{
-					name: "Antal fund pr 100.000",
+					name: $translate.use() === 'en' ? "Number of records pr 100.000" : "Antal fund pr 100.000",
 					data: $scope.decadesWeighted
 				}];
 

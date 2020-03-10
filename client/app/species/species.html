@@ -39,7 +39,7 @@
 		  <md-expansion-panel md-component-id="panelOne">
 
 		    <md-expansion-panel-collapsed>
-		      <div class="md-title">Klassifikation</div>
+		      <div class="md-title">{{'Klassifikation' | translate}}</div>
 		      <div class="md-summary classification-string"><span  ng-repeat="tx in higherTaxa" >{{capitalizeFirstLetter(tx.FullName)}}{{(!$last) ? ', ': ''}}</span></div>
 		      <md-expansion-panel-icon></md-expansion-panel-icon>
 		    </md-expansion-panel-collapsed>
@@ -48,7 +48,7 @@
 		    <md-expansion-panel-expanded>
 
 		      <md-expansion-panel-header ng-click="$panel.collapse()">
-		        <div class="md-title">Klassifikation</div>
+		        <div class="md-title">{{'Klassifikation' | translate}}</div>
 		         <div class="md-summary classification-string"><span  ng-repeat="tx in higherTaxa" >{{capitalizeFirstLetter(tx.FullName)}}{{(!$last) ? ', ': ''}}</span></div>
 		        <md-expansion-panel-icon ></md-expansion-panel-icon>
 		      </md-expansion-panel-header>
@@ -60,7 +60,7 @@
 	
 		  	  	<tbody >
 		  	  	<tr ng-repeat="tx in higherTaxa">
-		  	  		<td class="rightalign" ng-class="{'classification-last-row': $last}" translate>{{tx.RankName}}</td><td ng-class="{'classification-last-row': $last}"><span ng-if="tx.Vernacularname_DK">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}</span><br ng-if="tx.Vernacularname_DK"><em> {{tx.FullName}}</em></td>
+		  	  		<td class="rightalign" ng-class="{'classification-last-row': $last}" translate>{{tx.RankName}}</td><td ng-class="{'classification-last-row': $last}"><span ng-if="tx.Vernacularname_DK && $translate.use() !== 'en'">{{capitalizeFirstLetter(tx.Vernacularname_DK.vernacularname_dk)}}</span><br ng-if="tx.Vernacularname_DK && $translate.use() !== 'en'"><em> {{tx.FullName}}</em></td>
 					</tr>
 				<tbody >
 				 </table>
@@ -68,7 +68,7 @@
 
 		      <md-expansion-panel-footer>
 		        <div flex></div>
-		        <md-button class="md-accent" ng-click="$panel.collapse()">Luk</md-button>
+		        <md-button class="md-accent" ng-click="$panel.collapse()">{{'Luk' | translate}}</md-button>
 		      </md-expansion-panel-footer>
 
 		    </md-expansion-panel-expanded>
@@ -76,9 +76,10 @@
 		  </md-expansion-panel>  
 		  <div class="md-whiteframe-z3" layout-padding>
 			  <div>
-		<h3 ng-show="taxon.Vernacularname_DK" class="md-display-1"><a ng-if="Auth.hasRole('taxonomyadmin')" class="mycokey-image-link" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a>{{taxon.Vernacularname_DK.vernacularname_dk | capitalize}} </h3>
-		<h4 class="md-subhead" ng-show="taxon.Vernacularname_DK"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h4>
-		<h3 ng-show="!taxon.Vernacularname_DK" class="md-headline"><a ng-if="Auth.hasRole('taxonomyadmin')" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a> <em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
+		<h3 ng-show="taxon.Vernacularname_DK && $translate.use() !== 'en'" class="md-display-1"><a ng-if="Auth.hasRole('taxonomyadmin')" class="mycokey-image-link" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a>{{taxon.Vernacularname_DK.vernacularname_dk | capitalize}} </h3>
+		<h3 ng-show="taxon.attributes.vernacular_name_GB && $translate.use() === 'en'" class="md-display-1"><a ng-if="Auth.hasRole('taxonomyadmin')" class="mycokey-image-link" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a>{{taxon.attributes.vernacular_name_GB | capitalize}} </h3>
+		<h4 class="md-subhead" ng-show="(taxon.Vernacularname_DK && $translate.use() !== 'en') || (taxon.attributes.vernacular_name_GB &&  $translate.use() === 'en')"><em>{{taxon.FullName}}</em> {{taxon.Author}}</h4>
+		<h3 ng-show="(!taxon.Vernacularname_DK && $translate.use() !== 'en') || (!taxon.attributes.vernacular_name_GB && $translate.use() === 'en')" class="md-headline"><a ng-if="Auth.hasRole('taxonomyadmin')" ng-click="MycoKeyModalService.show($event, taxon)"><img src="assets/images/MycoKey.gif" width="24"  alt="MycoKey"> </a> <em>{{taxon.FullName}}</em> {{taxon.Author}}</h3>
 		 <div class="md-caption" layout="column"> 
 			 <span  ng-repeat="syn in taxon.synonyms| synonymsWithoutSelf">{{(syn.FullName.indexOf('sensu') !== -1 && !syn.FunIndexNumber) ?   ('Fejlanvendt navn:'): 'Syn.:'}}  <em> {{syn.FullName}}</em> {{syn.Author}}</span>
 	</div>
@@ -110,8 +111,8 @@
   </div>
     
 		<div>
-		<div layout><span flex></span>	<a ng-href="{{taxon.attributes.MycoKeyIDDKWebLink}}" ng-if="taxon.attributes.MycoKeyIDDKWebLink" target="_BLANK">Nøgler, beskrivelser mm i MycoKey</a></div>
-			<span>
+		<div layout><span flex></span>	<a ng-href="{{taxon.attributes.MycoKeyIDDKWebLink}}" ng-if="taxon.attributes.MycoKeyIDDKWebLink" target="_BLANK">{{'Nøgler, beskrivelser mm i MycoKey' | translate}}</a></div>
+			<div ng-if="$translate.use() !== 'en'">
 			<p ng-if="taxon.attributes.diagnose"><strong>Beskrivelse: </strong>{{taxon.attributes.diagnose}}</p>
 		<p ng-if="taxon.attributes.forvekslingsmuligheder || taxon.similarTaxa.length > 0"><strong>Forvekslingsmuligheder: </strong> 
 			<span ng-repeat="simTax in taxon.similarTaxa ">
@@ -121,18 +122,12 @@
 		</span></br>
 			
 			{{taxon.attributes.forvekslingsmuligheder}}</p>
-		
-	</span>
-		<p ng-if="taxon.attributes.bogtekst_faenologi_udbredelse"><strong>Udbredelse og fænologi: </strong>{{taxon.attributes.bogtekst_faenologi_udbredelse
-	}}</p>
-	<div ng-if="taxon.redlistdata.length > 0">
+			
+				<p ng-if="taxon.attributes.bogtekst_faenologi_udbredelse"><strong>Udbredelse og fænologi: </strong>{{taxon.attributes.bogtekst_faenologi_udbredelse
+			}}</p>
 	
-		<p><strong>Rødlistekategori ({{taxon.redlistdata[0].year}}): </strong>{{taxon.redlistdata[0].Status
-	}}</p>
-
-</div>
+				<p ng-if="taxon.redlistdata.length > 0"><strong>Rødlistekategori ({{taxon.redlistdata[0].year}}): </strong>{{taxon.redlistdata[0].Status }}</p>
 <p ng-if="taxon.attributes.spiselighedsrapport"><strong>Spiselighed: </strong>{{taxon.attributes.spiselighedsrapport}}</p>
-
 <p><strong>Antal fund i svampeatlas:</strong> {{count}} <md-button class="md-icon-button md-primary" ng-click="showRecords('list')">
 			<md-tooltip md-direction="bottom" >
 			          {{'Vis fund i liste' | translate}}
@@ -144,6 +139,35 @@
 			        </md-tooltip>
         <ng-md-icon icon="map"></ng-md-icon> 
       </md-button></p>
+
+	</div>
+	
+
+			<div ng-if="$translate.use() === 'en'">
+		
+<p ng-if="taxon.attributes.bogtekst_gyldendal_en"><strong>Description: </strong>{{taxon.attributes.bogtekst_gyldendal_en}} </p>
+<p ng-if="taxon.attributes.spiselighedsrapport && taxon.attributes.spiselighedsrapport.indexOf('giftig') > -1"><strong>Poisonous.</strong></p>
+		<p ng-if="taxon.similarTaxa.length > 0"><strong>Resembling species: </strong> 
+			<span ng-repeat="simTax in taxon.similarTaxa ">
+			
+			<a ng-if="simTax.Taxon2.acceptedTaxon._id === taxon._id" ng-click="gotoTaxon($event, simTax.Taxon1.acceptedTaxon._id)">{{simTax.Taxon1.acceptedTaxon.FullName}}</a>
+			<a ng-if="simTax.Taxon1.acceptedTaxon._id === taxon._id" ng-click="gotoTaxon($event, simTax.Taxon2.acceptedTaxon._id)">{{simTax.Taxon2.acceptedTaxon.FullName}}</a>{{((!$last) ? ', ' : '. ')}} 
+		</span></p>
+		<p><strong>Number of Danish records:</strong> {{count}} <md-button class="md-icon-button md-primary" ng-click="showRecords('list')">
+					<md-tooltip md-direction="bottom" >
+					          {{'Show in a list' | translate}}
+					        </md-tooltip>
+		        <ng-md-icon icon="list"></ng-md-icon> 
+		      </md-button><md-button class="md-icon-button md-primary" ng-click="showRecords('map')">
+					<md-tooltip md-direction="bottom" >
+					          {{'Show on a map' | translate}}
+					        </md-tooltip>
+		        <ng-md-icon icon="map"></ng-md-icon> 
+		      </md-button></p>
+</div>
+
+
+
 </div>
 	</div>
 </div>

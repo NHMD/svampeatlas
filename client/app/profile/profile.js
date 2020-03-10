@@ -7,6 +7,8 @@ angular.module('svampeatlasApp')
 
 
       .state('dashboard', {
+		parent: 'localization',  
+		  
         url: '/dashboard',
         templateUrl: 'app/profile/profile.html',
         controller: 'ProfileCtrl',
@@ -17,7 +19,8 @@ angular.module('svampeatlasApp')
 		  }
       })
       .state('userstats', {
-	
+		parent: 'localization',  
+		  
         url: '/userprofile/:userid?',
         templateUrl: 'app/profile/profile.html',
         controller: 'ProfileCtrl',

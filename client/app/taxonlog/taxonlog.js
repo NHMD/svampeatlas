@@ -4,6 +4,8 @@ angular.module('svampeatlasApp')
   .config(function ($stateProvider) {
     $stateProvider
       .state('taxonlog', {
+		parent: 'localization',  
+		  
 		  authenticate: function(Auth){
 		  	return Auth.hasRole('taxonomyadmin')
 		  },

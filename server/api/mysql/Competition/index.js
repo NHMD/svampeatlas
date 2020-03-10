@@ -30,7 +30,7 @@ router.get('/pioneerredlisted/:year/user/:userid', controller.showNewRedlistedTa
 router.get('/highjumper/:year',redisClient.use(), controller.showNewTaxonCountOnPersonalList);
 router.get('/highjumper/:year/user/:userid', controller.showNewTaxonCountOnPersonalListObservationIds);
 
-
+router.get('/validatoractivity/:year' , controller.showValidatorActivity)
 
 
 

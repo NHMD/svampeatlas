@@ -5,6 +5,8 @@ angular.module('svampeatlasApp')
     $stateProvider
 
       .state('logout', {
+		parent: 'localization',  
+		  
         url: '/logout?referrer',
         referrer: 'main',
         template: '',
@@ -27,12 +29,16 @@ angular.module('svampeatlasApp')
         }
       })
       .state('signup', {
+		parent: 'localization',  
+		  
         url: '/signup',
         templateUrl: 'app/account/signup/signup.html',
         controller: 'SignupCtrl'
       })
 
       .state('settings', {
+		parent: 'localization',  
+		  
         url: '/settings',
         templateUrl: 'app/account/settings/settings.html',
         controller: 'SettingsCtrl',
@@ -41,12 +47,16 @@ angular.module('svampeatlasApp')
 		  }
       })
       .state('forgot', {
+		parent: 'localization',  
+		  
         url: '/forgot?token',
 
         templateUrl: 'app/account/forgot/forgot.html',
         controller: 'ForgotCtrl'
       })
       .state('confirm', {
+		parent: 'localization',  
+		  
         url: '/confirm?token',
 
         templateUrl: 'app/account/confirm/confirm.html',

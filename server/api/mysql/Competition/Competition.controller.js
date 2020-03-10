@@ -270,7 +270,7 @@ var redlistsql = (req.query.redlisted) ? "d.Taxon_redlist_status IN ('RE', 'CR',
 
 if(req.query.persontype === "finder"){
 	sql = `	SELECT COUNT(b.Taxon_id) as count, b._id, b.name, b.Initialer, b.facebook FROM 
-	(SELECT oa.area_id, usr._id, usr.name, usr.Initialer, usr.facebook, d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Users usr, Observation o, ObservationAreas oa, Areas ar WHERE `+redlistsql+`u.user_id=usr._id AND ar._id=oa.area_id AND ar.type="UTM10" AND oa.observation_id=o._id AND u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(observationDate) = :year GROUP BY d.Taxon_id, oa.area_id) b
+	(SELECT oa.area_id, usr._id, usr.name, usr.Initialer, usr.facebook, d.Taxon_id FROM DeterminationView2 d, ObservationUsers u, Users usr, Observation o, ObservationAreas oa, Areas ar WHERE `+redlistsql+`u.user_id=usr._id AND ar._id=oa.area_id AND ar.type="UTM10" AND oa.observation_id=o._id AND u.observation_id = o._id AND d.Determination_id = o.primarydetermination_id AND (d.Determination_validation = "Godkendt" OR d.Determination_score >= :acceptedScore)  AND d.Taxon_RankID > 9950 AND o.locality_id IS NOT NULL AND YEAR(observationDate) = :year GROUP BY usr._id, d.Taxon_id, oa.area_id) b
 	LEFT JOIN  
 (SELECT oax.area_id, dx.Taxon_id FROM Observation ox, DeterminationView2 dx, ObservationAreas oax, Areas arx WHERE arx._id=oax.area_id AND arx.type="UTM10" AND oax.observation_id=ox._id AND dx.Determination_id = ox.primarydetermination_id  AND (dx.Determination_validation = "Godkendt" OR dx.Determination_score >= :acceptedScore) AND ox.locality_id IS NOT NULL AND YEAR(ox.observationDate) < :year AND dx.Taxon_RankID > 9950 GROUP BY dx.Taxon_id, oax.area_id) a 
 ON a.Taxon_id = b.Taxon_id AND a.area_id = b.area_id WHERE a.Taxon_id IS NULL GROUP BY b._id ORDER BY count DESC;`;
@@ -352,3 +352,22 @@ exports.showNewRedlistedTaxonInAreaForUser = function(req, res){
 	req.query.redlisted = true;
 	exports.showNewTaxonInAreaForUser(req, res);
 }
+
+exports.showValidatorActivity = function(req, res) {
+		
+	var sql = `SELECT count(v._id) as count, b._id, b.name, b.Initialer, b.facebook FROM DeterminationVotes v, Determination d, Users b WHERE b._id=v.user_id AND v.determination_id=d._id AND d.baseScore < ${determinationController.Constants.ACCEPTED_SCORE} AND (d.score >= ${determinationController.Constants.ACCEPTED_SCORE} OR d.validation = "Godkendt") AND YEAR(v.createdAt) = :year GROUP BY b._id ORDER BY count DESC;`
+		
+	return models.sequelize.query(sql, {
+		replacements: {
+			year: req.params.year
+		},
+		type: models.sequelize.QueryTypes.SELECT
+	})
+
+	.then(function(result) {
+
+		return res.status(200).json(result)
+	}).catch(handleError(res));
+
+
+};

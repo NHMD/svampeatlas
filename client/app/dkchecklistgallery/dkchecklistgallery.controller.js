@@ -80,7 +80,7 @@ angular.module('svampeatlasApp')
 					required: false,
 					"attributes": ['status'],
 					where: JSON.stringify({
-						year: 2009
+						year: 2019
 					})
 				}, {
 					"model": "Taxon",

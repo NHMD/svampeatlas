@@ -214,8 +214,13 @@ exports.addImagesToObs = function(req, res) {
 			attributes: ['Initialer']
 		}]
 	}).then(function(obs) {
-
-		var prefix = obs.observationDate.getFullYear() + "-" + obs._id;
+		var prefix
+		try {
+		 prefix = obs.observationDate.getFullYear() + "-" + obs._id;
+	    } catch(err){
+			var year = obs.observationDate.split('-')[0];
+				prefix = year + "-" + obs._id;
+	    }
 		var promises = [];
 
 		_.each(req.files, function(f) {

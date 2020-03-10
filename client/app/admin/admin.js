@@ -4,6 +4,8 @@ angular.module('svampeatlasApp')
   .config(function($stateProvider) {
     $stateProvider
       .state('admin', {
+		parent: 'localization',  
+		  
 		  authenticate: function(Auth){
 		  	return Auth.hasRole('useradmin')
 		  },

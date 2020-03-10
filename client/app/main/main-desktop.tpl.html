@@ -17,7 +17,7 @@
 		</div>
 			<div ng-click="openSideMenu(); $state.go('checklist')" class="cursor-pointer">
 			<h2 ng-bind="speciesCount | localNumber">7100</h2>
-			<h3>{{($parent.preferred_language ==='en') ? 'danish ': ''}}{{'arter af svampe' | translate}}</h3>
+			<h3>{{(translate.use() ==='en') ? 'danish ': ''}}{{'arter af svampe' | translate}}</h3>
 		</div>
 			<div ng-click="openSideMenu(); $state.go('search-gallery')" class="cursor-pointer">
 			<h2 ng-bind="imageCount | localNumber">90.000</h2>

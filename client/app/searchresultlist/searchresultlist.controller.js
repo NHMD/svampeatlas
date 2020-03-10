@@ -318,7 +318,7 @@ angular.module('svampeatlasApp')
 						search.include[0].where.$and.push({lichenized : 1});
 					};
 					if(useNoLichenFilter) {
-						search.include[0].where.$and.push({lichenized : {$ne: 1}}); 
+						search.include[0].where.$and.push({lichenized : 0}); 
 					}
 					// remove this if we don´t want foreign sightings in default searches
 					search.include[2].required = false;

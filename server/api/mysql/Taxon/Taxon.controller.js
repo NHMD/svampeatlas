@@ -305,7 +305,7 @@ exports.showAcceptedTaxon = function(req, res) {
 			{
 				model: models.TaxonRedListData,
 				as: "redlistdata",
-				where: {year: 2009},
+				where: {year: 2019},
 				required: false
 			},
 			{

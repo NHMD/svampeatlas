@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-  .controller('MainMobileCtrl', function($scope,  $translate,  $mdMedia, $timeout,  $state, $stateParams , Auth, $location,  SearchService, $q, appConstants) {
+  .controller('MainMobileCtrl', function($scope,  $translate,  $mdMedia, $timeout,  $state, $stateParams , Auth, $location,  SearchService, $q, appConstants, UserAgentService) {
 	 
 	//  $scope.isChrome = (/Chrome/i.test(navigator.userAgent));
 	  $scope.Auth = Auth;
 	  $scope.$state = $state;
 	  
 	  $scope.translate = $translate;
-	 
+	 $scope.os = UserAgentService.getOS().toLowerCase();
 	
 	  var that = this;
 	

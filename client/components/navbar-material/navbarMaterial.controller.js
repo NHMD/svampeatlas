@@ -6,6 +6,7 @@ angular.module('svampeatlasApp')
       $scope.hasRole = Auth.hasRole;
       $scope.getCurrentUser = Auth.getCurrentUser;
 	  $scope.mdMedia = $mdMedia;
+	  $scope.translate = $translate ;
 	  var that = this;
 	  this.$state = $state;
 	 $scope.User = Auth.getCurrentUser();
@@ -72,6 +73,16 @@ angular.module('svampeatlasApp')
 	
 	
 	$scope.preferred_language = $cookies.get('preferred_language') || 'da';
+	
+	function reloadWithLanguage(newval) {
+		var pathname = location.pathname;
+		            var localePrefix = newval == 'da' ? '' : '/' + newval;
+		            if (pathname.indexOf('/en/') === 0) {
+		                pathname = pathname.substr(3);
+		            }
+		            window.location.href = localePrefix + pathname + location.search + location.hash;
+	}
+	
 	$scope.changeLanguage = function(newval){
 		
 		if(newval === 'dk'){
@@ -83,19 +94,19 @@ angular.module('svampeatlasApp')
 		if(Auth.isLoggedIn()){
 			
 			User.setLanguage({language: newval }).$promise.then(function(){
-				$scope.getCurrentUser().preferred_language = newval;
 				$cookies.put("preferred_language",newval)
-				$translate.use(newval);
+				reloadWithLanguage(newval)
 			})
 		} else {
 			$cookies.put("preferred_language",newval)
-			$translate.use(newval);
-			$rootScope.$broadcast("preferred_language_changed", newval)
+			reloadWithLanguage(newval)
+			//$translate.use(newval);
+			// $rootScope.$broadcast("preferred_language_changed", newval)
 			
 		}
-		$timeout(function(){
+	/*	$timeout(function(){
 			$scope.preferred_language = $cookies.get('preferred_language') || 'da';
-		})
+		}) */
 	}
 	
   $scope.$on("preferred_language_changed", function(evt, newval){

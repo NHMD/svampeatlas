@@ -305,13 +305,18 @@ angular.module('svampeatlasApp')
 						$eq: null
 					};
 					
+					if (search.selectedCountry){
+						search.include[3].required = true;
+						dbQuery.include[3].where.countryName = search.selectedCountry
+					}
+					
 				} else {
 					delete dbQuery.where.locality_id;
 					
 					search.include[2].required = (search.geometry || (search.selectedDataSet && search.selectedDataSet.length) || search.databasenumber) ? false : !search.includeForeign;
 				}
 				
-				if (search.selectedCountry) {
+			/*	if (search.selectedCountry) {
 					search.include[2].required = false;
 					search.include[3].required = true;
 					dbQuery.where.locality_id = {
@@ -322,11 +327,11 @@ angular.module('svampeatlasApp')
 				} else {
 					delete dbQuery.where.locality_id;
 					
-						delete dbQuery.include[3].where.countryName
-					search.include[3].required = false;
+					delete dbQuery.include[3].where.countryName
+					search.include[3].required = search.onlyForeign;
 					
 					search.include[2].required = (search.geometry || (search.selectedDataSet && search.selectedDataSet.length) || search.databasenumber) ? false : !search.includeForeign;
-				}
+				} */
 				
 				
 				

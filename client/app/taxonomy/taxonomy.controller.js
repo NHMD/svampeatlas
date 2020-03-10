@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('svampeatlasApp')
-	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'MycokeyCharacters', 'TaxonBatchUpdateModalService', 'SearchService', 'MycoKeyModalService',
-		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters, TaxonBatchUpdateModalService, SearchService, MycoKeyModalService) {
+	.controller('TaxonomyCtrl', ['$scope', 'Taxon', 'Datamodel', '$timeout', '$q', 'TaxonTypeaheadService', '$translate', 'TaxonomyTags', 'TaxonRedListData', 'MycokeyCharacters', 'TaxonBatchUpdateModalService', 'SearchService', 'MycoKeyModalService','$http',
+		function($scope, Taxon, Datamodel, $timeout, $q, TaxonTypeaheadService, $translate, TaxonomyTags, TaxonRedListData, MycokeyCharacters, TaxonBatchUpdateModalService, SearchService, MycoKeyModalService, $http) {
 			
 			$scope.MycoKeyModalService = MycoKeyModalService;
 			
@@ -62,7 +62,7 @@ angular.module('svampeatlasApp')
 				
 				csvDeferred = $q.defer();
 				$scope.csv = csvDeferred.promise;
-				
+					
 				 
 				})
 
@@ -94,6 +94,34 @@ angular.module('svampeatlasApp')
 					//$scope.callServerSafe();
 
 			};
+			function download(filename, text) {
+			    var element = document.createElement('a');
+			    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
+			    element.setAttribute('download', filename);
+
+			    element.style.display = 'none';
+			    document.body.appendChild(element);
+
+			    element.click();
+
+			    document.body.removeChild(element);
+			}
+			
+			$scope.generateHigherTaxonReport = function(rank){
+				$scope.taxonReportProgress = true;
+				
+				$http.get('/api/gbif/classificationdiff/'+rank)
+					.then(function(csvdata){
+						$scope.taxonReportProgress = false;
+						
+						download('svampeatlas_'+rank+'_report.csv', csvdata.data)
+						
+					})
+					.catch(function(err){
+						$scope.taxonReportProgress = false;
+						alert('An error occurred')
+					})
+			}
 
 			$scope.taxonattributes = Datamodel.get({
 				id: 'TaxonAttributes'

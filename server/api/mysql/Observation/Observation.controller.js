@@ -27,6 +27,8 @@ var requestPromise = require("request-promise");
 
 var mail = require('../../../components/mail/mail.service');
 
+var GeoJSONservice = require('./GeoJSON.service')
+
 var crowdSourcedIdentificationConstants = determinationController.getCrowsourcedIdentificationConstants();
 
 
@@ -71,6 +73,40 @@ function getDefaulQuery(req) {
 							include: [{
 								model: models.TaxonDKnames,
 								as: "Vernacularname_DK"
+							},
+							{
+								model: models.Taxon,
+								as: "Parent",
+								include: [{
+								model: models.Taxon,
+								as: "Parent",
+								include: [
+									{
+										model: models.Taxon,
+										as: "Parent",
+										include: [
+											{
+												model: models.Taxon,
+												as: "Parent",
+												include: [
+											
+													{
+												model: models.TaxonDKnames,
+												as: "Vernacularname_DK"
+											}]},
+											{
+										model: models.TaxonDKnames,
+										as: "Vernacularname_DK"
+									}]
+																},{
+								model: models.TaxonDKnames,
+								as: "Vernacularname_DK"
+								}]	
+								},
+								{
+								model: models.TaxonDKnames,
+								as: "Vernacularname_DK"
+								}]
 							}]
 						}]
 					}, {
@@ -225,7 +261,7 @@ exports.index = function(req, res) {
 
 
 	if (!req.query.limit) {
-		req.query.limit = 10000;
+		req.query.limit = 25000;
 	}
 	if (!req.query.offset) {
 		req.query.offset = 0;
@@ -770,8 +806,30 @@ exports.create = function(req, res) {
 			var gnames = (req.body.geoname) ? models.GeoNames.upsert(req.body.geoname, {
 				transaction: t
 			}) : Promise.resolve(true);
+						
 
+			if(req.body.geoname && !req.body.verbatimLocality ){
+				var direction = GeoJSONservice.direction(
+					{
+						lat: Number(req.body.decimalLatitude), 
+						lng: Number(req.body.decimalLongitude) 
+					}, 
+					{
+						lat: Number(req.body.geoname.lat), 
+						lng: Number(req.body.geoname.lng)
+					}
+					);
+					
+
+				req.body.verbatimLocality = req.body.geoname.countryName + ", " + req.body.geoname.adminName1 + ", " + (Math.round(Number(req.body.geoname.distance) * 1000)) + " m " + direction + " " + req.body.geoname.name + " (" + req.body.geoname.fcodeName + ")";
+			}
+			
+			
 			return gnames.then(function(gname) {
+				
+				
+				
+				
 					return models.Observation.create(req.body, {
 						transaction: t
 					})
@@ -1824,29 +1882,31 @@ function getPdfCapsule(req, res, obs) {
 		.text("https://svampe.databasen.org/observations/" + obs._id, -480, -235)
 
 
-
-
+//console.log('https://api.mapbox.com/v4/mapbox.outdoors/url-https%3A%2F%2Fi.imgur.com%2FMK4NUzI.png(' + obs.decimalLongitude + ',' + obs.decimalLatitude + ')/' + obs.decimalLongitude + ',' + obs.decimalLatitude + ',14/415x125.png?access_token='+config.mapbox.access_token)
 	requestPromise({
-			url: 'https://maps.googleapis.com/maps/api/staticmap?center=' + obs.decimalLatitude + ',' + obs.decimalLongitude + '&zoom=10&size=415x125&maptype=roadmap&markers=' + obs.decimalLatitude + ',' + obs.decimalLongitude + "&key=" + config.google.maps.apikey,
+		url: 'https://api.mapbox.com/v4/mapbox.outdoors/url-https%3A%2F%2Fi.imgur.com%2FMK4NUzI.png(' + obs.decimalLongitude + ',' + obs.decimalLatitude + ')/' + obs.decimalLongitude + ',' + obs.decimalLatitude + ',14/415x125.png?access_token='+config.mapbox.access_token,
+			//url: 'https://maps.googleapis.com/maps/api/staticmap?center=' + obs.decimalLatitude + ',' + obs.decimalLongitude + '&zoom=10&size=415x125&maptype=roadmap&markers=' + obs.decimalLatitude + ',' + obs.decimalLongitude + "&key=" + config.google.maps.apikey,
 			// Prevents Request from converting response to string
 			encoding: null
 
 		})
 		.then(function(body) {
-			//console.log(response);
+			
+		//	console.log('img fetch succes');
 			doc.rotate(180);
 			doc.image(body, 70, 90, {
 				width: 415
 			})
 
 			return requestPromise({
-				url: 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=http://svampe.databasen.org/observations/' + obs._id,
+				url: 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://svampe.databasen.org/observations/' + obs._id,
 				// Prevents Request from converting response to string
 				encoding: null
 
 			})
 		})
 		.then(function(body) {
+		//	console.log('QR succes')
 			doc.rotate(180);
 			doc.image(body, -120, -280, {
 				width: 50
@@ -1857,7 +1917,7 @@ function getPdfCapsule(req, res, obs) {
 		.catch(function(err) {
 			console.log(err)
 			doc.end();
-		})
+		}) 
 
 
 

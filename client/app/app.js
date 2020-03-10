@@ -212,7 +212,19 @@ angular.module('svampeatlasApp', [
 					state: 'competitions',
 					type: 'toggle',
 					icon: 'trophy',
-					pages: [{
+					pages: [
+						
+						{
+							id: 'validatoractivity',
+							name: 'validatoractivity',
+							state: 'competitions',
+							params: {
+								controller: 'validatoractivity'
+							}
+
+						},
+						
+						{
 							id: 'speciescount',
 							name: 'speciescount',
 							state: 'competitions',
@@ -308,7 +320,7 @@ angular.module('svampeatlasApp', [
 					{
 						id: 'imagevision',
 						icon: 'camera_alt',
-						name: 'Foto identifikation',
+						name: 'Navneforslag',
 						state: 'imagevision',
 						type: 'link',
 						requireLogin: false,
@@ -626,9 +638,14 @@ angular.module('svampeatlasApp', [
 */
 	//  editableOptions.theme = 'angular-material';
 	// Redirect to login if route requires auth and you're not logged in
-	$rootScope.$on('$stateChangeStart', function(event, next) {
-		var lang = $cookies.get("preferred_language") || "da";
-		$translate.use(lang);
+	$rootScope.$on('$stateChangeStart', function(event, next, nextParams) {
+		if(nextParams.locale){
+			$translate.use(nextParams.locale);
+		} else {
+			
+			$translate.use('da');
+		}
+		
 
 		Auth.isLoggedIn(function(loggedIn) {
 			if (next.authenticate && !next.authenticate(Auth)) {

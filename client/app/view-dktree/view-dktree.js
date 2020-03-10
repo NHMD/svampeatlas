@@ -4,6 +4,8 @@
     .config(function ($stateProvider) {
       $stateProvider
         .state('taxon-tree-dk', {
+		parent: 'localization',  
+			
           url: '/classification',
 		title: 'Danmarks Svampe',
 			

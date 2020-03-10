@@ -197,7 +197,7 @@ return	Taxon.findAll({
 	 		}, {
 	 			model: models.TaxonAttributes,
 	 			as: "attributes",
-	 			attributes: ['bogtekst_gyldendal', 'PresentInDK', 'spiselighedsrapport', 'vernacular_name_GB']
+	 			attributes: ['bogtekst_gyldendal', 'bogtekst_gyldendal_en','PresentInDK', 'spiselighedsrapport', 'vernacular_name_GB']
 	 		}, {
 	 			model: models.TaxonStatistics,
 	 			as: "Statistics"

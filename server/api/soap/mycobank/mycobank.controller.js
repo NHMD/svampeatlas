@@ -68,7 +68,7 @@ function removeEntity(res) {
 
 // Get list of things
 exports.Mycobank = function(req, res) {
-	
+	console.log('http://www.mycobank.org//Services/Generic/SearchService.svc/rest/xml?layout=14682616000000161&filter=Name%20'+req.query.operator+'%20"'+req.query.name+'"&limit='+req.query.limit+'')
 	req.pipe(request('http://www.mycobank.org//Services/Generic/SearchService.svc/rest/xml?layout=14682616000000161&filter=Name%20'+req.query.operator+'%20"'+req.query.name+'"&limit='+req.query.limit+'')).pipe(res)
 		
 };

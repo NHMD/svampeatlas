@@ -13,7 +13,9 @@ angular.module('svampeatlasApp')
 		  numberofarchiveobservations:{ description: "Flest fund indlagt fra gamle notesbøger mv.", details: "Her tælles fund fra tidligere år, indlagt i konkurrenceåret. Konkurrencen går på rapportør."},
 		  pioneerredlisted: { description:"Flest fund af rødlistede arter fra områder (UTM felter), hvor de ikke før var kendt", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."},
 		  pioneer: { description:"Flest fund af arter fra områder (UTM felter), hvor de ikke før var kendt", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."},
-		  highjumper :{ description: "Flest nye arter på den personlige fundliste", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."}
+		  highjumper :{ description: "Flest nye arter på den personlige fundliste", details: "Konkurrencen går på finder, så alle findere på et fund tildeles point. Der er ingen grund til dobbeltindtastinger, som helst frabedes."},
+		  validatoractivity :{ description: "Mest aktive validator", details: "Flest stemmer afgivet som har bidraget til validering af fund."}
+		  
 	  	
 	  };
 	  

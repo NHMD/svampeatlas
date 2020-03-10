@@ -63,50 +63,62 @@ function removeEntity(res) {
 // Get list of things
 exports.NameSearch = function(req, res) {
 	soap.createClient(wsdl, function(err, client) {
-		if (err ) throw err;
+		if (err) {
+			return res.status(500).json(err.message)
+		} else {
+			client.NameSearch(req.query, function(err, result) {
+				if (err) {
+					res.status(500).json(err.message)
+				};
+					res.status(200).json(result)
+			          console.log(result);
+			      });
+		}
 		
-		client.NameSearch(req.query, function(err, result) {
-			if (err) {
-				res.status(500).json(err.message)
-			};
-				res.status(200).json(result)
-		          console.log(result);
-		      });
+		
 	});
 };
 
 exports.EpithetSearch = function(req, res) {
 	soap.createClient(wsdl, function(err, client) {
-		if (err ) throw err;
+		if (err) {
+			return res.status(500).json(err.message)
+		} else {
+			client.EpithetSearch(req.query, function(err, result) {
+				if (err) {
+					res.status(500).json(err.message)
+				};
+					res.status(200).json(result)
+			          console.log(result);
+			      });
+		}
 		
-		client.EpithetSearch(req.query, function(err, result) {
-			if (err) {
-				res.status(500).json(err.message)
-			};
-				res.status(200).json(result)
-		          console.log(result);
-		      });
+		
 	});
 };
 
 
 exports.NameByKey = function(req, res) {
 	soap.createClient(wsdl, function(err, client) {
-		if (err ) throw err;
-		
-		client.NameByKey(req.query, function(err, result) {
-			if (err) {
-				res.status(500).json(err.message)
-			};
-			var r = ( result && result.NameByKeyResult && result.NameByKeyResult.NewDataSet && result.NameByKeyResult.NewDataSet.IndexFungorum) ? result.NameByKeyResult.NewDataSet.IndexFungorum : undefined;
+		if (err) {
+			return res.status(500).json(err.message)
+		} else {
+			client.NameByKey(req.query, function(err, result) {
+				if (err) {
+					res.status(500).json(err.message)
+				};
+				var r = ( result && result.NameByKeyResult && result.NameByKeyResult.NewDataSet && result.NameByKeyResult.NewDataSet.IndexFungorum) ? result.NameByKeyResult.NewDataSet.IndexFungorum : undefined;
 			
-			if(r !== undefined){
-			var systematicPath = Taxon.getSystematicPath(r, r.INFRASPECIFIC_x0020_RANK);
-			result.NameByKeyResult.NewDataSet.IndexFungorum.SystematicPath= systematicPath;
-		};
-				res.status(200).json(result)
-		          //console.log(result);
-		      });
+				if(r !== undefined){
+				var systematicPath = Taxon.getSystematicPath(r, r.INFRASPECIFIC_x0020_RANK);
+				result.NameByKeyResult.NewDataSet.IndexFungorum.SystematicPath= systematicPath;
+			};
+					res.status(200).json(result)
+			          //console.log(result);
+			      });
+		}
+		
+
 	});
 };
 
@@ -115,7 +127,9 @@ exports.NameByKey = function(req, res) {
 // Get list of things
 exports.NewNames = function(req, res) {
 	soap.createClient(wsdl, function(err, client) {
-		if (err ) throw err;
+		if (err) {
+			return res.status(500).json(err.message)
+		};
 		
 		client.NewNames({rank: req.params.rank, startDate: req.params.startdate}, function(err, result) {
 			if (err) throw err;

@@ -215,6 +215,13 @@
 				        <div class="x-editable-texarea">{{ taxon.attributes.bogtekst_gyldendal || 'n/a' }}</div>
 				      </a>
 			</div>
+				<div>
+					 <label class="control-label" for="bogtekst_gyldendal_en">Engelsk Bogtekst Gyldendal </label>
+					 
+				    <a href="#" id="beskrivelse" editable-textarea="taxon.attributes.bogtekst_gyldendal_en" e-rows="7" e-cols="40" onaftersave="Taxon.updateAttributes({id: taxon._id}, taxon.attributes)">
+				        <div class="x-editable-texarea">{{ taxon.attributes.bogtekst_gyldendal_en || 'n/a' }}</div>
+				      </a>
+			</div>
 			 <div>
 			 <label class="control-label" for="BeskrivelseUK">Beskrivelse UK</label> - <em ng-class="taxon.attributes.BeskrivelseUK.length < 550 || (taxon.attributes.BeskrivelseUK.length < 1100 && taxon.attributes.Bogtekst_stor_art === true) ? 'text-success' : 'text-danger'">Brugt {{taxon.attributes.BeskrivelseUK.length}} af {{taxon.attributes.Bogtekst_stor_art === true ? 1100 : 550}} karakterer</em>
 			

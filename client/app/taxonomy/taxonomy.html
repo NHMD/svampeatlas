@@ -4,9 +4,40 @@
 </md-toolbar>
 <md-content flex md-scroll-y layout-padding>
 
-	
+
 			
 				<div class="panel-group" role="tablist" aria-multiselectable="false" start-collapsed="true" ng-model="extendedSearchIsOn" bs-collapse>
+					
+			    	  <div class="panel panel-default">
+			    	    <div class="panel-heading" role="tab">
+			    	      <h4 class="panel-title">
+			    	        <a bs-collapse-toggle>
+			    	       <i class="fa fa-file-excel-o"></i> {{'Higher taxonomy report' | translate}}
+			    	        </a>
+			    	      </h4>
+			    	    </div>
+			    	    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+			    	      <div class="panel-body">
+			  	          <md-input-container>
+			  	             <label>{{'Select taxon rank' | translate}}</label>
+			  	             <md-select ng-model="selectedRankForTaxonReport">
+			  	               <md-option ng-repeat="rank in ['GENUS', 'FAMILY', 'ORDER', 'CLASS']" value="{{rank}}">
+			  	                 {{rank}}
+			  	               </md-option>
+			  	             </md-select>
+			  	           </md-input-container>
+			  			  		  <md-input-container >
+			  			  	<md-button ng-if="!taxonReportProgress" class="md-raised md-primary" ng-click="generateHigherTaxonReport(selectedRankForTaxonReport)" ng-disabled="!selectedRankForTaxonReport">{{'Generate report' | translate}}</md-button>
+			  				<md-progress-circular md-mode="indeterminate" ng-show="taxonReportProgress"></md-progress-circular>
+			  			  </md-input-container>
+			  				<p>
+			  					{{"This tool will compare the fungal atlas taxonomy to the GBIF Backbone Taxonomy at a given rank. It will generate a report of all taxa where the parent taxon differ between the two taxonomies" | translate}}
+							</p>
+			  		 
+			  			  </div>
+			  			  </div>
+			  			  </div>
+					
 			    	  <!-- ########################################-->
 			    	  <div class="panel panel-default">
 			    	    <div class="panel-heading" role="tab">

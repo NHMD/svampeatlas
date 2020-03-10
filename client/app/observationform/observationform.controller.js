@@ -1133,9 +1133,9 @@ angular.module('svampeatlasApp')
 					});
 
 				}
-				
-	
 				// END IMAGES
+			this.extendedHostHigherTaxon = 6;
+				
 			$scope.processassociatedOrganismImport = function() {
 				var promises = [];
 				_.each($scope.associatedOrganismImport, function(e) {
@@ -1145,11 +1145,11 @@ angular.module('svampeatlasApp')
 					promises.push(PlantTaxon.save({
 						DKandLatinName: DKandLatinName,
 						LatinName: DKandLatinName,
-						gbiftaxon_id: e.nubKey
+						gbiftaxon_id: e.key
 					}).$promise.then(function(planttaxon) {
 						$scope.associatedOrganism.push(planttaxon);
 						_.remove($scope.associatedOrganismImport, function(e) {
-							return e.nubKey === planttaxon.gbiftaxon_id;
+							return e.key === planttaxon.gbiftaxon_id;
 						})
 					}))
 
@@ -1296,6 +1296,8 @@ angular.module('svampeatlasApp')
 				importPromise.then(function() {
 					if ($scope.associatedOrganism.length > 0) {
 						obs.primaryassociatedorganism_id = $scope.associatedOrganism[0]._id;
+					} else {
+						obs.primaryassociatedorganism_id = null;
 					}
 					return ($scope.obs && $scope.obs._id) ? Observation.update({
 						id: $scope.obs._id

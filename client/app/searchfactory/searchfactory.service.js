@@ -184,19 +184,22 @@ angular.module('svampeatlasApp')
 
 			},
 
-			querySearchGBIFPlantTaxon: function(query, rank) {
+			querySearchGBIFPlantTaxon: function(query, rank, higherTaxonKey) {
 
 
 				var results = query ? $http({
 					method: 'GET',
-					url: 'https://api.gbif.org/v1/species/suggest',
+					url: 'https://api.gbif.org/v1/species/search',
 					params: {
-						datasetKey: '046bbc50-cae2-47ff-aa43-729fbf53f7c5',
+						datasetKey: 'd7dddbf4-2cf0-4f39-9b2a-bb099caae36c',
+						higherTaxonKey: higherTaxonKey || 6,
 						q: query,
-						rank: rank
+						qField: 'SCIENTIFIC',
+						rank: rank,
+						status: 'ACCEPTED'
 					}
 				}).then(function(res) {
-					return res.data;
+					return res.data.results;
 				}) : [];
 
 				return results;

@@ -85,7 +85,7 @@ angular.module('svampeatlasApp')
 					required: false,
 					"attributes": ['status'],
 					where: JSON.stringify({
-						year: 2009
+						year: 2019
 					})
 				}, {
 					"model": "Taxon",
@@ -131,13 +131,13 @@ angular.module('svampeatlasApp')
 				 // if there is a search id delete it (will be set after 100 millisec when a stored search is selected or created)
 				if(newVal.redliststatus){
 					$scope.query.include[0].where = JSON.stringify({
-						year: 2009,
+						year: 2019,
 						status: newVal.redliststatus
 					})
 					$scope.query.include[0].required = true
 				} else {
 					$scope.query.include[0].where = JSON.stringify({
-											year: 2009
+											year: 2019
 										});
 										$scope.query.include[0].required = false;
 				}

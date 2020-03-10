@@ -491,7 +491,7 @@
             '<md-button\n' +
             '   ss-style-color="{\'background-color\': isSelected(section.state) ? \'primary.800\': \'primary.default\'}"' +
             '   class="md-raised md-primary"' +
-            '   ui-sref="{{section.state}}({{section.params}})" ui-sref-opts="{reload: true, inherit: false}"\n' +
+            '   ui-sref="{{section.state}}({{section.params}})" ui-sref-opts="{reload: true, inherit: true}"\n' +
             '   ng-click="focusSection(section)">\n' +
             '  <ng-md-icon ng-if="section.icon" icon="{{section.icon}}" ></ng-md-icon> {{section.name | translate}}\n' +
             '   <span class="md-visually-hidden"\n' +

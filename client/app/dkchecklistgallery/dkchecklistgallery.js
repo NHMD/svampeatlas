@@ -4,6 +4,8 @@ angular.module('svampeatlasApp')
   .config(function ($stateProvider) {
     $stateProvider
       .state('checklist-gallery', {
+		parent: 'localization',  
+		  
 		  params: {
 			  filter: null,
 			  indexLetter: null

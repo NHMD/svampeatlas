@@ -4,6 +4,8 @@ angular.module('svampeatlasApp')
   .config(function ($stateProvider) {
     $stateProvider
       .state('search-specieslist', {
+		parent: 'localization',  
+		  
 		  params: {
 		      where: null,
 			  determinationViewWhere: null,

@@ -171,7 +171,31 @@ angular.module('svampeatlasApp')
 
 			};
 
-
+			$scope.getClassification = function(determination){
+				var parent = determination.Taxon.acceptedTaxon.Parent;
+				var classification = []
+				while(parent){
+					classification.push(parent);
+					parent = parent.Parent;
+				}
+				return classification;
+			}
+			
+			$scope.addHigherTaxonDetermination = function(taxon, user, obs){
+				Observation.addDetermination({id: obs._id}, 
+												{taxon_id: taxon._id, user_id: user._id, confidence: 'sikker', validation: Auth.hasRole('validator') ? 'Godkendt' : 'Valideres', notes: 'Fundet kan ikke artsbestemmes sikkert udfra de indlagte data.'})
+					.$promise.then(function(){
+						return Observation.postComment({
+								id: $scope.obs._id
+							}, {
+								content: 'Fundet kan ikke artsbestemmes sikkert udfra de indlagte data.'
+							}).$promise
+							
+					})
+					.then(function(){
+								$rootScope.$broadcast('observation_updated', obs);
+												})
+			}
 
 			$scope.mapsettings = {
 				center: {

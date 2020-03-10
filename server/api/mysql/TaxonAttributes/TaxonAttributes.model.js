@@ -82,6 +82,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true,
 	},
+	bogtekst_gyldendal_en: {
+      type: DataTypes.STRING,
+      allowNull: true,
+	},
 	bog_Gyldendal_art_medtages: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

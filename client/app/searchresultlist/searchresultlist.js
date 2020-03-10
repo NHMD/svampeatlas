@@ -4,6 +4,8 @@ angular.module('svampeatlasApp')
   .config(function ($stateProvider) {
     $stateProvider
       .state('search-list', {
+		parent: 'localization',  
+		  
 		  params: {
 		      locality_id: null,
 			  date: null,

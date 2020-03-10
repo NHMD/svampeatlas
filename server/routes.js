@@ -58,6 +58,7 @@ module.exports = function(app) {
 	app.use('/api/similartaxa', require('./api/mysql/SimilarTaxa'));
 	app.use('/api/planttaxa', intparser.parseLimitOffset(), require('./api/mysql/PlantTaxon'));
 	app.use('/api/imagevision', require('./api/soap/ai'));
+	app.use('/api/gbif', require('./api/soap/gbif'));
 	app.use('/api/indexfungorum', require('./api/soap/indexfungorum'));
 	app.use('/api/mycobank', require('./api/soap/mycobank'));
 	app.use('/api/dyntaxa', require('./api/soap/dyntaxa'));

@@ -45,6 +45,12 @@
 				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} <a href="/taxon/{{det.Taxon.acceptedTaxon._id}}" target="_BLANK"><i class="fa fa-external-link"></i></a> {{(det._id === obs.primarydetermination_id) ? ('('+('Nuværende bestemmelse' | translate)+')') : '' }} </h3>
 	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} <a href="/taxon/{{det.Taxon.acceptedTaxon._id}}" target="_BLANK"><i class="fa fa-external-link"></i></a> {{(det._id === obs.primarydetermination_id) ? ('('+('Nuværende bestemmelse' | translate)+')') : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
+				
+  				 <a   href="#" editable-select="det.higherTaxonSuggestion" e-ng-options="(s.FullName | translate) for s in getClassification(det)" onaftersave="addHigherTaxonDetermination(det.higherTaxonSuggestion, User, obs)">
+  			    {{'Foreslå højere takson' | translate}}
+  			  </a> 
+			  
+			  
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
    			
 
@@ -105,6 +111,10 @@
 				  <h3 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.Vernacularname_DK.vernacularname_dk | capitalize}} <a href="/taxon/{{det.Taxon.acceptedTaxon._id}}" target="_BLANK"><i class="fa fa-external-link"></i></a> {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 	            <h3 ng-if="!det.Taxon.acceptedTaxon.Vernacularname_DK" ng-class="(det._id === obs.primarydetermination_id) ? 'primary-determination': ''">{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}} <a href="/taxon/{{det.Taxon.acceptedTaxon._id}}" target="_BLANK"><i class="fa fa-external-link"></i></a> {{(det._id === obs.primarydetermination_id) ? '(Nuværende bestemmelse)' : '' }}</h3>
 				<h4 ng-if="det.Taxon.acceptedTaxon.Vernacularname_DK"><em>{{ det.Taxon.acceptedTaxon.FullName }} {{( 9950 > det.Taxon.RankID) ? 'sp.' : ''}}</em></h4>
+    				 <a   href="#" editable-select="det.higherTaxonSuggestion" e-ng-options="(s.FullName | translate) for s in getClassification(det)" onaftersave="addHigherTaxonDetermination(det.higherTaxonSuggestion, User, obs)">
+    			    {{'Foreslå højere takson' | translate}}
+    			  </a>
+				
 	            <h4>{{(ctrl.moment(det.createdAt).isSame(ctrl.moment(), 'day')) ? ctrl.getCreatedAt(det.createdAt) : (det.createdAt | date : 'dd/MM/yyyy')}}, {{ det.User.name }} ({{det.User.Initialer}})</h4>
   				<p ng-if="det.confidence">{{'Bestemmelsens sikkerhed' | translate}}: <span ng-if="User._id !== det.user_id">{{ det.confidence | translate}}</span><a  ng-if="User._id === det.user_id" href="#" editable-select="det.confidence" e-ng-options="(s | translate) for s in ['sikker', 'sandsynlig', 'mulig']" onaftersave="updateConfidence(det, obs)">
   			    {{det.confidence | translate}}

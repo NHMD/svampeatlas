@@ -384,7 +384,10 @@ angular.module('svampeatlasApp')
 			'Sikkerhed': 'Confidence',
 			'Vis art': 'Show species',
 			'Opret fund': 'Create observation',
-			'Foto identifikation': 'Photo identification'
+			'Navneforslag': 'Name suggestions',
+			'Foreslå højere takson': 'Suggest higher taxon',
+			'validatoractivity': 'Most active validator',
+			'Nøgler, beskrivelser mm i MycoKey': 'Keys, descriptions and more in MycoKey'
 		});
 		
 
@@ -559,7 +562,13 @@ angular.module('svampeatlasApp')
 			'UTM northing' : 'UTM nord',
 			'UTM easting' : 'UTM øst',
 			'Password must be at least 7 characters' : 'Dit password skal være mindst 7 karakterer langt',
-			'contentNotAvailableInLocale' : 'Dette indhold er endnu ikke tilgængeligt på dansk.'
+			'contentNotAvailableInLocale' : 'Dette indhold er endnu ikke tilgængeligt på dansk.',
+			'validatoractivity': 'Mest aktive validator',
+			'Higher taxonomy report': 'Rapport over højere taksonomi',
+			'Select taxon rank': 'Vælg taxonrang',
+			'Generate report': 'Generér rapport',
+			'This tool will compare the fungal atlas taxonomy to the GBIF Backbone Taxonomy at a given rank. It will generate a report of all taxa where the parent taxon differ between the two taxonomies' : 'Dette værktøj sammenligner Svampeatlas taksonomi med GBIFs Backbone taksonomi på et givent niveau (rang). Der bliver genereret en rapport over alle taksa hvis forældretakson er forskelligt mellem de to taksonomier.'
+			
 			
 
 
