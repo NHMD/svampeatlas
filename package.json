@@ -18,7 +18,7 @@
     "lodash": "~4.0.0",
     "method-override": "~1.0.0",
     "moment": "^2.11.0",
-    "morgan": "~1.0.0",
+    "morgan": "~1.9.1",
     "multer": "1.1.0",
     "mysql": "2.6.2",
     "node-rest-client": "1.5.1",
