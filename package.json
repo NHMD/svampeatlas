@@ -35,7 +35,7 @@
     "sequelize": "3.17.1",
     "serve-favicon": "~2.0.1",
     "shortid": "2.2.6",
-    "showdown": "1.8.6",
+    "showdown": "1.9.1",
     "soap": "0.13.0",
     "socket.io": "^1.0.6",
     "socket.io-client": "^1.0.6",
